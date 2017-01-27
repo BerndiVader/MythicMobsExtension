@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 2.6 and higher
 
+Here you find some examples of CustomSkillMechanics for the new MythicMobs 2.6 API
 
 * DamageArmorSkill:
 
