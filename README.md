@@ -3,9 +3,39 @@ for MythicMobs 4.0.0 and higher
 
 Here you find some examples of CustomSkillMechanics for the new MythicMobs 4 API
 
+
+* EquipSkullSkill:
+
+	This is a fix for custom player heads for 1.8.8 as it appeard to not work with mm versions greater than 2.5.1
+
+	- equipskull{skull=mythicitemname}
+		skull or s: and valid MythicMobsItem to equip on head.
+		
+Example:
+```
+mob yml:
+
+Monkey:
+  Type: zombie
+  Display: 'a MythicMobs Monkey'
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - equipskull{skull=Pirate} @self ~onSpawn 1
+  
+item yml:
+
+Pirate:
+  Id: 397
+  Data: 3
+  Options:
+    SkinTexture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVmMDEyOTdlMmUxYWNkMDQ4ODJhMGM0NGU0OGYxZjE1Y2JiYTI1ODJmOTFiMDgxYzkyOTIwZmVkOGYzMjIwIn19fQ====
+```
+
+
 * DamageArmorSkill:
 
-	- damagearmor{armor="all";damage=5;signal=armorbroken}
+	- damagearmor{armor=all;damage=5;signal=armorbroken}
 		armor: all / helmet / chest / leggings / boots
 		damage: armor damage amount
 		signal: name of the signal which should be send to mob if an armor part is broken.

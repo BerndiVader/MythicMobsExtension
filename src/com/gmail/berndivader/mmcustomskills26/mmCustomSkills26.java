@@ -29,6 +29,9 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("dropstolenitems")) {
 			skill = new mmDropStolenItems(e.getContainer(), e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("equipskull")) {
+			skill = new mmEquipFix(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
 		}
 	}
 }
