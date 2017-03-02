@@ -15,19 +15,19 @@ public class mmCustomSkills26 implements Listener {
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
 		MechName = e.getMechanicName().toLowerCase();
 		if (MechName.equals("damagearmor")) {
-			skill = new mmDamageArmorSkill(e.getHolder(), e.getConfig());
+			skill = new mmDamageArmorSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 		} else if (MechName.equals("grenade")) {
-			skill = new mmGrenadeSkill(e.getHolder(), e.getConfig());
+			skill = new mmGrenadeSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 		} else if (MechName.equals("setrandomlevel")) {
-			skill = new mmRandomLevelSkill(e.getHolder(), e.getConfig());
+			skill = new mmRandomLevelSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 		} else if (MechName.equals("steal")) {
-			skill = new mmStealSkill(e.getHolder(), e.getConfig());
+			skill = new mmStealSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 		} else if (MechName.equals("dropstolenitems")) {
-			skill = new mmDropStolenItems(e.getHolder(), e.getConfig());
+			skill = new mmDropStolenItems(e.getContainer(), e.getConfig());
 			e.register(skill);
 		}
 	}

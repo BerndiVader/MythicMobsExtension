@@ -1,7 +1,7 @@
 # CustomSkillMechanics
-for MythicMobs 2.6 and higher
+for MythicMobs 4.0.0 and higher
 
-Here you find some examples of CustomSkillMechanics for the new MythicMobs 2.6 API
+Here you find some examples of CustomSkillMechanics for the new MythicMobs 4 API
 
 * DamageArmorSkill:
 
@@ -52,7 +52,6 @@ grenadezombie:
 ```
 
 
-
 * SetRandomLevelSkill:
 
 	- setrandomlevel{min=1;max=10;self=true}
@@ -72,7 +71,7 @@ RndLvlMob:
 * StealSkill:
 
 	- steal{items=ITEM:AMOUNT,ITEM:AMOUNT,.....;failsignal=steal_fail;oksignal=steal_ok}
-		items: Can be a list of items. One of the items shuffled by random will be tried to steal from the targeted player.
+		items: Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player.
 		failsignal: name of the signal that should be send to the mob if the stealing failed. default signal = steal_fail
 		oksignal: name of the signal that should be send to the mob if the stealing was good. default signal = steal_ok
 		
@@ -80,13 +79,13 @@ RndLvlMob:
 		use this skill and the mob drop all its stolen items. Good idea to use it on death. Or all the items are gone with the mob to herobrine.
 		
 	There is a buildin cancel damage condition if the mob should make no damage while try to steal. It can be activated if the stance of the mob is "gostealing"
+	So if the mob have the gostealing stance set, it will do no damage to its target.
 
 Example mobfile:
 ```
 thiefzombie:
   Type: zombie
   Skills:
-  - setstance{stance=gostealing} @self ~onSpawn 1
   - skill{s=StealSkill} ~onTimer:60 1
   - DropStolenItems ~onDeath 1
 ```
@@ -94,10 +93,9 @@ Example skillfile:
 ```
 StealSkill:
   Cooldown: 1
-  Conditions:
-  - targetwithin 3
-  - stance gostealing
+  TargetConditions:
+  - lineofsight true
+  - distance{d=<3} true
   Skills:
   - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @target 1
-  - setstance{stance=none} @self 1
 ```

@@ -27,6 +27,12 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new UndoBlockListener(), this);
 			getServer().getPluginManager().registerEvents(new mmCustomSkills26(), this);
 			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
+			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
+			
+			if (Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null) {
+				getServer().getPluginManager().registerEvents(new mmWorldEditSkills(), this);
+				Bukkit.getLogger().info("Found WorldEdit, registered WorldEditSkills.");
+			}
 
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    		public void run() {

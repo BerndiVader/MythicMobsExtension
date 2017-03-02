@@ -20,7 +20,7 @@ public class ThiefDamageEvent implements Listener {
 		}
         if (mm.getMobManager().isActiveMob(e.getDamager().getUniqueId())) {
         	if (e.getEntityType() == EntityType.PLAYER) {
-	        	ActiveMob am = mm.getAPI().getMobAPI().getMythicMobInstance(e.getDamager());
+	        	ActiveMob am = mm.getMobManager().getMythicMobInstance(e.getDamager());
 	        	if (am.getStance().equalsIgnoreCase("gostealing")) {
 	        		e.setCancelled(true);
 	            }
