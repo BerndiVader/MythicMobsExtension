@@ -81,21 +81,70 @@ RndLvlMob:
 	There is a buildin cancel damage condition if the mob should make no damage while try to steal. It can be activated if the stance of the mob is "gostealing"
 	So if the mob have the gostealing stance set, it will do no damage to its target.
 
-Example mobfile:
+Thief example:
+
+mob yml:
 ```
-thiefzombie:
-  Type: zombie
+thief:
+  Type: villager
+  Display: 'Thief'
+  Health: 20
+  Damage: 0
+  Modules:
+    ThreatTable: true
+  Options:
+    AlwaysShowName: false
+    Despawn: true
+  AIGoalSelectors:
+    - 0 clear
+    - 1 meleeattack
+    - 2 avoidskeletons
+    - 3 avoidzombies
+    - 4 randomstroll
+    - 5 float
+  AITargetSelectors:
+    - 0 clear
+    - 1 players
   Skills:
-  - skill{s=StealSkill} ~onTimer:60 1
-  - DropStolenItems ~onDeath 1
+    - setstance{stance=gostealing} @self ~onSpawn 1
+    - skill{s=FleeDidStealing;sync=true} ~onSignal:steal_ok 1
+    - skill{s=FleeButGotNothing;sync=true} ~onSignal:steal_fail 1
+    - skill{s=Steal} ~onTimer:60 >0 1
+    - DropStolenItems ~onDeath 1
 ```
-Example skillfile:
+skillfile:
 ```
-StealSkill:
+Steal:
   Cooldown: 1
   TargetConditions:
-  - lineofsight true
   - distance{d=<3} true
+  - lineofsight true
+  Conditions:
+  - stance{s=gostealing} true
   Skills:
-  - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @target 1
+  - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @NearestPlayer 0.75
+  
+FleeDidStealing:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=fleeplayers}
+    - effect:smoke @self
+    - potion{type=SPEED;duration=200;level=1} @self
+    - delay 400
+    - effect:smoke @self
+    - remove @self
+  
+FleeButGotNothing:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=randomstroll}
+    - delay 400
+    - effect:smoke @self
+    - remove @self
 ```
