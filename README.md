@@ -107,7 +107,7 @@ thief:
     - 1 players
   Skills:
     - setstance{stance=gostealing} @self ~onSpawn 1
-    - skill{s=FleeDidStealing;sync=true} ~onSignal:steal_ok 1
+    - skill{s=FleeGotSomeStuff;sync=true} ~onSignal:steal_ok 1
     - skill{s=FleeButGotNothing;sync=true} ~onSignal:steal_fail 1
     - skill{s=Steal} ~onTimer:60 >0 1
     - DropStolenItems ~onDeath 1
@@ -124,7 +124,7 @@ Steal:
   Skills:
   - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @NearestPlayer 0.75
   
-FleeDidStealing:
+FleeGotSomeStuff:
   Cooldown: 1
   Skills:
     - setstance{stance=flee} @self
