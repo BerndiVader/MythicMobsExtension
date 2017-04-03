@@ -32,7 +32,6 @@ public class mmEquipFix extends SkillMechanic implements ITargetedEntitySkill {
 		return true;
 	}
 	
-	
 	private boolean getItem(LivingEntity caster, String item) {
         Optional<MythicItem> maybeItem;
         if ((maybeItem = MythicMobs.inst().getItemManager().getItem(itemString)).isPresent()) {

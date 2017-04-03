@@ -35,9 +35,9 @@ Pirate:
 
 * DamageArmorSkill:
 
-	- damagearmor{armor=all;damage=5;signal=armorbroken}
-		armor: all / helmet / chest / leggings / boots
-		damage: armor damage amount
+	- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}
+		armor: all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
+		damage: armor damage amount as integer or as ranged value
 		signal: name of the signal which should be send to mob if an armor part is broken.
 		        dont set it if you dont want a signal to be send.
 				
@@ -55,8 +55,13 @@ dmgpig:
   - 1 randomstroll
   - 2 float
   Skills:
+  # this will damage the whole armor and handitem & offhanditem with damage value of 20
   - damagearmor{armor=all;damage=20;signal=armorbroken} @target ~onDamaged >0 1
-  - message{msg="Oh dear! A part of your armor is gone!"} @target ~onSignal:armorbroken
+  # this will damage only the chest with a random value between 1-20
+  - damagearmor{armor=chest;damage=1-20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will damage hand,offhand,helmet items with a random value between 20-40
+  - damagearmor{armor=hand,offhand,helmet;damage=20-40;signal=armorbroken} @trigger ~onDamaged >0 1
+  - message{msg="Oh dear! A part of your armor is gone!"} @trigger ~onSignal:armorbroken
 ```
 
 
