@@ -32,6 +32,9 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("equipskull")) {
 			skill = new mmEquipFix(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("endereffect")) {
+			skill = new mmEnderEffect(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
 		}
 	}
 }

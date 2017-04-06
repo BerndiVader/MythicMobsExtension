@@ -23,8 +23,6 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 	protected String[] armortype;
 	protected int rndMin,rndMax;
 	protected String signal;
-	protected ActiveMob am;
-	protected AbstractEntity target;
 	protected Random ran = new Random();
 
 	public mmDamageArmorSkill(CustomMechanic h, MythicLineConfig mlc) {
@@ -46,9 +44,11 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target == null || !target.isLiving() || target.isDead()) {return false;}
+		ActiveMob am = null;
 		SkillCaster caster = data.getCaster();
-		if (!(caster instanceof ActiveMob)) return false;
-		this.am = (ActiveMob)data.getCaster();
+		if (caster instanceof ActiveMob) {
+			am = (ActiveMob)data.getCaster();
+		}
 		LivingEntity e = (LivingEntity)BukkitAdapter.adapt(target);
    		ItemStack armor = null; short dur = 0; boolean broken = false;
    		int damagevalue = this.ran.nextInt(this.rndMax+1) + this.rndMin;
@@ -107,7 +107,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
         		}
         	}
         }
-        if (broken && !this.signal.isEmpty()) {am.signalMob(BukkitAdapter.adapt(e), this.signal);}
+        if (am!=null && broken && !this.signal.isEmpty()) {am.signalMob(BukkitAdapter.adapt(e), this.signal);}
         return true;
 	}
 }
