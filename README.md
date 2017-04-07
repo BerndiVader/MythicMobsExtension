@@ -1,6 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.0 and higher
 
+*** 7.4.2014 fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+
 Here you find some examples of CustomSkillMechanics for the new MythicMobs 4 API
 
 
@@ -37,7 +39,7 @@ Pirate:
 
 	- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}
 		armor: all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
-		damage: armor damage amount as integer or as ranged value
+		damage: armor damage amount as integer or as ranged value for ranged value use "to".
 		signal: name of the signal which should be send to mob if an armor part is broken.
 		        dont set it if you dont want a signal to be send.
 				
@@ -57,10 +59,10 @@ dmgpig:
   Skills:
   # this will damage the whole armor and handitem & offhanditem with damage value of 20
   - damagearmor{armor=all;damage=20;signal=armorbroken} @target ~onDamaged >0 1
-  # this will damage only the chest with a random value between 1-20
-  - damagearmor{armor=chest;damage=1-20;signal=armorbroken} @target ~onDamaged >0 1
-  # this will damage hand,offhand,helmet items with a random value between 20-40
-  - damagearmor{armor=hand,offhand,helmet;damage=20-40;signal=armorbroken} @trigger ~onDamaged >0 1
+  # this will damage only the chest with a random value between 1 to 20
+  - damagearmor{armor=chest;damage=1to20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will repear hand,offhand,helmet items with a random value between 20 to 40
+  - damagearmor{armor=hand,offhand,helmet;damage=-20to-40;signal=armorbroken} @trigger ~onDamaged >0 1
   - message{msg="Oh dear! A part of your armor is gone!"} @trigger ~onSignal:armorbroken
 ```
 

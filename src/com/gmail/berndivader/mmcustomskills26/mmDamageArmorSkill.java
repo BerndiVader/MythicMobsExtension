@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -23,13 +22,12 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 	protected String[] armortype;
 	protected int rndMin,rndMax;
 	protected String signal;
-	protected Random ran = new Random();
 
 	public mmDamageArmorSkill(CustomMechanic h, MythicLineConfig mlc) {
 		super(h.getConfigLine(), mlc);
 		this.ASYNC_SAFE=false;
 		this.armortype = mlc.getString(new String[]{"armor","a","armour"}, "all").toLowerCase().split(",");
-		String[] maybeRnd = mlc.getString(new String[]{"damage","dmg","d"}, "1").split("-");
+		String[] maybeRnd = mlc.getString(new String[]{"damage","dmg","d"}, "1").split("to");
 		if (maybeRnd.length>1) {
 			this.rndMin = Integer.valueOf(maybeRnd[0]);
 			this.rndMax = Integer.valueOf(maybeRnd[1]);
@@ -51,7 +49,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 		}
 		LivingEntity e = (LivingEntity)BukkitAdapter.adapt(target);
    		ItemStack armor = null; short dur = 0; boolean broken = false;
-   		int damagevalue = this.ran.nextInt(this.rndMax+1) + this.rndMin;
+   		int damagevalue = (int)this.rndMin + (int)(Math.random() * ((this.rndMax - this.rndMin) + 1));
    		if (Arrays.asList(this.armortype).contains("offhand") || Arrays.asList(this.armortype).contains("all")) {
    			armor = MythicMobs.inst().getMinecraftVersion()>=9?e.getEquipment().getItemInOffHand():null;
         	if (armor!=null) {
