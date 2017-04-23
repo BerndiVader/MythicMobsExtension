@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="X:/SpigotJars/1_10_2/Spigot/Spigot-API/target/spigot-api-1.10.2-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="X:/SpigotJars/worldedit-bukkit-6.1.jar"/>
 	<classpathentry kind="lib" path="X:/SpigotJars/MythicMobs-4.0.1-release.jar" sourcepath="X:/maven/MythicMobs-4.0.1-1973_source_from_cfr"/>
-	<classpathentry kind="lib" path="X:/SpigotJars/EnderDisco.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

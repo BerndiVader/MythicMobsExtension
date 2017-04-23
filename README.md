@@ -1,15 +1,28 @@
 # CustomSkillMechanics
-for MythicMobs 4.0.0 and higher
+for MythicMobs 4.0.1 and higher
 
-*** 7.4.2014 fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+*** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
+*** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
-Here you find some examples of CustomSkillMechanics for the new MythicMobs 4 API
 
+
+* CustomDamageSkill:
+
+	Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www.mythicmobs.net/index.php?threads/skill-damage-bypassed-armour.3373/ this thread for details of the issue.
+	
+	- customdamage{a=1;ia=false;pk=false;pi=false}
+	
+	a = amount = 1 by default. The amount of damage applied. 1 = 1/2 heart.
+	ia = i = ignorearmor = false by default. If the armor of the target should be ignored or not.
+	pk = pkb = preventknockback = false by default. If knockback should be applied or not.
+	pi = preventimmunity = false by default. If immunity should be used or not.
+	ignoreabs = iabs = false by default. If absorbation should be ignored or not.
+
+	
 
 * EquipSkullSkill:
 
 	This is a fix for custom player heads for 1.8.8 as it appeard to not work with mm versions greater than 2.5.1
-
 	- equipskull{skull=mythicitemname}
 		skull or s: and valid MythicMobsItem to equip on head.
 		
