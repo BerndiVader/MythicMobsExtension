@@ -45,24 +45,32 @@ public class mmCustomSkills26 implements Listener {
 	}
 	
 	@EventHandler
-	public void onPKdamage(EntityDamageByEntityEvent e) {
+	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
 		if (!(e.getEntity() instanceof LivingEntity) || e.isCancelled()) return;
 		LivingEntity victim = (LivingEntity) e.getEntity();
 		if (!victim.hasMetadata("MythicDamage")) return;
 		victim.removeMetadata("MythicDamage", Main.getPlugin());
-		double damage = e.getDamage(DamageModifier.BASE);
-		if (!victim.getMetadata("IgnoreAbs").get(0).asBoolean()) damage+=e.getDamage(DamageModifier.ABSORPTION);
-		if (!victim.getMetadata("IgnoreArmor").get(0).asBoolean()) damage+=e.getDamage(DamageModifier.ARMOR);
+		double damage=0D;
+		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
+		double df = md / e.getDamage(DamageModifier.BASE);
+		e.setDamage(DamageModifier.BASE, md);
+		if (victim.getMetadata("IgnoreArmor").get(0).asBoolean()) {
+			e.setDamage(DamageModifier.ARMOR, 0D);
+		} else {
+			e.setDamage(DamageModifier.ARMOR, df * e.getDamage(DamageModifier.ARMOR));
+		}
+		if (victim.getMetadata("IgnoreAbs").get(0).asBoolean()) {
+			e.setDamage(DamageModifier.ABSORPTION, 0D);
+		} else {
+			e.setDamage(DamageModifier.ABSORPTION, df * e.getDamage(DamageModifier.ABSORPTION));
+		}
 		if (victim.getMetadata("PreventKnockback").get(0).asBoolean()) {
 			e.setCancelled(true);
-			victim.damage(damage);
-		} else {
-			if (victim.getHealth() - damage < 1.0) {
-				victim.setHealth(0.1);
-            	victim.damage(10.0, e.getDamager());
-			} else {
-				victim.setHealth(victim.getHealth() - damage);
+			for (DamageModifier modifier : DamageModifier.values()) {
+				if (!e.isApplicable(modifier)) continue;
+				damage+=e.getDamage(modifier);
 			}
+			victim.damage(damage);
 		}
 	}
 }

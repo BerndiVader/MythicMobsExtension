@@ -1,16 +1,17 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
-*** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
-*** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+#### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
+#### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
+#### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
 
-* CustomDamageSkill:
+## CustomDamageSkill:
 
 	Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www.mythicmobs.net/index.php?threads/skill-damage-bypassed-armour.3373/ this thread for details of the issue.
 	
-	- customdamage{a=1;ia=false;pk=false;pi=false}
+	- customdamage{a=1;ia=false;pk=false;pi=false;iabs=false}
 	
 	a = amount = 1 by default. The amount of damage applied. 1 = 1/2 heart.
 	ia = i = ignorearmor = false by default. If the armor of the target should be ignored or not.
@@ -20,7 +21,7 @@ for MythicMobs 4.0.1 and higher
 
 	
 
-* EquipSkullSkill:
+## EquipSkullSkill:
 
 	This is a fix for custom player heads for 1.8.8 as it appeard to not work with mm versions greater than 2.5.1
 	- equipskull{skull=mythicitemname}
@@ -48,7 +49,7 @@ Pirate:
 ```
 
 
-* DamageArmorSkill:
+## DamageArmorSkill:
 
 	- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}
 		armor: all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
@@ -80,7 +81,7 @@ dmgpig:
 ```
 
 
-* GrenadeSkill:
+## GrenadeSkill:
 
 	- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true}
 		size: radius of the explosion
@@ -102,7 +103,7 @@ grenadezombie:
 ```
 
 
-* SetRandomLevelSkill:
+## SetRandomLevelSkill:
 
 	- setrandomlevel{min=1;max=10;self=true}
 		min: lowest level
@@ -118,7 +119,7 @@ RndLvlMob:
 ```
 
 
-* StealSkill:
+## StealSkill:
 
 	- steal{items=ITEM:AMOUNT,ITEM:AMOUNT,.....;failsignal=steal_fail;oksignal=steal_ok}
 		items: Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player.

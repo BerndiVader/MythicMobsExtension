@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -25,7 +24,8 @@ public class CustomStuff {
         target.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(),preventKnockback));
         target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),ignoreabs));
         target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
-		target.damage(damage, (Entity)source);
+        target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
+		target.damage(damage, source);
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
 	}
