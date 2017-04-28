@@ -30,20 +30,20 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-        if (target.isDead() || target.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill()) return false;
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+        if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill()) return false;
         double dmg = this.ip?this.amount * (double)data.getPower():this.amount;
         SkillCaster am = data.getCaster();
         if (am instanceof ActiveMob) ((ActiveMob)am).setLastDamageSkillAmount(dmg);
         LivingEntity source = (LivingEntity)BukkitAdapter.adapt(data.getCaster().getEntity());
-        LivingEntity t = (LivingEntity)BukkitAdapter.adapt(target);
-        t.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
-        t.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),dmg));
-        t.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(),this.pk));
-        t.setMetadata("IgnoreArmor", new FixedMetadataValue(Main.getPlugin(),this.ia));
-        t.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),this.iabs));
-		t.damage(dmg, source);
-	    if (this.pi) target.setNoDamageTicks(0);
+        LivingEntity target = (LivingEntity)BukkitAdapter.adapt(t);
+        target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
+        target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),dmg));
+        target.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(),this.pk));
+        target.setMetadata("IgnoreArmor", new FixedMetadataValue(Main.getPlugin(),this.ia));
+        target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),this.iabs));
+        target.damage(dmg, source);
+	    if (this.pi) t.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
         return true;
 	}

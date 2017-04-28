@@ -1,12 +1,17 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
+import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 public class CustomStuff {
 
@@ -29,4 +34,12 @@ public class CustomStuff {
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
 	}
+	
+    public static boolean createActivePlayer(LivingEntity l, MythicMob mm) {
+        ActiveMob am = new ActiveMob(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
+        am.setFaction(mm.getFaction());
+        MythicMobs.inst().getMobManager().registerActiveMob(am);
+        new TriggeredSkill(SkillTrigger.SPAWN, am, null);
+        return true;
+    }
 }

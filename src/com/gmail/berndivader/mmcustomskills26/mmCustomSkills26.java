@@ -41,6 +41,12 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("customdamage")) {
 			skill = new mmCustomDamage(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("activeplayer")) {
+			skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("settarget")) {
+			skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
 		}
 	}
 	
