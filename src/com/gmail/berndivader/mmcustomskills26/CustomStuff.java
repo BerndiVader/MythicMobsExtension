@@ -37,9 +37,13 @@ public class CustomStuff {
 	
     public static boolean createActivePlayer(LivingEntity l, MythicMob mm) {
         ActiveMob am = new ActiveMob(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
-        am.setFaction(mm.getFaction());
+        if (mm.hasFaction()) {
+            am.setFaction(mm.getFaction());
+            l.setMetadata("Faction", new FixedMetadataValue(MythicMobs.inst(),mm.getFaction()));
+        }
         MythicMobs.inst().getMobManager().registerActiveMob(am);
         new TriggeredSkill(SkillTrigger.SPAWN, am, null);
+        l.setMetadata("MythicPlayer", new FixedMetadataValue(Main.getPlugin(),mm.getInternalName()));
         return true;
     }
 }

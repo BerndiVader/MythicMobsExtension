@@ -15,6 +15,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 
 	public mmSetTarget(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.ASYNC_SAFE=false;
 	}
 
 	@Override
@@ -23,11 +24,13 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 		if (data.getCaster().getEntity().isPlayer() && (data.getCaster() instanceof ActiveMob)) {
 			ActiveMob am = (ActiveMob) data.getCaster();
 			le = MythicUtil.getTargetedEntity((Player)BukkitAdapter.adapt(data.getCaster().getEntity()));
+			if (am.getThreatTable().size()>0) {
+				am.getThreatTable().clearTarget();
+				am.getThreatTable().getAllThreatTargets().clear();
+			}
 			if (le!=null) {
 				am.getThreatTable().threatGain(BukkitAdapter.adapt(le), 99999999);
 				am.getThreatTable().targetHighestThreat();
-			} else if (am.getThreatTable().getTopTargetThreat()>999999) {
-				am.getThreatTable().clearTarget();
 			}
 		}
 		return true;
