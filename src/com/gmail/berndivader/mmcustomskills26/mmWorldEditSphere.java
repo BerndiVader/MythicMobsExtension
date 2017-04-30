@@ -1,9 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -49,21 +47,15 @@ public class mmWorldEditSphere extends SkillMechanic implements ITargetedEntityS
 			te = BukkitAdapter.adapt(target);
 		}
 		if (te==null) return false;
-		dosphere(te.getLocation());
+		WorldEditStuff.dosphere(te.getLocation(), mp, material, size, undoticks, mask);
 		return true;
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		if (target==null) return false;
-		dosphere(BukkitAdapter.adapt(target));
+		WorldEditStuff.dosphere(BukkitAdapter.adapt(target), mp, material, size, undoticks, mask);
 		return true;
 	}
 	
-	private void dosphere(Location l) {
-		Sphere sphere =  new Sphere();
-		Vector v = l.getDirection();
-		Location fl = l.add(v.multiply(mp));
-		sphere.drawsphere(fl, material, size, undoticks, mask);
-	}
 }

@@ -26,6 +26,7 @@ public class Main extends JavaPlugin {
 			mm = MythicMobs.inst();
 			getServer().getPluginManager().registerEvents(new UndoBlockListener(), this);
 			getServer().getPluginManager().registerEvents(new mmCustomSkills26(), this);
+			getServer().getPluginManager().registerEvents(new CustomStuff(), this);
 			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
 			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
 			
