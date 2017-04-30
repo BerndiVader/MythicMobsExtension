@@ -13,6 +13,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,7 +26,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
-public class CustomStuff implements Listener {
+public class ActivePlayerStuff implements Listener {
 	
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onActivePlayerDeath(PlayerDeathEvent e) {
@@ -47,7 +48,7 @@ public class CustomStuff implements Listener {
 	    	new BukkitRunnable() {
 	            public void run() {
 	    			MythicMob mm = MythicMobs.inst().getAPIHelper().getMythicMob(e.getPlayer().getMetadata("MythicPlayer").get(0).asString());
-	    	        CustomStuff.createActivePlayer((LivingEntity) e.getPlayer(), mm);
+	    			ActivePlayerStuff.createActivePlayer((LivingEntity) e.getPlayer(), mm);
 	            }
 	        }.runTaskLater(Main.getPlugin(), 1);
 		}
@@ -66,6 +67,16 @@ public class CustomStuff implements Listener {
 			ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getEntity());
             am.getEntity().getBukkitEntity().setMetadata("LDC", new FixedMetadataValue(Main.getPlugin(),cause.toString()));
 			new TriggeredSkill(SkillTrigger.DAMAGED, am, null);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent e) {
+		if (!MythicMobs.inst().getAPIHelper().isMythicMob(e.getPlayer())) return;
+		if (!e.getPlayer().isSneaking()) {
+			new TriggeredSkill(SkillTrigger.CROUCH, MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getPlayer()), null);
+		} else {
+			new TriggeredSkill(SkillTrigger.UNCROUCH, MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getPlayer()), null);
 		}
 	}
 	
@@ -120,13 +131,13 @@ public class CustomStuff implements Listener {
 	}
 	
     public static boolean createActivePlayer(LivingEntity l, MythicMob mm) {
-        ActiveMob am = new ActiveMob(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
+        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
         if (mm.hasFaction()) {
-            am.setFaction(mm.getFaction());
+            ap.setFaction(mm.getFaction());
             l.setMetadata("Faction", new FixedMetadataValue(MythicMobs.inst(),mm.getFaction()));
         }
-        MythicMobs.inst().getMobManager().registerActiveMob(am);
-        new TriggeredSkill(SkillTrigger.SPAWN, am, null);
+        MythicMobs.inst().getMobManager().registerActiveMob(ap);
+        new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
         l.setMetadata("MythicPlayer", new FixedMetadataValue(Main.getPlugin(),mm.getInternalName()));
         return true;
     }

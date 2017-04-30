@@ -23,7 +23,7 @@ public class mmCreateActivePlayer extends SkillMechanic implements ITargetedEnti
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
         MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(this.mobtype);
         if (mm==null || !target.isPlayer() || MythicMobs.inst().getMobManager().isActiveMob(target)) return false;
-        return CustomStuff.createActivePlayer((LivingEntity) target.getBukkitEntity(), mm);
+        return ActivePlayerStuff.createActivePlayer((LivingEntity) target.getBukkitEntity(), mm);
 	}
 	
 }
