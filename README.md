@@ -1,16 +1,39 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
-#### *** 30.4.2017 *** added removepotion mechanic.
+#### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
 #### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 #### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 #### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
 
-## RemovePotionSkill:
+## OxygenSkill:
 
-	Use this mechanic to remove all or a specific potion from the targeted entity.
+	Use this mechanic to add oxygen to the LivingEntity.
+	
+	- oxygen{a=20} @self
+	
+	a = amount = the amount of oxygen that will be added. A player has a usual max air amount of 300. A amount of 20 gives about 1 bubble air.
+	
+	
+	
+### FeedSkill:
+
+	Add specific amount of food to the players foodlevel.
+	
+	- feed{a=1} @PIR{r=20}
+	
+	a = amount = the food amount. The amount of 1 add 1/2 foodlevel.
+
+
+
+## RemovePotionSkill or CureSkill:
+
+	Use this mechanic to remove all or a specific potion from the targeted entity. Use removepotion or cure.
+
+	- cure{t=ALL} @self
+	- cure{t=INVISIBILITY} @PIR{r=30}
 	
 	- removepotion{t=ALL} @self
 	- removepotion{t=INVISIBILITY} @PIR{r=30}

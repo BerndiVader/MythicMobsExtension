@@ -89,7 +89,6 @@ public class ActivePlayerStuff implements Listener {
 			!cause.equals(DamageCause.CUSTOM) &&
 			!cause.equals(DamageCause.PROJECTILE)) {
 			ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getEntity());
-            am.getEntity().getBukkitEntity().setMetadata("LDC", new FixedMetadataValue(Main.getPlugin(),cause.toString()));
 			new TriggeredSkill(SkillTrigger.DAMAGED, am, null);
 		}
 	}

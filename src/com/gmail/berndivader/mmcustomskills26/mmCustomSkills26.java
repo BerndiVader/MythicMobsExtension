@@ -47,8 +47,14 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("settarget")) {
 			skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-		} else if (MechName.equals("removepotion")) {
+		} else if (MechName.equals("cure") || MechName.equals("removepotion")) {
 			skill = new mmRemovePotionEffect(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("feed")) {
+			skill = new mmFeedSkill(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("oxygen")) {
+			skill = new mmOxygenSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 		}
 	}
