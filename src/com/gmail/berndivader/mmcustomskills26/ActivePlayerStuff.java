@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.Iterator;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,9 +14,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -29,7 +34,7 @@ import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 public class ActivePlayerStuff implements Listener {
 	
 	@EventHandler(priority=EventPriority.MONITOR)
-	public void onActivePlayerDeath(PlayerDeathEvent e) {
+	public void onMythicPlayerDeath(PlayerDeathEvent e) {
 		if (!e.getEntity().hasMetadata("MythicPlayer") && !MythicMobs.inst().getAPIHelper().isMythicMob(e.getEntity())) return;
 		ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getEntity());
 		am.signalMob(am.getEntity(), "DEATH");
@@ -47,10 +52,29 @@ public class ActivePlayerStuff implements Listener {
 			MythicMobs.inst().getMobManager().unregisterActiveMob(e.getPlayer().getUniqueId());
 	    	new BukkitRunnable() {
 	            public void run() {
-	    			MythicMob mm = MythicMobs.inst().getAPIHelper().getMythicMob(e.getPlayer().getMetadata("MythicPlayer").get(0).asString());
-	    			ActivePlayerStuff.createActivePlayer((LivingEntity) e.getPlayer(), mm);
+	            	ActivePlayerStuff.attachActivePlayer(e.getPlayer());
 	            }
 	        }.runTaskLater(Main.getPlugin(), 1);
+		}
+	}
+
+	@EventHandler
+	public void onActivePlayerJoin(PlayerJoinEvent e) {
+		if (e.getPlayer().hasMetadata("MythicPlayer")) ActivePlayerStuff.attachActivePlayer(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onActivePlayerQuit(PlayerQuitEvent e) {
+		if (e.getPlayer().hasMetadata("MythicPlayer")) {
+			ActiveMob am = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getPlayer());
+			ActivePlayerStuff.removeAllEffectsFromPlayer(am.getEntity());
+			am.signalMob(am.getEntity(), "QUIT");
+			Location l = e.getPlayer().getLocation();
+			l.setY(0);
+			AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
+			MythicMobs.inst().getMobManager().unregisterActiveMob(am.getEntity().getUniqueId());
+			am.setEntity(d);
+			d.remove();
 		}
 	}
 	
@@ -128,6 +152,45 @@ public class ActivePlayerStuff implements Listener {
 		target.damage(damage, source);
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
+	}
+	
+	public static void removeAllEffectsFromPlayer(AbstractEntity e) {
+		if (e.hasPotionEffect()) {
+			LivingEntity le = (LivingEntity) e.getBukkitEntity();
+			Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
+			while (i.hasNext()) {
+				le.removePotionEffect(((PotionEffect)i.next()).getType());
+			}
+		}
+	}
+	
+	public static void makeNormalPlayer(ActiveMob am) {
+		am.signalMob(am.getEntity(), "NOACTIVEMOB");
+		Location l = am.getEntity().getBukkitEntity().getLocation();
+		l.setY(0);
+		AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
+		ActivePlayerStuff.removeAllEffectsFromPlayer(am.getEntity());
+		am.getEntity().getBukkitEntity().removeMetadata("MythicPlayer", Main.getPlugin());
+		am.getEntity().getBukkitEntity().removeMetadata("Faction", Main.getPlugin());
+		MythicMobs.inst().getMobManager().unregisterActiveMob(am.getEntity().getUniqueId());
+		am.setEntity(d);
+		d.remove();
+	}
+	
+	public static boolean attachActivePlayer(LivingEntity l) {
+		MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(l.getMetadata("MythicPlayer").get(0).asString());
+		if (mm==null) {
+			l.removeMetadata("MythicPlayer", Main.getPlugin());
+			return false;
+		};
+        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
+        if (mm.hasFaction()) {
+            ap.setFaction(mm.getFaction());
+            l.setMetadata("Faction", new FixedMetadataValue(MythicMobs.inst(),mm.getFaction()));
+        }
+        MythicMobs.inst().getMobManager().registerActiveMob(ap);
+        new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
+        return true;
 	}
 	
     public static boolean createActivePlayer(LivingEntity l, MythicMob mm) {

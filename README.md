@@ -1,11 +1,23 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 30.4.2017 *** added removepotion mechanic.
 #### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 #### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 #### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
+
+## RemovePotionSkill:
+
+	Use this mechanic to remove all or a specific potion from the targeted entity.
+	
+	- removepotion{t=ALL} @self
+	- removepotion{t=INVISIBILITY} @PIR{r=30}
+	
+	t = type = p = potion = ALL by default. Use "ALL" to remove all effects or use a single effect or a list like: p=INVISIBILITY,SPEED,HEAL
+
+	
 
 ## CustomDamageSkill:
 
