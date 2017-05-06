@@ -4,9 +4,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
+import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
+import com.gmail.berndivader.mmcustomskills26.conditions.Own.mmOwnConditions;
+import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.WorldGuardFlags;
+import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.mmWorldGuardFlag;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 
@@ -16,8 +22,12 @@ public class Main extends JavaPlugin {
 	private static ThiefHandler thiefhandler = new ThiefHandler();
 	private Iterator<Thief> ti;
 
-	private static Plugin plugin;
+	private static Main plugin;
 	public static MythicMobs mm;
+	public static WorldGuardPlugin wg;
+	public static Integer wgVer;
+	public static WorldGuardFlags wgf;
+	public static FactionsFlags fflags;
 	
 	@Override
 	public void onEnable() {
@@ -26,15 +36,29 @@ public class Main extends JavaPlugin {
 			mm = MythicMobs.inst();
 			getServer().getPluginManager().registerEvents(new UndoBlockListener(), this);
 			getServer().getPluginManager().registerEvents(new mmCustomSkills26(), this);
-			getServer().getPluginManager().registerEvents(new ActivePlayerStuff(), this);
 			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
+			getServer().getPluginManager().registerEvents(new CustomSkillStuff(), this);
 			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
 			
 			if (Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null) {
 				getServer().getPluginManager().registerEvents(new mmWorldEditSkills(), this);
 				Bukkit.getLogger().info("Found WorldEdit, registered WorldEditSkills.");
 			}
-
+			
+			Bukkit.getLogger().info("Register CustomConditions");
+			new mmOwnConditions();
+			if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+				wg = getWorldGuard();
+				wgf = new WorldGuardFlags();
+				new mmWorldGuardFlag();
+				Bukkit.getLogger().info("registered WorldGuard conditions!");
+			}
+			if (Bukkit.getPluginManager().isPluginEnabled("Factions") && Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
+				fflags = new FactionsFlags();
+				new mmFactionsFlag();
+				Bukkit.getLogger().info("registered Factions conditions!");
+			}
+			
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    		public void run() {
 	    			ti = thiefhandler.getThiefs().iterator();
@@ -49,7 +73,11 @@ public class Main extends JavaPlugin {
     	Bukkit.getServer().getScheduler().cancelTask(taskid.getTaskId());
     	thiefhandler = null;
 	}
-	public static Plugin getPlugin() {return plugin;}
+	public static Main getPlugin() {return plugin;}
 	public static Set<Thief> getThiefs() {return thiefhandler.getThiefs();}
 	public static ThiefHandler thiefhandler() {return thiefhandler;}
+	private static WorldGuardPlugin getWorldGuard() {
+	    return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+	}
+	
 }

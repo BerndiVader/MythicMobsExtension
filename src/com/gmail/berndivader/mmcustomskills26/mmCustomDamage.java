@@ -1,14 +1,9 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -33,18 +28,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
         if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill()) return false;
         double dmg = this.ip?this.amount * (double)data.getPower():this.amount;
-        SkillCaster am = data.getCaster();
-        if (am instanceof ActiveMob) ((ActiveMob)am).setLastDamageSkillAmount(dmg);
-        LivingEntity source = (LivingEntity)BukkitAdapter.adapt(data.getCaster().getEntity());
-        LivingEntity target = (LivingEntity)BukkitAdapter.adapt(t);
-        target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
-        target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),dmg));
-        target.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(),this.pk));
-        target.setMetadata("IgnoreArmor", new FixedMetadataValue(Main.getPlugin(),this.ia));
-        target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),this.iabs));
-        target.damage(dmg, source);
-	    if (this.pi) t.setNoDamageTicks(0);
-	    am.setUsingDamageSkill(false);
+        CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs);
         return true;
 	}
 }

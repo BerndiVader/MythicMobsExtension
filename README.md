@@ -1,11 +1,14 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
 #### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
 #### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 #### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 #### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
+
+# Mechanics:
 
 
 ## OxygenSkill:
@@ -233,4 +236,79 @@ FleeButGotNothing:
     - delay 400
     - effect:smoke @self
     - remove @self
+```
+
+
+
+# Conditions
+
+
+
+```
+  Conditions:
+  - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}
+```
+Use this condition to check how many mobs are in radius.
+mobtypes=types=mobs=mob=t=m= the mythicmobs or mythicentities to check.
+amount=a=ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for range
+radius=r=radius to check
+action=true/false
+```
+  Conditions:
+  - wgstateflag{flag=mob-spawning;action=false}
+  - wgstateflag{flag=pvp;action=true}
+  - wgstateflag{flag=creeper-explosion;action=false}
+  .....
+``` 
+This condition can be used on every allow/deny flag. If region has no flag set, it inherits the flag of the parent region.
+
+```
+  Conditions:
+  - wgdenyspawnflag{types=zombie,skeleton;action=true}
+```
+This condition can be used to check if the region denys the spawning of some entitytypes. If region has no flag set, it inherits the flag of the parent region.
+
+```
+  Conditions:
+  - factionsflag{flag=monsters;action=true}
+```
+This condition can be used to check if the faction has a specific flag set to true or false. Here is a list of all flagnames: animals, monsters, peaceful, endergrief, explosions, firespread, friendlyfire, infpower, offlineexplosions, open, permanent, powergain, powerloss, pvp, zombiegrief
+
+```
+  Conditions:
+  - hastarget{action=true}
+```
+This condition meets if the mob has a target (true) or no target (false).
+
+```
+  TargetConditions:
+  - vdistance{d=2to3;action=true}
+```
+This condition checks for the vertical distance between target and mob. Use ">" for greater "<" smaller or "to" for range.
+
+Example:
+```
+Mobfile:
+
+Monkey:
+  Type: zombie
+  Display: "&cMythicMobs Monkey"
+  Damage: 1
+  Health: 10
+  Armor: 1
+  DamageModifiers:
+  - FALL 0.25
+  Skills:
+  - skill{s=jumpToTarget} @target ~onTimer:50 1
+  
+Skillfile:
+
+jumpToTarget:
+  Conditions:
+  - hastarget{a=true}
+  TargetConditions:
+  - distance{d=<4} true
+  - hdistance{d=2to3;a=true}
+  Skills:
+  - leap{velocity=120} @target
 ```
