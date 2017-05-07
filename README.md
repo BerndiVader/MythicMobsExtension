@@ -249,7 +249,7 @@ FleeButGotNothing:
   - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}
 ```
 Use this condition to check how many mobs are in radius.
-mobtypes=types=mobs=mob=t=m= the mythicmobs or mythicentities to check.
+mobtypes=types=mobs=mob=t=m= The mythicmobs or mythicentities to check. Or use ALL for any mythicmobs mob.
 amount=a=ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for range
 radius=r=radius to check
 action=true/false

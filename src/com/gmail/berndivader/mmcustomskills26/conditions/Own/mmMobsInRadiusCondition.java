@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -61,7 +62,7 @@ public class mmMobsInRadiusCondition extends SkillCondition implements IEntityCo
 			if (ae.getLocation().distanceSquared(e.getLocation())<Math.pow(this.r, 2.0D)) {
 				ActiveMob am = MythicMobs.inst().getMobManager().getMythicMobInstance(e);
 				if (am!=null) {
-					if (mmT.contains(am.getType())) {
+					if (mmT.contains(am.getType()) || Arrays.asList(this.t).contains("ALL")) {
 						count++;
 						am=null;
 					}
