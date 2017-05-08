@@ -10,21 +10,20 @@ import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class mmMobsInRadiusCondition extends SkillCondition implements IEntityCondition {
+public class mmMobsInRadiusCondition extends SkillCondition implements ILocationCondition {
 	private String[] t;
 	private RangedDouble a;
 	private double r;
 	private  HashSet<MythicMob> mmT = new HashSet<MythicMob>();
-	private  HashSet<MythicEntity> meT = new HashSet<MythicEntity>();
 
 	public mmMobsInRadiusCondition(String line, MythicLineConfig mlc) {
 		super(line);
@@ -37,41 +36,28 @@ public class mmMobsInRadiusCondition extends SkillCondition implements IEntityCo
 		this.a = new RangedDouble(mlc.getString(new String[]{"amount","a"},"0"), false);
 		this.r = mlc.getDouble(new String[]{"radius","r"},5);
 	    new BukkitRunnable() {
-	        public void run() {
-	          for (String s : t) {
+	    	public void run() {	
+	    		for (String s : t) {
 	            MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(s);
 	            if (mm != null) {
-	              mmT.add(mm);
-	            } else {
-	              MythicEntity me = MythicEntity.getMythicEntity(s);
-	              if (me != null) {
-	                meT.add(me);
-	              }
+	            	mmT.add(mm);
 	            }
-	          }
-	        }
-	      }.runTaskLater(Main.getPlugin(), 1L);
+	    	}
+	    }}.runTaskLater(Main.getPlugin(), 1L);
 	}
 
 	@Override
-	public boolean check(AbstractEntity ae) {
+	public boolean check(AbstractLocation l) {
 		int count = 0;
-		for (Iterator<AbstractEntity>it = MythicMobs.inst().getEntityManager().getLivingEntities(ae.getWorld()).iterator();it.hasNext();) {
+		for (Iterator<AbstractEntity>it = MythicMobs.inst().getEntityManager().getLivingEntities(l.getWorld()).iterator();it.hasNext();) {
 			AbstractEntity e = it.next();
-			if (e.getBukkitEntity().getUniqueId().equals(ae.getBukkitEntity().getUniqueId())) continue;
-			if (ae.getLocation().distanceSquared(e.getLocation())<Math.pow(this.r, 2.0D)) {
+			double diffsq=l.distanceSquared(e.getLocation());
+			if (diffsq<=Math.pow(this.r, 2.0D)) {
 				ActiveMob am = MythicMobs.inst().getMobManager().getMythicMobInstance(e);
 				if (am!=null) {
 					if (mmT.contains(am.getType()) || Arrays.asList(this.t).contains("ALL")) {
 						count++;
 						am=null;
-					}
-				} else {
-					for (MythicEntity me : this.meT) {
-						if (me.compare(e.getBukkitEntity())) {
-							count++;
-							break;
-						}
 					}
 				}
 			}
