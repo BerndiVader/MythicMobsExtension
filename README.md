@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 8.5.2017 **** added lastdamagecause condition.
 #### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
 #### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
 #### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
@@ -8,7 +9,9 @@ for MythicMobs 4.0.1 and higher
 #### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
+
 # Mechanics:
+
 
 
 ## OxygenSkill:
@@ -244,6 +247,13 @@ FleeButGotNothing:
 
 
 
+```
+  Conditions:
+  - lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}
+```
+Check what caused the last damage to the MythicMob mob. cause and damager can be a single value or a List
+cause=c= The cause of the last damage. Valid is "ANY" or Bukkit's DamageCause https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+damager=attacker= The EntityType of the attacker. Valid is "ANY" or Bukkit's EntityTypes https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
 ```
   Conditions:
   - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}

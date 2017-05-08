@@ -1,6 +1,8 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -63,5 +65,23 @@ public class CustomSkillStuff implements Listener {
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
 	}
+	
+	public static Entity getAttacker(Entity damager) {
+        if (damager instanceof Projectile) {
+            if (((Projectile)damager).getShooter() instanceof LivingEntity) {
+                LivingEntity shooter = (LivingEntity)((Projectile)damager).getShooter();
+                if (shooter != null && shooter instanceof LivingEntity) {
+                    return shooter;
+                }
+            } else {
+                return null;
+            }
+        }
+        if (damager instanceof LivingEntity) {
+            return (LivingEntity)damager;
+        }
+        return null;
+	}
+	
 	
 }
