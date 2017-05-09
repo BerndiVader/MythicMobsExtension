@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
 #### *** 8.5.2017 **** added lastdamagecause condition.
 #### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
 #### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
@@ -321,4 +322,56 @@ jumpToTarget:
   - hdistance{d=2to3;a=true}
   Skills:
   - leap{velocity=120} @target
+```
+
+#### ~onKill trigger with lastdamagecause condition example
+
+```
+BowMonkey:
+  Type: skeleton
+  Display: "&cBowMonkey"
+  AITargetSelectors:
+  - 0 clear
+  - 1 monsters
+  Skills:
+  - skill{s=DamageCauseMeele} @self ~onDamaged
+  - skill{s=DamageCauseProjectile} @self ~onDamaged
+  - skill{s=KillCauseProjectile} @trigger ~onKill
+  - skill{s=KillCauseMeele} @trigger ~onKill
+
+MeeleMonkey:
+  Type: zombie
+  Display: "&cMeeleMonkey"
+  AITargetSelectors:
+  - 0 clear
+  - 1 monsters  
+  Skills:
+  - skill{s=DamageCauseMeele} @self ~onDamaged
+  - skill{s=DamageCauseProjectile} @self ~onDamaged
+  - skill{s=KillCauseProjectile} @trigger ~onKill
+  - skill{s=KillCauseMeele} @trigger ~onKill
+
+KillCauseProjectile:
+  TargetConditions:
+  - lastdamagecause{cause=PROJECTILE;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Sorry <trigger.name> i am no Wilhelm Tell though!"} @world
+  
+KillCauseMeele:
+  TargetConditions:
+  - lastdamagecause{cause=ENTITY_ATTACK;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="I killed <trigger.name> just with my hands only!"} @world
+  
+DamageCauseProjectile:
+  Conditions:
+  - lastdamagecause{cause=PROJECTILE;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Someone try to shoot me down!"} @world
+  
+DamageCauseMeele:
+  Conditions:
+  - lastdamagecause{cause=ENTITY_ATTACK;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Help! It punch me in my face!"} @world
 ```

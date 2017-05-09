@@ -6,15 +6,34 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
+import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 public class CustomSkillStuff implements Listener {
+	
+	@EventHandler
+	public void mmTriggerOnKill(EntityDeathEvent e) {
+        EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
+        if (entityDamageEvent != null 
+        		&& !entityDamageEvent.isCancelled() 
+        		&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
+        	LivingEntity damager = getAttacker(((EntityDamageByEntityEvent)entityDamageEvent).getDamager());
+        	if (damager!=null && MythicMobs.inst().getMobManager().isActiveMob(damager.getUniqueId())) {
+                new TriggeredSkill(SkillTrigger.KILL, MythicMobs.inst().getMobManager().getMythicMobInstance(damager),
+                		BukkitAdapter.adapt(e.getEntity()));
+        	}
+        }
+	}
 	
 	@EventHandler
 	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
@@ -66,7 +85,7 @@ public class CustomSkillStuff implements Listener {
 	    am.setUsingDamageSkill(false);
 	}
 	
-	public static Entity getAttacker(Entity damager) {
+	public static LivingEntity getAttacker(Entity damager) {
         if (damager instanceof Projectile) {
             if (((Projectile)damager).getShooter() instanceof LivingEntity) {
                 LivingEntity shooter = (LivingEntity)((Projectile)damager).getShooter();

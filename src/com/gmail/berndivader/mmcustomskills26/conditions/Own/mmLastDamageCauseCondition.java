@@ -38,17 +38,12 @@ public class mmLastDamageCauseCondition extends SkillCondition implements IEntit
 			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent)e).getDamager());
 			if (damager!=null) {
 				if (Arrays.asList(this.attacker).contains(damager.getType().toString()) || 
-						Arrays.asList(this.attacker).contains("ANY")) {
+						this.attacker[0].equals("ANY")) {
 					match = true;
 				}
 			}
 		}
-		if (Arrays.asList(this.cause).contains(e.getCause().name().toUpperCase()) || 
-				Arrays.asList(this.cause).contains("ANY")) {
-			match = true;
-		} else {
-			match = false;
-		}
+		match=(Arrays.asList(this.cause).contains(e.getCause().name().toUpperCase()) || this.cause[0].equals("ANY"))?true:false;
 		return match;
 	}
 
