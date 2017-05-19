@@ -1,6 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
+#### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
 #### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
 #### *** 8.5.2017 **** added lastdamagecause condition.
 #### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
@@ -12,6 +14,18 @@ for MythicMobs 4.0.1 and higher
 
 
 # Mechanics:
+
+
+
+## CustomSummonSkill:
+
+	Use this mechanic to add ax,ay,az to the targetlocation.
+	
+	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;ax=5;ay=1;az=2} @self
+	
+	This example do not check for a safeplace it will spawn the mob no matter if its in block or such. If you want to use safeplace add noise. Example:
+	
+	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;noise=0.1;ax=5;ay=1;az=2} @self
 
 
 
