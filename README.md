@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 19.5.2017 *** added stun mechanic & isstunned condition.
 #### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
 #### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
 #### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
@@ -15,6 +16,17 @@ for MythicMobs 4.0.1 and higher
 
 # Mechanics:
 
+
+
+## StunSkill:
+	
+	Use this mechanic to stun the target. 
+	
+	- stun{duration=Ticks} @target
+	
+	Where duration=d=how many ticks the target will be stunned. In addition there is the isstunned condition. Look at Conditions.
+
+	
 
 
 ## CustomSummonSkill:
@@ -262,6 +274,12 @@ FleeButGotNothing:
 
 
 
+```
+  TargetConditions:
+  - isstunned{a=false}
+```
+Check if the target is stunned (true) or not (false) The example will match if the target isnt stunned. Please notice that this can be used at the caster, or as TargetConditions.
+If used as TargetConditions the targeter for the metaskill is important.
 ```
   Conditions:
   - lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}

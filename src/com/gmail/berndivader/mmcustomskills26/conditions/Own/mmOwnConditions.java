@@ -32,6 +32,9 @@ public class mmOwnConditions implements Listener {
 		} else if (e.getConditionName().toLowerCase().equals("lastdamagecause")) {
 			SkillCondition c = new mmLastDamageCauseCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
+		} else if (e.getConditionName().toLowerCase().equals("isstunned")) {
+			SkillCondition c = new mmIsStunnedCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
 		}
 	}
 }
