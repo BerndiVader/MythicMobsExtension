@@ -32,7 +32,7 @@ public class mmMobsInRadiusCondition extends SkillCondition implements ILocation
 			this.ACTION = ConditionAction.TRUE;
 		}
 		this.t = mlc.getString(new String[]{"mobtypes","types","mobs","mob","type","t","m"},"ALL").split(",");
-		if (this.t[0].toUpperCase()=="ALL") this.t[0]="ALL";
+		if (this.t[0].toUpperCase().equals("ALL")) this.t[0]="ALL";
 		this.a = new RangedDouble(mlc.getString(new String[]{"amount","a"},"0"), false);
 		this.r = mlc.getDouble(new String[]{"radius","r"},5);
 	    new BukkitRunnable() {
@@ -55,7 +55,7 @@ public class mmMobsInRadiusCondition extends SkillCondition implements ILocation
 			if (diffsq<=Math.pow(this.r, 2.0D)) {
 				ActiveMob am = MythicMobs.inst().getMobManager().getMythicMobInstance(e);
 				if (am!=null) {
-					if (mmT.contains(am.getType()) || this.t[0]=="ALL") {
+					if (mmT.contains(am.getType()) || this.t[0].equals("ALL")) {
 						count++;
 						am=null;
 					}

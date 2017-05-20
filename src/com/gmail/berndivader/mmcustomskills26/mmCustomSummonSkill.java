@@ -20,10 +20,10 @@ ITargetedEntitySkill {
     private MythicMob mm;
     private MythicEntity me;
     private String strType;
-    private int amount, noise, yNoise;
+    private int amount;
 	@SuppressWarnings("unused")
-	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable;
-    private double addx, addy, addz;
+	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection;
+    private double noise, yNoise, addx, addy, addz, inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -40,7 +40,7 @@ ITargetedEntitySkill {
             // empty catch block
         }
         this.noise = mlc.getInteger(new String[]{"noise", "n", "radius", "r"}, 0);
-        this.yNoise = mlc.getInteger(new String[]{"ynoise", "yn", "yradius", "yr"}, this.noise);
+        this.yNoise = mlc.getDouble(new String[]{"ynoise", "yn", "yradius", "yr"}, this.noise);
         this.yUpOnly = mlc.getBoolean(new String[]{"yradiusuponly", "yradiusonlyup", "yruo", "yu"}, false);
         this.onSurface = mlc.getBoolean(new String[]{"onsurface", "os", "s"}, true);
         this.copyThreatTable = mlc.getBoolean(new String[]{"copythreattable", "ctt"}, false);
@@ -48,12 +48,16 @@ ITargetedEntitySkill {
         this.addx = mlc.getDouble(new String[]{"addx","ax"},0);
         this.addy = mlc.getDouble(new String[]{"addy","ay"},0);
         this.addz = mlc.getDouble(new String[]{"addz","az"},0);
-		
+        this.useEyeDirection = mlc.getBoolean(new String[]{"useeyedirection","eyedirection","ued"}, false);
+        this.inFrontBlocks = mlc.getDouble(new String[]{"inFrontBlocks","inFront","ifb"},0D);
 	}
 
     @Override
     public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
     	AbstractLocation target = t.clone();
+    	if (this.useEyeDirection) {
+    		target = BukkitAdapter.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
+    	}
     	target.add(this.addx, this.addy, this.addz);
         if (this.mm == null && this.me == null) {
             this.mm = MythicMobs.inst().getMobManager().getMythicMob(this.strType);
@@ -65,7 +69,7 @@ ITargetedEntitySkill {
             if (this.noise > 0) {
                 for (int i = 1; i <= this.amount; ++i) {
                     MythicMobs.inst().getMobManager();
-                    AbstractLocation l = MobManager.findSafeSpawnLocation(target, this.noise, this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly);
+                    AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int)this.noise, (int)this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly);
                     ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
                     if (ams == null) continue;
                     MythicMobs.inst().getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
@@ -123,7 +127,7 @@ ITargetedEntitySkill {
             if (this.noise > 0) {
                 for (int i = 1; i <= this.amount; ++i) {
                     MythicMobs.inst().getMobManager();
-                    AbstractLocation l = MobManager.findSafeSpawnLocation(target, this.noise, this.yNoise, this.me.getHeight(), this.yUpOnly);
+                    AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int)this.noise, (int)this.yNoise, this.me.getHeight(), this.yUpOnly);
                     this.me.spawn(BukkitAdapter.adapt(l));
                 }
             } else {

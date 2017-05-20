@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
@@ -102,5 +103,9 @@ public class CustomSkillStuff implements Listener {
         return null;
 	}
 	
-	
+    public static Location getLocationInFront(Location start, double range) {
+    	Location l = start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
+        return l;
+    }	
+    
 }

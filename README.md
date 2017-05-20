@@ -1,6 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
+#### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
 #### *** 19.5.2017 *** added stun mechanic & isstunned condition.
 #### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
 #### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
@@ -37,7 +39,13 @@ for MythicMobs 4.0.1 and higher
 	
 	This example do not check for a safeplace it will spawn the mob no matter if its in block or such. If you want to use safeplace add noise. Example:
 	
-	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;noise=0.1;ax=5;ay=1;az=2} @self
+	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;noise=1;ax=5;ay=1;az=2} @self
+	
+	This example shows how to spawn mobs relative to the direction of the targeted mob:
+	
+    - customsummon{t=mobname;ued=true;ifb=1} @self
+	
+	ued=useEyeDirection=EyeDirection;ifb=inFrontBlocks=inFront
 
 
 
