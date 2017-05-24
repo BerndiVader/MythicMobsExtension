@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
 #### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
 #### *** 24.5.2017 *** added swap mechanic.
 #### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
@@ -118,6 +119,9 @@ for MythicMobs 4.0.1 and higher
 	pk = pkb = preventknockback = false by default. If knockback should be applied or not.
 	pi = preventimmunity = false by default. If immunity should be used or not.
 	ignoreabs = iabs = false by default. If absorbation should be ignored or not.
+	percentage=p=false by default. If true it uses the amount as percent.
+	pcur=pc=false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
+	
 
 	
 
