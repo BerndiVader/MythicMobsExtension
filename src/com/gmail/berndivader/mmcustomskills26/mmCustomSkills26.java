@@ -53,6 +53,12 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("stun")) {
 			skill = new mmStunSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("customteleport")) {
+			skill = new mmCustomTeleportSkill(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("swap")) {
+			skill = new mmSwapSkill(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
 		}
 	}
 	

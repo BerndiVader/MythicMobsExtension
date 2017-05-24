@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 24.5.2017 *** added swap mechanic.
 #### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
 #### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
 #### *** 19.5.2017 *** added stun mechanic & isstunned condition.
@@ -20,6 +21,17 @@ for MythicMobs 4.0.1 and higher
 
 
 
+
+## SwapSkill:
+
+	Swap location of caster and target.
+	
+	- swap @target
+	
+	Simple as that, no additional options required.
+
+
+
 ## StunSkill:
 	
 	Use this mechanic to stun the target. 
@@ -27,7 +39,6 @@ for MythicMobs 4.0.1 and higher
 	- stun{duration=Ticks} @target
 	
 	Where duration=d=how many ticks the target will be stunned. In addition there is the isstunned condition. Look at Conditions.
-
 	
 
 
