@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
 #### *** 24.5.2017 *** added swap mechanic.
 #### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
 #### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
@@ -19,6 +20,18 @@ for MythicMobs 4.0.1 and higher
 
 # Mechanics:
 
+
+
+
+## setthreattarget & clearthreattarget skill:
+
+	Use setthreattarget to clear the activemobs threattable and add {a=double} targeter to the threat. Default amount is 65536.
+	
+	- setthreattarget{a=11111} @p
+	
+	To clear the threattable and trigger the dropCombat Event use:
+	
+	- clearthreattarget @self
 
 
 
