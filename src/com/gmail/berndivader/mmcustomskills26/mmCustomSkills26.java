@@ -65,6 +65,9 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("clearthreattarget")) {
 			skill=new mmClearThreatTableTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("customparticleline")) {
+			skill=new mmCustomParticleLineEffect(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
 		}
 	}
 	

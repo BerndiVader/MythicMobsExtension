@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details.
 #### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
 #### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
 #### *** 24.5.2017 *** added swap mechanic.
@@ -24,6 +25,15 @@ for MythicMobs 4.0.1 and higher
 
 
 
+## customparticleline skill:
+
+	The same like the original but added vDestOffset & hDestOffset to adjust the targetlocation. Use vDestOffset to adjust the height and use hDestOffset to adjust the x/z position.
+	With this its possible to target a specific part of the entity.
+	
+    - customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-1.0;distanceBetween=0.5;tyo=1.25} @pir{r=10} ~onTimer:5
+
+
+
 ## setthreattarget & clearthreattarget skill:
 
 	Use setthreattarget to clear the activemobs threattable and add {a=double} targeter to the threat. Default amount is 65536.
@@ -38,11 +48,9 @@ for MythicMobs 4.0.1 and higher
 
 ## SwapSkill:
 
-	Swap location of caster and target.
+	Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcasteryaw=kcy false/true to keep the original direction or not.
 	
-	- swap @target
-	
-	Simple as that, no additional options required.
+	- swap{kty=true;kcy=false} @target
 
 
 

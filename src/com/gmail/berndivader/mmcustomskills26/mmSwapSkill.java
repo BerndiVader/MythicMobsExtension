@@ -9,15 +9,21 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmSwapSkill extends SkillMechanic implements ITargetedEntitySkill {
 
+	protected boolean keepTargetYaw, keepCasterYaw;
+	
 	public mmSwapSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.keepTargetYaw = mlc.getBoolean(new String[]{"keeptargetyaw","kty"}, false);
+		this.keepCasterYaw = mlc.getBoolean(new String[]{"keepcasteryaw","kcy"}, false);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		
-		AbstractLocation tl = target.getLocation();
-		AbstractLocation cl = data.getCaster().getLocation();
+		AbstractLocation tl = target.getLocation().clone();
+		AbstractLocation cl = data.getCaster().getLocation().clone();
+		if (this.keepTargetYaw) cl.setYaw(target.getLocation().getYaw());
+		if (this.keepCasterYaw) tl.setYaw(data.getCaster().getLocation().getYaw());
 		
 		target.teleport(cl);
 		data.getCaster().getEntity().teleport(tl);

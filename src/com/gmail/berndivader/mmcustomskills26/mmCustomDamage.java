@@ -29,10 +29,13 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
         if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill()) return false;
-        double dmg = this.ip?this.amount:this.amount * (double)data.getPower();
+        double dmg = 0D;
         if (this.p) {
             dmg = this.pcur?t.getHealth()*this.amount:t.getMaxHealth()*this.amount;
+        } else {
+        	dmg = this.amount;
         }
+        if (!this.ip) dmg = dmg*(double)data.getPower();
         CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs);
         return true;
 	}
