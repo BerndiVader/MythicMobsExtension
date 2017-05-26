@@ -19,7 +19,7 @@ extends CustomParticleEffect
 implements ITargetedEntitySkill,
 ITargetedLocationSkill {
     protected float distanceBetween,yStartOffset,vDestOffset,hDestOffset;
-    protected boolean fromOrigin;
+    protected boolean fromOrigin, ignoreYaw;
 
     public mmCustomParticleLineEffect(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -28,6 +28,7 @@ ITargetedLocationSkill {
         this.hDestOffset = mlc.getFloat(new String[]{"hdestoffset","hd"}, 0.0f);
         this.distanceBetween = mlc.getFloat(new String[]{"distancebetween","db"}, 0.25f);
         this.fromOrigin = mlc.getBoolean(new String[]{"fromorigin", "fo"}, false);
+        this.ignoreYaw = mlc.getBoolean(new String[]{"ignoredestoffsetyaw", "idoy"}, false);
     }
     
     @Override
@@ -45,9 +46,9 @@ ITargetedLocationSkill {
     protected void playParticleLineEffect(SkillCaster am, AbstractLocation origin, AbstractLocation target) {
         Location l = BukkitAdapter.adapt(target);
         if (this.hDestOffset!=0.0f) {
-        	l = getOffsetLocation(l, this.vDestOffset, this.hDestOffset);
+        	l = getOffsetLocation(l, this.vDestOffset, this.hDestOffset, this.ignoreYaw);
         } else if (this.vDestOffset!=0.0f) {
-            l.clone().add(0.0, (double)this.vDestOffset,0.0);
+            l = l.clone().add(0.0, (double)this.vDestOffset,0.0);
         }
         
         Location sl = this.fromOrigin ? BukkitAdapter.adapt(origin).add(0.0, (double)this.yStartOffset, 0.0) : BukkitAdapter.adapt(am.getEntity()).getLocation().add(0.0, (double)this.yStartOffset, 0.0);

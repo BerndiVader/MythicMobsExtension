@@ -119,11 +119,12 @@ ITargetedLocationSkill {
         }
     }
     
-    protected Location getOffsetLocation(Location l, double voff, double hoff) {
-    	double yaw = Math.toRadians(l.getYaw());
-    	double realXOffset = Math.cos(yaw) * hoff;
-    	double realZOffset = Math.sin(yaw) * hoff;
-    	Location offset = l.clone().add(realXOffset, voff, realZOffset);
+    protected Location getOffsetLocation(Location l, double vo, double ho, boolean iy) {
+    	double yaw = 0.0D;
+    	if (!iy) yaw = Math.toRadians(l.getYaw());
+    	double xo = Math.cos(yaw) * ho;
+    	double zo = Math.sin(yaw) * ho;
+    	Location offset = l.clone().add(xo, vo, zo);
     	return offset;
     }    
     
