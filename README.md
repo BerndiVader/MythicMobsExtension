@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
 #### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
 #### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details.
 #### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
@@ -23,6 +24,18 @@ for MythicMobs 4.0.1 and higher
 
 # Mechanics:
 
+
+
+
+## dropmythicitem skill:
+	
+	Drop a mythicitem or a mythicdroptable.
+	Options: mythicitem=item=itemtype=type=t=i= Internal name of the mythic item or the mythic droptable.
+	         amount=a= the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
+	
+	- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack
+	
+	This drop one MythicItem at all players in radius of 20 if the mob targets a entity.
 
 
 

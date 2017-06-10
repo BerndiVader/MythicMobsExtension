@@ -68,6 +68,9 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("customparticleline")) {
 			skill=new mmCustomParticleLineEffect(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("dropmythicitem")) {
+			skill=new mmDropItemSkill(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
 		}
 	}
 	

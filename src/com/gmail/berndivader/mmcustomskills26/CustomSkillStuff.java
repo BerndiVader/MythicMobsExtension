@@ -20,6 +20,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
+@SuppressWarnings("deprecation")
 public class CustomSkillStuff implements Listener {
 	
 	@EventHandler
