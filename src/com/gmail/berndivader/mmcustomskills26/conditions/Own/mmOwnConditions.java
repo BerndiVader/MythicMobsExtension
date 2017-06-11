@@ -23,9 +23,6 @@ public class mmOwnConditions implements Listener {
 		} else if (e.getConditionName().toLowerCase().equals("hastarget")) {
 			SkillCondition c = new mmHasTargetCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("hasfaction")) {
-			SkillCondition c = new mmHasFactionCondition(e.getConfig().getLine(), e.getConfig());
-			e.register(c);
 		} else if (e.getConditionName().toLowerCase().equals("mobsinradius")) {
 			SkillCondition c = new mmMobsInRadiusCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
@@ -34,6 +31,9 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 		} else if (e.getConditionName().toLowerCase().equals("isstunned")) {
 			SkillCondition c = new mmIsStunnedCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+		} else if (e.getConditionName().toLowerCase().equals("biomefix")) {
+			SkillCondition c = new mmBiomeFixCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 		}
 	}

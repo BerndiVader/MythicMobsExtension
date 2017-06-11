@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
 #### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
 #### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
 #### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details.
@@ -333,6 +334,13 @@ FleeButGotNothing:
 
 
 
+```
+  Conditions:
+  - biomefix{biome=PLAINS,DESSERT;action=true}
+```
+Check if the target is in a certain biome.
+biome=b= A list with valid biome names.
+action=a= true / false
 ```
   TargetConditions:
   - isstunned{a=false}

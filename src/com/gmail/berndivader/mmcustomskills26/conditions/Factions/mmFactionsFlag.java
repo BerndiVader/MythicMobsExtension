@@ -20,6 +20,9 @@ public class mmFactionsFlag implements Listener {
 		if (e.getConditionName().toLowerCase().equals("factionsflag")) {
 			SkillCondition condition = new mmFactionsFlagCondition(e.getConditionName(),e.getConfig());
 			e.register(condition);
+		} else if (e.getConditionName().toLowerCase().equals("hasfaction")) {
+			SkillCondition c = new mmHasFactionCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
 		}
 	}
 

@@ -37,13 +37,10 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation ltarget) {
-		if (this.itemtype==null) return false;
+		SkillCaster caster = data.getCaster();
+		if (this.itemtype==null || !(caster instanceof ActiveMob)) return false;
 		ArrayList<ItemStack>drops = createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,(ActiveMob)data.getCaster(),null);
-		World w = BukkitAdapter.adapt(ltarget.getWorld());
-		Location l = BukkitAdapter.adapt(ltarget);
-		for (ItemStack is : drops) {
-			if (is!=null) w.dropItem(l, is);
-		}
+		dropItems(drops, BukkitAdapter.adapt(ltarget));
 		return true;
 	}
 
@@ -52,15 +49,11 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 		SkillCaster caster = data.getCaster();
 		if (this.itemtype==null || !(caster instanceof ActiveMob)) return false;
 		ArrayList<ItemStack>drops = createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,(ActiveMob)data.getCaster(),etarget);
-		World w = BukkitAdapter.adapt(etarget.getWorld());
-		Location l = BukkitAdapter.adapt(etarget.getLocation());
-		for (ItemStack is : drops) {
-			if (is!=null) w.dropItem(l, is);
-		}
+		dropItems(drops, BukkitAdapter.adapt(etarget.getLocation()));
 		return true;
 	}
 	
-	public static ArrayList<ItemStack> createItemStack(String itemtype, String dropname, int amount, boolean stackable, ActiveMob dropper, AbstractEntity trigger) {
+	private static ArrayList<ItemStack> createItemStack(String itemtype, String dropname, int amount, boolean stackable, ActiveMob dropper, AbstractEntity trigger) {
         Optional<MythicDropTable> maybeDropTable = MythicMobs.inst().getDropManager().getDropTable(itemtype);
         ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
         MythicDropTable dt;
@@ -79,6 +72,13 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
             }
         }
         return loot;
+	}
+	
+	private static void dropItems(ArrayList<ItemStack>drops, Location l) {
+		World w = l.getWorld();
+		for (ItemStack is : drops) {
+			if (is!=null) w.dropItem(l, is);
+		}
 	}
 	
 }
