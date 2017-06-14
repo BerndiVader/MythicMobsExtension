@@ -1,6 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
+#### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
 #### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
 #### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
 #### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
@@ -28,6 +30,25 @@ for MythicMobs 4.0.1 and higher
 
 
 
+## customteleport skill:
+	
+	Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors. Beta in meanwhile. Released in a hurry.
+	Options:	destination= MythicMobs targeter or vanilla targeter. Use "" that the targeter can be parsed.
+				noise=n= number, random point around the target
+				delay= number, delay in ticks between teleportation (if more than 1)
+				infrontof=front=f= true/false, teleport in front of target (if target is a entity)
+				returntostart=return=r= true/false, if the source entity should return to its start position
+				inbetweensignal=bs= signalname to be send to caster mob between the teleportations, where the trigger is the last entity (if target was a entity)
+				finalsignal=fs= signal to be send at the end of the skill
+```
+  - customteleport{destination="@eir{r=20}";delay=5;front=true;fs=ende;bs=more;r=true} @trigger ~onDamaged
+  
+  NOTICE THE "" FOR THE DESTIONATION!
+  
+```
+	
+	
+	
 ## dropmythicitem skill:
 	
 	Drop a mythicitem or a mythicdroptable.
@@ -136,9 +157,9 @@ for MythicMobs 4.0.1 and higher
 
 	Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www.mythicmobs.net/index.php?threads/skill-damage-bypassed-armour.3373/ this thread for details of the issue.
 	
-	- customdamage{a=1;ia=false;pk=false;pi=false;iabs=false}
+	- customdamage{a=1to2;ia=false;pk=false;pi=false;iabs=false}
 	
-	a = amount = 1 by default. The amount of damage applied. 1 = 1/2 heart.
+	a = amount = 1 by default. The amount of damage applied. 1 = 1/2 heart. Ranged amount possbile: 1to2
 	ia = i = ignorearmor = false by default. If the armor of the target should be ignored or not.
 	pk = pkb = preventknockback = false by default. If knockback should be applied or not.
 	pi = preventimmunity = false by default. If immunity should be used or not.
