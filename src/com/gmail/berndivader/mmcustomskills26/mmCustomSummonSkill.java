@@ -22,7 +22,7 @@ ITargetedEntitySkill {
     private String strType;
     private int amount;
 	@SuppressWarnings("unused")
-	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection;
+	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection, setowner;
     private double noise, yNoise, addx, addy, addz, inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
@@ -50,6 +50,7 @@ ITargetedEntitySkill {
         this.addz = mlc.getDouble(new String[]{"addz","az"},0);
         this.useEyeDirection = mlc.getBoolean(new String[]{"useeyedirection","eyedirection","ued"}, false);
         this.inFrontBlocks = mlc.getDouble(new String[]{"inFrontBlocks","inFront","ifb"},0D);
+        this.setowner = mlc.getBoolean(new String[]{"setowner","so"}, false);
 	}
 
     @Override
@@ -77,6 +78,9 @@ ITargetedEntitySkill {
                         ActiveMob am = (ActiveMob)data.getCaster();
                         ams.setParent(am);
                         ams.setFaction(am.getFaction());
+                        if (this.setowner) {
+                            ams.setOwner(data.getCaster().getEntity().getUniqueId());
+                        }
                         if (this.copyThreatTable) {
                             try {
                                 ams.importThreatTable(am.getThreatTable().clone());
@@ -92,7 +96,6 @@ ITargetedEntitySkill {
                         ams.getThreatTable().targetHighestThreat();
                         continue;
                     }
-                    ams.setOwner(data.getCaster().getEntity().getUniqueId());
                 }
             } else {
                 for (int i = 1; i <= this.amount; ++i) {
@@ -103,6 +106,9 @@ ITargetedEntitySkill {
                         ActiveMob am = (ActiveMob)data.getCaster();
                         ams.setParent(am);
                         ams.setFaction(am.getFaction());
+                        if (this.setowner) {
+                            ams.setOwner(data.getCaster().getEntity().getUniqueId());
+                        }
                         if (this.copyThreatTable) {
                             try {
                                 ams.importThreatTable(am.getThreatTable().clone());
@@ -118,7 +124,6 @@ ITargetedEntitySkill {
                         ams.getThreatTable().targetHighestThreat();
                         continue;
                     }
-                    ams.setOwner(data.getCaster().getEntity().getUniqueId());
                 }
             }
             return true;

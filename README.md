@@ -1,6 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
+#### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
 #### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
 #### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
 #### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
@@ -35,15 +37,43 @@ for MythicMobs 4.0.1 and higher
 	Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors. Beta in meanwhile. Released in a hurry.
 	Options:	destination= MythicMobs targeter or vanilla targeter. Use "" that the targeter can be parsed.
 				noise=n= number, random point around the target
-				delay= number, delay in ticks between teleportation (if more than 1)
+				teleportdelay=tdelay=td= number, delay in ticks between teleportation (if more than 1)
 				infrontof=front=f= true/false, teleport in front of target (if target is a entity)
 				returntostart=return=r= true/false, if the source entity should return to its start position
-				inbetweensignal=bs= signalname to be send to caster mob between the teleportations, where the trigger is the last entity (if target was a entity)
-				finalsignal=fs= signal to be send at the end of the skill
+				betweenlastentitysignal=bls= signalname to be send to caster mob between the teleportations, where the trigger is the last entity (if target was an entity)
+				betweennextentitysignal=bns= signalname to be send to caster mob 
+				ignoreowner=io= true/false, if the owner of the caster mob should be ignored.
+				maxtargets=mt= number, the maximium number of targets.
 ```
-  - customteleport{destination="@eir{r=20}";delay=5;front=true;fs=ende;bs=more;r=true} @trigger ~onDamaged
+Example Mob:
+
+Monkey:
+  Health: 300
+  Type: zombie
+  Display: "Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - customsummon{t=ChainDummy;setowner=true} @selflocation ~onDamaged
   
-  NOTICE THE "" FOR THE DESTIONATION!
+ChainDummy:
+  Type: armor_stand
+  Options:
+    Invisible: true
+    Invincible: true
+  Skills:
+  - customteleport{destination="@EIR{r=10}";sdelay=20;front=false;fs=ende;bns=bns;bls=bls;r=false;io=true} @self ~onSpawn
+  - skill{s=chain} @trigger ~onSignal:bns
+  - remove @self ~onSignal:ende
+  
+#  NOTICE THE "" FOR THE DESTINATION!
+
+Example Skill:
+
+chain:
+  Skills:
+  - lightning
+  - customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-0.5;distanceBetween=0.5;tyo=1.25}
   
 ```
 	
@@ -116,6 +146,12 @@ for MythicMobs 4.0.1 and higher
     - customsummon{t=mobname;ued=true;ifb=1} @self
 	
 	ued=useEyeDirection=EyeDirection;ifb=inFrontBlocks=inFront
+	
+	Use setowner (true/false) to set the owner to the mob which casted the custumsummon skill.
+	
+	- customsummon{t=mobname;setowner=true} @selflocation
+	
+	This summon the mob mobname and set its owner to the mob which casted the skill.
 
 
 

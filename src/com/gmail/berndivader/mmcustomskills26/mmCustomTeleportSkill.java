@@ -2,13 +2,12 @@ package com.gmail.berndivader.mmcustomskills26;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BlockIterator;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -36,9 +35,9 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill
 {
-	protected String stargeter, FinalSignal, inBetweenSignal;
-	protected boolean inFrontOf, isLocations, returnToStart, sortTargets;
-	protected long delay, noise, maxTargets, maxSources;
+	protected String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
+	protected boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
+	protected long delay, noise, maxTargets;
 	protected AbstractEntity entityTarget;
 	protected AbstractLocation startLocation;
 
@@ -46,14 +45,16 @@ ITargetedLocationSkill
         super(line, mlc);
         this.ASYNC_SAFE = false;
         this.noise = mlc.getLong(new String[]{"noise","n"},0L);
-        this.delay = mlc.getLong(new String[]{"delay"},0L);
+        this.delay = mlc.getLong(new String[]{"teleportdelay","tdelay","td"},0L);
         if ((this.maxTargets = mlc.getLong(new String[]{"maxtargets","mt"},0L))<0) this.maxTargets=0L;
-        if ((this.maxSources = mlc.getLong(new String[]{"maxsources","ms"},0L))<0) this.maxSources=0L;
-        this.delay = mlc.getLong(new String[]{"delay"},0L);
         this.inFrontOf = mlc.getBoolean(new String[]{"infront","front","f"},false);
         this.returnToStart = mlc.getBoolean(new String[]{"returntostart","return","r"},false);
-        this.inBetweenSignal = mlc.getString(new String[]{"betweensignal","bs"},null);
+        this.targetInsight = mlc.getBoolean(new String[]{"targetinsight","insight","is"},false);
+        this.ignoreOwner = mlc.getBoolean(new String[]{"ignoreowner","io"},false);
+        this.inBetweenLastSignal = mlc.getString(new String[]{"betweenlastentitysignal","bls"},null);
+        this.inBetweenNextSignal = mlc.getString(new String[]{"betweennextentitysignal","bns"},null);
         this.FinalSignal = mlc.getString(new String[]{"finalsignal","fs"},null);
+        
         String s = mlc.getString(new String[]{"destination","dest","d"},"@self").toLowerCase();
         s=s.replaceAll("<&lc>", "{");
         s=s.replaceAll("<&rc>", "}");
@@ -77,8 +78,10 @@ ITargetedLocationSkill
 	}
 	
     private boolean doMechanic(SkillMetadata data, Object target) {
-    	HashSet<?>osources=getDestination(this.stargeter, data);
-    	
+    	@SuppressWarnings("unchecked")
+		HashSet<Object>osources=(HashSet<Object>) getDestination(this.stargeter, data);
+    	Map<Double,Object>sortedsources = new TreeMap<Double,Object>();
+  	
     	if (!osources.iterator().hasNext()) return false;
     	this.isLocations=osources.iterator().next() instanceof AbstractLocation?true:false;
     	if (target.getClass().equals(BukkitEntity.class) || target.getClass().equals(BukkitPlayer.class)) {
@@ -87,46 +90,90 @@ ITargetedLocationSkill
     	} else {
     		Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
     	}
+    	if (this.maxTargets>0 && osources.size()>this.maxTargets) {
+    		HashSet<Object>lsrc = new HashSet<>();
+    		Iterator<?>it = osources.iterator();
+    		int c = 1;
+    		while (it.hasNext()) {
+    			if (c>this.maxTargets) {
+    				osources.clear();
+    				osources.addAll(lsrc);
+    				break;
+    			}
+    			lsrc.add(it.next());
+    			c++;
+    		}
+    	}
+    	if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
+    			&& ((ActiveMob)data.getCaster()).getOwner().isPresent()) {
+    		osources.remove(BukkitAdapter.adapt(Bukkit.getEntity(((ActiveMob)data.getCaster()).getOwner().get())));
+    	}
+    	if (this.sortTargets) {
+    		Iterator<?>it = osources.iterator();
+    		while (it.hasNext()) {
+    			Object o = it.next();
+    			AbstractLocation l;
+    			if (this.isLocations) {
+    				l = ((AbstractLocation)o);
+    			} else {
+    				l = ((AbstractEntity)o).getLocation();
+    			}
+   				double distance = data.getCaster().getLocation().distanceSquared(l);
+   				sortedsources.put(distance, o);
+    		}
+    	}
+    	
 		new BukkitRunnable() {
 			AbstractEntity sourceEntity = entityTarget;
+			AbstractEntity lastEntity;
 			boolean isLoc = isLocations;
-			Iterator<?>it = osources.iterator();
-			double n = noise;
 			boolean ifo = inFrontOf;
-			String bs = inBetweenSignal;
+			boolean is = targetInsight;
+			boolean sorted = sortTargets;
+			Iterator<?>it = osources.iterator();
+			Map<Double,Object>sosources = sortedsources;
+			double n = noise;
+			String bls = inBetweenLastSignal;
+			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
 			AbstractLocation start = startLocation;
 			
 			@Override
 			public void run() {
 				if (!this.it.hasNext()) {
-					if (this.isLoc) {
-						if (this.fs!=null) ((ActiveMob)data.getCaster()).signalMob(null, this.fs);
-					} else {
-						if (this.fs!=null) ((ActiveMob)data.getCaster()).signalMob((AbstractEntity)target, this.fs);
-					}
 					if (returnToStart) this.sourceEntity.teleport(this.start);
+					if (this.fs!=null) {
+						if (this.isLoc) {
+							((ActiveMob)data.getCaster()).signalMob(null, this.fs);
+						} else {
+							((ActiveMob)data.getCaster()).signalMob((AbstractEntity)target, this.fs);
+						}
+					}
 					this.cancel();
 					return;
 				}
 				Object target = this.it.next();
 				if (this.isLoc) {
 					if (this.n>0) target = MobManager.findSafeSpawnLocation((AbstractLocation)target, (int)this.n, 0, ((ActiveMob)data.getCaster()).getType().getMythicEntity().getHeight(), false);
-					if (this.bs!=null) ((ActiveMob)data.getCaster()).signalMob(null, this.bs);
+					this.sourceEntity.teleport((AbstractLocation)target);
+					if (this.bls!=null) ((ActiveMob)data.getCaster()).signalMob(null, this.bls);
 				} else {
+					if (lastEntity==null) lastEntity = this.sourceEntity;
 					AbstractEntity t = (AbstractEntity)target;
 					target = ((AbstractEntity)target).getLocation();
-					if (this.ifo) target = getTargetBlock((AbstractLocation)target, 1);
+					if (this.ifo) target = t.getLocation().add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
 					if (this.n>0) target = MobManager.findSafeSpawnLocation(((AbstractLocation)target), (int)this.n, 0, ((ActiveMob)data.getCaster()).getType().getMythicEntity().getHeight(), false);
-					if (this.bs!=null) ((ActiveMob)data.getCaster()).signalMob(t, this.bs);
+					if (this.bns!=null) ((ActiveMob)data.getCaster()).signalMob(t, this.bns);
+					this.sourceEntity.teleport((AbstractLocation)target);
+					if (this.bls!=null) ((ActiveMob)data.getCaster()).signalMob(this.lastEntity, this.bls);
+					this.lastEntity=t;
 				}
-				this.sourceEntity.teleport((AbstractLocation)target);
 			}
 		}.runTaskTimer(Main.getPlugin(), 0L, this.delay);
     	return true;
     }
     
-	private static HashSet<?> getDestination(String target, SkillMetadata skilldata) {
+	protected static HashSet<?> getDestination(String target, SkillMetadata skilldata) {
         SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(), skilldata.getOrigin(), null, null, 1.0f);
     	Optional<SkillTargeter>maybeTargeter;
     	maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(target));
@@ -155,16 +202,5 @@ ITargetedLocationSkill
         }
 	    return null;
     }
-	
-	private static AbstractLocation getTargetBlock(AbstractLocation l, int range) {
-		BlockIterator bit = new BlockIterator(BukkitAdapter.adapt(l), range);
-		while(bit.hasNext()) {
-			Block next = bit.next();
-			if(next != null && next.getType() != Material.AIR) {
-				return BukkitAdapter.adapt(next.getLocation().clone());
-			}
-		}
-		return null;
-	}
 	
 }
