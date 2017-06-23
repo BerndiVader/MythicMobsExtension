@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
 #### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
 #### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
 #### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
@@ -34,7 +35,7 @@ for MythicMobs 4.0.1 and higher
 
 ## customteleport skill:
 	
-	Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors. Beta in meanwhile. Released in a hurry.
+	Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors.
 	Options:	destination= MythicMobs targeter or vanilla targeter. Use "" that the targeter can be parsed.
 				noise=n= number, random point around the target
 				teleportdelay=tdelay=td= number, delay in ticks between teleportation (if more than 1)
@@ -44,6 +45,7 @@ for MythicMobs 4.0.1 and higher
 				betweennextentitysignal=bns= signalname to be send to caster mob 
 				ignoreowner=io= true/false, if the owner of the caster mob should be ignored.
 				maxtargets=mt= number, the maximium number of targets.
+				targetinsight=insight=is= true/false, only the targets insight of the current position are used.
 ```
 Example Mob:
 
@@ -62,7 +64,7 @@ ChainDummy:
     Invisible: true
     Invincible: true
   Skills:
-  - customteleport{destination="@EIR{r=10}";sdelay=20;front=false;fs=ende;bns=bns;bls=bls;r=false;io=true} @self ~onSpawn
+  - customteleport{destination="@EIR{r=40}";teleportdelay=10;front=false;fs=ende;bns=bns;bls=bls;r=false;io=true;is=true} @self ~onSpawn
   - skill{s=chain} @trigger ~onSignal:bns
   - remove @self ~onSignal:ende
   
@@ -74,6 +76,11 @@ chain:
   Skills:
   - lightning
   - customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-0.5;distanceBetween=0.5;tyo=1.25}
+  
+  
+Or use some variables in the destination targeter:
+
+  - customteleport{destination="@Location{c=<mob.l.x>,<mob.l.y>,<mob.l.z>}"} @eir{r=40} ~onDamaged
   
 ```
 	

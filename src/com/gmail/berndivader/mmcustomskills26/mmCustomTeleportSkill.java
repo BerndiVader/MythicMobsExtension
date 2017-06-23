@@ -22,6 +22,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
@@ -77,19 +78,21 @@ ITargetedLocationSkill
 		return this.doMechanic(data, target);
 	}
 	
-    private boolean doMechanic(SkillMetadata data, Object target) {
-    	@SuppressWarnings("unchecked")
-		HashSet<Object>osources=(HashSet<Object>) getDestination(this.stargeter, data);
-    	Map<Double,Object>sortedsources = new TreeMap<Double,Object>();
-  	
-    	if (!osources.iterator().hasNext()) return false;
-    	this.isLocations=osources.iterator().next() instanceof AbstractLocation?true:false;
+    @SuppressWarnings("unchecked")
+	private boolean doMechanic(SkillMetadata data, Object target) {
+    	String targeter = this.stargeter;
     	if (target.getClass().equals(BukkitEntity.class) || target.getClass().equals(BukkitPlayer.class)) {
+        	targeter = SkillString.parseMobVariables(this.stargeter, data.getCaster(), (AbstractEntity)target, data.getTrigger());
     		this.entityTarget = (AbstractEntity)target;
     		this.startLocation = ((AbstractEntity)target).getLocation();
     	} else {
     		Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
+    		return false;
     	}
+		HashSet<Object>osources=(HashSet<Object>) getDestination(targeter, data);
+    	Map<Double,Object>sortedsources = new TreeMap<Double,Object>();
+    	if (!osources.iterator().hasNext()) return false;
+    	this.isLocations=osources.iterator().next() instanceof AbstractLocation?true:false;
     	if (this.maxTargets>0 && osources.size()>this.maxTargets) {
     		HashSet<Object>lsrc = new HashSet<>();
     		Iterator<?>it = osources.iterator();
@@ -140,6 +143,7 @@ ITargetedLocationSkill
 			
 			@Override
 			public void run() {
+			block: {
 				if (!this.it.hasNext()) {
 					if (returnToStart) this.sourceEntity.teleport(this.start);
 					if (this.fs!=null) {
@@ -161,6 +165,7 @@ ITargetedLocationSkill
 					if (lastEntity==null) lastEntity = this.sourceEntity;
 					AbstractEntity t = (AbstractEntity)target;
 					target = ((AbstractEntity)target).getLocation();
+					if (this.is && !this.sourceEntity.hasLineOfSight(t)) break block;
 					if (this.ifo) target = t.getLocation().add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
 					if (this.n>0) target = MobManager.findSafeSpawnLocation(((AbstractLocation)target), (int)this.n, 0, ((ActiveMob)data.getCaster()).getType().getMythicEntity().getHeight(), false);
 					if (this.bns!=null) ((ActiveMob)data.getCaster()).signalMob(t, this.bns);
@@ -168,7 +173,7 @@ ITargetedLocationSkill
 					if (this.bls!=null) ((ActiveMob)data.getCaster()).signalMob(this.lastEntity, this.bls);
 					this.lastEntity=t;
 				}
-			}
+			}}
 		}.runTaskTimer(Main.getPlugin(), 0L, this.delay);
     	return true;
     }
