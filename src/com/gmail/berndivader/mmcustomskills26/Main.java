@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
 import com.gmail.berndivader.mmcustomskills26.conditions.Own.mmOwnConditions;
@@ -28,6 +29,8 @@ public class Main extends JavaPlugin {
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
+	private static NMSUtils nmsutils;
+	public static NMSUtils NMSUtils() {return nmsutils;}
 	
 	@Override
 	public void onEnable() {
@@ -58,7 +61,7 @@ public class Main extends JavaPlugin {
 				new mmFactionsFlag();
 				Bukkit.getLogger().info("registered Factions conditions!");
 			}
-			
+			getNMSUtil();
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    		public void run() {
 	    			ti = thiefhandler.getThiefs().iterator();
@@ -79,5 +82,8 @@ public class Main extends JavaPlugin {
 	private static WorldGuardPlugin getWorldGuard() {
 	    return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
-	
+	private boolean getNMSUtil() {
+		nmsutils=new NMSUtils();
+		return nmsutils!=null;
+	}
 }

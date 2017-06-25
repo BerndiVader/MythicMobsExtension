@@ -1,6 +1,7 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
+#### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details.
 #### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
 #### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
 #### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
@@ -30,6 +31,35 @@ for MythicMobs 4.0.1 and higher
 
 # Mechanics:
 
+
+
+
+## CustomProjectiles mechanics:
+	
+	ItemProjectile:
+		
+		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem to choose any droppable item.
+		
+	BlockProjectile:
+	
+		Shoot any FallingBlock. Use it like the original MythicMobs projectile mechanic. In addtion use pblock to choose any FallingBlock.
+		
+	EntityProjectile:
+	
+		Shoot any Entity. Use it like the original MythicMobs projectile mechanic. In addtion use pentity to choose any Entity.
+		
+```
+ItemProjectile:
+  Skills:
+  - itemprojectile{pitem=DIRT;ontick=IP-Tick;onend=IP-Hit;v=20;i=1;hR=1;vR=1}
+IP-Tick:
+  Skills:
+  - effect:particles{p=cloud;amount=1;speed=0;hS=0.2;vS=0.2} @origin
+IP-Hit:
+  Skills:
+  - effect:particles{p=lava;amount=20;speed=0;hS=0.2;vS=0.2} @origin
+  - damage{a=10}
+```
 
 
 

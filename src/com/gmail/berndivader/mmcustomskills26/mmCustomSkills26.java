@@ -3,6 +3,10 @@ package com.gmail.berndivader.mmcustomskills26;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.BlockProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.EntityProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.ItemProjectile;
+
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
@@ -70,6 +74,15 @@ public class mmCustomSkills26 implements Listener {
 			e.register(skill);
 		} else if (MechName.equals("dropmythicitem")) {
 			skill=new mmDropItemSkill(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("itemprojectile")) {
+			skill=new ItemProjectile(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("blockprojectile")) {
+			skill=new BlockProjectile(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+		} else if (MechName.equals("entityprojectile")) {
+			skill=new EntityProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 		}
 	}
