@@ -26,10 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
@@ -140,7 +138,7 @@ ITargetedLocationSkill {
         this.projectileVelocityVertNoiseBase = 0.0f - this.projectileVelocityVertNoise / 2.0f;
         this.projectileVelocityHorizNoiseBase = 0.0f - this.projectileVelocityHorizNoise / 2.0f;
         
-        this.pEntityName = mlc.getString(new String[]{"projectileentity","pentity"},"MINECART").toUpperCase();
+        this.pEntityName = mlc.getString(new String[]{"pobject","projectileentity","pentity"},"MINECART").toUpperCase();
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
         

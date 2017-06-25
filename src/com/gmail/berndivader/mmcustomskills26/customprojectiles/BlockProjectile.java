@@ -139,7 +139,7 @@ ITargetedLocationSkill {
         this.projectileVelocityVertNoiseBase = 0.0f - this.projectileVelocityVertNoise / 2.0f;
         this.projectileVelocityHorizNoiseBase = 0.0f - this.projectileVelocityHorizNoise / 2.0f;
         
-        this.pEntityName = mlc.getString(new String[]{"projectileblock","pblock"},"DIRT").toUpperCase();
+        this.pEntityName = mlc.getString(new String[]{"pobject","projectileblock","pblock"},"DIRT").toUpperCase();
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
         
