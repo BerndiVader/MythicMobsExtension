@@ -28,7 +28,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
+
+import com.gmail.berndivader.mmcustomskills26.Main;
 
 public class BlockProjectile
 extends SkillMechanic
@@ -193,7 +196,7 @@ ITargetedLocationSkill {
 		private Location pLocation;
 		private float pSpin;
 		private float ppOff;
-        @SuppressWarnings({ "unchecked", "rawtypes"})
+        @SuppressWarnings({ "unchecked", "rawtypes", "deprecation"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
 
             float noise;
@@ -275,9 +278,13 @@ ITargetedLocationSkill {
             
             Vector v = new Vector();
             this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation, Material.valueOf(customItemName), (byte)0);
+            this.pBlock.setHurtEntities(false);
+            this.pBlock.setDropItem(false);
+            this.pBlock.setTicksLived(Integer.MAX_VALUE);
             this.pBlock.setInvulnerable(true);
             this.pBlock.setGravity(false);
             this.pBlock.setVelocity(v);
+            this.pBlock.setMetadata("pBlock", new FixedMetadataValue(Main.getPlugin(), null));
             
             MythicMobs.debug(3, "------ Initializing projectile skill");
             this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
@@ -422,7 +429,6 @@ ITargetedLocationSkill {
             }
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pBlock.getLocation();
-//            this.pItem.getLocation().setYaw(this.pItem.getLocation().getYaw()+this.pSpin);
             this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
             this.targets.clear();
         }

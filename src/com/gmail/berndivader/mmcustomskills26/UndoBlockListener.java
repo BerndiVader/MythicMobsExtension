@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,7 +45,8 @@ public class UndoBlockListener implements Listener {
     
     @EventHandler
     public void removeFallingBlock(EntityChangeBlockEvent e) {
-   		if (e.getEntity().hasMetadata("removeit")==false) return;
+   		if (e.getEntity().hasMetadata("removeit")==false || e.getEntity().hasMetadata("pBlock")==false) return;
+   		Bukkit.getLogger().info("removed blockchange!");
    		e.setCancelled(true);
     }
     

@@ -427,7 +427,6 @@ ITargetedLocationSkill {
             }
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pEntity.getLocation();
-//            this.pItem.getLocation().setYaw(this.pItem.getLocation().getYaw()+this.pSpin);
             this.pEntity.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
             this.targets.clear();
         }
