@@ -1,7 +1,8 @@
 # CustomSkillMechanics
 for MythicMobs 4.0.1 and higher
 
-#### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details.
+#### *** 27.6.2017 *** fixed compatibility with 4.0.1
+#### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
 #### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
 #### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
 #### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
@@ -10,7 +11,7 @@ for MythicMobs 4.0.1 and higher
 #### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
 #### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
 #### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
-#### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details.
+#### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details. MythicMobs 4.1.0 or higher
 #### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
 #### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
 #### *** 24.5.2017 *** added swap mechanic.
@@ -34,7 +35,7 @@ for MythicMobs 4.0.1 and higher
 
 
 
-## CustomProjectiles mechanics:
+## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher):
 	
 	ItemProjectile:
 		
@@ -128,7 +129,7 @@ Or use some variables in the destination targeter:
 
 
 
-## customparticleline skill:
+## customparticleline skill (for MythicMobs 4.1.0 or higher):
 
 	The same like the original but added vDestOffset & hDestOffset to adjust the targetlocation.
 	Use vDestOffset to adjust the height and use hDestOffset to adjust the x/z position. Use idoy true/false(default) = ignoredestoffsetyaw to ignore the yaw of the targetlocation. 

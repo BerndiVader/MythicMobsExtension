@@ -3,6 +3,7 @@ package com.gmail.berndivader.mmcustomskills26;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
+import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -10,7 +11,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.ParticleMaker;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.awt.Color;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -81,7 +81,7 @@ ITargetedLocationSkill {
         Location l = this.useEyeLocation ? target.getEyeLocation() : BukkitAdapter.adapt(target.getLocation());
         if (this.fOffset > 0.0f || this.sOffset != 0.0f) {
             l.setPitch(0.0f);
-            l = MythicUtil.moveBukkit(l, this.fOffset, 0.0, this.sOffset);
+            l = CustomParticleEffect.move(l, this.fOffset, 0.0, this.sOffset);
         }
         if (this.directional) {
             this.playDirectionalParticleEffect(BukkitAdapter.adapt(data.getOrigin()), BukkitAdapter.adapt(target.getLocation()));
@@ -126,7 +126,40 @@ ITargetedLocationSkill {
     	double zo = Math.sin(yaw) * ho;
     	Location offset = l.clone().add(xo, vo, zo);
     	return offset;
-    }    
+    }
+    
+    public static Location move(Location loc, double dx, double dy, double dz) {
+        AbstractVector off = CustomParticleEffect.rotate(loc.getYaw(), loc.getPitch(), dx, dy, dz);
+        double x = loc.getX() + off.getX();
+        double y = loc.getY() + off.getY();
+        double z = loc.getZ() + off.getZ();
+        return new Location(loc.getWorld(), x, y, z, loc.getYaw(), loc.getPitch());
+    }
+    
+    public static AbstractVector rotate(float yaw, float pitch, double x, double y, double z)
+    {
+      float angle = yaw * 0.017453292F;
+      double sinyaw = Math.sin(angle);
+      double cosyaw = Math.cos(angle);
+      
+      angle = pitch * 0.017453292F;
+      double sinpitch = Math.sin(angle);
+      double cospitch = Math.cos(angle);
+      
+      double newx = 0.0D;
+      double newy = 0.0D;
+      double newz = 0.0D;
+      newz -= x * cosyaw;
+      newz -= y * sinyaw * sinpitch;
+      newz -= z * sinyaw * cospitch;
+      newx += x * sinyaw;
+      newx -= y * cosyaw * sinpitch;
+      newx -= z * cosyaw * cospitch;
+      newy += y * cospitch;
+      newy -= z * sinpitch;
+      
+      return new AbstractVector(newx, newy, newz);
+    }
     
 }
 

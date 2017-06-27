@@ -38,16 +38,16 @@ ITargetedLocationSkill
 {
 	protected String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	protected boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
-	protected long delay, noise, maxTargets;
+	protected double delay, noise, maxTargets;
 	protected AbstractEntity entityTarget;
 	protected AbstractLocation startLocation;
 
     public mmCustomTeleportSkill(String line, MythicLineConfig mlc) {
         super(line, mlc);
         this.ASYNC_SAFE = false;
-        this.noise = mlc.getLong(new String[]{"noise","n"},0L);
-        this.delay = mlc.getLong(new String[]{"teleportdelay","tdelay","td"},0L);
-        if ((this.maxTargets = mlc.getLong(new String[]{"maxtargets","mt"},0L))<0) this.maxTargets=0L;
+        this.noise = mlc.getDouble(new String[]{"noise","n"},0D);
+        this.delay = mlc.getDouble(new String[]{"teleportdelay","tdelay","td"},0D);
+        if ((this.maxTargets = mlc.getDouble(new String[]{"maxtargets","mt"},0D))<0) this.maxTargets=0D;
         this.inFrontOf = mlc.getBoolean(new String[]{"infront","front","f"},false);
         this.returnToStart = mlc.getBoolean(new String[]{"returntostart","return","r"},false);
         this.targetInsight = mlc.getBoolean(new String[]{"targetinsight","insight","is"},false);
@@ -174,7 +174,7 @@ ITargetedLocationSkill
 					this.lastEntity=t;
 				}
 			}}
-		}.runTaskTimer(Main.getPlugin(), 0L, this.delay);
+		}.runTaskTimer(Main.getPlugin(), 0L, (long)this.delay);
     	return true;
     }
     

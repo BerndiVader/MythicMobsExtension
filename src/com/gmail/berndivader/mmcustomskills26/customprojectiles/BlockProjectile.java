@@ -97,8 +97,7 @@ ITargetedLocationSkill {
         this.range = mlc.getFloat("maxrange", 40.0f);
         this.range = mlc.getFloat("mr", this.range);
         this.maxDistanceSquared = this.range * this.range;
-        this.duration = mlc.getLong("maxduration", 100);
-        this.duration = mlc.getLong("md", this.duration);
+        this.duration = (long)mlc.getInteger(new String[]{"maxduration","md"}, 100);
         this.duration *= 1000;
         this.verticalHitRadius = mlc.getFloat("verticalradius", this.hitRadius);
         this.verticalHitRadius = mlc.getFloat("vradius", this.verticalHitRadius);
