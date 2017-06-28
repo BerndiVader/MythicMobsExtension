@@ -5,6 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -37,7 +38,7 @@ public class CustomSkillStuff implements Listener {
         }
 	}
 	
-	@EventHandler
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
 		if (!(e.getEntity() instanceof LivingEntity) || e.isCancelled()) return;
 		LivingEntity victim = (LivingEntity) e.getEntity();
