@@ -426,9 +426,11 @@ ITargetedLocationSkill {
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pEntity.getLocation();
             this.pEntity.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
-            float yaw = eloc.getYaw();
-            yaw = ((yaw + 10) % 360.0F);
-            NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
+            if (this.pSpin>0.0) {
+                float yaw = eloc.getYaw();
+                yaw = ((yaw + this.pSpin) % 360.0F);
+                NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
+            }
             this.targets.clear();
         }
 

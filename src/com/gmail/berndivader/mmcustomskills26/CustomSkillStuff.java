@@ -34,7 +34,6 @@ public class CustomSkillStuff implements Listener {
 	@EventHandler
 	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
 		if (e.getEntity().hasMetadata("pBlock")) {
-			Bukkit.getLogger().info("found block");
 			e.setCancelled(true);
 		}
 	}
