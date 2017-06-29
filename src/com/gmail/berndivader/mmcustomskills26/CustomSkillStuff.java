@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -45,9 +46,17 @@ public class CustomSkillStuff implements Listener {
 		victim.removeMetadata("MythicDamage", Main.getPlugin());
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
+		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
+		if (debug) Bukkit.getLogger().info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled()) return;
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
 		double df = md / e.getDamage(DamageModifier.BASE);
+		if (debug) {
+			Bukkit.getLogger().info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
+			Bukkit.getLogger().info("Custom MythicDamage.: " + Double.toString(md));
+			Bukkit.getLogger().info("DamageFactor: " + Double.toString(df));
+			Bukkit.getLogger().info("-----------------------------");
+		}
 		e.setDamage(DamageModifier.BASE, md);
 		double damage = e.getDamage(DamageModifier.BASE);
 		for (DamageModifier modifier : DamageModifier.values()) {
@@ -62,13 +71,17 @@ public class CustomSkillStuff implements Listener {
 			e.setCancelled(true);
 			victim.damage(damage);
 		}
+		if (debug) {
+			Bukkit.getLogger().info("Finaldamage amount after modifiers: " + Double.toString(damage));
+		}
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, 
 			boolean ignorearmor, 
 			boolean preventKnockback, 
 			boolean preventImmunity, 
-			boolean ignoreabs) {
+			boolean ignoreabs,
+			boolean debug) {
         LivingEntity target;
         am.setUsingDamageSkill(true);
         if (am instanceof ActiveMob) ((ActiveMob)am).setLastDamageSkillAmount(damage);
@@ -79,6 +92,7 @@ public class CustomSkillStuff implements Listener {
         target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),ignoreabs));
         target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
         target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
+        target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(),debug));
 		target.damage(damage, source);
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);

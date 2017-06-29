@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.util.MathParser;
 
 public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkill {
 
-	private boolean pk, pi, ia, iabs, ip, p, pcur;
+	private boolean pk, pi, ia, iabs, ip, p, pcur, debug;
 	private String amount;
 	
 	public mmCustomDamage(String skill, MythicLineConfig mlc) {
@@ -26,6 +26,8 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
         this.ip = mlc.getBoolean(new String[]{"ignorepower", "ip"}, false);
         this.p = mlc.getBoolean(new String[]{"percentage", "p"}, false);
         this.pcur = mlc.getBoolean(new String[]{"pcur", "pc"}, false);
+        this.debug = mlc.getBoolean("debug", false);
+        
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
             dmg = this.pcur?t.getHealth()*dmg:t.getMaxHealth()*dmg;
         }
         if (!this.ip) dmg = dmg*(double)data.getPower();
-        CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs);
+        CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug);
         return true;
 	}
 }
