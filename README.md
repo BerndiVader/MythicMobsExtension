@@ -1,6 +1,7 @@
-# CustomSkillMechanics
-for MythicMobs 4.0.1 and higher
+# CustomSkillMechanics v1.1
+for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
 #### *** 27.6.2017 *** fixed compatibility with 4.0.1
 #### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
 #### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.

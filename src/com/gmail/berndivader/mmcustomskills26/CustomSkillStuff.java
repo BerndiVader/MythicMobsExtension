@@ -5,7 +5,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -38,32 +37,29 @@ public class CustomSkillStuff implements Listener {
         }
 	}
 	
-	@EventHandler(priority=EventPriority.MONITOR)
+	@EventHandler
 	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
-		if (!(e.getEntity() instanceof LivingEntity) || e.isCancelled()) return;
-		LivingEntity victim = (LivingEntity) e.getEntity();
-		if (!victim.hasMetadata("MythicDamage")) return;
+		LivingEntity victim = null;
+		if (e.getEntity() instanceof LivingEntity) victim = (LivingEntity) e.getEntity();
+		if (victim==null || !victim.hasMetadata("MythicDamage")) return;
 		victim.removeMetadata("MythicDamage", Main.getPlugin());
-		double damage=0D;
+		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
+		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
+		if (e.isCancelled()) return;
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
 		double df = md / e.getDamage(DamageModifier.BASE);
 		e.setDamage(DamageModifier.BASE, md);
-		if (victim.getMetadata("IgnoreArmor").get(0).asBoolean()) {
-			e.setDamage(DamageModifier.ARMOR, 0D);
-		} else {
-			e.setDamage(DamageModifier.ARMOR, df * e.getDamage(DamageModifier.ARMOR));
-		}
-		if (victim.getMetadata("IgnoreAbs").get(0).asBoolean()) {
-			e.setDamage(DamageModifier.ABSORPTION, 0D);
-		} else {
-			e.setDamage(DamageModifier.ABSORPTION, df * e.getDamage(DamageModifier.ABSORPTION));
+		double damage = e.getDamage(DamageModifier.BASE);
+		for (DamageModifier modifier : DamageModifier.values()) {
+			if (!e.isApplicable(modifier) || modifier.equals(DamageModifier.BASE)) continue;
+			double modF = df;
+			if ((modifier.equals(DamageModifier.ARMOR) && ignoreArmor) 
+					|| (modifier.equals(DamageModifier.ABSORPTION) && ignoreAbs)) modF = 0D;
+			e.setDamage(modifier, modF * e.getDamage(modifier));
+			damage+=e.getDamage(modifier);
 		}
 		if (victim.getMetadata("PreventKnockback").get(0).asBoolean()) {
 			e.setCancelled(true);
-			for (DamageModifier modifier : DamageModifier.values()) {
-				if (!e.isApplicable(modifier)) continue;
-				damage+=e.getDamage(modifier);
-			}
 			victim.damage(damage);
 		}
 	}
