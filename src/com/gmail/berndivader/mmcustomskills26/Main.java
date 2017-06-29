@@ -29,6 +29,7 @@ public class Main extends JavaPlugin {
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
+	public static boolean hasRpgItems=false;
 	private static NMSUtils nmsutils;
 	public static NMSUtils NMSUtils() {return nmsutils;}
 	
@@ -47,6 +48,8 @@ public class Main extends JavaPlugin {
 				getServer().getPluginManager().registerEvents(new mmWorldEditSkills(), this);
 				Bukkit.getLogger().info("Found WorldEdit, registered WorldEditSkills.");
 			}
+			
+			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems")!=null) hasRpgItems=true;
 			
 			Bukkit.getLogger().info("Register CustomConditions");
 			new mmOwnConditions();

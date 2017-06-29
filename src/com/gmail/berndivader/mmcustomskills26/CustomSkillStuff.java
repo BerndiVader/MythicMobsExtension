@@ -4,13 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -20,9 +24,20 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
+import think.rpgitems.item.ItemManager;
+import think.rpgitems.item.RPGItem;
 
 @SuppressWarnings("deprecation")
 public class CustomSkillStuff implements Listener {
+	
+	
+	@EventHandler
+	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
+		if (e.getEntity().hasMetadata("pBlock")) {
+			Bukkit.getLogger().info("found block");
+			e.setCancelled(true);
+		}
+	}
 	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
@@ -38,7 +53,7 @@ public class CustomSkillStuff implements Listener {
         }
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
 		LivingEntity victim = null;
 		if (e.getEntity() instanceof LivingEntity) victim = (LivingEntity) e.getEntity();
@@ -91,8 +106,10 @@ public class CustomSkillStuff implements Listener {
         target.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(),preventKnockback));
         target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),ignoreabs));
         target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
-        target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
         target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(),debug));
+		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) damage=rpgItemPlayerHit((Player)target, damage);
+		if (Math.abs(damage)<0.01) damage=0.01;
+        target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
 		target.damage(damage, source);
 	    if (preventImmunity) target.setNoDamageTicks(0);
 	    am.setUsingDamageSkill(false);
@@ -118,6 +135,24 @@ public class CustomSkillStuff implements Listener {
     public static Location getLocationInFront(Location start, double range) {
     	Location l = start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
         return l;
-    }	
+    }
+    
+    public static double rpgItemPlayerHit(Player p, double damage) {
+        ItemStack[] armour = p.getInventory().getArmorContents();
+        for (ItemStack pArmour : armour) {
+            RPGItem pRItem = ItemManager.toRPGItem(pArmour);
+            if (pRItem == null) continue;
+            boolean can;
+            if (!pRItem.hitCostByDamage) {
+                can = pRItem.consumeDurability(pArmour, pRItem.hitCost);
+            } else {
+                can = pRItem.consumeDurability(pArmour, (int) (pRItem.hitCost * damage / 100d));
+            }
+            if (can && pRItem.getArmour() > 0) {
+                damage -= Math.round(damage * (((double) pRItem.getArmour()) / 100d));
+            }
+        }
+        return damage;
+    }    
     
 }

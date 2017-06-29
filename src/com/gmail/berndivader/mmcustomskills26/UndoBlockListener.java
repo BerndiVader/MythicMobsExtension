@@ -45,8 +45,7 @@ public class UndoBlockListener implements Listener {
     
     @EventHandler
     public void removeFallingBlock(EntityChangeBlockEvent e) {
-   		if (e.getEntity().hasMetadata("removeit")==false || e.getEntity().hasMetadata("pBlock")==false) return;
-   		Bukkit.getLogger().info("removed blockchange!");
+   		if (e.getEntity().hasMetadata("removeit")==false) return;
    		e.setCancelled(true);
     }
     

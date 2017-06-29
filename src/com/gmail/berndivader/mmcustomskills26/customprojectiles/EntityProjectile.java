@@ -30,6 +30,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class EntityProjectile
@@ -424,7 +425,10 @@ ITargetedLocationSkill {
             }
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pEntity.getLocation();
-            this.pEntity.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
+            this.pEntity.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
+            float yaw = eloc.getYaw();
+            yaw = ((yaw + 10) % 360.0F);
+            NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
             this.targets.clear();
         }
 
