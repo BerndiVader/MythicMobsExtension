@@ -27,9 +27,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class ItemProjectile
 extends SkillMechanic
@@ -424,7 +427,6 @@ ITargetedLocationSkill {
             }
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pItem.getLocation();
-//            this.pItem.getLocation().setYaw(this.pItem.getLocation().getYaw()+this.pSpin);
             this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
             this.targets.clear();
         }

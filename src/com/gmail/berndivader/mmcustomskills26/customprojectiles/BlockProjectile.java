@@ -27,11 +27,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class BlockProjectile
 extends SkillMechanic
@@ -428,7 +430,7 @@ ITargetedLocationSkill {
             }
             Location loc = BukkitAdapter.adapt(currentLocation);
             Location eloc = this.pBlock.getLocation();
-            this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
+            this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));  
             this.targets.clear();
         }
 

@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.11
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
 #### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
 #### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
 #### *** 27.6.2017 *** fixed compatibility with 4.0.1
@@ -41,15 +42,15 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 	
 	ItemProjectile:
 		
-		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem to choose any droppable item.
+		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem or pobject to choose any droppable item.
 		
 	BlockProjectile:
 	
-		Shoot any FallingBlock. Use it like the original MythicMobs projectile mechanic. In addtion use pblock to choose any FallingBlock.
+		Shoot any FallingBlock. Use it like the original MythicMobs projectile mechanic. In addtion use pblock or pobject to choose any FallingBlock.
 		
 	EntityProjectile:
 	
-		Shoot any Entity. Use it like the original MythicMobs projectile mechanic. In addtion use pentity to choose any Entity.
+		Shoot any Entity. Use it like the original MythicMobs projectile mechanic. In addtion use pentity or pobject to choose any Entity. Since v1.11 you can use pspin to spin the entity where pspin=VALUE value is the speed.
 		
 ```
 ItemProjectile:

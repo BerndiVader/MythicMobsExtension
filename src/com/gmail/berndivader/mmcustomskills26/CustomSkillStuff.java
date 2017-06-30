@@ -51,13 +51,30 @@ public class CustomSkillStuff implements Listener {
         	}
         }
 	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onMythicCustomRPGItemDamage(EntityDamageByEntityEvent e) {
+		LivingEntity victim = null;
+		if (e.getEntity() instanceof LivingEntity) victim = (LivingEntity) e.getEntity();
+		if (victim==null || !victim.hasMetadata("MythicDamage")) return;
+		if (victim.getMetadata("mmrpgitemdmg").get(0).asBoolean()) {
+			victim.removeMetadata("MythicDamage", Main.getPlugin());
+			onEntityDamageTaken(e, victim);
+		}
+	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onMythicCustomDamage(EntityDamageByEntityEvent e) {
 		LivingEntity victim = null;
 		if (e.getEntity() instanceof LivingEntity) victim = (LivingEntity) e.getEntity();
 		if (victim==null || !victim.hasMetadata("MythicDamage")) return;
-		victim.removeMetadata("MythicDamage", Main.getPlugin());
+		if (!victim.getMetadata("mmrpgitemdmg").get(0).asBoolean()) {
+			victim.removeMetadata("MythicDamage", Main.getPlugin());
+			onEntityDamageTaken(e, victim);
+		}
+	}
+	
+	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
@@ -88,6 +105,7 @@ public class CustomSkillStuff implements Listener {
 		if (debug) {
 			Bukkit.getLogger().info("Finaldamage amount after modifiers: " + Double.toString(damage));
 		}
+		
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, 
@@ -106,7 +124,10 @@ public class CustomSkillStuff implements Listener {
         target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(),ignoreabs));
         target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(),true));
         target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(),debug));
-		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) damage=rpgItemPlayerHit((Player)target, damage);
+        target.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(),false));
+		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
+			damage=rpgItemPlayerHit((Player)target, damage);
+		}
 		if (Math.abs(damage)<0.01) damage=0.01;
         target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
 		target.damage(damage, source);
@@ -138,6 +159,7 @@ public class CustomSkillStuff implements Listener {
     
     public static double rpgItemPlayerHit(Player p, double damage) {
         ItemStack[] armour = p.getInventory().getArmorContents();
+        boolean useDamage=false;
         for (ItemStack pArmour : armour) {
             RPGItem pRItem = ItemManager.toRPGItem(pArmour);
             if (pRItem == null) continue;
@@ -148,9 +170,11 @@ public class CustomSkillStuff implements Listener {
                 can = pRItem.consumeDurability(pArmour, (int) (pRItem.hitCost * damage / 100d));
             }
             if (can && pRItem.getArmour() > 0) {
+            	useDamage=true;
                 damage -= Math.round(damage * (((double) pRItem.getArmour()) / 100d));
             }
         }
+        if (useDamage) p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(),useDamage));
         return damage;
     }    
     
