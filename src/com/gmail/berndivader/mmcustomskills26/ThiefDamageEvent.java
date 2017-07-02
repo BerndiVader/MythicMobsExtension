@@ -8,19 +8,20 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class ThiefDamageEvent implements Listener {
 	
-	private MythicMobs mm = Main.mm;
+	private MobManager mm = new MobManager(MythicMobs.inst());
 	
 	@EventHandler
 	public void onThiefDamageEvent(EntityDamageByEntityEvent e) {
 		if (e.getDamager() instanceof ArmorStand) {
 			return;
 		}
-        if (mm.getMobManager().isActiveMob(e.getDamager().getUniqueId())) {
+        if (mm.isActiveMob(e.getDamager().getUniqueId())) {
         	if (e.getEntityType() == EntityType.PLAYER) {
-	        	ActiveMob am = mm.getMobManager().getMythicMobInstance(e.getDamager());
+	        	ActiveMob am = mm.getMythicMobInstance(e.getDamager());
 	        	if (am.getStance().equalsIgnoreCase("gostealing")) {
 	        		e.setCancelled(true);
 	            }

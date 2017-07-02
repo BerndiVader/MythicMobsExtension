@@ -63,15 +63,20 @@ ITargetedLocationSkill {
         if (color != null) {
             this.color = Color.decode(color);
         }
-        this.fOffset *= -1.0f;
+        //this.fOffset *= -1.0f;
     }
 
     @Override
     public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+        Location l = BukkitAdapter.adapt(target);
+        if (this.fOffset > 0.0f || this.sOffset != 0.0f) {
+            l.setPitch(0.0f);
+            l = CustomParticleEffect.move(l, this.fOffset, 0.0, this.sOffset);
+        }
         if (this.directional) {
             this.playDirectionalParticleEffect(BukkitAdapter.adapt(data.getOrigin()), BukkitAdapter.adapt(target));
         } else {
-            this.playParticleEffect(BukkitAdapter.adapt(data.getOrigin()), BukkitAdapter.adapt(target));
+            this.playParticleEffect(BukkitAdapter.adapt(data.getOrigin()), l);
         }
         return true;
     }

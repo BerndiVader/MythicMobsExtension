@@ -69,6 +69,7 @@ public class mmGrenadeSkill extends SkillMechanic implements ITargetedEntitySkil
 			grenade.setYield(size);
 			grenade.setFuseTicks(this.fuse);
 			grenade.setIsIncendiary(this.fire);
+			grenade.setMetadata("customgrenade", new FixedMetadataValue(this.plugin,true));
 			grenade.setMetadata("utime", new FixedMetadataValue(this.plugin,this.utime));
 			grenade.setMetadata("noblkdmg", new FixedMetadataValue(this.plugin, this.breakBlocks));
 			grenade.setMetadata("undotnt", new FixedMetadataValue(this.plugin, this.undotnt));

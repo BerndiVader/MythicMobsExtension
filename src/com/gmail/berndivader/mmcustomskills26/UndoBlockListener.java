@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -38,7 +37,7 @@ public class UndoBlockListener implements Listener {
 	private int utime;
 	private boolean ueffect;
 	
-    public Double getRandomVel(Double min, Double max) {
+    public static Double getRandomVel(Double min, Double max) {
         Random rnd = new Random();
         return rnd.nextDouble() * (max - min) + min;
     }
@@ -52,6 +51,7 @@ public class UndoBlockListener implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST)
 	private void GrenadeBlockDestroy(EntityExplodeEvent e) {
 		if (e.getEntityType() == EntityType.PRIMED_TNT && e.isCancelled()==false && !e.blockList().isEmpty()) {
+			if (!e.getEntity().hasMetadata("customgrenade")) return;
 			if (e.getEntity().hasMetadata("noblkdmg")) {
 				if (!e.getEntity().getMetadata("noblkdmg").get(0).asBoolean()) {
 					e.setCancelled(true);
@@ -99,7 +99,7 @@ public class UndoBlockListener implements Listener {
 		}
 	}
 	
-    public void regen(final List<BlockState> blocks, boolean effect, int speed) {
+    public static void regen(final List<BlockState> blocks, boolean effect, int speed) {
         new BukkitRunnable() {
             int i = -1;
             @SuppressWarnings("deprecation")

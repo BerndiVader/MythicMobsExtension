@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.11
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
 #### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
 #### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
 #### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
@@ -52,6 +53,10 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 	
 		Shoot any Entity. Use it like the original MythicMobs projectile mechanic. In addtion use pentity or pobject to choose any Entity. Since v1.11 you can use pspin to spin the entity where pspin=VALUE value is the speed.
 		
+	MythicProjectile:
+
+		Shoot any MythicMobs mob as a projectile. In addition use poption or pmythic to choose a existing MythicMobs mob. See example for details.
+		
 ```
 ItemProjectile:
   Skills:
@@ -63,6 +68,14 @@ IP-Hit:
   Skills:
   - effect:particles{p=lava;amount=20;speed=0;hS=0.2;vS=0.2} @origin
   - damage{a=10}
+```
+
+MythicProjectile Example:
+
+```
+Mobs Yaml: https://pastebin.com/6U6iUxkF
+Skill Yaml: https://pastebin.com/Vnanzhmz
+Items Yaml: https://pastebin.com/ddkeJaqG
 ```
 
 

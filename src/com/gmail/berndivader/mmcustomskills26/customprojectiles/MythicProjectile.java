@@ -6,7 +6,9 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -27,12 +29,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
-public class EntityProjectile
+public class MythicProjectile
 extends SkillMechanic
 implements ITargetedEntitySkill,
 ITargetedLocationSkill {
@@ -77,8 +80,11 @@ ITargetedLocationSkill {
     protected String pEntityName;
     protected float pEntitySpin;
     protected float pEntityPitchOffset;
+    protected boolean pFaceDirection;
+    protected double pVOffset;
+    protected float pFOffset;
 
-    public EntityProjectile(String skill, MythicLineConfig mlc) {
+    public MythicProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
         this.onTickSkillName = mlc.getString(new String[]{"ontickskill", "ontick", "ot", "skill", "s", "meta", "m"});
@@ -137,9 +143,12 @@ ITargetedLocationSkill {
         this.projectileVelocityVertNoiseBase = 0.0f - this.projectileVelocityVertNoise / 2.0f;
         this.projectileVelocityHorizNoiseBase = 0.0f - this.projectileVelocityHorizNoise / 2.0f;
         
-        this.pEntityName = mlc.getString(new String[]{"pobject","projectileentity","pentity"},"MINECART").toUpperCase();
+        this.pEntityName = mlc.getString(new String[]{"pobject","projectilemythic","pmythic"},"MINECART");
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
+        this.pFaceDirection = mlc.getBoolean("pfacedir",false);
+        this.pVOffset = mlc.getDouble("pvoff",0.0D);
+        this.pFOffset = mlc.getFloat("pfoff",0.0F);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -190,10 +199,15 @@ ITargetedLocationSkill {
         private Set<AbstractEntity> inRange;
         private HashSet<AbstractEntity> targets;
         private Map<AbstractEntity, Long> immune;
+        private ActiveMob pam;
         private Entity pEntity;
 		private Location pLocation;
 		private float pSpin;
 		private float ppOff;
+		private float pFOff;
+		private double pVOff;
+		private boolean pFaceDir;
+		
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
 
@@ -209,32 +223,35 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
-            this.ppOff = EntityProjectile.this.pEntityPitchOffset;
-            this.pSpin = EntityProjectile.this.pEntitySpin;
+            this.ppOff = MythicProjectile.this.pEntityPitchOffset;
+            this.pSpin = MythicProjectile.this.pEntitySpin;
+            this.pFaceDir = MythicProjectile.this.pFaceDirection;
+            this.pVOff = MythicProjectile.this.pVOffset;
+            this.pFOff = MythicProjectile.this.pFOffset;
             double velocity = 0.0;
             
-            if (EntityProjectile.this.type == ProjectileType.METEOR) {
+            if (MythicProjectile.this.type == ProjectileType.METEOR) {
                 this.startLocation = target.clone();
-                this.startLocation.add(0.0, EntityProjectile.this.heightFromSurface, 0.0);
-                if (EntityProjectile.this.projectileGravity <= 0.0f) {
-                    this.gravity = EntityProjectile.this.projectileVelocity;
-                    this.gravity = this.gravity > 0.0f ? this.gravity / EntityProjectile.this.ticksPerSecond : 0.0f;
+                this.startLocation.add(0.0, MythicProjectile.this.heightFromSurface, 0.0);
+                if (MythicProjectile.this.projectileGravity <= 0.0f) {
+                    this.gravity = MythicProjectile.this.projectileVelocity;
+                    this.gravity = this.gravity > 0.0f ? this.gravity / MythicProjectile.this.ticksPerSecond : 0.0f;
                 } else {
-                    this.gravity = EntityProjectile.this.projectileGravity > 0.0f ? EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond : 0.0f;
+                    this.gravity = MythicProjectile.this.projectileGravity > 0.0f ? MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond : 0.0f;
                 }
                 velocity = 0.0;
             } else {
-                this.startLocation = EntityProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
-                velocity = EntityProjectile.this.projectileVelocity / EntityProjectile.this.ticksPerSecond;
-                if (EntityProjectile.this.startYOffset != 0.0f) {
-                    this.startLocation.setY(this.startLocation.getY() + (double)EntityProjectile.this.startYOffset);
+                this.startLocation = MythicProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
+                velocity = MythicProjectile.this.projectileVelocity / MythicProjectile.this.ticksPerSecond;
+                if (MythicProjectile.this.startYOffset != 0.0f) {
+                    this.startLocation.setY(this.startLocation.getY() + (double)MythicProjectile.this.startYOffset);
                 }
-                if (EntityProjectile.this.startForwardOffset != 0.0f) {
-                    this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(EntityProjectile.this.startForwardOffset));
+                if (MythicProjectile.this.startForwardOffset != 0.0f) {
+                    this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(MythicProjectile.this.startForwardOffset));
                 }
-                if (EntityProjectile.this.startSideOffset != 0.0f) {
+                if (MythicProjectile.this.startSideOffset != 0.0f) {
                     this.startLocation.setPitch(0.0f);
-                    this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0, EntityProjectile.this.startSideOffset);
+                    this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0, MythicProjectile.this.startSideOffset);
                 }
             }
             this.startLocation.clone();
@@ -243,47 +260,57 @@ ITargetedLocationSkill {
                 return;
             }
             this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
-            if (EntityProjectile.this.projectileVelocityHorizOffset != 0.0f || EntityProjectile.this.projectileVelocityHorizNoise > 0.0f) {
+            if (MythicProjectile.this.projectileVelocityHorizOffset != 0.0f || MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
                 noise = 0.0f;
-                if (EntityProjectile.this.projectileVelocityHorizNoise > 0.0f) {
-                    noise = EntityProjectile.this.projectileVelocityHorizNoiseBase + MythicMobs.r.nextFloat() * EntityProjectile.this.projectileVelocityHorizNoise;
+                if (MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
+                    noise = MythicProjectile.this.projectileVelocityHorizNoiseBase + MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityHorizNoise;
                 }
-                this.currentVelocity.rotate(EntityProjectile.this.projectileVelocityHorizOffset + noise);
+                this.currentVelocity.rotate(MythicProjectile.this.projectileVelocityHorizOffset + noise);
             }
-            if (EntityProjectile.this.startSideOffset != 0.0f) {
+            if (MythicProjectile.this.startSideOffset != 0.0f) {
                 // empty if block
             }
-            if (EntityProjectile.this.projectileVelocityVertOffset != 0.0f || EntityProjectile.this.projectileVelocityVertNoise > 0.0f) {
+            if (MythicProjectile.this.projectileVelocityVertOffset != 0.0f || MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
                 noise = 0.0f;
-                if (EntityProjectile.this.projectileVelocityVertNoise > 0.0f) {
-                    noise = EntityProjectile.this.projectileVelocityVertNoiseBase + MythicMobs.r.nextFloat() * EntityProjectile.this.projectileVelocityVertNoise;
+                if (MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
+                    noise = MythicProjectile.this.projectileVelocityVertNoiseBase + MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityVertNoise;
                 }
-                this.currentVelocity.add(new AbstractVector(0.0f, EntityProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
+                this.currentVelocity.add(new AbstractVector(0.0f, MythicProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
             }
-            if (EntityProjectile.this.hugSurface) {
-                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
+            if (MythicProjectile.this.hugSurface) {
+                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + MythicProjectile.this.heightFromSurface);
                 this.currentVelocity.setY(0).normalize();
             }
-            if (EntityProjectile.this.powerAffectsVelocity) {
+            if (MythicProjectile.this.powerAffectsVelocity) {
                 this.currentVelocity.multiply(this.power);
             }
             this.currentVelocity.multiply(velocity);
-            if (EntityProjectile.this.projectileGravity > 0.0f) {
+            if (MythicProjectile.this.projectileGravity > 0.0f) {
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
             }
             
             this.pLocation = BukkitAdapter.adapt(currentLocation);
-            
             Vector v = new Vector();
-            this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation, EntityType.valueOf(customItemName));
-            NMSUtils.setInvulnerable(this.pEntity);
-            NMSUtils.setSilent(this.pEntity,true);
-            this.pEntity.setGravity(false);
-            this.pEntity.setVelocity(v);
+			try {
+				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0,this.pVOff,0));
+			} catch (InvalidMobTypeException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
+            new BukkitRunnable() {
+				@Override
+				public void run() {
+		            NMSUtils.setInvulnerable(pEntity, true);
+		            NMSUtils.setSilent(pEntity,true);
+		            pEntity.setGravity(false);
+		            pEntity.setVelocity(v);
+				}
+			}.runTaskLater(Main.getPlugin(), 5L);
             
             MythicMobs.debug(3, "------ Initializing projectile skill");
-            this.taskId = TaskManager.get().scheduleTask(this, 0, EntityProjectile.this.tickInterval);
-            if (EntityProjectile.this.hitPlayers || EntityProjectile.this.hitNonPlayers) {
+            this.taskId = TaskManager.get().scheduleTask(this, 0, MythicProjectile.this.tickInterval);
+            if (MythicProjectile.this.hitPlayers || MythicProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
                 this.inRange.removeIf(e -> {
                     if (e != null) {
@@ -292,11 +319,11 @@ ITargetedLocationSkill {
                             MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is self");
                             return true;
                         }
-                        if (!EntityProjectile.this.hitPlayers && e.isPlayer()) {
+                        if (!MythicProjectile.this.hitPlayers && e.isPlayer()) {
                             MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is player");
                             return true;
                         }
-                        if (!EntityProjectile.this.hitNonPlayers && !e.isPlayer()) {
+                        if (!MythicProjectile.this.hitNonPlayers && !e.isPlayer()) {
                             MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is non-player");
                             return true;
                         }
@@ -307,13 +334,13 @@ ITargetedLocationSkill {
                 }
                 );
             }
-            if (EntityProjectile.this.onStartSkill.isPresent() && EntityProjectile.this.onStartSkill.get().isUsable(data)) {
+            if (MythicProjectile.this.onStartSkill.isPresent() && MythicProjectile.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
                 HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
                 targets.add(this.startLocation);
                 sData.setLocationTargets(targets);
                 sData.setOrigin(this.currentLocation.clone());
-                EntityProjectile.this.onStartSkill.get().execute(sData);
+                MythicProjectile.this.onStartSkill.get().execute(sData);
             }
         }
 
@@ -339,17 +366,17 @@ ITargetedLocationSkill {
                 this.stop();
                 return;
             }
-            if (this.startTime + EntityProjectile.this.duration < System.currentTimeMillis()) {
+            if (this.startTime + MythicProjectile.this.duration < System.currentTimeMillis()) {
                 this.stop();
                 return;
             }
             this.currentLocation.clone();
             this.currentLocation.add(this.currentVelocity);
-            if (EntityProjectile.this.hugSurface) {
+            if (MythicProjectile.this.hugSurface) {
                 if (this.currentLocation.getBlockX() != this.currentX || this.currentLocation.getBlockZ() != this.currentZ) {
                     boolean ok;
                     int attempts;
-                    Block b = BukkitAdapter.adapt(this.currentLocation.subtract(0.0, EntityProjectile.this.heightFromSurface, 0.0)).getBlock();
+                    Block b = BukkitAdapter.adapt(this.currentLocation.subtract(0.0, MythicProjectile.this.heightFromSurface, 0.0)).getBlock();
                     if (BlockUtil.isPathable(b)) {
                         attempts = 0;
                         ok = false;
@@ -380,24 +407,24 @@ ITargetedLocationSkill {
                             return;
                         }
                     }
-                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
+                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + MythicProjectile.this.heightFromSurface);
                     this.currentX = this.currentLocation.getBlockX();
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
-            } else if (EntityProjectile.this.projectileGravity != 0.0f) {
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond));
+            } else if (MythicProjectile.this.projectileGravity != 0.0f) {
+                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond));
             }
-            if (EntityProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
+            if (MythicProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
             }
-            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)EntityProjectile.this.maxDistanceSquared) {
+            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)MythicProjectile.this.maxDistanceSquared) {
                 this.stop();
                 return;
             }
             if (this.inRange != null) {
                 MythicMobs.debug(4, "-------- Checking if entities in HitBox");
-                HitBox hitBox = new HitBox(this.currentLocation, EntityProjectile.this.hitRadius, EntityProjectile.this.verticalHitRadius);
+                HitBox hitBox = new HitBox(this.currentLocation, MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
                 for (AbstractEntity e : this.inRange) {
                     if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
                     MythicMobs.debug(4, "---------- Target " + e.getName() + " is in HitBox!");
@@ -407,25 +434,31 @@ ITargetedLocationSkill {
                 }
                 this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
             }
-            if (EntityProjectile.this.onTickSkill.isPresent() && EntityProjectile.this.onTickSkill.get().isUsable(this.data)) {
+            if (MythicProjectile.this.onTickSkill.isPresent() && MythicProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                AbstractLocation location = this.currentLocation.clone();
-                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
-                targets.add(location);
-                sData.setLocationTargets(targets);
-                sData.setOrigin(location);
-                EntityProjectile.this.onTickSkill.get().execute(sData);
+                AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
+                HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
+                targets.add(entity);
+                sData.setEntityTargets(targets);
+                sData.setOrigin(entity.getLocation());
+                
+                MythicProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
                 this.doHit((HashSet)this.targets.clone());
-                if (EntityProjectile.this.stopOnHitEntity) {
+                if (MythicProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }
             }
+            
             Location loc = BukkitAdapter.adapt(currentLocation);
-            Location eloc = this.pEntity.getLocation();
-            this.pEntity.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
-            if (this.pSpin>0.0) {
+        	Location eloc = this.pEntity.getLocation();
+            if (this.pFaceDir) {
+                eloc = lookAt(eloc,loc);
+            }
+            
+            NMSUtils.setLocation(this.pEntity, loc.getX(), loc.getY()+this.pVOff, loc.getZ(), eloc.getYaw(), eloc.getPitch());
+            if (this.pSpin!=0.0) {
                 float yaw = eloc.getYaw();
                 yaw = ((yaw + this.pSpin) % 360.0F);
                 NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
@@ -434,20 +467,20 @@ ITargetedLocationSkill {
         }
 
         private void doHit(HashSet<AbstractEntity> targets) {
-            if (EntityProjectile.this.onHitSkill.isPresent()) {
+            if (MythicProjectile.this.onHitSkill.isPresent()) {
                 SkillMetadata sData = this.data.deepClone();
                 sData.setEntityTargets(targets);
                 sData.setOrigin(this.currentLocation.clone());
-                if (EntityProjectile.this.onHitSkill.get().isUsable(sData)) {
-                	EntityProjectile.this.onHitSkill.get().execute(sData);
+                if (MythicProjectile.this.onHitSkill.get().isUsable(sData)) {
+                	MythicProjectile.this.onHitSkill.get().execute(sData);
                 }
             }
         }
 
         private void stop() {
-            if (EntityProjectile.this.onEndSkill.isPresent() && EntityProjectile.this.onEndSkill.get().isUsable(this.data)) {
+            if (MythicProjectile.this.onEndSkill.isPresent() && MythicProjectile.this.onEndSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                EntityProjectile.this.onEndSkill.get().execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
+                MythicProjectile.this.onEndSkill.get().execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
             }
             this.pEntity.remove();
             TaskManager.get().cancelTask(this.taskId);
@@ -464,6 +497,31 @@ ITargetedLocationSkill {
             return this.cancelled;
         }
     }
+    
+	private static Location lookAt(Location loc, Location lookat) {
+        loc = loc.clone();
+        lookat = lookat.clone();
+        double dx = lookat.getX() - loc.getX();
+        double dy = lookat.getY() - loc.getY();
+        double dz = lookat.getZ() - loc.getZ();
+ 
+        if (dx != 0) {
+            if (dx < 0) {
+                loc.setYaw((float) (1.5 * Math.PI));
+            } else {
+                loc.setYaw((float) (0.5 * Math.PI));
+            }
+            loc.setYaw((float) loc.getYaw() - (float) Math.atan(dz / dx));
+        } else if (dz < 0) {
+            loc.setYaw((float) Math.PI);
+        }
+        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
+        loc.setPitch((float) -Math.atan(dy / dxz));
+        loc.setYaw(-loc.getYaw() * 180f / (float) Math.PI);
+        loc.setPitch(loc.getPitch() * 180f / (float) Math.PI);
+        return loc;
+    }	
+    
 
     protected static enum ProjectileType {
         NORMAL,
