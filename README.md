@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.11
+# CustomSkillMechanics v1.112
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 03.7.2017 *** added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
 #### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
 #### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
 #### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
@@ -57,6 +58,15 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
 		Shoot any MythicMobs mob as a projectile. In addition use poption or pmythic to choose a existing MythicMobs mob. See example for details.
 		
+	MythicOrbitalProjectile:
+	
+		Summon a orbital object on the targeted entity. Do not work on locations. See the example who to use it.
+		oradx = radius x
+		orady = radius y
+		oradz = radius z axsis.
+		oradsec = how much angle added per sec. (speed)
+		pvoff = vertical offset.
+		
 ```
 ItemProjectile:
   Skills:
@@ -69,13 +79,24 @@ IP-Hit:
   - effect:particles{p=lava;amount=20;speed=0;hS=0.2;vS=0.2} @origin
   - damage{a=10}
 ```
-
 MythicProjectile Example:
 
 ```
 Mobs Yaml: https://pastebin.com/6U6iUxkF
 Skill Yaml: https://pastebin.com/Vnanzhmz
 Items Yaml: https://pastebin.com/ddkeJaqG
+```
+MythicOrbitalProjectile Example:
+```
+MythicOrbitalBullet:
+  Skills:
+  - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-blue;i=1;hR=0;vR=0;oradx=0;oradz=1.5;orady=-1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
+  - delay 40
+  - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-red;i=1;hR=0;vR=0;oradx=0;oradz=1.5;orady=1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
+  - delay 40
+  - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-green;i=1;hR=0;vR=0;oradx=1.5;oradz=1.5;orady=-1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
+  - delay 40
+  - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-black;i=1;hR=0;vR=0;oradx=1.5;oradz=1.5;orady=1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
 ```
 
 
