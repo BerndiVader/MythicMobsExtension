@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin {
 
 	private static Main plugin;
 	public static MythicMobs mm;
+	public static MythicPlayers mp;
 	public static WorldGuardPlugin wg;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
@@ -43,14 +45,13 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
 			getServer().getPluginManager().registerEvents(new CustomSkillStuff(), this);
 			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
-			
+			/** no use for this in the meanwhile
 			if (Bukkit.getServer().getPluginManager().getPlugin("WorldEdit") != null) {
 				getServer().getPluginManager().registerEvents(new mmWorldEditSkills(), this);
 				Bukkit.getLogger().info("Found WorldEdit, registered WorldEditSkills.");
 			}
-			
+			 **/
 			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems")!=null) hasRpgItems=true;
-			
 			Bukkit.getLogger().info("Register CustomConditions");
 			new mmOwnConditions();
 			if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
@@ -65,6 +66,8 @@ public class Main extends JavaPlugin {
 				Bukkit.getLogger().info("registered Factions conditions!");
 			}
 			getNMSUtil();
+			mp = new MythicPlayers(this);
+			Bukkit.getLogger().info("registered MythicPlayers!");
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 	    		public void run() {
 	    			ti = thiefhandler.getThiefs().iterator();
@@ -78,6 +81,7 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
     	Bukkit.getServer().getScheduler().cancelTask(taskid.getTaskId());
     	thiefhandler = null;
+    	mp = null;
 	}
 	public static Main getPlugin() {return plugin;}
 	public static Set<Thief> getThiefs() {return thiefhandler.getThiefs();}

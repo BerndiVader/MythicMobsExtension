@@ -1,7 +1,8 @@
-# CustomSkillMechanics v1.112
+# CustomSkillMechanics v1.15
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
-#### *** 03.7.2017 *** added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
+#### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
+#### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
 #### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
 #### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
 #### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
@@ -38,6 +39,75 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 # Mechanics:
 
 
+
+
+## MythicPlayers Module
+
+	With this module you can turn any player on your server into a MythicPlayer. With almost all abilities of a MythicMobs mob. But there are some limitations. Because a player is a player and not a mob
+	its very important that you make all the mob yamls that will be used for player ++persistent++ otherwise it will break your server and because of that fact you can only use MythicMobs yamls that have
+	persistent set to true. Well thats the only limit.
+
+	### Mechanics:
+	
+	ActivePlayer:
+		Transform the targeted player into a mythicplayer.
+		
+	NormalPlayer:
+		Make the mythicplayer player a ordinary player again.
+		
+	SetTarget:
+		This mechanic is used to update the crosshair target of the player.
+		
+Example configuration for a full working MythicPlayer (Summon the PlayerMonkey and interact with it to turn into the MythicPlayer mob or damage the mob to be normal player):
+
+Mob yaml file:
+```
+PlayerMonkey:
+  Type: villager
+  Display: "&cPlayer Monkey"
+  Health: 20
+  AIGoalSelectors:
+  - 0 clear
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - activeplayer{m=MythicPlayer} @trigger ~onInteract
+  - normalplayer @trigger ~onDamaged 
+
+MythicPlayer:
+  Type: player
+  Options:
+    Persistent: true
+  Modules:
+    ThreatTable: true
+  Skills:
+  - firework{t=1;d=0;f=true;tr=true} @selflocation ~onSpawn
+  - skill{s=PlayEffectOnTarget} ~onTimer:20
+  - particlesphere{particle=angryVillager;amount=10;radius=1} @trigger ~onAttack
+  - heal{a=5} @self ~onDamaged <25% 1
+  - skill{s=ApplyStealth} @self ~onCrouch
+  - skill{s=RemoveStealth} @self ~onUnCrouch
+  - message{msg="use"} @self ~onUse
+```
+Skill yaml file:
+```
+ApplyStealth:
+  Skills:
+  - message{msg="crouch"} @self
+  - potion{type=INVISIBILITY;duration=999999;level=4} @self
+  - particlesphere{particle=cloud;amount=20;radius=1} @self
+
+RemoveStealth:
+  Skills:
+  - message{msg="uncrouch"} @self
+  - particlesphere{particle=cloud;amount=20;radius=1} @self
+  - removepotion{p=INVISIBILITY} @self
+  
+PlayEffectOnTarget:
+  Skills:
+  - settarget
+  - particlesphere{particle=flame;amount=10;radius=1} @target
+```
 
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher):
