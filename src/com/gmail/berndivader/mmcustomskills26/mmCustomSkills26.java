@@ -95,6 +95,9 @@ public class mmCustomSkills26 implements Listener {
 		} else if (MechName.equals("mythicorbitalprojectile")) {
 			skill=new MythicOrbitalProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
+		} else if (MechName.equals("castif")) {
+			skill=new CastIf(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
 		}
 	}
 	

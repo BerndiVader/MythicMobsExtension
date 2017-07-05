@@ -1,7 +1,11 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -16,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.BlockIterator;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -33,7 +38,7 @@ public class CustomSkillStuff implements Listener {
 	
 	@EventHandler
 	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
-		if (e.getEntity().hasMetadata("pBlock")) {
+		if (e.getEntity().hasMetadata(Main.mpNameVar)) {
 			e.setCancelled(true);
 		}
 	}
@@ -177,5 +182,44 @@ public class CustomSkillStuff implements Listener {
         if (useDamage) p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(),useDamage));
         return damage;
     }    
+    
+    public static LivingEntity getTargetedEntity(Player player) {
+    	int range = 32;
+    	BlockIterator bi;
+    	List<Entity> ne = player.getNearbyEntities(range, range, range);
+    	List<LivingEntity> entities = new ArrayList<LivingEntity>();
+    	for (Entity en : ne) {
+			if ((en instanceof LivingEntity) && !en.hasMetadata(Main.noTargetVar)) {
+    			entities.add((LivingEntity)en);
+    		}
+    	}
+    	LivingEntity target = null;
+    	bi = new BlockIterator(player, range);
+    	int bx;
+    	int by;
+    	int bz;
+    	while (bi.hasNext()) {
+    		Block b = bi.next();
+    		bx = b.getX();
+    		by = b.getY();
+    		bz = b.getZ();
+    		if (!b.getType().isTransparent()) break;
+    		for (LivingEntity e : entities) {
+    			Location l = e.getLocation();
+    			double ex = l.getX();
+    			double ey = l.getY();
+    			double ez = l.getZ();
+    			if ((bx - 0.75D <= ex) && (ex <= bx + 1.75D) && (bz - 0.75D <= ez) && (ez <= bz + 1.75D) && (by - 1 <= ey) && (ey <= by + 2.5D)) {
+    				target = e;
+    				if ((target != null) && ((target instanceof Player)) && (((Player)target).getGameMode() == org.bukkit.GameMode.CREATIVE)) {
+    					target = null;
+    				} else {
+    					return target;
+    				}
+    			}
+    		}
+    	}
+    	return null;
+   	}    
     
 }

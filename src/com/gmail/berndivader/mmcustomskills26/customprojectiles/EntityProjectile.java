@@ -28,8 +28,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class EntityProjectile
@@ -77,6 +79,7 @@ ITargetedLocationSkill {
     protected String pEntityName;
     protected float pEntitySpin;
     protected float pEntityPitchOffset;
+    protected boolean targetable=true;
 
     public EntityProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -140,6 +143,7 @@ ITargetedLocationSkill {
         this.pEntityName = mlc.getString(new String[]{"pobject","projectileentity","pentity"},"MINECART").toUpperCase();
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
+        this.targetable = mlc.getBoolean("targetable",false);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -193,7 +197,7 @@ ITargetedLocationSkill {
         private Entity pEntity;
 		private Location pLocation;
 		private float pSpin;
-		private float ppOff;
+		private boolean targetable;
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
 
@@ -209,8 +213,8 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
-            this.ppOff = EntityProjectile.this.pEntityPitchOffset;
             this.pSpin = EntityProjectile.this.pEntitySpin;
+            this.targetable = EntityProjectile.this.targetable;
             double velocity = 0.0;
             
             if (EntityProjectile.this.type == ProjectileType.METEOR) {
@@ -276,6 +280,8 @@ ITargetedLocationSkill {
             
             Vector v = new Vector();
             this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation, EntityType.valueOf(customItemName));
+            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
             NMSUtils.setInvulnerable(this.pEntity);
             NMSUtils.setSilent(this.pEntity,true);
             this.pEntity.setGravity(false);
@@ -473,4 +479,3 @@ ITargetedLocationSkill {
     }
 
 }
-

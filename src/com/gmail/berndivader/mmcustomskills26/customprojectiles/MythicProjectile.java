@@ -29,6 +29,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -83,6 +84,7 @@ ITargetedLocationSkill {
     protected boolean pFaceDirection;
     protected double pVOffset;
     protected float pFOffset;
+    protected boolean targetable;
 
     public MythicProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -149,6 +151,7 @@ ITargetedLocationSkill {
         this.pFaceDirection = mlc.getBoolean("pfacedir",false);
         this.pVOffset = mlc.getDouble("pvoff",0.0D);
         this.pFOffset = mlc.getFloat("pfoff",0.0F);
+        this.targetable = mlc.getBoolean("targetable",false);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -203,14 +206,13 @@ ITargetedLocationSkill {
         private Entity pEntity;
 		private Location pLocation;
 		private float pSpin;
-		private float ppOff;
-		private float pFOff;
 		private double pVOff;
-		private boolean pFaceDir;
+		private double pFOff;
+		private boolean pFaceDir,targetable;
 		
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
-
+        	
             float noise;
             this.cancelled = false;
             this.gravity = 0.0f;
@@ -223,11 +225,10 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
-            this.ppOff = MythicProjectile.this.pEntityPitchOffset;
             this.pSpin = MythicProjectile.this.pEntitySpin;
             this.pFaceDir = MythicProjectile.this.pFaceDirection;
             this.pVOff = MythicProjectile.this.pVOffset;
-            this.pFOff = MythicProjectile.this.pFOffset;
+            this.targetable = MythicProjectile.this.targetable;
             double velocity = 0.0;
             
             if (MythicProjectile.this.type == ProjectileType.METEOR) {
@@ -293,6 +294,8 @@ ITargetedLocationSkill {
             Vector v = new Vector();
 			try {
 				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0,this.pVOff,0));
+	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+	            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();
 				return;
@@ -308,23 +311,18 @@ ITargetedLocationSkill {
 				}
 			}.runTaskLater(Main.getPlugin(), 5L);
             
-            MythicMobs.debug(3, "------ Initializing projectile skill");
             this.taskId = TaskManager.get().scheduleTask(this, 0, MythicProjectile.this.tickInterval);
             if (MythicProjectile.this.hitPlayers || MythicProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
                 this.inRange.removeIf(e -> {
                     if (e != null) {
-                        MythicMobs.debug(4, "-------- Added entity " + e.getName());
                         if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
-                            MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is self");
                             return true;
                         }
                         if (!MythicProjectile.this.hitPlayers && e.isPlayer()) {
-                            MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is player");
                             return true;
                         }
                         if (!MythicProjectile.this.hitNonPlayers && !e.isPlayer()) {
-                            MythicMobs.debug(4, "-------- Removed entity " + e.getName() + ": is non-player");
                             return true;
                         }
                     } else {
@@ -423,11 +421,9 @@ ITargetedLocationSkill {
                 return;
             }
             if (this.inRange != null) {
-                MythicMobs.debug(4, "-------- Checking if entities in HitBox");
                 HitBox hitBox = new HitBox(this.currentLocation, MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
                 for (AbstractEntity e : this.inRange) {
                     if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
-                    MythicMobs.debug(4, "---------- Target " + e.getName() + " is in HitBox!");
                     this.targets.add(e);
                     this.immune.put(e, System.currentTimeMillis());
                     break;

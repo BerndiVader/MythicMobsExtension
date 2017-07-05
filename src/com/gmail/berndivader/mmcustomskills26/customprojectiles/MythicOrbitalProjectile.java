@@ -26,8 +26,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class MythicOrbitalProjectile
@@ -81,6 +83,7 @@ ITargetedLocationSkill {
 	protected float oRadiusZ;
 	protected float oRadiusY;
 	protected float oRadiusPerSec;
+	protected boolean targetable;
 
     public MythicOrbitalProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -149,6 +152,7 @@ ITargetedLocationSkill {
         this.oRadiusZ = mlc.getFloat("oradz",0.0F);
         this.oRadiusY = mlc.getFloat("orady",0.0F);
         this.oRadiusPerSec = mlc.getFloat("oradsec",0.0F);
+        this.targetable = mlc.getBoolean("targetable",false);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -206,6 +210,7 @@ ITargetedLocationSkill {
 		private int tick;
 		private AbstractEntity target;
 		private UUID tuuid;
+		private boolean targetable;
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractEntity t) {
@@ -235,18 +240,21 @@ ITargetedLocationSkill {
             this.centerLocation = BukkitAdapter.adapt(this.target.getLocation());
             this.startLocation=this.target.getLocation();
             this.currentLocation = this.startLocation.clone();
+            this.targetable = MythicOrbitalProjectile.this.targetable;
             if (this.currentLocation == null) {
                 return;
             }
             
 			try {
 				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.centerLocation);
+	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+	            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();
 				return;
 			}
 			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
-            
+			this.pam.setOwner(this.am.getEntity().getUniqueId());
             this.taskId = TaskManager.get().scheduleTask(this, 0, MythicOrbitalProjectile.this.tickInterval);
             if (MythicOrbitalProjectile.this.hitPlayers || MythicOrbitalProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
