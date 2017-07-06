@@ -15,7 +15,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.HitBox;
 import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;

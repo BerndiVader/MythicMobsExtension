@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.15
+# CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
 #### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
 #### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
 #### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
@@ -40,23 +41,30 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
 
 
-
 ## MythicPlayers Module
+
+	#### new since 1.16:
+		- settarget:
+			+ selfnotarget=true/false(default) set the players target to self if the player do not have a target at crosshair. Bit hacky workaround for skill not beeing triggered if no target is set.
 
 	With this module you can turn any player on your server into a MythicPlayer. With almost all abilities of a MythicMobs mob. But there are some limitations. Because a player is a player and not a mob
 	its very important that you make all the mob yamls that will be used for player ++persistent++ otherwise it will break your server and because of that fact you can only use MythicMobs yamls that have
 	persistent set to true. Well thats the only limit.
 
-	### Mechanics:
-	
-	ActivePlayer:
+	### ActivePlayer mechanic:
 		Transform the targeted player into a mythicplayer.
 		
-	NormalPlayer:
+		m = Any valid MythicMob configuration with persistent option enabled.
+	
+	### NormalPlayer mechanic:
 		Make the mythicplayer player a ordinary player again.
 		
-	SetTarget:
+		No further options needed here.
+		
+	### SetTarget mechanic:
 		This mechanic is used to update the crosshair target of the player.
+		
+		selfnotarget = snt = true/false(default) If enabled the target of the player will be set to self. Thats a hacky workaround for skills not being triggered if no target is avail.
 		
 Example configuration for a full working MythicPlayer (Summon the PlayerMonkey and interact with it to turn into the MythicPlayer mob or damage the mob to be normal player):
 
@@ -111,31 +119,56 @@ PlayEffectOnTarget:
 
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher):
-	
-	ItemProjectile:
+
+	#### new since 1.16:
+		- mythicprojectiles:
+			+ pfacedir=true/false(default) Projectile object will face in movement direction.
+			+ pfoff=value(0.0 default) The front offset of the object. A value of -1.0 is about the center of the caster mob.
+			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
+			+ eyedir=true/false(default) If eyedir is used. The projectile do not need a target. It will be shoot in the entities look direction.
 		
+		- mythicorbitalprojectiles:
+			+ pfacedir=true/false(default) Projectile object will face in movement direction.
+			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
+			+ the owner of the orbital projectile will be set to its caster.
+	
+	### ItemProjectile:
 		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem or pobject to choose any droppable item.
 		
-	BlockProjectile:
-	
+		pobject = Any valid bukkit item type.
+		
+	### BlockProjectile:
 		Shoot any FallingBlock. Use it like the original MythicMobs projectile mechanic. In addtion use pblock or pobject to choose any FallingBlock.
 		
-	EntityProjectile:
-	
+		pobject = Any valid Bukkit fallingblock type.
+		
+	### EntityProjectile:
 		Shoot any Entity. Use it like the original MythicMobs projectile mechanic. In addtion use pentity or pobject to choose any Entity. Since v1.11 you can use pspin to spin the entity where pspin=VALUE value is the speed.
 		
-	MythicProjectile:
-
-		Shoot any MythicMobs mob as a projectile. In addition use poption or pmythic to choose a existing MythicMobs mob. See example for details.
+		pobject = Any valid bukkit entity type.
 		
-	MythicOrbitalProjectile:
-	
-		Summon a orbital object on the targeted entity. Do not work on locations. See the example who to use it.
+	### MythicProjectile:
+		Shoot any MythicMobs mob as a projectile. In addition use pobject or pmythic to choose a existing MythicMobs mob. See example for details.
+
+		pobject = MythicMob used for the projectile object
+		pfoff = value(0.0 default) The front offset of the object. A value of -1.0 is about the center of the caster mob.
+		pvoff = value(0.0 default) The vertical offset of the object.
+		pfacedir = true/false(default) Projectile object will face in movement direction.
+		eyedir = true/false(default) If eyedir is used. The projectile do not need a target. It will be shoot in the entities look direction.
+		targetable = true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
+		pspin = value(0 default) If there is a value != 0 the pobject will be spinned at value speed.
+		
+	### MythicOrbitalProjectile:
+		Summon a orbital object on the targeted entity. Do not work on locations. The owner of the orbital projectile will be set to its caster. See the example who to use it.
+		
+		pobject = MythicMob used for the orbital object
 		oradx = radius x
 		orady = radius y
 		oradz = radius z axsis.
 		oradsec = how much angle added per sec. (speed)
 		pvoff = vertical offset.
+		pfacedir = true/false(default) Projectile object will face in movement direction.
+		targetable = true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 		
 ```
 ItemProjectile:

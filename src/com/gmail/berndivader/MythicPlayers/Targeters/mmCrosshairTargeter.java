@@ -1,4 +1,4 @@
-package com.gmail.berndivader.MythicPlayers;
+package com.gmail.berndivader.MythicPlayers.Targeters;
 
 import java.util.HashSet;
 

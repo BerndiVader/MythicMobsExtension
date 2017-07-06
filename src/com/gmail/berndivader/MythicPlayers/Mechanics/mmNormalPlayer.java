@@ -1,6 +1,9 @@
-package com.gmail.berndivader.MythicPlayers;
+package com.gmail.berndivader.MythicPlayers.Mechanics;
 
 import java.util.Optional;
+
+import com.gmail.berndivader.MythicPlayers.ActivePlayer;
+import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;

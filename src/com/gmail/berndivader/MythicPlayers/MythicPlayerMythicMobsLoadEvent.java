@@ -3,6 +3,10 @@ package com.gmail.berndivader.MythicPlayers;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import com.gmail.berndivader.MythicPlayers.Mechanics.mmCreateActivePlayer;
+import com.gmail.berndivader.MythicPlayers.Mechanics.mmNormalPlayer;
+import com.gmail.berndivader.MythicPlayers.Mechanics.mmSetTarget;
+
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 

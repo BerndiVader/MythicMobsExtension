@@ -17,7 +17,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.HitBox;
 import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,7 +83,7 @@ ITargetedLocationSkill {
     protected boolean pFaceDirection;
     protected double pVOffset;
     protected float pFOffset;
-    protected boolean targetable;
+    protected boolean targetable,eyedir;
 
     public MythicProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -97,18 +96,13 @@ ITargetedLocationSkill {
         this.type = ProjectileType.valueOf(type.toUpperCase());
         this.tickInterval = mlc.getInteger(new String[]{"interval", "int", "i"}, 4);
         this.ticksPerSecond = 20.0f / (float)this.tickInterval;
-        this.hitRadius = mlc.getFloat("horizontalradius", 1.25f);
-        this.hitRadius = mlc.getFloat("hradius", this.hitRadius);
-        this.hitRadius = mlc.getFloat("hr", this.hitRadius);
-        this.hitRadius = mlc.getFloat("r", this.hitRadius);
         this.range = mlc.getFloat("maxrange", 40.0f);
         this.range = mlc.getFloat("mr", this.range);
         this.maxDistanceSquared = this.range * this.range;
         this.duration = (long)mlc.getInteger(new String[]{"maxduration","md"}, 100);
         this.duration *= 1000;
-        this.verticalHitRadius = mlc.getFloat("verticalradius", this.hitRadius);
-        this.verticalHitRadius = mlc.getFloat("vradius", this.verticalHitRadius);
-        this.verticalHitRadius = mlc.getFloat("vr", this.verticalHitRadius);
+        this.hitRadius = mlc.getFloat("hr", 2.0f);
+        this.verticalHitRadius = mlc.getFloat("vr", 2.0f);
         this.startYOffset = mlc.getFloat("startyoffset", 1.0f);
         this.startYOffset = mlc.getFloat("syo", this.startYOffset);
         this.startForwardOffset = mlc.getFloat(new String[]{"forwardoffset", "startfoffset", "sfo"}, 1.0f);
@@ -152,6 +146,7 @@ ITargetedLocationSkill {
         this.pVOffset = mlc.getDouble("pvoff",0.0D);
         this.pFOffset = mlc.getFloat("pfoff",0.0F);
         this.targetable = mlc.getBoolean("targetable",false);
+        this.eyedir = mlc.getBoolean("eyedir",false);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -208,7 +203,7 @@ ITargetedLocationSkill {
 		private float pSpin;
 		private double pVOff;
 		private double pFOff;
-		private boolean pFaceDir,targetable;
+		private boolean pFaceDir,targetable,eyedir;
 		
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
@@ -228,7 +223,9 @@ ITargetedLocationSkill {
             this.pSpin = MythicProjectile.this.pEntitySpin;
             this.pFaceDir = MythicProjectile.this.pFaceDirection;
             this.pVOff = MythicProjectile.this.pVOffset;
+            this.pFOff = MythicProjectile.this.pFOffset;
             this.targetable = MythicProjectile.this.targetable;
+            this.eyedir = MythicProjectile.this.eyedir;
             double velocity = 0.0;
             
             if (MythicProjectile.this.type == ProjectileType.METEOR) {
@@ -260,7 +257,12 @@ ITargetedLocationSkill {
             if (this.currentLocation == null) {
                 return;
             }
-            this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
+            if (!this.eyedir) {
+                this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
+            } else {
+            	AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
+            	this.currentVelocity = al.getDirection().normalize();
+            }
             if (MythicProjectile.this.projectileVelocityHorizOffset != 0.0f || MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
                 noise = 0.0f;
                 if (MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
@@ -290,8 +292,8 @@ ITargetedLocationSkill {
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
             }
             
-            this.pLocation = BukkitAdapter.adapt(currentLocation);
-            Vector v = new Vector();
+            this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
+            this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			try {
 				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0,this.pVOff,0));
 	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -307,7 +309,6 @@ ITargetedLocationSkill {
 		            NMSUtils.setInvulnerable(pEntity, true);
 		            NMSUtils.setSilent(pEntity,true);
 		            pEntity.setGravity(false);
-		            pEntity.setVelocity(v);
 				}
 			}.runTaskLater(Main.getPlugin(), 5L);
             
@@ -316,7 +317,8 @@ ITargetedLocationSkill {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
                 this.inRange.removeIf(e -> {
                     if (e != null) {
-                        if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
+                    	ActiveMob eam = null;
+                        if (e.getUniqueId().equals(this.am.getEntity().getUniqueId()) || e.getBukkitEntity().hasMetadata(Main.noTargetVar)) {
                             return true;
                         }
                         if (!MythicProjectile.this.hitPlayers && e.isPlayer()) {
@@ -325,9 +327,15 @@ ITargetedLocationSkill {
                         if (!MythicProjectile.this.hitNonPlayers && !e.isPlayer()) {
                             return true;
                         }
+                    	if (MythicMobs.inst().getMobManager().isActiveMob(e)) {
+                        	eam = MythicMobs.inst().getMobManager().getMythicMobInstance(e);
+                        	if (eam.getOwner().isPresent() && eam.getOwner().get().equals(this.am.getEntity().getUniqueId())) {
+                        		return true;
+                        	}
+                    	}
                     } else {
                         return true;
-                    }
+                    } 
                     return false;
                 }
                 );
@@ -421,7 +429,7 @@ ITargetedLocationSkill {
                 return;
             }
             if (this.inRange != null) {
-                HitBox hitBox = new HitBox(this.currentLocation, MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
+                HitBox hitBox = new HitBox(this.pam.getLocation(), MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
                 for (AbstractEntity e : this.inRange) {
                     if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
                     this.targets.add(e);
@@ -437,7 +445,6 @@ ITargetedLocationSkill {
                 targets.add(entity);
                 sData.setEntityTargets(targets);
                 sData.setOrigin(entity.getLocation());
-                
                 MythicProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
@@ -446,13 +453,12 @@ ITargetedLocationSkill {
                     this.stop();
                 }
             }
-            
-            Location loc = BukkitAdapter.adapt(currentLocation);
+            Location loc = BukkitAdapter.adapt(this.currentLocation);
         	Location eloc = this.pEntity.getLocation();
             if (this.pFaceDir) {
                 eloc = lookAt(eloc,loc);
             }
-            
+            loc.add(loc.getDirection().clone().multiply(this.pFOff));
             NMSUtils.setLocation(this.pEntity, loc.getX(), loc.getY()+this.pVOff, loc.getZ(), eloc.getYaw(), eloc.getPitch());
             if (this.pSpin!=0.0) {
                 float yaw = eloc.getYaw();
