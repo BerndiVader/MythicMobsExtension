@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,10 +18,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -82,19 +86,24 @@ public class PlayerManager implements Listener {
 	}
 	
 	public void makeNormalPlayer(ActivePlayer ap) {
+		Entity e = ap.getEntity().getBukkitEntity();
 		ap.signalMob(ap.getEntity(), "NOACTIVEMOB");
+		this.removeAllEffectsFromPlayer(ap.getEntity());
+		this.removeActivePlayer(ap);
+		e.removeMetadata("MythicPlayer", mythicplayers.plugin());
+		e.removeMetadata("Faction", mythicplayers.plugin());
+	}
+	
+	public void removeActivePlayer(ActivePlayer ap) {
 		Location l = ap.getEntity().getBukkitEntity().getLocation();
 		l.setY(0);
 		AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
-		this.removeAllEffectsFromPlayer(ap.getEntity());
-		ap.getEntity().getBukkitEntity().removeMetadata("MythicPlayer", mythicplayers.plugin());
-		ap.getEntity().getBukkitEntity().removeMetadata("Faction", mythicplayers.plugin());
 		this.unregisterActivePlayer(ap.getUniqueId());
 		ap.setEntity(d);
 		d.remove();
 	}
 	
-	public boolean attachActivePlayer(LivingEntity l) {
+	public boolean attachActivePlayer(LivingEntity l, boolean dotrigger) {
 		MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(l.getMetadata("MythicPlayer").get(0).asString());
 		if (mm==null) {
 			l.removeMetadata("MythicPlayer", mythicplayers.plugin());
@@ -103,7 +112,7 @@ public class PlayerManager implements Listener {
         ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
         this.addMythicPlayerToFaction(mm, ap);
         this.registerActiveMob(ap);
-        new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
+        if (dotrigger) new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
         return true;
 	}
 	
@@ -115,18 +124,14 @@ public class PlayerManager implements Listener {
         l.setMetadata("MythicPlayer", new FixedMetadataValue(mythicplayers.plugin(),mm.getInternalName()));
         return true;
     }
-    
+
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onMythicPlayerDeath(PlayerDeathEvent e) {
 		if (!this.isActivePlayer(e.getEntity().getUniqueId())) return;
 		ActivePlayer ap = this.getActivePlayer(e.getEntity().getUniqueId()).get();
 		ap.signalMob(ap.getEntity(), "DEATH");
-		Location l = e.getEntity().getLocation();
-		l.setY(0);
-		AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
-		this.unregisterActivePlayer(e.getEntity().getUniqueId());
-		ap.setEntity(d);
-		d.remove();
+		this.removeAllEffectsFromPlayer(ap.getEntity());
+		this.removeActivePlayer(ap);
 	}
 	
 	@EventHandler
@@ -134,7 +139,7 @@ public class PlayerManager implements Listener {
 		if (e.getPlayer().hasMetadata("MythicPlayer")) {
 	    	new BukkitRunnable() {
 	            public void run() {
-	            	MythicPlayers.inst().getPlayerManager().attachActivePlayer(e.getPlayer());
+	            	MythicPlayers.inst().getPlayerManager().attachActivePlayer(e.getPlayer(),true);
 	            }
 	        }.runTaskLater(mythicplayers.plugin(), 1);
 		}
@@ -142,7 +147,7 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerJoin(PlayerJoinEvent e) {
-		if (e.getPlayer().hasMetadata("MythicPlayer")) this.attachActivePlayer(e.getPlayer());
+		if (e.getPlayer().hasMetadata("MythicPlayer")) this.attachActivePlayer(e.getPlayer(),true);
 	}
 	
 	@EventHandler
@@ -151,12 +156,7 @@ public class PlayerManager implements Listener {
 			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 			this.removeAllEffectsFromPlayer(ap.getEntity());
 			ap.signalMob(ap.getEntity(), "QUIT");
-			Location l = e.getPlayer().getLocation();
-			l.setY(0);
-			AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
-			this.unregisterActivePlayer(e.getPlayer().getUniqueId());
-			ap.setEntity(d);
-			d.remove();
+			this.removeActivePlayer(ap);
 		}
 	}
 	
@@ -199,6 +199,36 @@ public class PlayerManager implements Listener {
     	Bukkit.getLogger().info("Action: " + e.getAction().toString());
     	 */
         if (ts!=null && ts.getCancelled()) e.setCancelled(true);
+    }
+   
+	@EventHandler
+    public void onPlayerWorldChangeAtPortal(PlayerPortalEvent e) {
+    	if (e.isCancelled() 
+    			|| !this.isActivePlayer(e.getPlayer().getUniqueId()) 
+    			|| e.getFrom().getWorld().equals(e.getTo().getWorld())) return;
+    	ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
+    	this.removeActivePlayer(ap);
+    }
+    
+	@EventHandler
+    public void onMythicPlayerWorldChangeAtTeleport(PlayerTeleportEvent e) {
+    	if (e.isCancelled() 
+    			|| !this.isActivePlayer(e.getPlayer().getUniqueId()) 
+    			|| e.getFrom().getWorld().equals(e.getTo().getWorld())) return;
+    	ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
+    	this.removeActivePlayer(ap);
+    }
+	
+	@EventHandler
+    public void onMythicPlayerWorldChanged(PlayerChangedWorldEvent e) {
+		if (e.getPlayer().hasMetadata("MythicPlayer")) {
+	    	new BukkitRunnable() {
+	    		private Player p = e.getPlayer();
+	            public void run() {
+	            	MythicPlayers.inst().getPlayerManager().attachActivePlayer(this.p,false);
+	            }
+	        }.runTaskLater(mythicplayers.plugin(),50L);
+		}
     }
     
 }

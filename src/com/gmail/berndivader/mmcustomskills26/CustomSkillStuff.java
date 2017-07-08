@@ -35,7 +35,6 @@ import think.rpgitems.item.RPGItem;
 @SuppressWarnings("deprecation")
 public class CustomSkillStuff implements Listener {
 	
-	
 	@EventHandler
 	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
 		if (e.getEntity().hasMetadata(Main.mpNameVar)) {
@@ -221,5 +220,4 @@ public class CustomSkillStuff implements Listener {
     	}
     	return null;
    	}    
-    
 }

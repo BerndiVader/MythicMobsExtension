@@ -17,23 +17,27 @@ public class mmOwnConditions implements Listener {
 	
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
-		if (e.getConditionName().toLowerCase().equals("vdistance")) {
+		String conditionName = e.getConditionName().toLowerCase();
+		if (conditionName.equals("vdistance")) {
 			SkillCondition c = new mmVerticalDistanceCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("hastarget")) {
+		} else if (conditionName.equals("hastarget")) {
 			SkillCondition c = new mmHasTargetCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("mobsinradius")) {
+		} else if (conditionName.equals("mobsinradius")) {
 			SkillCondition c = new mmMobsInRadiusCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("lastdamagecause")) {
+		} else if (conditionName.equals("lastdamagecause")) {
 			SkillCondition c = new mmLastDamageCauseCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("isstunned")) {
+		} else if (conditionName.equals("isstunned")) {
 			SkillCondition c = new mmIsStunnedCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("biomefix")) {
+		} else if (conditionName.equals("biomefix")) {
 			SkillCondition c = new mmBiomeFixCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+		} else if (conditionName.equals("hasmeta")) {
+			SkillCondition c = new mmHasMetaTagCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 		}
 	}
