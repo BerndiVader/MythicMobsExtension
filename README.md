@@ -119,7 +119,7 @@ PlayEffectOnTarget:
 ```
 
 
-## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher):
+## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
 
 	#### new since 1.16:
 		- mythicprojectiles:
