@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
@@ -255,6 +256,16 @@ ITargetedLocationSkill {
 			}
 			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
 			this.pam.setOwner(this.am.getEntity().getUniqueId());
+            new BukkitRunnable() {
+				@Override
+				public void run() {
+		            NMSUtils.setInvulnerable(pEntity, true);
+		            NMSUtils.setSilent(pEntity,true);
+		            pEntity.setGravity(false);
+		            pEntity.setVelocity(new Vector(0.0D,0.0D,0.0D));
+		            pEntity.teleport(BukkitAdapter.adapt(startLocation.add(0.0D, pVOff, 0.0D)));
+				}
+			}.runTaskLater(Main.getPlugin(), 5L);
             this.taskId = TaskManager.get().scheduleTask(this, 0, MythicOrbitalProjectile.this.tickInterval);
             if (MythicOrbitalProjectile.this.hitPlayers || MythicOrbitalProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
@@ -340,9 +351,8 @@ ITargetedLocationSkill {
                 }
             }
             
-            Location loc = BukkitAdapter.adapt(this.currentLocation);
-        	Location eloc = this.pEntity.getLocation();
-            if (this.pFaceDir) eloc = lookAt(eloc,loc);
+        	Location eloc = this.pEntity.getLocation().clone();
+            if (this.pFaceDir) eloc = lookAt(eloc,BukkitAdapter.adapt(this.currentLocation));
             NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY()+this.pVOff, this.currentLocation.getZ(), eloc.getYaw(), eloc.getPitch());
             if (this.pSpin!=0.0) {
                 float yaw = eloc.getYaw();

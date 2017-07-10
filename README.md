@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
 #### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
 #### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
 #### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
@@ -202,6 +203,91 @@ MythicOrbitalBullet:
   - delay 40
   - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-black;i=1;hR=0;vR=0;oradx=1.5;oradz=1.5;orady=1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
 ```
+
+
+
+## MetaMechanics & Conditions:
+
+	### setmeta mechchanic:
+		Set parsed(!) metadata for the target. You can use all variables that are avaible while the skill is executed.
+		
+			- setmeta{meta="tag=tagname;value=tagvalue;type=BOOLEAN/NUMERIC/STRING"}
+			
+		The tags "tag" and "value" can contain any mob variable. Example: [- setmeta{meta=<target.uuid>} @self] add the uuid of the target as metatag to the mob.
+		You can also use values and types, but this is more for further purpose. Still you can go form them too.
+		
+			- setmeta{meta="tag=lastdamagedentity;value=<trigger.uuid>;type=STRING"} @self ~onAttack
+			
+		This will set the lastdamagedentity tag of the mob to the victims uuid.
+		It is possible to set a metadata of a block by using a location targeter. All blocks but air are valid.
+		
+	### delmeta mechanic:
+		Delete a metatag from the targeted entity. Be aware, if you remove tags that are not added by yourself, might break something else!
+		
+			- delmeta{meta="tag=lastdamagedentity"} @self ~onCombatDrop
+			
+		This remove the lastdamagedentity tag if the mob stop fighting.
+		
+	### hasmeta condition:
+		With this condition you can check any parsed meta. In its main purpose its a compare condition. Mean its a TargetConditions because it needs 2 entities. But by setting the cs tag (compareself)
+		in the condition, you can choose if the target or the caster metas are checked. Its also possible to use a list of tags. All mob variables that are useable at the moment the skill is executed
+		can be used.
+
+			Syntax:
+			- hasmeta{meta="tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING";cs=true/false;action=true/false}
+
+			Example:
+			- hasmeta{meta="tag=lastdamagedentity;value=<target.uuid>;type=STRING";cs=true;action=true}
+			
+		This will check the caster entity if it has the tag "lastdamagedentity" and if it contains the uuid of the target. If cs=false it would check the target entity.
+		The following condition use a list. ATM it will meet the condition if only 1 of the tags match. This will be changed in the future.
+		
+			Example:
+			- hasmeta{meta="tag=<target.uuid>||tag=<trigger.uuid>";cs=true;action=true}
+			
+			Checks if the caster mob have the tag target uuid or trigger.uuid.
+			
+		The following example shows how to make it, that every entity can hit the villager only once. After that the entity have to interact with the villager do get removed and can hit him again one time:
+
+Example for metatag mechanics and condition:
+```
+Mob yaml:
+
+MetaMonkey:
+  Health: 1000
+  Type: villager
+  Display: "Meta Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - skill{s=cancelDamageIfMeta;sync=true} @trigger ~onDamaged
+  - skill{s=setMetaTag} @trigger ~onDamaged
+  - skill{s=delMetaTag} @trigger ~onInteract
+
+  
+Skill yaml:
+
+delMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";action=true;cs=true}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i remove you from my black list!"} @world
+  - delmeta{meta="tag=<trigger.uuid>"} @self
+  
+setMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=false}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i will remember you!"} @world
+  - setmeta{meta="tag=<trigger.uuid>"} @self
+  
+cancelDamageIfMeta:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=true}
+  Skills:
+  - cancelevent
+```
+
 
 
 
