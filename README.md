@@ -128,11 +128,14 @@ PlayEffectOnTarget:
 			+ pfoff=value(0.0 default) The front offset of the object. A value of -1.0 is about the center of the caster mob.
 			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 			+ eyedir=true/false(default) If eyedir is used. The projectile do not need a target. It will be shoot in the entities look direction.
+			+ invis=true/false(default) to apply invisible to the projectile.
 		
 		- mythicorbitalprojectiles:
 			+ pfacedir=true/false(default) Projectile object will face in movement direction.
 			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 			+ the owner of the orbital projectile will be set to its caster.
+			+ tag=value If used this tag will be parsed and added as metatag to the orbitalentity.
+			+ invis=true/false(default) to apply invisible to the projectile.
 	
 	### ItemProjectile:
 		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem or pobject to choose any droppable item.
@@ -159,6 +162,7 @@ PlayEffectOnTarget:
 		eyedir = true/false(default) If eyedir is used. The projectile do not need a target. It will be shoot in the entities look direction.
 		targetable = true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 		pspin = value(0 default) If there is a value != 0 the pobject will be spinned at value speed.
+		invis = true/false(default) if invisible will be applied to the pobject
 		
 	### MythicOrbitalProjectile:
 		Summon a orbital object on the targeted entity. Do not work on locations. The owner of the orbital projectile will be set to its caster. See the example who to use it.
@@ -171,6 +175,8 @@ PlayEffectOnTarget:
 		pvoff = vertical offset.
 		pfacedir = true/false(default) Projectile object will face in movement direction.
 		targetable = true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
+		tag = if used it will add a parsed metatag to the orbitalentity. Example: tag=<trigger.uuid>
+		invis = true/false(default) if invisible will be applied to the pobject
 		
 ```
 ItemProjectile:

@@ -282,8 +282,6 @@ ITargetedLocationSkill {
             this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation, EntityType.valueOf(customItemName));
             this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
             if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-            NMSUtils.setInvulnerable(this.pEntity);
-            NMSUtils.setSilent(this.pEntity,true);
             this.pEntity.setGravity(false);
             this.pEntity.setVelocity(v);
             

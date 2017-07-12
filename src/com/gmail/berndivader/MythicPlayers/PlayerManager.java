@@ -20,6 +20,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -35,8 +36,10 @@ import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
@@ -95,11 +98,11 @@ public class PlayerManager implements Listener {
 	}
 	
 	public void removeActivePlayer(ActivePlayer ap) {
-		Location l = ap.getEntity().getBukkitEntity().getLocation();
+		Location l = ap.getEntity().getBukkitEntity().getLocation().clone();
 		l.setY(0);
 		AbstractEntity d = BukkitAdapter.adapt(l.getWorld().spawnEntity(l, EntityType.BAT));
-		this.unregisterActivePlayer(ap.getUniqueId());
 		ap.setEntity(d);
+		this.unregisterActivePlayer(ap.getUniqueId());
 		d.remove();
 	}
 	
@@ -157,6 +160,7 @@ public class PlayerManager implements Listener {
 			this.removeAllEffectsFromPlayer(ap.getEntity());
 			ap.signalMob(ap.getEntity(), "QUIT");
 			this.removeActivePlayer(ap);
+            TaskManager.get().runAsyncLater(new QueuedMobCleanup(ap), 0);
 		}
 	}
 	
@@ -177,7 +181,7 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onMythicPlayerToggleSneak(PlayerToggleSneakEvent e) {
-		if (!this.isActivePlayer(e.getPlayer().getUniqueId())) return;
+		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId())) return;
 		SkillTrigger st = e.getPlayer().isSneaking()?SkillTrigger.UNCROUCH:SkillTrigger.CROUCH;
 		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null);
 	}
@@ -206,8 +210,11 @@ public class PlayerManager implements Listener {
     	if (e.isCancelled() 
     			|| !this.isActivePlayer(e.getPlayer().getUniqueId()) 
     			|| e.getFrom().getWorld().equals(e.getTo().getWorld())) return;
-    	ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
-    	this.removeActivePlayer(ap);
+    	Optional<ActivePlayer>maybeActivePlayer = this.getActivePlayer(e.getPlayer().getUniqueId());
+    	if (maybeActivePlayer.isPresent()) {
+        	ActivePlayer ap = maybeActivePlayer.get();
+        	this.removeActivePlayer(ap);
+    	}
     }
     
 	@EventHandler
@@ -215,8 +222,11 @@ public class PlayerManager implements Listener {
     	if (e.isCancelled() 
     			|| !this.isActivePlayer(e.getPlayer().getUniqueId()) 
     			|| e.getFrom().getWorld().equals(e.getTo().getWorld())) return;
-    	ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
-    	this.removeActivePlayer(ap);
+    	Optional<ActivePlayer>maybeActivePlayer = this.getActivePlayer(e.getPlayer().getUniqueId());
+    	if (maybeActivePlayer.isPresent()) {
+        	ActivePlayer ap = maybeActivePlayer.get();
+        	this.removeActivePlayer(ap);
+    	}
     }
 	
 	@EventHandler
@@ -230,5 +240,16 @@ public class PlayerManager implements Listener {
 	        }.runTaskLater(mythicplayers.plugin(),50L);
 		}
     }
+	
+	@EventHandler
+	public void onMythicPlayerChangeSlot(PlayerItemHeldEvent e) {
+		if (e.isCancelled() || !e.getPlayer().hasMetadata("MythicPlayer")) return;
+		Optional<ActivePlayer>maybeActivePlayer = this.getActivePlayer(e.getPlayer().getUniqueId());
+		if (maybeActivePlayer.isPresent()) {
+			ActivePlayer ap = maybeActivePlayer.get();
+	        e.getPlayer().setMetadata("READYREASON", new FixedMetadataValue(mythicplayers.plugin(),"ITEMCHANGE"));
+			new TriggeredSkill(SkillTrigger.READY, ap, ap.getEntity(), false);
+		}
+	}
     
 }

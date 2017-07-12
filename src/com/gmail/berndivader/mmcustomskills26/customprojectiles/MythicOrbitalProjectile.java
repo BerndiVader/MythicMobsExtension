@@ -15,6 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 import io.lumine.xikage.mythicmobs.util.HitBox;
 import java.util.HashMap;
@@ -22,12 +23,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
@@ -84,7 +84,8 @@ ITargetedLocationSkill {
 	protected float oRadiusZ;
 	protected float oRadiusY;
 	protected float oRadiusPerSec;
-	protected boolean targetable;
+	protected boolean targetable, invisible, ct, tc;
+	protected String tag;
 
     public MythicOrbitalProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -154,6 +155,10 @@ ITargetedLocationSkill {
         this.oRadiusY = mlc.getFloat("orady",0.0F);
         this.oRadiusPerSec = mlc.getFloat("oradsec",0.0F);
         this.targetable = mlc.getBoolean("targetable",false);
+        this.tag = mlc.getString("tag");
+        this.invisible = mlc.getBoolean("invis",false);
+        this.ct= mlc.getBoolean("ct",false);
+        this.tc= mlc.getBoolean("tc",false);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -192,6 +197,7 @@ ITargetedLocationSkill {
         private SkillMetadata data;
         private boolean cancelled;
         private SkillCaster am;
+        private ActiveMob cam;
         private long startTime;
         private AbstractLocation startLocation;
         private AbstractLocation currentLocation;
@@ -210,8 +216,8 @@ ITargetedLocationSkill {
 		private boolean pFaceDir;
 		private int tick;
 		private AbstractEntity target;
-		private UUID tuuid;
-		private boolean targetable;
+		private boolean targetable, ct, tc;
+		private String tag;
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractEntity t) {
@@ -237,11 +243,14 @@ ITargetedLocationSkill {
             this.radPerTick = this.radPerSec / 20f;
             this.tick = 0;
             this.target = t;
-            this.tuuid = t.getUniqueId();
             this.centerLocation = BukkitAdapter.adapt(this.target.getLocation());
             this.startLocation=this.target.getLocation();
             this.currentLocation = this.startLocation.clone();
             this.targetable = MythicOrbitalProjectile.this.targetable;
+            this.tag=MythicOrbitalProjectile.this.tag;
+            this.ct=MythicOrbitalProjectile.this.ct;
+            this.tc=MythicOrbitalProjectile.this.tc;
+            if (this.am instanceof ActiveMob) this.cam = (ActiveMob)this.am;
             if (this.currentLocation == null) {
                 return;
             }
@@ -256,16 +265,19 @@ ITargetedLocationSkill {
 			}
 			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
 			this.pam.setOwner(this.am.getEntity().getUniqueId());
-            new BukkitRunnable() {
-				@Override
-				public void run() {
-		            NMSUtils.setInvulnerable(pEntity, true);
-		            NMSUtils.setSilent(pEntity,true);
-		            pEntity.setGravity(false);
-		            pEntity.setVelocity(new Vector(0.0D,0.0D,0.0D));
-		            pEntity.teleport(BukkitAdapter.adapt(startLocation.add(0.0D, pVOff, 0.0D)));
+			if (this.tc) {
+				this.pam.setTarget(data.getCaster().getEntity());
+			} else if (this.ct) {
+				if (this.cam!=null && this.cam.hasThreatTable() && this.cam.getThreatTable().size()>0) {
+					this.pam.setTarget(this.cam.getThreatTable().getTopThreatHolder());
+				} else if (this.cam.getEntity().getTarget()!=null) {
+					this.pam.setTarget(this.cam.getEntity().getTarget());
 				}
-			}.runTaskLater(Main.getPlugin(), 5L);
+			}
+			if (this.tag!=null) {
+				this.tag=SkillString.parseMobVariables(this.tag, this.pam, this.am.getEntity().getTarget(), this.am.getEntity());
+	            this.pEntity.setMetadata(this.tag, new FixedMetadataValue(Main.getPlugin(), null));
+			}
             this.taskId = TaskManager.get().scheduleTask(this, 0, MythicOrbitalProjectile.this.tickInterval);
             if (MythicOrbitalProjectile.this.hitPlayers || MythicOrbitalProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
@@ -317,7 +329,6 @@ ITargetedLocationSkill {
             	return;
             }
 
-            this.target = BukkitAdapter.adapt(NMSUtils.getEntity(this.target.getBukkitEntity().getWorld(), this.tuuid));
             this.centerLocation = this.target.getBukkitEntity().getLocation(); //this.data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
             this.currentLocation = MythicOrbitalProjectile.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY, this.radPerTick * tick);
             if (MythicOrbitalProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
@@ -359,6 +370,13 @@ ITargetedLocationSkill {
                 yaw = ((yaw + this.pSpin) % 360.0F);
                 NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
             }
+            if (this.ct) {
+				if (this.cam!=null && this.cam.hasThreatTable() && this.cam.getThreatTable().size()>0) {
+					this.pam.setTarget(this.cam.getThreatTable().getTopThreatHolder());
+				} else if (this.cam.getEntity().getTarget()!=null) {
+					this.pam.setTarget(this.cam.getEntity().getTarget());
+				}
+			}
             this.targets.clear();
         }
 

@@ -18,7 +18,6 @@ public class mmCrosshairTargeter extends IEntitySelector {
 		super(mlc);
 	}
 
-	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
         HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
         SkillCaster caster = data.getCaster();

@@ -29,8 +29,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
@@ -295,7 +293,7 @@ ITargetedLocationSkill {
             this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
             this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			try {
-				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0,this.pVOff,0));
+				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0.0D, this.pVOff, 0.0D));
 	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 	            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
@@ -303,15 +301,6 @@ ITargetedLocationSkill {
 				return;
 			}
 			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
-            new BukkitRunnable() {
-				@Override
-				public void run() {
-		            NMSUtils.setInvulnerable(pEntity, true);
-		            NMSUtils.setSilent(pEntity,true);
-		            pEntity.setGravity(false);
-				}
-			}.runTaskLater(Main.getPlugin(), 5L);
-            
             this.taskId = TaskManager.get().scheduleTask(this, 0, MythicProjectile.this.tickInterval);
             if (MythicProjectile.this.hitPlayers || MythicProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));

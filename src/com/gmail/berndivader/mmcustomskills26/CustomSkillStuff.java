@@ -20,6 +20,9 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -219,5 +222,17 @@ public class CustomSkillStuff implements Listener {
     		}
     	}
     	return null;
-   	}    
+   	}
+
+	public static void applyInvisible(LivingEntity le, long runlater) {
+		PotionEffect pe = new PotionEffect(PotionEffectType.INVISIBILITY, 2073600, 4, false, false);
+		pe.apply(le);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				le.getEquipment().clear();
+			}
+		}.runTaskLater(Main.getPlugin(), runlater);
+	}
+
 }
