@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
 #### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
 #### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
 #### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
@@ -123,7 +124,7 @@ PlayEffectOnTarget:
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
 
 	#### new since 1.16:
-		- mythicprojectiles:
+		- mythicprojectiles/effectprojectile:
 			+ pfacedir=true/false(default) Projectile object will face in movement direction.
 			+ pfoff=value(0.0 default) The front offset of the object. A value of -1.0 is about the center of the caster mob.
 			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
@@ -136,7 +137,7 @@ PlayEffectOnTarget:
 			+ the owner of the orbital projectile will be set to its caster.
 			+ tag=value If used this tag will be parsed and added as metatag to the orbitalentity.
 			+ invis=true/false(default) to apply invisible to the projectile.
-	
+			
 	### ItemProjectile:
 		Shoot any Item. Use it like the original MythicMobs projectile mechanic. In addition use pitem or pobject to choose any droppable item.
 		
@@ -152,8 +153,9 @@ PlayEffectOnTarget:
 		
 		pobject = Any valid bukkit entity type.
 		
-	### MythicProjectile:
+	### MythicProjectile / MythicEffectProjectile:
 		Shoot any MythicMobs mob as a projectile. In addition use pobject or pmythic to choose a existing MythicMobs mob. See example for details.
+		If you dont need the projectile object you can use MythicEffectProjectile and use the futures of mythicprojectile without object.
 
 		pobject = MythicMob used for the projectile object
 		pfoff = value(0.0 default) The front offset of the object. A value of -1.0 is about the center of the caster mob.

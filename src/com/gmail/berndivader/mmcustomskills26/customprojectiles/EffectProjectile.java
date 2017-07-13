@@ -6,7 +6,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
@@ -26,15 +25,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
-import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
-public class MythicProjectile
+public class EffectProjectile
 extends SkillMechanic
 implements ITargetedEntitySkill,
 ITargetedLocationSkill {
@@ -84,7 +78,7 @@ ITargetedLocationSkill {
     protected float pFOffset;
     protected boolean targetable,eyedir;
 
-    public MythicProjectile(String skill, MythicLineConfig mlc) {
+    public EffectProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
         this.onTickSkillName = mlc.getString(new String[]{"ontickskill", "ontick", "ot", "skill", "s", "meta", "m"});
@@ -99,7 +93,7 @@ ITargetedLocationSkill {
         this.range = mlc.getFloat("mr", this.range);
         this.maxDistanceSquared = this.range * this.range;
         this.duration = (long)mlc.getInteger(new String[]{"maxduration","md"}, 100);
-        this.duration *= 1000;
+        this.duration *= 500;
         this.hitRadius = mlc.getFloat("hr", 2.0f);
         this.verticalHitRadius = mlc.getFloat("vr", 2.0f);
         this.startYOffset = mlc.getFloat("startyoffset", 1.0f);
@@ -196,13 +190,7 @@ ITargetedLocationSkill {
         private Set<AbstractEntity> inRange;
         private HashSet<AbstractEntity> targets;
         private Map<AbstractEntity, Long> immune;
-        private ActiveMob pam;
-        private Entity pEntity;
-		private Location pLocation;
-		private float pSpin;
-		private double pVOff;
-		private double pFOff;
-		private boolean pFaceDir,targetable,eyedir;
+		private boolean eyedir;
 		
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
@@ -219,36 +207,31 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
-            this.pSpin = MythicProjectile.this.pEntitySpin;
-            this.pFaceDir = MythicProjectile.this.pFaceDirection;
-            this.pVOff = MythicProjectile.this.pVOffset;
-            this.pFOff = MythicProjectile.this.pFOffset;
-            this.targetable = MythicProjectile.this.targetable;
-            this.eyedir = MythicProjectile.this.eyedir;
+            this.eyedir = EffectProjectile.this.eyedir;
             double velocity = 0.0;
             
-            if (MythicProjectile.this.type == ProjectileType.METEOR) {
+            if (EffectProjectile.this.type == ProjectileType.METEOR) {
                 this.startLocation = target.clone();
-                this.startLocation.add(0.0, MythicProjectile.this.heightFromSurface, 0.0);
-                if (MythicProjectile.this.projectileGravity <= 0.0f) {
-                    this.gravity = MythicProjectile.this.projectileVelocity;
-                    this.gravity = this.gravity > 0.0f ? this.gravity / MythicProjectile.this.ticksPerSecond : 0.0f;
+                this.startLocation.add(0.0, EffectProjectile.this.heightFromSurface, 0.0);
+                if (EffectProjectile.this.projectileGravity <= 0.0f) {
+                    this.gravity = EffectProjectile.this.projectileVelocity;
+                    this.gravity = this.gravity > 0.0f ? this.gravity / EffectProjectile.this.ticksPerSecond : 0.0f;
                 } else {
-                    this.gravity = MythicProjectile.this.projectileGravity > 0.0f ? MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond : 0.0f;
+                    this.gravity = EffectProjectile.this.projectileGravity > 0.0f ? EffectProjectile.this.projectileGravity / EffectProjectile.this.ticksPerSecond : 0.0f;
                 }
                 velocity = 0.0;
             } else {
-                this.startLocation = MythicProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
-                velocity = MythicProjectile.this.projectileVelocity / MythicProjectile.this.ticksPerSecond;
-                if (MythicProjectile.this.startYOffset != 0.0f) {
-                    this.startLocation.setY(this.startLocation.getY() + (double)MythicProjectile.this.startYOffset);
+                this.startLocation = EffectProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
+                velocity = EffectProjectile.this.projectileVelocity / EffectProjectile.this.ticksPerSecond;
+                if (EffectProjectile.this.startYOffset != 0.0f) {
+                    this.startLocation.setY(this.startLocation.getY() + (double)EffectProjectile.this.startYOffset);
                 }
-                if (MythicProjectile.this.startForwardOffset != 0.0f) {
-                    this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(MythicProjectile.this.startForwardOffset));
+                if (EffectProjectile.this.startForwardOffset != 0.0f) {
+                    this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(EffectProjectile.this.startForwardOffset));
                 }
-                if (MythicProjectile.this.startSideOffset != 0.0f) {
+                if (EffectProjectile.this.startSideOffset != 0.0f) {
                     this.startLocation.setPitch(0.0f);
-                    this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0, MythicProjectile.this.startSideOffset);
+                    this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0, EffectProjectile.this.startSideOffset);
                 }
             }
             this.startLocation.clone();
@@ -262,53 +245,37 @@ ITargetedLocationSkill {
             	AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
             	this.currentVelocity = al.getDirection().normalize();
             }
-            if (MythicProjectile.this.projectileVelocityHorizOffset != 0.0f || MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
+            if (EffectProjectile.this.projectileVelocityHorizOffset != 0.0f || EffectProjectile.this.projectileVelocityHorizNoise > 0.0f) {
                 noise = 0.0f;
-                if (MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
-                    noise = MythicProjectile.this.projectileVelocityHorizNoiseBase + MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityHorizNoise;
+                if (EffectProjectile.this.projectileVelocityHorizNoise > 0.0f) {
+                    noise = EffectProjectile.this.projectileVelocityHorizNoiseBase + MythicMobs.r.nextFloat() * EffectProjectile.this.projectileVelocityHorizNoise;
                 }
-                this.currentVelocity.rotate(MythicProjectile.this.projectileVelocityHorizOffset + noise);
+                this.currentVelocity.rotate(EffectProjectile.this.projectileVelocityHorizOffset + noise);
             }
-            if (MythicProjectile.this.startSideOffset != 0.0f) {
+            if (EffectProjectile.this.startSideOffset != 0.0f) {
                 // empty if block
             }
-            if (MythicProjectile.this.projectileVelocityVertOffset != 0.0f || MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
+            if (EffectProjectile.this.projectileVelocityVertOffset != 0.0f || EffectProjectile.this.projectileVelocityVertNoise > 0.0f) {
                 noise = 0.0f;
-                if (MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
-                    noise = MythicProjectile.this.projectileVelocityVertNoiseBase + MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityVertNoise;
+                if (EffectProjectile.this.projectileVelocityVertNoise > 0.0f) {
+                    noise = EffectProjectile.this.projectileVelocityVertNoiseBase + MythicMobs.r.nextFloat() * EffectProjectile.this.projectileVelocityVertNoise;
                 }
-                this.currentVelocity.add(new AbstractVector(0.0f, MythicProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
+                this.currentVelocity.add(new AbstractVector(0.0f, EffectProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
             }
-            if (MythicProjectile.this.hugSurface) {
-                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + MythicProjectile.this.heightFromSurface);
+            if (EffectProjectile.this.hugSurface) {
+                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EffectProjectile.this.heightFromSurface);
                 this.currentVelocity.setY(0).normalize();
             }
-            if (MythicProjectile.this.powerAffectsVelocity) {
+            if (EffectProjectile.this.powerAffectsVelocity) {
                 this.currentVelocity.multiply(this.power);
             }
             this.currentVelocity.multiply(velocity);
-            if (MythicProjectile.this.projectileGravity > 0.0f) {
+            if (EffectProjectile.this.projectileGravity > 0.0f) {
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
             }
             
-            this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
-            float yaw = this.pLocation.getYaw();
-            if (this.pFaceDir && !this.eyedir) {
-            	yaw = CustomSkillStuff.lookAt(this.pLocation, BukkitAdapter.adapt(target));
-            	this.pLocation.setYaw(yaw);
-            }
-            this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
-			try {
-				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.pLocation.add(0.0D, this.pVOff, 0.0D));
-	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-	            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			} catch (InvalidMobTypeException e1) {
-				e1.printStackTrace();
-				return;
-			}
-			this.pam = MythicMobs.inst().getMobManager().getMythicMobInstance(this.pEntity);
-            this.taskId = TaskManager.get().scheduleTask(this, 0, MythicProjectile.this.tickInterval);
-            if (MythicProjectile.this.hitPlayers || MythicProjectile.this.hitNonPlayers) {
+            this.taskId = TaskManager.get().scheduleTask(this, 0, EffectProjectile.this.tickInterval);
+            if (EffectProjectile.this.hitPlayers || EffectProjectile.this.hitNonPlayers) {
                 this.inRange.addAll(MythicMobs.inst().getEntityManager().getLivingEntities(this.currentLocation.getWorld()));
                 this.inRange.removeIf(e -> {
                     if (e != null) {
@@ -316,10 +283,10 @@ ITargetedLocationSkill {
                         if (e.getUniqueId().equals(this.am.getEntity().getUniqueId()) || e.getBukkitEntity().hasMetadata(Main.noTargetVar)) {
                             return true;
                         }
-                        if (!MythicProjectile.this.hitPlayers && e.isPlayer()) {
+                        if (!EffectProjectile.this.hitPlayers && e.isPlayer()) {
                             return true;
                         }
-                        if (!MythicProjectile.this.hitNonPlayers && !e.isPlayer()) {
+                        if (!EffectProjectile.this.hitNonPlayers && !e.isPlayer()) {
                             return true;
                         }
                     	if (MythicMobs.inst().getMobManager().isActiveMob(e)) {
@@ -335,13 +302,13 @@ ITargetedLocationSkill {
                 }
                 );
             }
-            if (MythicProjectile.this.onStartSkill.isPresent() && MythicProjectile.this.onStartSkill.get().isUsable(data)) {
+            if (EffectProjectile.this.onStartSkill.isPresent() && EffectProjectile.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
                 HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
                 targets.add(this.startLocation);
                 sData.setLocationTargets(targets);
                 sData.setOrigin(this.currentLocation.clone());
-                MythicProjectile.this.onStartSkill.get().execute(sData);
+                EffectProjectile.this.onStartSkill.get().execute(sData);
             }
         }
 
@@ -367,17 +334,17 @@ ITargetedLocationSkill {
                 this.stop();
                 return;
             }
-            if (this.startTime + MythicProjectile.this.duration < System.currentTimeMillis()) {
+            if (this.startTime + EffectProjectile.this.duration < System.currentTimeMillis()) {
                 this.stop();
                 return;
             }
             this.currentLocation.clone();
             this.currentLocation.add(this.currentVelocity);
-            if (MythicProjectile.this.hugSurface) {
+            if (EffectProjectile.this.hugSurface) {
                 if (this.currentLocation.getBlockX() != this.currentX || this.currentLocation.getBlockZ() != this.currentZ) {
                     boolean ok;
                     int attempts;
-                    Block b = BukkitAdapter.adapt(this.currentLocation.subtract(0.0, MythicProjectile.this.heightFromSurface, 0.0)).getBlock();
+                    Block b = BukkitAdapter.adapt(this.currentLocation.subtract(0.0, EffectProjectile.this.heightFromSurface, 0.0)).getBlock();
                     if (BlockUtil.isPathable(b)) {
                         attempts = 0;
                         ok = false;
@@ -408,23 +375,23 @@ ITargetedLocationSkill {
                             return;
                         }
                     }
-                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + MythicProjectile.this.heightFromSurface);
+                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EffectProjectile.this.heightFromSurface);
                     this.currentX = this.currentLocation.getBlockX();
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
-            } else if (MythicProjectile.this.projectileGravity != 0.0f) {
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond));
+            } else if (EffectProjectile.this.projectileGravity != 0.0f) {
+                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(EffectProjectile.this.projectileGravity / EffectProjectile.this.ticksPerSecond));
             }
-            if (MythicProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
+            if (EffectProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
             }
-            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)MythicProjectile.this.maxDistanceSquared) {
+            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)EffectProjectile.this.maxDistanceSquared) {
                 this.stop();
                 return;
             }
             if (this.inRange != null) {
-                HitBox hitBox = new HitBox(this.pam.getLocation(), MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
+                HitBox hitBox = new HitBox(this.currentLocation, EffectProjectile.this.hitRadius, EffectProjectile.this.verticalHitRadius);
                 for (AbstractEntity e : this.inRange) {
                     if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
                     this.targets.add(e);
@@ -433,49 +400,40 @@ ITargetedLocationSkill {
                 }
                 this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
             }
-            if (MythicProjectile.this.onTickSkill.isPresent() && MythicProjectile.this.onTickSkill.get().isUsable(this.data)) {
+            if (EffectProjectile.this.onTickSkill.isPresent() && EffectProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                sData.setCaster(this.pam);
-                sData.setTrigger(sData.getCaster().getEntity());
-                AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
-                HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
-                targets.add(entity);
-                sData.setEntityTargets(targets);
-                sData.setOrigin(entity.getLocation());
-                MythicProjectile.this.onTickSkill.get().execute(sData);
+                AbstractLocation location = this.currentLocation.clone();
+                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
+                targets.add(location);
+                sData.setLocationTargets(targets);
+                sData.setOrigin(location);
+                EffectProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
                 this.doHit((HashSet)this.targets.clone());
-                if (MythicProjectile.this.stopOnHitEntity) {
+                if (EffectProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }
             }
-        	Location eloc = this.pEntity.getLocation();
-            float yaw = eloc.getYaw();
-            if (this.pSpin!=0.0) {
-                yaw = ((yaw + this.pSpin) % 360.0F);
-            }
-            NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY()+this.pVOff, this.currentLocation.getZ(), yaw, eloc.getPitch());
             this.targets.clear();
         }
 
         private void doHit(HashSet<AbstractEntity> targets) {
-            if (MythicProjectile.this.onHitSkill.isPresent()) {
+            if (EffectProjectile.this.onHitSkill.isPresent()) {
                 SkillMetadata sData = this.data.deepClone();
                 sData.setEntityTargets(targets);
                 sData.setOrigin(this.currentLocation.clone());
-                if (MythicProjectile.this.onHitSkill.get().isUsable(sData)) {
-                	MythicProjectile.this.onHitSkill.get().execute(sData);
+                if (EffectProjectile.this.onHitSkill.get().isUsable(sData)) {
+                	EffectProjectile.this.onHitSkill.get().execute(sData);
                 }
             }
         }
 
         private void stop() {
-            if (MythicProjectile.this.onEndSkill.isPresent() && MythicProjectile.this.onEndSkill.get().isUsable(this.data)) {
+            if (EffectProjectile.this.onEndSkill.isPresent() && EffectProjectile.this.onEndSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                MythicProjectile.this.onEndSkill.get().execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
+                EffectProjectile.this.onEndSkill.get().execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
             }
-            this.pEntity.remove();
             TaskManager.get().cancelTask(this.taskId);
             this.cancelled = true;
         }

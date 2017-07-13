@@ -25,11 +25,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
@@ -330,7 +331,7 @@ ITargetedLocationSkill {
             }
 
             this.centerLocation = this.target.getBukkitEntity().getLocation(); //this.data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
-            this.currentLocation = MythicOrbitalProjectile.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY, this.radPerTick * tick);
+            this.currentLocation = CustomSkillStuff.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY, this.radPerTick * tick);
             if (MythicOrbitalProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
@@ -347,12 +348,13 @@ ITargetedLocationSkill {
             }
             if (MythicOrbitalProjectile.this.onTickSkill.isPresent() && MythicOrbitalProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
+                sData.setCaster(this.pam);
+                sData.setTrigger(sData.getCaster().getEntity());
                 AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
                 HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
                 targets.add(entity);
                 sData.setEntityTargets(targets);
                 sData.setOrigin(entity.getLocation());
-                
                 MythicOrbitalProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
@@ -361,15 +363,15 @@ ITargetedLocationSkill {
                     this.stop();
                 }
             }
-            
-        	Location eloc = this.pEntity.getLocation().clone();
-            if (this.pFaceDir) eloc = lookAt(eloc,BukkitAdapter.adapt(this.currentLocation));
-            NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY()+this.pVOff, this.currentLocation.getZ(), eloc.getYaw(), eloc.getPitch());
-            if (this.pSpin!=0.0) {
-                float yaw = eloc.getYaw();
+        	Location eloc = this.pEntity.getLocation();
+            float yaw = eloc.getYaw();
+            if (this.pFaceDir) {
+            	yaw = CustomSkillStuff.lookAt(eloc, BukkitAdapter.adapt(this.currentLocation));
+            }else if (this.pSpin!=0.0) {
                 yaw = ((yaw + this.pSpin) % 360.0F);
-                NMSUtils.setYawPitch(this.pEntity, yaw, eloc.getPitch());
             }
+            NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY()+this.pVOff, this.currentLocation.getZ(), yaw, 0.0F);
+            this.targets.clear();
             if (this.ct) {
 				if (this.cam!=null && this.cam.hasThreatTable() && this.cam.getThreatTable().size()>0) {
 					this.pam.setTarget(this.cam.getThreatTable().getTopThreatHolder());
@@ -412,39 +414,5 @@ ITargetedLocationSkill {
         }
     }
     
-	private static Location lookAt(Location loc, Location lookat) {
-        loc = loc.clone();
-        lookat = lookat.clone();
-        double dx = lookat.getX() - loc.getX();
-        double dy = lookat.getY() - loc.getY();
-        double dz = lookat.getZ() - loc.getZ();
- 
-        if (dx != 0) {
-            if (dx < 0) {
-                loc.setYaw((float) (1.5 * Math.PI));
-            } else {
-                loc.setYaw((float) (0.5 * Math.PI));
-            }
-            loc.setYaw((float) loc.getYaw() - (float) Math.atan(dz / dx));
-        } else if (dz < 0) {
-            loc.setYaw((float) Math.PI);
-        }
-        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
-        loc.setPitch((float) -Math.atan(dy / dxz));
-        loc.setYaw(-loc.getYaw() * 180f / (float) Math.PI);
-        loc.setPitch(loc.getPitch() * 180f / (float) Math.PI);
-        return loc;
-    }	
-    
-	private static AbstractLocation getCircleLoc(Location c, double rX, double rZ, double rY, double air) {
-        double x = c.getX() + rX * Math.cos(air);
-        double z = c.getZ() + rZ * Math.sin(air);
-        double y = c.getY() + rY * Math.cos(air);
-        Location loc = new Location(c.getWorld(), x, y, z);
-        Vector difference = c.toVector().clone().subtract(loc.toVector()); 
-        loc.setDirection(difference);
-        return BukkitAdapter.adapt(loc);
-    }	
-
 }
 

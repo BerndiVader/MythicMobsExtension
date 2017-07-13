@@ -24,9 +24,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
@@ -234,5 +236,132 @@ public class CustomSkillStuff implements Listener {
 			}
 		}.runTaskLater(Main.getPlugin(), runlater);
 	}
+	
+    public static final float DEGTORAD = 0.017453293F;
+    public static final float RADTODEG = 57.29577951F;
+    
+    public static float getLookAtYaw(Entity loc, Entity lookat) {
+        return getLookAtYaw(loc.getLocation(), lookat.getLocation());
+    }
+    
+    public static float getLookAtYaw(Block loc, Block lookat) {
+        return getLookAtYaw(loc.getLocation(), lookat.getLocation());
+    }
+    
+    public static float getLookAtYaw(Location loc, Location lookat) {
+        return getLookAtYaw(lookat.getX() - loc.getX(), lookat.getZ() - loc.getZ());
+    }
+    
+    public static float getLookAtYaw(Vector motion) {
+        return getLookAtYaw(motion.getX(), motion.getZ());
+    }
+    
+    public static float getLookAtYaw(double dx, double dz) {
+        float yaw = 0;
+        if (dx != 0) {
+            if (dx < 0) {
+                yaw = 270;
+            } else {
+                yaw = 90;
+            }
+            yaw -= atan(dz / dx);
+        } else if (dz < 0) {
+            yaw = 180;
+        }
+        return -yaw - 90;
+    }
+    
+    private static float atan(double value) {
+        return RADTODEG * (float) Math.atan(value);
+    }
 
+    public static Location move(Location loc, Vector offset) {
+        return move(loc, offset.getX(), offset.getY(), offset.getZ());
+    }
+    
+    public static Location move(Location loc, double dx, double dy, double dz) {
+        Vector off = rotate(loc.getYaw(), loc.getPitch(), dx, dy, dz);
+        double x = loc.getX() + off.getX();
+        double y = loc.getY() + off.getY();
+        double z = loc.getZ() + off.getZ();
+        return new Location(loc.getWorld(), x, y, z, loc.getYaw(), loc.getPitch());
+    }
+    
+    public static Vector rotate(float yaw, float pitch, Vector value) {
+        return rotate(yaw, pitch, value.getX(), value.getY(), value.getZ());
+    }
+    
+    public static Vector rotate(float yaw, float pitch, double x, double y, double z) {
+        float angle;
+        angle = yaw * DEGTORAD;
+        double sinyaw = Math.sin(angle);
+        double cosyaw = Math.cos(angle);
+        angle = pitch * DEGTORAD;
+        double sinpitch = Math.sin(angle);
+        double cospitch = Math.cos(angle);
+        double newx = 0.0;
+        double newy = 0.0;
+        double newz = 0.0;
+        newz -= x * cosyaw;
+        newz -= y * sinyaw * sinpitch;
+        newz -= z * sinyaw * cospitch;
+        newx += x * sinyaw;
+        newx -= y * cosyaw * sinpitch;
+        newx -= z * cosyaw * cospitch;
+        newy += y * cospitch;
+        newy -= z * sinpitch;
+        return new Vector(newx, newy, newz);
+    }
+
+	public static float lookAt(Location loc, Location lookat) {
+        loc = loc.clone();
+        lookat = lookat.clone();
+        float yaw=0.0F;
+        double dx = lookat.getX() - loc.getX();
+        double dy = lookat.getY() - loc.getY();
+        double dz = lookat.getZ() - loc.getZ();
+        
+        if (dx != 0) {
+            if (dx < 0) {
+                yaw=(float)(1.5 * Math.PI);
+            } else {
+                yaw=(float)(0.5*Math.PI);
+            }
+            yaw=yaw-(float)Math.atan(dz/dx);
+        } else if (dz < 0) {
+            yaw=(float)Math.PI;
+        }
+        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
+//        loc.setPitch((float) -Math.atan(dy / dxz));
+        yaw=-yaw*180f/(float)Math.PI;
+//        loc.setPitch(loc.getPitch() * 180f / (float) Math.PI);
+        return yaw;
+    }
+	
+    public static Location moveTo(Location loc, Vector offset) {
+        float ryaw = -loc.getYaw() / 180f * (float) Math.PI;
+        float rpitch = loc.getPitch() / 180f * (float) Math.PI;
+        double x = loc.getX();
+        double y = loc.getY();
+        double z = loc.getZ();
+        z -= offset.getX() * Math.sin(ryaw);
+        z += offset.getY() * Math.cos(ryaw) * Math.sin(rpitch);
+        z += offset.getZ() * Math.cos(ryaw) * Math.cos(rpitch);
+        x += offset.getX() * Math.cos(ryaw);
+        x += offset.getY() * Math.sin(rpitch) * Math.sin(ryaw);
+        x += offset.getZ() * Math.sin(ryaw) * Math.cos(rpitch);
+        y += offset.getY() * Math.cos(rpitch);
+        y -= offset.getZ() * Math.sin(rpitch);
+        return new Location(loc.getWorld(), x, y, z, loc.getYaw(), loc.getPitch());
+    }	
+    
+	public static AbstractLocation getCircleLoc(Location c, double rX, double rZ, double rY, double air) {
+        double x = c.getX() + rX * Math.cos(air);
+        double z = c.getZ() + rZ * Math.sin(air);
+        double y = c.getY() + rY * Math.cos(air);
+        Location loc = new Location(c.getWorld(), x, y, z);
+        Vector difference = c.toVector().clone().subtract(loc.toVector()); 
+        loc.setDirection(difference);
+        return BukkitAdapter.adapt(loc);
+    }	    
 }
