@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,21 +92,24 @@ public class CustomSkillStuff implements Listener {
 		if (debug) Bukkit.getLogger().info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled()) return;
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
-		double df = md / e.getDamage(DamageModifier.BASE);
+		double df = round(md / e.getDamage(DamageModifier.BASE),3);
 		if (debug) {
 			Bukkit.getLogger().info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
 			Bukkit.getLogger().info("Custom MythicDamage.: " + Double.toString(md));
 			Bukkit.getLogger().info("DamageFactor: " + Double.toString(df));
 			Bukkit.getLogger().info("-----------------------------");
 		}
+		if (Double.isNaN(md)) md=0.001D;
 		e.setDamage(DamageModifier.BASE, md);
-		double damage = e.getDamage(DamageModifier.BASE);
+		double damage = round(e.getDamage(DamageModifier.BASE),3);
 		for (DamageModifier modifier : DamageModifier.values()) {
 			if (!e.isApplicable(modifier) || modifier.equals(DamageModifier.BASE)) continue;
 			double modF = df;
 			if ((modifier.equals(DamageModifier.ARMOR) && ignoreArmor) 
 					|| (modifier.equals(DamageModifier.ABSORPTION) && ignoreAbs)) modF = 0D;
-			e.setDamage(modifier, modF * e.getDamage(modifier));
+			modF=round(modF*e.getDamage(modifier),3);
+			if (Double.isNaN(modF)) modF=0D;
+			e.setDamage(modifier, modF);
 			damage+=e.getDamage(modifier);
 		}
 		if (victim.getMetadata("PreventKnockback").get(0).asBoolean()) {
@@ -137,7 +142,8 @@ public class CustomSkillStuff implements Listener {
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage=rpgItemPlayerHit((Player)target, damage);
 		}
-		if (Math.abs(damage)<0.01) damage=0.01;
+		if (Double.isNaN(damage)) damage=0.001;
+		round(damage,3);
         target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
 		target.damage(damage, source);
 	    if (preventImmunity) target.setNoDamageTicks(0);
@@ -184,7 +190,7 @@ public class CustomSkillStuff implements Listener {
             }
         }
         if (useDamage) p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(),useDamage));
-        return damage;
+        return round(damage,3);
     }    
     
     public static LivingEntity getTargetedEntity(Player player) {
@@ -318,7 +324,7 @@ public class CustomSkillStuff implements Listener {
         lookat = lookat.clone();
         float yaw=0.0F;
         double dx = lookat.getX() - loc.getX();
-        double dy = lookat.getY() - loc.getY();
+//        double dy = lookat.getY() - loc.getY();
         double dz = lookat.getZ() - loc.getZ();
         
         if (dx != 0) {
@@ -331,7 +337,7 @@ public class CustomSkillStuff implements Listener {
         } else if (dz < 0) {
             yaw=(float)Math.PI;
         }
-        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
+//        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
 //        loc.setPitch((float) -Math.atan(dy / dxz));
         yaw=-yaw*180f/(float)Math.PI;
 //        loc.setPitch(loc.getPitch() * 180f / (float) Math.PI);
@@ -364,4 +370,10 @@ public class CustomSkillStuff implements Listener {
         loc.setDirection(difference);
         return BukkitAdapter.adapt(loc);
     }	    
+	
+	public static double round(double value, int places) {
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}	
 }
