@@ -319,14 +319,12 @@ public class CustomSkillStuff implements Listener {
         return new Vector(newx, newy, newz);
     }
 
-	public static float lookAt(Location loc, Location lookat) {
+	public static float lookAtYaw(Location loc, Location lookat) {
         loc = loc.clone();
         lookat = lookat.clone();
         float yaw=0.0F;
         double dx = lookat.getX() - loc.getX();
-//        double dy = lookat.getY() - loc.getY();
         double dz = lookat.getZ() - loc.getZ();
-        
         if (dx != 0) {
             if (dx < 0) {
                 yaw=(float)(1.5 * Math.PI);
@@ -337,10 +335,7 @@ public class CustomSkillStuff implements Listener {
         } else if (dz < 0) {
             yaw=(float)Math.PI;
         }
-//        double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
-//        loc.setPitch((float) -Math.atan(dy / dxz));
         yaw=-yaw*180f/(float)Math.PI;
-//        loc.setPitch(loc.getPitch() * 180f / (float) Math.PI);
         return yaw;
     }
 	
