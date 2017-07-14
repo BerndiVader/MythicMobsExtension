@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
 #### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
 #### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
 #### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
@@ -130,6 +131,9 @@ PlayEffectOnTarget:
 			+ targetable=true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 			+ eyedir=true/false(default) If eyedir is used. The projectile do not need a target. It will be shoot in the entities look direction.
 			+ invis=true/false(default) to apply invisible to the projectile.
+			+ bounce=true/false(default) if enabled the projectile bounce from the ground. only make sense if gravity is used and stoponground=false.
+			+ bred=0.2f(default) the amount the bouncing velocity is reduced.
+			+ onbounceskill=onbounce=ob=skillname The skill that will be executed if the projectile hit the ground.
 		
 		- mythicorbitalprojectiles:
 			+ pfacedir=true/false(default) Projectile object will face in movement direction.
@@ -165,6 +169,9 @@ PlayEffectOnTarget:
 		targetable = true/false(default) Create a metadata on the object called "nottargetable" useful for to exclude the entity from targeters.
 		pspin = value(0 default) If there is a value != 0 the pobject will be spinned at value speed.
 		invis = true/false(default) if invisible will be applied to the pobject
+		bounce=true/false(default) if enabled the projectile bounce from the ground. only make sense if gravity is used and stoponground=false.
+		bred=0.2f(default) the amount the bouncing velocity is reduced.
+		onbounceskill=onbounce=ob=skillname The skill that will be executed if the projectile hit the ground. For bounce example see below.
 		
 	### MythicOrbitalProjectile:
 		Summon a orbital object on the targeted entity. Do not work on locations. The owner of the orbital projectile will be set to its caster. See the example who to use it.
@@ -211,7 +218,22 @@ MythicOrbitalBullet:
   - delay 40
   - mythicorbitalprojectile{pobject=MythicOrbital1;ontick=IP-Tick-dust-black;i=1;hR=0;vR=0;oradx=1.5;oradz=1.5;orady=1.5;oradsec=3;md=20000;se=false;sb=false;pvoff=1}
 ```
-
+BouncingBulletSkills:
+```
+BouncingBullet:
+  Cooldown: 1
+  Skills:
+  - effectprojectile{ontick=BouncingBulletTicking;onbounce=IP-bounce-effect;v=5;i=1;g=0.2;hR=0;vR=0;sb=false;sfo=0;tyo=0;bounce=true;bred=0.5;md=200;mr=100;pfacedir=true} 
+BouncingBulletTicking:
+  Skills:
+  - mythiceffectprojectile{ontick=IP-Tick-bouncing;v=1;i=1;g=0;hR=0;vR=0;eyedir=true;sfo=0;md=1;pfoff=-4}
+IP-Tick-bouncing:
+  Skills:
+  - customparticles{p=reddust;amount=1;hs=0;vs=0;speed=0;yoffset=0;foffset=0} @origin
+IP-bounce-effect:
+  Skills:
+  - customparticles{p=explosion;amount=5;hs=0;vs=0.0;speed=0;yoffset=0.5;foffset=0} @origin
+```
 
 
 ## MetaMechanics & Conditions:

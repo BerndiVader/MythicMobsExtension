@@ -14,7 +14,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 import io.lumine.xikage.mythicmobs.util.MythicUtil;
@@ -38,6 +37,8 @@ public class MythicProjectile
 extends CustomProjectile
 implements ITargetedEntitySkill,
 ITargetedLocationSkill {
+    protected Optional<Skill> onBounceSkill = Optional.empty();
+    protected String onBounceSkillName;
     protected String pEntityName;
     protected float pEntitySpin;
     protected float pEntityPitchOffset;
@@ -47,6 +48,11 @@ ITargetedLocationSkill {
         this.pEntityName = mlc.getString(new String[]{"pobject","projectilemythic","pmythic"},"MINECART");
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
+        this.onBounceSkillName = mlc.getString(new String[]{"onbounceskill", "onbounce", "ob"});
+        if (this.onBounceSkillName != null) {
+            this.onBounceSkill = MythicMobs.inst().getSkillManager().getSkill(this.onBounceSkillName);
+        }
+        
     }
 
     @Override
@@ -91,6 +97,7 @@ ITargetedLocationSkill {
 		private double pVOff;
 		private double pFOff;
 		private boolean pFaceDir,targetable,eyedir;
+		private float currentBounce,bounceReduce;
 		
         @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
@@ -113,6 +120,8 @@ ITargetedLocationSkill {
             this.pFOff = MythicProjectile.this.pFOffset;
             this.targetable = MythicProjectile.this.targetable;
             this.eyedir = MythicProjectile.this.eyedir;
+            this.bounceReduce = MythicProjectile.this.bounceReduce;
+            this.currentBounce = MythicProjectile.this.projectileVelocity;
             double velocity = 0.0;
             
             if (MythicProjectile.this.type == ProjectileType.METEOR) {
@@ -304,6 +313,27 @@ ITargetedLocationSkill {
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
             } else if (MythicProjectile.this.projectileGravity != 0.0f) {
+           		if (MythicProjectile.this.bounce 
+           				&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
+           			if (this.currentBounce<0.0F) {
+                        this.stop();
+                        return;
+           			}
+           			this.currentBounce-=this.bounceReduce;
+           			this.currentVelocity.setY(this.currentBounce / MythicProjectile.this.ticksPerSecond);
+                    if (MythicProjectile.this.onBounceSkill.isPresent() 
+                    		&& MythicProjectile.this.onBounceSkill.get().isUsable(this.data)) {
+                        SkillMetadata sData = this.data.deepClone();
+                        sData.setCaster(this.pam);
+                        sData.setTrigger(sData.getCaster().getEntity());
+                        AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
+                        HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
+                        targets.add(entity);
+                        sData.setEntityTargets(targets);
+                        sData.setOrigin(this.currentLocation);
+                        MythicProjectile.this.onBounceSkill.get().execute(sData);
+                    }
+           		}
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)(MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond));
             }
             if (MythicProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {

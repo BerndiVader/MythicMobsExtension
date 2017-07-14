@@ -266,6 +266,10 @@ ITargetedLocationSkill {
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
             } else if (ItemProjectile.this.projectileGravity != 0.0f) {
+           		if (ItemProjectile.this.bounce 
+           				&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
+           			this.currentVelocity.setY(ItemProjectile.this.projectileVelocity / ItemProjectile.this.ticksPerSecond);
+           		}
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)(ItemProjectile.this.projectileGravity / ItemProjectile.this.ticksPerSecond));
             }
             if (ItemProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {

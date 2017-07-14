@@ -56,7 +56,8 @@ ITargetedLocationSkill {
     protected boolean pFaceDirection;
     protected double pVOffset;
     protected float pFOffset;
-    protected boolean targetable,eyedir;
+    protected boolean targetable,eyedir,bounce;
+    protected float bounceReduce;
     
     public CustomProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -117,6 +118,8 @@ ITargetedLocationSkill {
         this.pFOffset = mlc.getFloat("pfoff",0.0F);
         this.targetable = mlc.getBoolean("targetable",false);
         this.eyedir = mlc.getBoolean("eyedir",false);
+        this.bounce = mlc.getBoolean("bounce",false);
+        this.bounceReduce = mlc.getFloat("bred",0.2F);
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);

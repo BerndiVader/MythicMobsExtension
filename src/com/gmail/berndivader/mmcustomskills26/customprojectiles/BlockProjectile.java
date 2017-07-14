@@ -28,7 +28,6 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 public class BlockProjectile
@@ -85,7 +84,7 @@ ITargetedLocationSkill {
         private Map<AbstractEntity, Long> immune;
         private FallingBlock pBlock;
 		private Location pLocation;
-		private boolean pFaceDir,targetable,eyedir;
+		private boolean targetable,eyedir;
 		
         @SuppressWarnings({ "unchecked", "rawtypes", "deprecation"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
@@ -102,7 +101,6 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
-            this.pFaceDir = BlockProjectile.this.pFaceDirection;
             this.targetable = BlockProjectile.this.targetable;
             this.eyedir = BlockProjectile.this.eyedir;
             double velocity = 0.0;
@@ -284,6 +282,10 @@ ITargetedLocationSkill {
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
             } else if (BlockProjectile.this.projectileGravity != 0.0f) {
+           		if (BlockProjectile.this.bounce 
+           				&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
+           			this.currentVelocity.setY(BlockProjectile.this.projectileVelocity / BlockProjectile.this.ticksPerSecond);
+           		}
                 this.currentVelocity.setY(this.currentVelocity.getY() - (double)(BlockProjectile.this.projectileGravity / BlockProjectile.this.ticksPerSecond));
             }
             if (BlockProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
