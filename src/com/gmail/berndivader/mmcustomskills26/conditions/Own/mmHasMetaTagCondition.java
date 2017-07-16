@@ -28,7 +28,6 @@ public class mmHasMetaTagCondition extends SkillCondition
 implements 
 ILocationCondition,
 IEntityComparisonCondition {
-	protected String metaStrings[];
 	protected HashMap<String, metaTagValue>metatags = new HashMap<>();
 	protected boolean compareToSelf;
 	
@@ -43,7 +42,7 @@ IEntityComparisonCondition {
 		String ms =  mlc.getString(new String[]{"metalist","list","l"});
 		ms = ms.substring(1, ms.length()-1);
 		ms = SkillString.parseMessageSpecialChars(ms);
-		this.metaStrings = ms.split("\\|\\|");
+		String metaStrings[] = ms.split("\\|\\|");
 		for (String metaString : metaStrings) {
 			String parse[] = metaString.split(";");
 			String t=null, v=null, vt=null;

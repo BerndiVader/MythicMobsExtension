@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
 #### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
 #### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
 #### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
@@ -121,6 +122,17 @@ PlayEffectOnTarget:
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
 
+
+## CastIf mechanic:
+
+	Use this mechanic to compare conditions and targetconditions inside of skills and execute a skill if meet or another if not meet.
+	
+		- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;else=elseSkill} @trigger ~onDamaged
+			conditions=c= (Optional) The conditions to compare with the caster. Can be an arraylist split by &&
+			targetconditions=tc= (Optional) The conditions to compare with the targeted entity. Can be an arraylist split by &&
+			meet= (Optional) The skill to be executed if the conditions are meet.
+			else= (Optional) The skill to be executed if the conditions not meet.
+			The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
 
