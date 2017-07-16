@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.Bukkit;
-
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -46,26 +44,17 @@ ITargetedLocationSkill {
 		if (ms!=null) {
 			ms = ms.substring(1, ms.length()-1);
 			ms = SkillString.parseMessageSpecialChars(ms);
-			Bukkit.getLogger().info(ms);
 			String[]parse=ms.split("\\&\\&");
 			if (parse!=null && parse.length>0) {
-				Bukkit.getLogger().info("got skill!");
 				this.cConditionLines.addAll(Arrays.asList(parse));
-			}
-			for (String a : this.cConditionLines) {
-				Bukkit.getLogger().info(a);
 			}
 		}
 		ms =  mlc.getString(new String[]{"targetconditions","tc"});
 		if (ms!=null) {
 			ms = ms.substring(1, ms.length()-1);
 			ms = SkillString.parseMessageSpecialChars(ms);
-			Bukkit.getLogger().info(ms);
 			String[]parse=ms.split("\\&\\&");
 			if (parse!=null && parse.length>0) this.tConditionLines.addAll(Arrays.asList(parse));
-			for (String a : this.tConditionLines) {
-				Bukkit.getLogger().info(a);
-			}
 		}
 		
 		this.meetAction = mlc.getString(new String[]{"meet"});
@@ -152,5 +141,27 @@ ITargetedLocationSkill {
             conditions.add(sc);
         }
 		return conditions;
+	}
+	
+	public class oCondition {
+		private SkillCondition sc;
+		private String op;
+		
+		public oCondition(SkillCondition sc, String op) {
+			this.setSc(sc);
+			this.setOp(op);
+		}
+		public SkillCondition getSc() {
+			return sc;
+		}
+		public void setSc(SkillCondition sc) {
+			this.sc = sc;
+		}
+		public String getOp() {
+			return op;
+		}
+		public void setOp(String op) {
+			this.op = op;
+		}
 	}
 }
