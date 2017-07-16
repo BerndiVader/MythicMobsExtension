@@ -133,6 +133,8 @@ PlayEffectOnTarget:
 			meet= (Optional) The skill to be executed if the conditions are meet.
 			else= (Optional) The skill to be executed if the conditions not meet.
 			The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
+			
+			NOTE THE "" for the conditions and targetconditions!!
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
 
