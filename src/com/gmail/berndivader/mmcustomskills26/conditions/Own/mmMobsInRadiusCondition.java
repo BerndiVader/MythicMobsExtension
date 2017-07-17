@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -13,24 +14,17 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class mmMobsInRadiusCondition extends SkillCondition implements ILocationCondition {
+public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocationCondition {
 	private String[] t;
 	private RangedDouble a;
 	private double r;
 	private  HashSet<MythicMob> mmT = new HashSet<MythicMob>();
 
 	public mmMobsInRadiusCondition(String line, MythicLineConfig mlc) {
-		super(line);
-		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action"}, "TRUE").toUpperCase());
-		} catch (Exception ex) {
-			this.ACTION = ConditionAction.TRUE;
-		}
+		super(line, mlc);
 		this.t = mlc.getString(new String[]{"mobtypes","types","mobs","mob","type","t","m"},"ALL").split(",");
 		if (this.t[0].toUpperCase().equals("ALL")) this.t[0]="ALL";
 		this.a = new RangedDouble(mlc.getString(new String[]{"amount","a"},"0"), false);

@@ -1,5 +1,5 @@
 name: mmCustomSkills26
 main: com.gmail.berndivader.mmcustomskills26.Main
-version: 1.17
-softdepend: [RPGItems]
+version: 1.171
+softdepend: [RPGItems, MobArena]
 depend: [MythicMobs]

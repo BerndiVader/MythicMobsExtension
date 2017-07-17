@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 
 import com.gmail.berndivader.mmcustomskills26.metaTagValue;
+import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 import com.gmail.berndivader.mmcustomskills26.metaTagValue.ValueTypes;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -17,14 +18,12 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import net.minecraft.server.v1_12_R1.Material;
 
-public class mmHasMetaTagCondition extends SkillCondition 
+public class mmHasMetaTagCondition extends mmCustomCondition 
 implements 
 ILocationCondition,
 IEntityComparisonCondition {
@@ -32,12 +31,7 @@ IEntityComparisonCondition {
 	protected boolean compareToSelf;
 	
 	public mmHasMetaTagCondition(String line, MythicLineConfig mlc) {
-		super(line);
-		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action","a"}, "TRUE").toUpperCase());
-		} catch (Exception ex) {
-			this.ACTION = ConditionAction.TRUE;
-		}
+		super(line, mlc);
 		this.compareToSelf = mlc.getBoolean(new String[]{"compareself","cs"},false);
 		String ms =  mlc.getString(new String[]{"metalist","list","l"});
 		ms = ms.substring(1, ms.length()-1);

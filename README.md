@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 17.7.2017 *** added inMobArena condition.
 #### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
 #### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
 #### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
@@ -700,6 +701,11 @@ FleeButGotNothing:
 
 
 
+```
+  Conditions:
+  - inmobarena
+```
+Check if the location is in a MobArena arena. Requires MobArena plugin to work.
 ```
   Conditions:
   - biomefix{biome=PLAINS,DESSERT;action=true}

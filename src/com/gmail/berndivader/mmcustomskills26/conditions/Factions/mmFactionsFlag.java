@@ -13,6 +13,7 @@ public class mmFactionsFlag implements Listener {
 	
 	public mmFactionsFlag() {
 		Bukkit.getPluginManager().registerEvents(this, Main.getPlugin());
+		Bukkit.getLogger().info("registered Factions conditions!");
 	}
 	
 	@EventHandler

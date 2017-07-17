@@ -7,10 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
+import com.gmail.berndivader.mmcustomskills26.conditions.MobArena.mmMobArenaConditions;
 import com.gmail.berndivader.mmcustomskills26.conditions.Own.mmOwnConditions;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.WorldGuardFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.mmWorldGuardFlag;
@@ -27,6 +29,7 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	public static MythicMobs mm;
 	public static MythicPlayers mp;
+	public static MobArenaHandler maHandler;
 	public static WorldGuardPlugin wg;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
@@ -47,19 +50,23 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
 			getServer().getPluginManager().registerEvents(new CustomSkillStuff(), this);
 			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
-			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems")!=null) hasRpgItems=true;
-			Bukkit.getLogger().info("Register CustomConditions");
 			new mmOwnConditions();
 			if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
 				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new mmWorldGuardFlag();
-				Bukkit.getLogger().info("registered WorldGuard conditions!");
 			}
 			if (Bukkit.getPluginManager().isPluginEnabled("Factions") && Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
 				fflags = new FactionsFlags();
 				new mmFactionsFlag();
-				Bukkit.getLogger().info("registered Factions conditions!");
+			}
+			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems")!=null) {
+				Bukkit.getLogger().info("RPGItems support enabled!");
+				hasRpgItems=true;
+			}
+			if (Bukkit.getPluginManager().isPluginEnabled("MobArena")) {
+				maHandler = getMobArena();
+				new mmMobArenaConditions();
 			}
 			getNMSUtil();
 			mp = new MythicPlayers(this);
@@ -84,6 +91,9 @@ public class Main extends JavaPlugin {
 	public static ThiefHandler thiefhandler() {return thiefhandler;}
 	private static WorldGuardPlugin getWorldGuard() {
 	    return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+	}
+	private static MobArenaHandler getMobArena() {
+		return new MobArenaHandler();
 	}
 	private boolean getNMSUtil() {
 		nmsutils=new NMSUtils();
