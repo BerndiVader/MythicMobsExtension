@@ -22,33 +22,25 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
 		MechName = e.getMechanicName().toLowerCase();
-		switch (MechName) {
-		case("activeplayer"): {
+		if (MechName.equals("activeplayer")) {
 			skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
-			break;
-		}
-		case("normalplayer"): {
+		} else if (MechName.equals("normalplayer")) {
 			skill = new mmNormalPlayer(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-			break;
-		}
-		case ("settarget"): {
+		} else if (MechName.equals("settarget")) {
 			skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-		}}
+		}
 	}
 	
 	@EventHandler
 	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
 		TargeterName = e.getTargeterName().toLowerCase();
-		switch (TargeterName) {
-		case ("crosshairentity"):
-		case ("che"): {
+		if (TargeterName.equals("corsshairentity") 
+				|| TargeterName.equals("che")) {
 			targeter = new mmCrosshairTargeter(e.getConfig());
 			e.register(targeter);
-			break;
-		}}
+		}
 	}
-	
 }

@@ -18,10 +18,9 @@ public class mmMobArenaConditions implements Listener {
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
 		String conditionName = e.getConditionName().toLowerCase();
-		switch (conditionName) {
-		case "inmobarena": {
+		if (conditionName.equals("inmobarena")) {
 			SkillCondition c = new inMobArenaCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
-		}}
+		}
 	}
 }

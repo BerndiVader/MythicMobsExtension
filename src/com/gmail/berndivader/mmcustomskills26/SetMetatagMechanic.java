@@ -26,7 +26,7 @@ ITargetedEntitySkill {
 	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		String ms =  mlc.getString(new String[]{"meta","m"});
+		String ms =  mlc.getString(new String[]{"meta","m"},"");
 		ms = ms.substring(1, ms.length()-1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String parse[] = ms.split(";");

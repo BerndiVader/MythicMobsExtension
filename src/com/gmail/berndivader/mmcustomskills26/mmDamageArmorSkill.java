@@ -23,8 +23,8 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 	protected int rndMin,rndMax;
 	protected String signal;
 
-	public mmDamageArmorSkill(CustomMechanic h, MythicLineConfig mlc) {
-		super(h.getConfigLine(), mlc);
+	public mmDamageArmorSkill(String line, MythicLineConfig mlc) {
+		super(line, mlc);
 		this.ASYNC_SAFE=false;
 		this.armortype = mlc.getString(new String[]{"armor","a","armour"}, "all").toLowerCase().split(",");
 		String[] maybeRnd = mlc.getString(new String[]{"damage","dmg","d"}, "1").split("to");

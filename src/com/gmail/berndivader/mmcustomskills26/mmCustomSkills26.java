@@ -21,8 +21,9 @@ public class mmCustomSkills26 implements Listener {
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
 		MechName = e.getMechanicName().toLowerCase();
+		MechName = e.getMechanicName().toLowerCase();
 		if (MechName.equals("damagearmor")) {
-			skill = new mmDamageArmorSkill(e.getContainer(), e.getConfig());
+			skill = new mmDamageArmorSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 		} else if (MechName.equals("grenade")) {
 			skill = new mmGrenadeSkill(e.getContainer(), e.getConfig());
@@ -109,6 +110,5 @@ public class mmCustomSkills26 implements Listener {
 			skill=new CastIf(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 		}
-	}
-	
+	}	
 }
