@@ -42,40 +42,9 @@ ITargetedLocationSkill {
 		super(skill, mlc);
 		
 		String ms =  mlc.getString(new String[]{"conditions","c"});
-		if (ms!=null 
-				&& (ms.startsWith("\"") 
-						&& ms.endsWith("\""))) {
-			ms = ms.substring(1, ms.length()-1);
-			ms = SkillString.parseMessageSpecialChars(ms);
-			this.cConditionLine = ms;
-			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
-			String[]parse=ms.split("\\&\\&|\\|\\|");
-			if (parse!=null 
-					&& parse.length>0) {
-				for (int a=0;a<Arrays.asList(parse).size();a++) {
-					String p = Arrays.asList(parse).get(a);
-					this.cConditionLines.put(a, p);
-				}
-			}
-		}
+		this.parseConditionLines(ms, false);
 		ms =  mlc.getString(new String[]{"targetconditions","tc"});
-		if (ms!=null 
-				&& (ms.startsWith("\"") 
-						&& ms.endsWith("\""))) {
-			ms = ms.substring(1, ms.length()-1);
-			ms = SkillString.parseMessageSpecialChars(ms);
-			this.tConditionLine=ms;
-			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
-			String[]parse=ms.split("\\&\\&|\\|\\|");
-			if (parse!=null 
-					&& parse.length>0) {
-				for (int a=0;a<Arrays.asList(parse).size();a++) {
-					String p = Arrays.asList(parse).get(a);
-					this.tConditionLines.put(a, p);
-				}
-			}
-		}
-		
+		this.parseConditionLines(ms, true);
 		this.meetAction = mlc.getString(new String[]{"meet"});
 		this.elseAction = mlc.getString(new String[]{"else"});
 		if (this.meetAction!=null) {
@@ -174,5 +143,32 @@ ITargetedLocationSkill {
             conditions.put(a,sc);
         }
 		return conditions;
+	}
+	
+	private void parseConditionLines(String ms, boolean istarget) {
+		if (ms!=null 
+				&& (ms.startsWith("\"") 
+						&& ms.endsWith("\""))) {
+			ms = ms.substring(1, ms.length()-1);
+			ms = SkillString.parseMessageSpecialChars(ms);
+			if (istarget) {
+				this.tConditionLine=ms;
+			} else {
+				this.cConditionLine=ms;
+			}
+			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
+			String[]parse=ms.split("\\&\\&|\\|\\|");
+			if (parse!=null 
+					&& parse.length>0) {
+				for (int a=0;a<Arrays.asList(parse).size();a++) {
+					String p = Arrays.asList(parse).get(a);
+					if (istarget) {
+						this.tConditionLines.put(a, p);
+					} else {
+						this.cConditionLines.put(a, p);
+					}
+				}
+			}
+		}
 	}
 }

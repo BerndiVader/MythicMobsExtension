@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.16
 for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
+#### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
 #### *** 17.7.2017 *** added inMobArena condition.
 #### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
 #### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
@@ -134,6 +135,10 @@ PlayEffectOnTarget:
 			meet= (Optional) The skill to be executed if the conditions are meet.
 			else= (Optional) The skill to be executed if the conditions not meet.
 			The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
+			
+			Now possible, to use && || expressions. Example:
+			- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;elese=elseMetaSkill} @trigger ~onDamaged
+			This parse the c condtions lets say the mob is outside onground but player not within 10: (true&&true)||false condition will meet. Same work for the targetcondtion too.
 			
 			NOTE THE "" for the conditions and targetconditions!!
 
