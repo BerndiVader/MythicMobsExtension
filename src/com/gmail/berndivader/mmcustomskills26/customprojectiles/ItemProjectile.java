@@ -305,9 +305,9 @@ ITargetedLocationSkill {
                     this.stop();
                 }
             }
-            Location loc = BukkitAdapter.adapt(currentLocation);
-            Location eloc = this.pItem.getLocation();
-            this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
+            Vector cV = BukkitAdapter.adapt(currentLocation).toVector();
+            Vector eV = this.pItem.getLocation().toVector();
+            this.pItem.setVelocity(cV.subtract(eV.multiply(0.5)));            
             this.targets.clear();
         }
 

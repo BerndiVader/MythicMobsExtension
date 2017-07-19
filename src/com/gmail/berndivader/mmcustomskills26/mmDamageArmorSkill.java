@@ -15,7 +15,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.mechanics.CustomMechanic;
 
 public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntitySkill {
 
