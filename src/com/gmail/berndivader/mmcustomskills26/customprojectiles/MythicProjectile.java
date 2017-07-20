@@ -12,7 +12,6 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
@@ -20,7 +19,6 @@ import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Block;
@@ -37,21 +35,12 @@ public class MythicProjectile
 extends CustomProjectile
 implements ITargetedEntitySkill,
 ITargetedLocationSkill {
-    protected Optional<Skill> onBounceSkill = Optional.empty();
-    protected String onBounceSkillName;
-    protected String pEntityName;
-    protected float pEntitySpin;
-    protected float pEntityPitchOffset;
 
     public MythicProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.pEntityName = mlc.getString(new String[]{"pobject","projectilemythic","pmythic"},"MINECART");
         this.pEntitySpin = mlc.getFloat("pspin",0.0F);
         this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
-        this.onBounceSkillName = mlc.getString(new String[]{"onbounceskill", "onbounce", "ob"});
-        if (this.onBounceSkillName != null) {
-            this.onBounceSkill = MythicMobs.inst().getSkillManager().getSkill(this.onBounceSkillName);
-        }
         
     }
 

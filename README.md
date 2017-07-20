@@ -1,6 +1,9 @@
-# CustomSkillMechanics v1.16
-for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
+# CustomSkillMechanics v1.172dev
+for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+
+#### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
+#### *** 19.7.2017 *** final fix for location bug in orbit projectile.
 #### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
 #### *** 17.7.2017 *** added inMobArena condition.
 #### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
@@ -52,7 +55,7 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 
 	#### new since 1.16:
 		- settarget:
-			+ selfnotarget=true/false(default) set the players target to self if the player do not have a target at crosshair. Bit hacky workaround for skill not beeing triggered if no target is set.
+			+ selfnotarget=true/false(default) set the players target to self if the player do not have a target at crosshair. Bit hacky workaround for skill not being triggered if no target is set.
 
 	With this module you can turn any player on your server into a MythicPlayer. With almost all abilities of a MythicMobs mob. But there are some limitations. Because a player is a player and not a mob
 	its very important that you make all the mob yamls that will be used for player ++persistent++ otherwise it will break your server and because of that fact you can only use MythicMobs yamls that have
@@ -70,7 +73,6 @@ for MythicMobs 4.0.1 and Spigot 1.8.8 and higher
 		
 	### SetTarget mechanic:
 		This mechanic is used to update the crosshair target of the player.
-		
 		selfnotarget = snt = true/false(default) If enabled the target of the player will be set to self. Thats a hacky workaround for skills not being triggered if no target is avail.
 		
 Example configuration for a full working MythicPlayer (Summon the PlayerMonkey and interact with it to turn into the MythicPlayer mob or damage the mob to be normal player):
@@ -548,7 +550,13 @@ Pirate:
     SkinTexture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVmMDEyOTdlMmUxYWNkMDQ4ODJhMGM0NGU0OGYxZjE1Y2JiYTI1ODJmOTFiMDgxYzkyOTIwZmVkOGYzMjIwIn19fQ====
 ```
 
+## unEquipSkill:
 
+	- unequip{armor=<all>||<list>||<single>;signal=<string>}
+		armor: all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
+		signal: name of the signal which will be send to the target if set.
+
+		
 ## DamageArmorSkill:
 
 	- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}
