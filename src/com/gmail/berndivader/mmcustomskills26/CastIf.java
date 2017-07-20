@@ -137,7 +137,7 @@ ITargetedLocationSkill {
 		HashMap<Integer, SkillCondition>conditions = new HashMap<Integer, SkillCondition>();
         for (int a=0;a<conditionList.size();a++) {
         	SkillCondition sc;
-            String s = (String)conditionList.get(a);
+            String s = conditionList.get(a);
             if (s.startsWith(" ")) s = s.substring(1);
             if ((sc = SkillCondition.getCondition(s)) instanceof InvalidCondition) continue;
             conditions.put(a,sc);

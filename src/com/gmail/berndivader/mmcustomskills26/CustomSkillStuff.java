@@ -49,6 +49,7 @@ public class CustomSkillStuff implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
         EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();

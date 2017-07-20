@@ -111,12 +111,11 @@ ITargetedLocationSkill {
 		private boolean targetable, ct, tc, lt;
 		private String tag;
 		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractEntity t) {
 
             this.cancelled = false;
             this.inRange = ConcurrentHashMap.newKeySet();
-            this.targets = new HashSet();
+            this.targets = new HashSet<AbstractEntity>();
             this.immune = new HashMap<AbstractEntity, Long>();
             this.cancelled = false;
             this.data = data;
@@ -210,7 +209,7 @@ ITargetedLocationSkill {
             }
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
 		@Override
         public void run() {
         	this.tick++;
@@ -266,7 +265,7 @@ ITargetedLocationSkill {
                 MythicOrbitalProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
+                this.doHit((HashSet<AbstractEntity>)this.targets.clone());
                 if (MythicOrbitalProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }

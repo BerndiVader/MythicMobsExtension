@@ -6,8 +6,7 @@ import java.util.List;
 public final class MalformedBooleanException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	@SuppressWarnings("rawtypes")
-	private List booleanExpressionErrorIndexes;
+	private List<Integer> booleanExpressionErrorIndexes;
 	private String booleanExpression;
 	private String booleanExpressionErrorMessage;
 	
@@ -16,9 +15,8 @@ public final class MalformedBooleanException extends Exception {
 		this(errorMessage, toList(errorIndex), newBooleanExpression);
 	}
 
-	@SuppressWarnings("rawtypes")
 	MalformedBooleanException(final String errorMessage,
-		final List errorIndexes, final String newBooleanExpression) {
+		final List<Integer> errorIndexes, final String newBooleanExpression) {
 		super(format(errorMessage, errorIndexes, newBooleanExpression));
 		this.booleanExpression = newBooleanExpression;
 		this.booleanExpressionErrorIndexes = errorIndexes;
@@ -29,8 +27,7 @@ public final class MalformedBooleanException extends Exception {
 		return this.booleanExpression;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List getBooleanExpressionErrorIndexes() {
+	public List<Integer> getBooleanExpressionErrorIndexes() {
 		return this.booleanExpressionErrorIndexes;
 	}
 
@@ -38,15 +35,14 @@ public final class MalformedBooleanException extends Exception {
 		return this.booleanExpressionErrorMessage;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static List toList(final int errorIndex) {
-		List errorIndexes = new ArrayList();
+	private static List<Integer> toList(final int errorIndex) {
+		List<Integer> errorIndexes = new ArrayList<Integer>();
 		errorIndexes.add(new Integer(errorIndex));
 		return errorIndexes;
 	}
 
 	private static String format(final String errorMessage,
-		@SuppressWarnings("rawtypes") final List errorIndexes, final String newBooleanExpression) {
+		final List<Integer> errorIndexes, final String newBooleanExpression) {
 		if (errorMessage == null || errorMessage.equals("")) {
 			throw new IllegalArgumentException("errorMessage is null or void");
 		}
@@ -63,7 +59,7 @@ public final class MalformedBooleanException extends Exception {
 		int size = errorIndexes.size();
 		int lastIndex = 0;
 		for (int i = 0; i < size; i++) {
-			int index = ((Integer) errorIndexes.get(i)).intValue();
+			int index = errorIndexes.get(i).intValue();
 			error.append(newBooleanExpression.substring(lastIndex, index));
 			error.append("_");
 			lastIndex = index;

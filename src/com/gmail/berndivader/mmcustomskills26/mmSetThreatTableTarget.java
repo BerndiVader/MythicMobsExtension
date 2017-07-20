@@ -18,6 +18,7 @@ public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEn
 		this.amount=mlc.getDouble(new String[]{"amount","a"},65536);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (data.getCaster() instanceof ActiveMob) {

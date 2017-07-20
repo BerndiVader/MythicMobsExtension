@@ -99,14 +99,13 @@ ITargetedLocationSkill {
 		private boolean pFaceDir,targetable,eyedir;
 		private float currentBounce,bounceReduce;
 		
-        @SuppressWarnings({ "unchecked", "rawtypes"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
         	
             float noise;
             this.cancelled = false;
             this.gravity = 0.0f;
             this.inRange = ConcurrentHashMap.newKeySet();
-            this.targets = new HashSet();
+            this.targets = new HashSet<AbstractEntity>();
             this.immune = new HashMap<AbstractEntity, Long>();
             this.cancelled = false;
             this.data = data;
@@ -257,7 +256,7 @@ ITargetedLocationSkill {
             this.gravity *= p;
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
 		@Override
         public void run() {
             if (this.cancelled) {
@@ -366,7 +365,7 @@ ITargetedLocationSkill {
                 MythicProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
+                this.doHit((HashSet<AbstractEntity>)this.targets.clone());
                 if (MythicProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }

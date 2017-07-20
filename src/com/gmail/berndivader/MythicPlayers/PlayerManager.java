@@ -76,7 +76,7 @@ public class PlayerManager implements Listener {
 			LivingEntity le = (LivingEntity) e.getBukkitEntity();
 			Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
 			while (i.hasNext()) {
-				le.removePotionEffect(((PotionEffect)i.next()).getType());
+				le.removePotionEffect(i.next().getType());
 			}
 		}
 	}
@@ -106,6 +106,7 @@ public class PlayerManager implements Listener {
 		d.remove();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean attachActivePlayer(LivingEntity l, boolean dotrigger) {
 		MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(l.getMetadata("MythicPlayer").get(0).asString());
 		if (mm==null) {
@@ -119,7 +120,8 @@ public class PlayerManager implements Listener {
         return true;
 	}
 	
-    public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
+    @SuppressWarnings("unchecked")
+	public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
         ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
         this.addMythicPlayerToFaction(mm, ap);
         this.registerActiveMob(ap);
@@ -164,6 +166,7 @@ public class PlayerManager implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void onMythicPlayerDamage(EntityDamageEvent e) {
 		if (!MythicMobs.inst().getAPIHelper().isMythicMob(e.getEntity()) || e.isCancelled()) return;
@@ -179,6 +182,7 @@ public class PlayerManager implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void onMythicPlayerToggleSneak(PlayerToggleSneakEvent e) {
 		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId())) return;
@@ -241,6 +245,7 @@ public class PlayerManager implements Listener {
 		}
     }
 	
+	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void onMythicPlayerChangeSlot(PlayerItemHeldEvent e) {
 		if (e.isCancelled() || !e.getPlayer().hasMetadata("MythicPlayer")) return;

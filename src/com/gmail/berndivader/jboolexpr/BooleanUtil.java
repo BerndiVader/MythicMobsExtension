@@ -26,14 +26,13 @@ final class BooleanUtil {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void validRegexp(final String booleanExpression)
 		throws MalformedBooleanException {
 		String regexp = "(\\(|\\)|\\|{2}|\\&{2}|!|(false)|(true)|\\s)+";
 		if (!booleanExpression.matches("^" + regexp + "$")) {
 			Matcher matcher = Pattern.compile(regexp)
 				.matcher(booleanExpression);
-			List errorIndexes = new ArrayList();
+			List<Integer> errorIndexes = new ArrayList<Integer>();
 			while (matcher.find()) {
 				int start = matcher.start();
 				if (start != 0) {

@@ -24,8 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class UndoBlockListener implements Listener {
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Collection<Material> dList = new ArrayList(Arrays.asList(
+	
+	private Collection<Material> dList = new ArrayList<Material>(Arrays.asList(
 			Material.CHEST,
 			Material.TRAPPED_CHEST,
 			Material.ENDER_CHEST,

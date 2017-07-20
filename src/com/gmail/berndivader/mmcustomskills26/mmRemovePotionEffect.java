@@ -29,7 +29,7 @@ public class mmRemovePotionEffect extends SkillMechanic implements ITargetedEnti
 			if (target.hasPotionEffect()) {
 				Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
 				while (i.hasNext()) {
-					le.removePotionEffect(((PotionEffect)i.next()).getType());
+					le.removePotionEffect(i.next().getType());
 				}
 			}
 		} else {
