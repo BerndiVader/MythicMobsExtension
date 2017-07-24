@@ -17,10 +17,12 @@ final class BooleanAndOperation implements IBoolean {
 
 	}
 
+	@Override
 	public boolean booleanValue() {
 		return (this.iBoolean1.booleanValue() && this.iBoolean2.booleanValue());
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("(");

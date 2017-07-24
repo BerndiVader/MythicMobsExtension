@@ -129,7 +129,7 @@ ITargetedLocationSkill {
                 this.startLocation = EntityProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
                 velocity = EntityProjectile.this.projectileVelocity / EntityProjectile.this.ticksPerSecond;
                 if (EntityProjectile.this.startYOffset != 0.0f) {
-                    this.startLocation.setY(this.startLocation.getY() + (double)EntityProjectile.this.startYOffset);
+                    this.startLocation.setY(this.startLocation.getY() + EntityProjectile.this.startYOffset);
                 }
                 if (EntityProjectile.this.startForwardOffset != 0.0f) {
                     this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(EntityProjectile.this.startForwardOffset));
@@ -168,7 +168,7 @@ ITargetedLocationSkill {
                 this.currentVelocity.add(new AbstractVector(0.0f, EntityProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
             }
             if (EntityProjectile.this.hugSurface) {
-                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
+                this.currentLocation.setY(((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
                 this.currentVelocity.setY(0).normalize();
             }
             if (EntityProjectile.this.powerAffectsVelocity) {
@@ -176,7 +176,7 @@ ITargetedLocationSkill {
             }
             this.currentVelocity.multiply(velocity);
             if (EntityProjectile.this.projectileGravity > 0.0f) {
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
+                this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
             }
             this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
             float yaw = this.pLocation.getYaw();
@@ -289,7 +289,7 @@ ITargetedLocationSkill {
                             return;
                         }
                     }
-                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
+                    this.currentLocation.setY(((int)this.currentLocation.getY()) + EntityProjectile.this.heightFromSurface);
                     this.currentX = this.currentLocation.getBlockX();
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
@@ -303,13 +303,13 @@ ITargetedLocationSkill {
            			this.currentBounce-=this.bounceReduce;
            			this.currentVelocity.setY(this.currentBounce / EntityProjectile.this.ticksPerSecond);
            		}
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond));
+                this.currentVelocity.setY(this.currentVelocity.getY() - EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond);
             }
             if (EntityProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
             }
-            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)EntityProjectile.this.maxDistanceSquared) {
+            if (this.currentLocation.distanceSquared(this.startLocation) >= EntityProjectile.this.maxDistanceSquared) {
                 this.stop();
                 return;
             }
@@ -323,7 +323,7 @@ ITargetedLocationSkill {
                     this.immune.put(e, System.currentTimeMillis());
                     break;
                 }
-                this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
+                this.immune.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis() - 2000);
             }
             if (EntityProjectile.this.onTickSkill.isPresent() && EntityProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();

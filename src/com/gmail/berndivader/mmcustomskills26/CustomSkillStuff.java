@@ -28,6 +28,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -35,7 +37,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -49,7 +50,6 @@ public class CustomSkillStuff implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
         EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
@@ -58,7 +58,7 @@ public class CustomSkillStuff implements Listener {
         		&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
         	LivingEntity damager = getAttacker(((EntityDamageByEntityEvent)entityDamageEvent).getDamager());
         	if (damager!=null && MythicMobs.inst().getMobManager().isActiveMob(damager.getUniqueId())) {
-                new TriggeredSkill(SkillTrigger.KILL, MythicMobs.inst().getMobManager().getMythicMobInstance(damager),
+                new TriggeredSkillAP(SkillTrigger.KILL, MythicMobs.inst().getMobManager().getMythicMobInstance(damager),
                 		BukkitAdapter.adapt(e.getEntity()));
         	}
         }
@@ -187,7 +187,7 @@ public class CustomSkillStuff implements Listener {
             }
             if (can && pRItem.getArmour() > 0) {
             	useDamage=true;
-                damage -= Math.round(damage * (((double) pRItem.getArmour()) / 100d));
+                damage -= Math.round(damage * ((pRItem.getArmour()) / 100d));
             }
         }
         if (useDamage) p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(),useDamage));

@@ -12,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Skull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,7 +74,6 @@ import java.util.logging.Level;
  * switch everything over once the new Bukkit method is in an
  * official release.
  */
-@SuppressWarnings("unused")
 public class NMSUtils extends NMSUtil {
     public static boolean USE_MAGIC_DAMAGE = true;
     public static boolean isDamaging = false;
@@ -870,7 +868,7 @@ public class NMSUtils extends NMSUtil {
                 shootMethod.invoke(nmsProjectile, direction.getX(), direction.getY(), direction.getZ(), speed, spread);
             }
 
-            Entity entity = NMSUtils.getBukkitEntity(nmsProjectile);
+            Entity entity = NMSUtil.getBukkitEntity(nmsProjectile);
             if (entity == null || !(entity instanceof Projectile)) {
                 throw new Exception("Got invalid bukkit entity from projectile of class " + projectileType.getName());
             }
@@ -1138,7 +1136,7 @@ public class NMSUtils extends NMSUtil {
         try {
             Object entityDataTag = getNode(item, "BlockEntityTag");
             if (entityDataTag == null) return;
-            NMSUtils.setTileEntityData(block.getLocation(), entityDataTag);
+            NMSUtil.setTileEntityData(block.getLocation(), entityDataTag);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

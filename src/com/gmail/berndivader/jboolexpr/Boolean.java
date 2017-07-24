@@ -8,10 +8,12 @@ final class Boolean implements IBoolean {
 		this.booleanValue = newBooleanValue;
 	}
 
+	@Override
 	public boolean booleanValue() {
 		return this.booleanValue;
 	}
 
+	@Override
 	public String toString() {
 		return "" + this.booleanValue;
 	}

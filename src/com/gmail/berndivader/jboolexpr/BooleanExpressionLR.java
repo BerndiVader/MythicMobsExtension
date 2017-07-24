@@ -13,6 +13,7 @@ final class BooleanExpressionLR extends BooleanExpression {
 			.length());
 	}
 
+	@Override
 	public boolean booleanValue() {
 		return this.iBoolean.booleanValue();
 	}
@@ -173,6 +174,7 @@ final class BooleanExpressionLR extends BooleanExpression {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return this.iBoolean.toString();
 	}

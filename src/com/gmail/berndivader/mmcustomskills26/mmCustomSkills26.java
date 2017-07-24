@@ -26,119 +26,119 @@ public class mmCustomSkills26 implements Listener {
 			skill = new mmDamageArmorSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("unequip")) {
+		} if (MechName.equals("unequip")) {
 			skill = new mmUnequipSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("grenade")) {
+		} if (MechName.equals("grenade")) {
 			skill = new mmGrenadeSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("setrandomlevel")) {
+		} if (MechName.equals("setrandomlevel")) {
 			skill = new mmRandomLevelSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("steal")) {
+		} if (MechName.equals("steal")) {
 			skill = new mmStealSkill(e.getContainer(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("dropstolenitems")) {
+		} if (MechName.equals("dropstolenitems")) {
 			skill = new mmDropStolenItems(e.getContainer(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("equipskull")) {
+		} if (MechName.equals("equipskull")) {
 			skill = new mmEquipFix(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("endereffect")) {
+		} if (MechName.equals("endereffect")) {
 			skill = new mmEnderEffect(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("customdamage")) {
+		} if (MechName.equals("customdamage")) {
 			skill = new mmCustomDamage(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("cure") || MechName.equals("removepotion")) {
+		} if (MechName.equals("cure") || MechName.equals("removepotion")) {
 			skill = new mmRemovePotionEffect(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("feed")) {
+		} if (MechName.equals("feed")) {
 			skill = new mmFeedSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("oxygen")) {
+		} if (MechName.equals("oxygen")) {
 			skill = new mmOxygenSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("customsummon")) {
+		} if (MechName.equals("customsummon")) {
 			skill = new mmCustomSummonSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("stun")) {
+		} if (MechName.equals("stun")) {
 			skill = new mmStunSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("customteleport")) {
+		} if (MechName.equals("customteleport")) {
 			skill = new mmCustomTeleportSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("swap")) {
+		} if (MechName.equals("swap")) {
 			skill = new mmSwapSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("setthreattarget")) {
+		} if (MechName.equals("setthreattarget")) {
 			skill=new mmSetThreatTableTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("clearthreattarget")) {
+		} if (MechName.equals("clearthreattarget")) {
 			skill=new mmClearThreatTableTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("customparticleline")) {
+		} if (MechName.equals("customparticleline")) {
 			skill=new mmCustomParticleLineEffect(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("customparticles")) {
+		} if (MechName.equals("customparticles")) {
 			skill=new CustomParticleEffect(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("dropmythicitem")) {
+		} if (MechName.equals("dropmythicitem")) {
 			skill=new mmDropItemSkill(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("itemprojectile")) {
+		} if (MechName.equals("itemprojectile")) {
 			skill=new ItemProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("blockprojectile")) {
+		} if (MechName.equals("blockprojectile")) {
 			skill=new BlockProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("entityprojectile")) {
+		} if (MechName.equals("entityprojectile")) {
 			skill=new EntityProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("mythicprojectile")) {
+		} if (MechName.equals("mythicprojectile")) {
 			skill=new MythicProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("mythicorbitalprojectile")) {
+		} if (MechName.equals("mythicorbitalprojectile")) {
 			skill=new MythicOrbitalProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("mythiceffectprojectile")) {
+		} if (MechName.equals("mythiceffectprojectile")) {
 			skill=new EffectProjectile(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("setmeta")) {
+		} if (MechName.equals("setmeta")) {
 			skill=new SetMetatagMechanic(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("delmeta")) {
+		} if (MechName.equals("delmeta")) {
 			skill=new DeleteMetatagMechanic(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			return;
-		} else if (MechName.equals("castif")) {
+		} if (MechName.equals("castif")) {
 			skill=new CastIf(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			return;

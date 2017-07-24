@@ -48,7 +48,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 		}
 		LivingEntity e = (LivingEntity)BukkitAdapter.adapt(target);
    		ItemStack armor = null; short dur = 0; boolean broken = false;
-   		int damagevalue = (int)this.rndMin + (int)(Math.random() * ((this.rndMax - this.rndMin) + 1));
+   		int damagevalue = this.rndMin + (int)(Math.random() * ((this.rndMax - this.rndMin) + 1));
    		if (Arrays.asList(this.armortype).contains("offhand") || Arrays.asList(this.armortype).contains("all")) {
    			armor = MythicMobs.inst().getMinecraftVersion()>=9?e.getEquipment().getItemInOffHand():null;
         	if (armor!=null) {

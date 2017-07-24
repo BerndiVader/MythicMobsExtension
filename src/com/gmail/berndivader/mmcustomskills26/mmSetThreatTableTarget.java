@@ -28,7 +28,7 @@ public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEn
 				am.getThreatTable().getAllThreatTargets().clear();
 			}
 			if (target!=null) {
-				am.getThreatTable().threatGain(target, (double)this.amount);
+				am.getThreatTable().threatGain(target, this.amount);
 				am.getThreatTable().targetHighestThreat();
 				new TriggeredSkill(SkillTrigger.ENTERCOMBAT, am, target);
 			}

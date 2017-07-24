@@ -26,7 +26,7 @@ ITargetedEntitySkill {
 		final AbstractEntity t = target;
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
-		target.getBukkitEntity().setMetadata("mmStunned", new FixedMetadataValue(Main.getPlugin(), (boolean)true));
+		target.getBukkitEntity().setMetadata("mmStunned", new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
 			int count=0;
 			@Override

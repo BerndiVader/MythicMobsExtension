@@ -72,7 +72,8 @@ public class Main extends JavaPlugin {
 			mp = new MythicPlayers(this);
 			Bukkit.getLogger().info("registered MythicPlayers!");
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-	    		public void run() {
+	    		@Override
+				public void run() {
 	    			ti = thiefhandler.getThiefs().iterator();
 	    			while (ti.hasNext()) {
 	    				Thief thief = ti.next();if (!mm.getMobManager().isActiveMob(thief.getUuid())) {ti.remove();}}

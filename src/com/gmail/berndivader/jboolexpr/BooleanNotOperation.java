@@ -11,10 +11,12 @@ final class BooleanNotOperation implements IBoolean {
 		this.iBoolean = newIBoolean;
 	}
 
+	@Override
 	public boolean booleanValue() {
 		return (!this.iBoolean.booleanValue());
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("(!");

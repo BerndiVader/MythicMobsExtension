@@ -246,7 +246,7 @@ ITargetedLocationSkill {
                     this.immune.put(e, System.currentTimeMillis());
                     break;
                 }
-                this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
+                this.immune.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis() - 2000);
             }
             if (MythicOrbitalProjectile.this.onTickSkill.isPresent() 
             		&& MythicOrbitalProjectile.this.onTickSkill.get().isUsable(this.data)) {

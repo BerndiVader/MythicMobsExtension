@@ -77,11 +77,11 @@ ITargetedLocationSkill {
         String type = mlc.getString("type", "NORMAL");
         this.type = ProjectileType.valueOf(type.toUpperCase());
         this.tickInterval = mlc.getInteger(new String[]{"interval", "int", "i"}, 4);
-        this.ticksPerSecond = 20.0f / (float)this.tickInterval;
+        this.ticksPerSecond = 20.0f / this.tickInterval;
         this.range = mlc.getFloat("maxrange", 40.0f);
         this.range = mlc.getFloat("mr", this.range);
         this.maxDistanceSquared = this.range * this.range;
-        this.duration = (long)mlc.getInteger(new String[]{"maxduration","md"}, 100);
+        this.duration = mlc.getInteger(new String[]{"maxduration","md"}, 100);
         this.duration *= 500;
         this.hitRadius = mlc.getFloat("hr", 2.0f);
         this.verticalHitRadius = mlc.getFloat("vr", 2.0f);

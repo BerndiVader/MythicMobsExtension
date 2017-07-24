@@ -48,16 +48,16 @@ ITargetedLocationSkill {
         if (this.hDestOffset!=0.0f) {
         	l = getOffsetLocation(l, this.vDestOffset, this.hDestOffset, this.ignoreYaw);
         } else if (this.vDestOffset!=0.0f) {
-            l = l.clone().add(0.0, (double)this.vDestOffset,0.0);
+            l = l.clone().add(0.0, this.vDestOffset,0.0);
         }
         
-        Location sl = this.fromOrigin ? BukkitAdapter.adapt(origin).add(0.0, (double)this.yStartOffset, 0.0) : BukkitAdapter.adapt(am.getEntity()).getLocation().add(0.0, (double)this.yStartOffset, 0.0);
-        int c = (int)Math.ceil(sl.distance(l) / (double)this.distanceBetween) - 1;
+        Location sl = this.fromOrigin ? BukkitAdapter.adapt(origin).add(0.0, this.yStartOffset, 0.0) : BukkitAdapter.adapt(am.getEntity()).getLocation().add(0.0, this.yStartOffset, 0.0);
+        int c = (int)Math.ceil(sl.distance(l) / this.distanceBetween) - 1;
         if (c <= 0) {
             return;
         }
         Vector v = l.toVector().subtract(sl.toVector()).normalize().multiply(this.distanceBetween);
-        Location l2 = sl.clone().add(0.0, (double)this.yOffset, 0.0);
+        Location l2 = sl.clone().add(0.0, this.yOffset, 0.0);
         for (int i = 0; i < c; ++i) {
             l2.add(v);
             if (this.directional) {
@@ -71,7 +71,7 @@ ITargetedLocationSkill {
     protected void playDirectionalParticleEffect(Location origin, Location target, Location spawn) {
         Vector direction = this.directionReversed ? origin.toVector().subtract(target.clone().toVector()).normalize() : target.toVector().subtract(origin.clone().toVector()).normalize();
         for (int i = 0; i < this.amount; ++i) {
-            Location ln = spawn.clone().add((double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0, (double)this.vSpread + MythicMobs.r.nextDouble() * (double)this.vSpread * 2.0, (double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0);
+            Location ln = spawn.clone().add(0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0, this.vSpread + MythicMobs.r.nextDouble() * this.vSpread * 2.0, 0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0);
             new ParticleMaker.ParticlePacket(this.strParticle, direction, this.pSpeed, this.amount, true).send(ln, this.viewDistance);
         }
     }
