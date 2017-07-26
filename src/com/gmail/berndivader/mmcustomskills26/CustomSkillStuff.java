@@ -109,7 +109,7 @@ public class CustomSkillStuff implements Listener {
 			if ((modifier.equals(DamageModifier.ARMOR) && ignoreArmor) 
 					|| (modifier.equals(DamageModifier.ABSORPTION) && ignoreAbs)) modF = 0D;
 			modF=round(modF*e.getDamage(modifier),3);
-			if (Double.isNaN(modF)) modF=0D;
+			if (Double.isNaN(modF)) modF=0.001D;
 			e.setDamage(modifier, modF);
 			damage+=e.getDamage(modifier);
 		}
@@ -143,7 +143,7 @@ public class CustomSkillStuff implements Listener {
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage=rpgItemPlayerHit((Player)target, damage);
 		}
-		if (Double.isNaN(damage)) damage=0.001;
+		if (Double.isNaN(damage)) damage=0.001D;
 		round(damage,3);
         target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(),damage));
 		target.damage(damage, source);
@@ -368,7 +368,7 @@ public class CustomSkillStuff implements Listener {
     }	    
 	
 	public static double round(double value, int places) {
-	    BigDecimal bd = new BigDecimal(value);
+		BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(places, RoundingMode.HALF_UP);
 	    return bd.doubleValue();
 	}	

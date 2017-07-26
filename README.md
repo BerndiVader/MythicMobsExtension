@@ -1,7 +1,7 @@
 # CustomSkillMechanics v1.172dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-
+#### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
 #### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
 #### *** 19.7.2017 *** final fix for location bug in orbit projectile.
 #### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.

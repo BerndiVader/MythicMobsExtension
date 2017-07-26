@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26.NMS;
 
 import com.google.common.io.BaseEncoding;
+
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1267,8 +1268,8 @@ public class NMSUtils extends NMSUtil {
     
     public void setRotation(Entity e, float y, float p) {
     	try {
-        	Object nmsEntity = getHandle(e);
-        	class_Entity_setYawPitchMethod.invoke(nmsEntity, y, p);
+        	Object entityHandle = getHandle(e);
+        	class_Entity_setYawPitchMethod.invoke(entityHandle, y, p);
     	} catch (Exception ex) {
     		ex.printStackTrace();
     	}
@@ -1281,6 +1282,30 @@ public class NMSUtils extends NMSUtil {
     	} catch (Exception ex) {
     		ex.printStackTrace();
     	}
+    }
+    
+    public Float getAbsAmount(Entity e) {
+    	try {
+    		Object data = getEntityData(e);
+    		return (Float)class_NBTTagCompound_getFloatMethod.invoke(data, "AbsorptionAmount");
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+		return null;
+    }
+    
+    public boolean setAbsAmount(Entity e, float f) {
+    	try {
+    		String tag = "AbsorptionAmount";
+    		Object entityHandle = getHandle(e);
+    		Object data = getEntityData(e);
+    		setMetaFloat(data, tag, f);
+    		class_EntityLiving_writeNBTMethod.invoke(entityHandle, data);
+    		return true;
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return false;
     }
     
 }
