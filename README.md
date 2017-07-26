@@ -1,4 +1,4 @@
-# CustomSkillMechanics v1.172dev
+# CustomSkillMechanics v1.174 release
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 #### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
