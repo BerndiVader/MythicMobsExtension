@@ -30,7 +30,8 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 		this.a = new RangedDouble(mlc.getString(new String[]{"amount","a"},"0"), false);
 		this.r = mlc.getDouble(new String[]{"radius","r"},5);
 	    new BukkitRunnable() {
-	    	public void run() {	
+	    	@Override
+			public void run() {	
 	    		for (String s : t) {
 	            MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(s);
 	            if (mm != null) {
@@ -56,7 +57,7 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 				}
 			}
 		}
-		return this.a.equals((int)count);
+		return this.a.equals(count);
 	}
 
 }

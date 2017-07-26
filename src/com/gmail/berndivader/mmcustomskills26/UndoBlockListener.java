@@ -24,8 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class UndoBlockListener implements Listener {
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Collection<Material> dList = new ArrayList(Arrays.asList(
+	
+	private Collection<Material> dList = new ArrayList<Material>(Arrays.asList(
 			Material.CHEST,
 			Material.TRAPPED_CHEST,
 			Material.ENDER_CHEST,
@@ -92,6 +92,7 @@ public class UndoBlockListener implements Listener {
 			}
 			Collections.shuffle(blocks);
 			new BukkitRunnable() {
+				@Override
 				public void run() {
 					regen(blocks, ueffect, 1);
 				}
@@ -102,7 +103,8 @@ public class UndoBlockListener implements Listener {
     public static void regen(final List<BlockState> blocks, boolean effect, int speed) {
         new BukkitRunnable() {
             int i = -1;
-            @SuppressWarnings("deprecation")
+            @Override
+			@SuppressWarnings("deprecation")
             public void run() {
                 if (i != blocks.size() - 1) {
                     i++; BlockState bs = blocks.get(i);

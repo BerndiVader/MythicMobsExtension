@@ -13,6 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
+import io.lumine.xikage.mythicmobs.util.HitBox;
 import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +27,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 public class ItemProjectile
@@ -36,11 +37,15 @@ implements ITargetedEntitySkill,
 ITargetedLocationSkill {
     
     protected String pEntityName;
+    protected float pEntitySpin;
+    protected float pEntityPitchOffset;
 
     public ItemProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
-        this.ASYNC_SAFE=false;
-        this.pEntityName = mlc.getString(new String[]{"pobject","projectileitem","pitem"},"DIRT").toUpperCase();
+        
+        this.pEntityName = mlc.getString(new String[]{"pobject","projectileblock","pItem"},"DIRT").toUpperCase();
+        this.pEntitySpin = mlc.getFloat("pspin",0.0F);
+        this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
     }
 
     @Override
@@ -80,14 +85,19 @@ ITargetedLocationSkill {
         private Map<AbstractEntity, Long> immune;
         private Item pItem;
 		private Location pLocation;
-        @SuppressWarnings({ "unchecked", "rawtypes"})
+		private float pSpin;
+		private double pVOff;
+		private double pFOff;
+		private boolean pFaceDir,targetable,eyedir;
+		private float currentBounce,bounceReduce;
+		
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
 
             float noise;
             this.cancelled = false;
             this.gravity = 0.0f;
             this.inRange = ConcurrentHashMap.newKeySet();
-            this.targets = new HashSet();
+            this.targets = new HashSet<AbstractEntity>();
             this.immune = new HashMap<AbstractEntity, Long>();
             this.cancelled = false;
             this.data = data;
@@ -95,6 +105,14 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
+            this.pSpin = ItemProjectile.this.pEntitySpin;
+            this.pFaceDir = ItemProjectile.this.pFaceDirection;
+            this.pVOff = ItemProjectile.this.pVOffset;
+            this.pFOff = ItemProjectile.this.pFOffset;
+            this.targetable = ItemProjectile.this.targetable;
+            this.eyedir = ItemProjectile.this.eyedir;
+            this.bounceReduce = ItemProjectile.this.bounceReduce;
+            this.currentBounce = ItemProjectile.this.projectileVelocity;
             double velocity = 0.0;
             
             if (ItemProjectile.this.type == ProjectileType.METEOR) {
@@ -111,7 +129,7 @@ ITargetedLocationSkill {
                 this.startLocation = ItemProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
                 velocity = ItemProjectile.this.projectileVelocity / ItemProjectile.this.ticksPerSecond;
                 if (ItemProjectile.this.startYOffset != 0.0f) {
-                    this.startLocation.setY(this.startLocation.getY() + (double)ItemProjectile.this.startYOffset);
+                    this.startLocation.setY(this.startLocation.getY() + ItemProjectile.this.startYOffset);
                 }
                 if (ItemProjectile.this.startForwardOffset != 0.0f) {
                     this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(ItemProjectile.this.startForwardOffset));
@@ -126,7 +144,12 @@ ITargetedLocationSkill {
             if (this.currentLocation == null) {
                 return;
             }
-            this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
+            if (!this.eyedir) {
+                this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
+            } else {
+            	AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
+            	this.currentVelocity = al.getDirection().normalize();
+            }
             if (ItemProjectile.this.projectileVelocityHorizOffset != 0.0f || ItemProjectile.this.projectileVelocityHorizNoise > 0.0f) {
                 noise = 0.0f;
                 if (ItemProjectile.this.projectileVelocityHorizNoise > 0.0f) {
@@ -145,7 +168,7 @@ ITargetedLocationSkill {
                 this.currentVelocity.add(new AbstractVector(0.0f, ItemProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
             }
             if (ItemProjectile.this.hugSurface) {
-                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + ItemProjectile.this.heightFromSurface);
+                this.currentLocation.setY(((int)this.currentLocation.getY()) + ItemProjectile.this.heightFromSurface);
                 this.currentVelocity.setY(0).normalize();
             }
             if (ItemProjectile.this.powerAffectsVelocity) {
@@ -153,19 +176,23 @@ ITargetedLocationSkill {
             }
             this.currentVelocity.multiply(velocity);
             if (ItemProjectile.this.projectileGravity > 0.0f) {
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
+                this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
             }
-            
-            this.pLocation = BukkitAdapter.adapt(currentLocation);
-            
-            Vector v = new Vector();
+            this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
+            float yaw = this.pLocation.getYaw();
+            if (this.pFaceDir && !this.eyedir) {
+            	yaw = CustomSkillStuff.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+            	this.pLocation.setYaw(yaw);
+            }
+            this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
             ItemStack i = new ItemStack(Material.valueOf(customItemName));
-            this.pItem = this.pLocation.getWorld().dropItem(BukkitAdapter.adapt(currentLocation), i);
+            this.pItem = this.pLocation.getWorld().dropItem(this.pLocation.add(0.0d, this.pVOff, 0.0d), i);
             this.pItem.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-            this.pItem.setPickupDelay(Integer.MAX_VALUE);
+            if (!this.targetable) this.pItem.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
+            this.pItem.setTicksLived(Integer.MAX_VALUE);
             this.pItem.setInvulnerable(true);
             this.pItem.setGravity(false);
-            this.pItem.setVelocity(v);
+            this.pItem.setPickupDelay(Integer.MAX_VALUE);
             
             this.taskId = TaskManager.get().scheduleTask(this, 0, ItemProjectile.this.tickInterval);
             if (ItemProjectile.this.hitPlayers || ItemProjectile.this.hitNonPlayers) {
@@ -210,7 +237,7 @@ ITargetedLocationSkill {
             this.gravity *= p;
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
 		@Override
         public void run() {
             if (this.cancelled) {
@@ -261,22 +288,27 @@ ITargetedLocationSkill {
                             return;
                         }
                     }
-                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + ItemProjectile.this.heightFromSurface);
+                    this.currentLocation.setY(((int)this.currentLocation.getY()) + ItemProjectile.this.heightFromSurface);
                     this.currentX = this.currentLocation.getBlockX();
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
             } else if (ItemProjectile.this.projectileGravity != 0.0f) {
            		if (ItemProjectile.this.bounce 
            				&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
-           			this.currentVelocity.setY(ItemProjectile.this.projectileVelocity / ItemProjectile.this.ticksPerSecond);
+           			if (this.currentBounce<0.0F) {
+                        this.stop();
+                        return;
+           			}
+           			this.currentBounce-=this.bounceReduce;
+           			this.currentVelocity.setY(this.currentBounce / ItemProjectile.this.ticksPerSecond);
            		}
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(ItemProjectile.this.projectileGravity / ItemProjectile.this.ticksPerSecond));
+                this.currentVelocity.setY(this.currentVelocity.getY() - ItemProjectile.this.projectileGravity / ItemProjectile.this.ticksPerSecond);
             }
             if (ItemProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
             }
-            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)ItemProjectile.this.maxDistanceSquared) {
+            if (this.currentLocation.distanceSquared(this.startLocation) >= ItemProjectile.this.maxDistanceSquared) {
                 this.stop();
                 return;
             }
@@ -288,7 +320,7 @@ ITargetedLocationSkill {
                     this.immune.put(e, System.currentTimeMillis());
                     break;
                 }
-                this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
+                this.immune.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis() - 2000);
             }
             if (ItemProjectile.this.onTickSkill.isPresent() && ItemProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
@@ -300,14 +332,14 @@ ITargetedLocationSkill {
                 ItemProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
+                this.doHit((HashSet<AbstractEntity>)this.targets.clone());
                 if (ItemProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }
             }
-            Location loc = BukkitAdapter.adapt(currentLocation);
-            Location eloc = this.pItem.getLocation();
-            this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));            
+            Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+            Location eloc = this.pItem.getLocation().clone();
+            this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));  
             this.targets.clear();
         }
 
@@ -342,6 +374,5 @@ ITargetedLocationSkill {
             return this.cancelled;
         }
     }
-
 }
 

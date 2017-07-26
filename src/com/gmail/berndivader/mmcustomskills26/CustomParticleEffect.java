@@ -63,7 +63,6 @@ ITargetedLocationSkill {
         if (color != null) {
             this.color = Color.decode(color);
         }
-        //this.fOffset *= -1.0f;
     }
 
     @Override
@@ -105,13 +104,13 @@ ITargetedLocationSkill {
             this.playColoredParticleEffect(target);
             return;
         }
-        Location ln = target.clone().add(0.0, (double)this.yOffset, 0.0);
+        Location ln = target.clone().add(0.0, this.yOffset, 0.0);
         new ParticleMaker.ParticlePacket(this.strParticle, this.hSpread, this.vSpread, this.hSpread, this.pSpeed, this.amount, true).send(ln, this.viewDistance);
     }
 
     protected void playColoredParticleEffect(Location target) {
         for (int i = 0; i < this.amount; ++i) {
-            Location ln = target.clone().add((double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0, (double)(this.yOffset - this.vSpread) + MythicMobs.r.nextDouble() * (double)this.vSpread * 2.0, (double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0);
+            Location ln = target.clone().add(0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0, this.yOffset - this.vSpread + MythicMobs.r.nextDouble() * this.vSpread * 2.0, 0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0);
             new ParticleMaker.ParticlePacket(this.strParticle, this.color, this.pSpeed, this.amount, true).send(ln, this.viewDistance);
         }
     }
@@ -119,7 +118,7 @@ ITargetedLocationSkill {
     protected void playDirectionalParticleEffect(Location origin, Location target) {
         Vector direction = this.directionReversed ? origin.toVector().subtract(target.clone().toVector()).normalize() : target.toVector().subtract(origin.clone().toVector()).normalize();
         for (int i = 0; i < this.amount; ++i) {
-            Location ln = target.clone().add((double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0, (double)(this.yOffset - this.vSpread) + MythicMobs.r.nextDouble() * (double)this.vSpread * 2.0, (double)(0.0f - this.hSpread) + MythicMobs.r.nextDouble() * (double)this.hSpread * 2.0);
+            Location ln = target.clone().add(0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0, this.yOffset - this.vSpread + MythicMobs.r.nextDouble() * this.vSpread * 2.0, 0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0);
             new ParticleMaker.ParticlePacket(this.strParticle, direction, this.pSpeed, this.amount, true).send(ln, this.viewDistance);
         }
     }

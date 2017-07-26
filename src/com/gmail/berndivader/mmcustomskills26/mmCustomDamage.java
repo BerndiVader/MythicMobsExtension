@@ -37,7 +37,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
         if (this.p) {
             dmg = this.pcur?t.getHealth()*dmg:t.getMaxHealth()*dmg;
         }
-        if (!this.ip) dmg = dmg*(double)data.getPower();
+        if (!this.ip) dmg = dmg*data.getPower();
         CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug);
         return true;
 	}

@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26.NMS;
 
 import com.google.common.io.BaseEncoding;
+
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +13,6 @@ import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Skull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,7 +75,6 @@ import java.util.logging.Level;
  * switch everything over once the new Bukkit method is in an
  * official release.
  */
-@SuppressWarnings("unused")
 public class NMSUtils extends NMSUtil {
     public static boolean USE_MAGIC_DAMAGE = true;
     public static boolean isDamaging = false;
@@ -870,7 +869,7 @@ public class NMSUtils extends NMSUtil {
                 shootMethod.invoke(nmsProjectile, direction.getX(), direction.getY(), direction.getZ(), speed, spread);
             }
 
-            Entity entity = NMSUtils.getBukkitEntity(nmsProjectile);
+            Entity entity = NMSUtil.getBukkitEntity(nmsProjectile);
             if (entity == null || !(entity instanceof Projectile)) {
                 throw new Exception("Got invalid bukkit entity from projectile of class " + projectileType.getName());
             }
@@ -1138,7 +1137,7 @@ public class NMSUtils extends NMSUtil {
         try {
             Object entityDataTag = getNode(item, "BlockEntityTag");
             if (entityDataTag == null) return;
-            NMSUtils.setTileEntityData(block.getLocation(), entityDataTag);
+            NMSUtil.setTileEntityData(block.getLocation(), entityDataTag);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1269,8 +1268,8 @@ public class NMSUtils extends NMSUtil {
     
     public void setRotation(Entity e, float y, float p) {
     	try {
-        	Object nmsEntity = getHandle(e);
-        	class_Entity_setYawPitchMethod.invoke(nmsEntity, y, p);
+        	Object entityHandle = getHandle(e);
+        	class_Entity_setYawPitchMethod.invoke(entityHandle, y, p);
     	} catch (Exception ex) {
     		ex.printStackTrace();
     	}
@@ -1283,6 +1282,30 @@ public class NMSUtils extends NMSUtil {
     	} catch (Exception ex) {
     		ex.printStackTrace();
     	}
+    }
+    
+    public Float getAbsAmount(Entity e) {
+    	try {
+    		Object data = getEntityData(e);
+    		return (Float)class_NBTTagCompound_getFloatMethod.invoke(data, "AbsorptionAmount");
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+		return null;
+    }
+    
+    public boolean setAbsAmount(Entity e, float f) {
+    	try {
+    		String tag = "AbsorptionAmount";
+    		Object entityHandle = getHandle(e);
+    		Object data = getEntityData(e);
+    		setMetaFloat(data, tag, f);
+    		class_EntityLiving_writeNBTMethod.invoke(entityHandle, data);
+    		return true;
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return false;
     }
     
 }

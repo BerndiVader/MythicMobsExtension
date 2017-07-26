@@ -19,10 +19,13 @@ ITargetedLocationSkill {
     protected Optional<Skill> onHitSkill = Optional.empty();
     protected Optional<Skill> onEndSkill = Optional.empty();
     protected Optional<Skill> onStartSkill = Optional.empty();
+    protected Optional<Skill> onBounceSkill = Optional.empty();
+    
     protected String onTickSkillName;
     protected String onHitSkillName;
     protected String onEndSkillName;
     protected String onStartSkillName;
+    protected String onBounceSkillName;
     protected ProjectileType type;
     protected int tickInterval;
     protected float ticksPerSecond;
@@ -59,6 +62,11 @@ ITargetedLocationSkill {
     protected boolean targetable,eyedir,bounce;
     protected float bounceReduce;
     
+    protected String pEntityName;
+    protected float pEntitySpin;
+    protected float pEntityPitchOffset;
+    
+    
     public CustomProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
@@ -69,11 +77,11 @@ ITargetedLocationSkill {
         String type = mlc.getString("type", "NORMAL");
         this.type = ProjectileType.valueOf(type.toUpperCase());
         this.tickInterval = mlc.getInteger(new String[]{"interval", "int", "i"}, 4);
-        this.ticksPerSecond = 20.0f / (float)this.tickInterval;
+        this.ticksPerSecond = 20.0f / this.tickInterval;
         this.range = mlc.getFloat("maxrange", 40.0f);
         this.range = mlc.getFloat("mr", this.range);
         this.maxDistanceSquared = this.range * this.range;
-        this.duration = (long)mlc.getInteger(new String[]{"maxduration","md"}, 100);
+        this.duration = mlc.getInteger(new String[]{"maxduration","md"}, 100);
         this.duration *= 500;
         this.hitRadius = mlc.getFloat("hr", 2.0f);
         this.verticalHitRadius = mlc.getFloat("vr", 2.0f);
@@ -120,6 +128,10 @@ ITargetedLocationSkill {
         this.eyedir = mlc.getBoolean("eyedir",false);
         this.bounce = mlc.getBoolean("bounce",false);
         this.bounceReduce = mlc.getFloat("bred",0.2F);
+        this.pEntityName = mlc.getString(new String[]{"pobject","projectilemythic","pmythic"},"MINECART");
+        this.pEntitySpin = mlc.getFloat("pspin",0.0F);
+        this.pEntityPitchOffset = mlc.getFloat("ppOff",360.0f);
+        this.onBounceSkillName = mlc.getString(new String[]{"onbounceskill", "onbounce", "ob"});
         
         if (this.onTickSkillName != null) {
             this.onTickSkill = MythicMobs.inst().getSkillManager().getSkill(this.onTickSkillName);
@@ -133,6 +145,10 @@ ITargetedLocationSkill {
         if (this.onStartSkillName != null) {
             this.onStartSkill = MythicMobs.inst().getSkillManager().getSkill(this.onStartSkillName);
         }
+        if (this.onBounceSkillName != null) {
+            this.onBounceSkill = MythicMobs.inst().getSkillManager().getSkill(this.onBounceSkillName);
+        }
+        
     }
 
     @Override

@@ -41,7 +41,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 public class PlayerManager implements Listener {
 	private MythicPlayers mythicplayers;
@@ -76,7 +75,7 @@ public class PlayerManager implements Listener {
 			LivingEntity le = (LivingEntity) e.getBukkitEntity();
 			Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
 			while (i.hasNext()) {
-				le.removePotionEffect(((PotionEffect)i.next()).getType());
+				le.removePotionEffect(i.next().getType());
 			}
 		}
 	}
@@ -112,18 +111,18 @@ public class PlayerManager implements Listener {
 			l.removeMetadata("MythicPlayer", mythicplayers.plugin());
 			return false;
 		};
-        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
+        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
         this.addMythicPlayerToFaction(mm, ap);
         this.registerActiveMob(ap);
-        if (dotrigger) new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
+        if (dotrigger) new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
         return true;
 	}
 	
-    public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
-        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt((Entity)l), mm, 1);
+	public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
+        ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
         this.addMythicPlayerToFaction(mm, ap);
         this.registerActiveMob(ap);
-        new TriggeredSkill(SkillTrigger.SPAWN, ap, null);
+        new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
         l.setMetadata("MythicPlayer", new FixedMetadataValue(mythicplayers.plugin(),mm.getInternalName()));
         return true;
     }
@@ -141,7 +140,8 @@ public class PlayerManager implements Listener {
 	public void onMythicPlayerRespawn(PlayerRespawnEvent e) {
 		if (e.getPlayer().hasMetadata("MythicPlayer")) {
 	    	new BukkitRunnable() {
-	            public void run() {
+	            @Override
+				public void run() {
 	            	MythicPlayers.inst().getPlayerManager().attachActivePlayer(e.getPlayer(),true);
 	            }
 	        }.runTaskLater(mythicplayers.plugin(), 1);
@@ -175,7 +175,7 @@ public class PlayerManager implements Listener {
 			!cause.equals(DamageCause.CUSTOM) &&
 			!cause.equals(DamageCause.PROJECTILE)) {
 			ActivePlayer ap = this.getActivePlayer(e.getEntity().getUniqueId()).get();
-			new TriggeredSkill(SkillTrigger.DAMAGED, ap, null);
+			new TriggeredSkillAP(SkillTrigger.DAMAGED, ap, null);
 		}
 	}
 	
@@ -183,7 +183,7 @@ public class PlayerManager implements Listener {
 	public void onMythicPlayerToggleSneak(PlayerToggleSneakEvent e) {
 		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId())) return;
 		SkillTrigger st = e.getPlayer().isSneaking()?SkillTrigger.UNCROUCH:SkillTrigger.CROUCH;
-		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null);
+		new TriggeredSkillAP(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null);
 	}
 	
     @EventHandler
@@ -198,10 +198,6 @@ public class PlayerManager implements Listener {
     	    	ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null, BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
     		}
     	}
-    	/**
-    	Bukkit.getLogger().info("Hand: " + e.getHand().toString());
-    	Bukkit.getLogger().info("Action: " + e.getAction().toString());
-    	 */
         if (ts!=null && ts.getCancelled()) e.setCancelled(true);
     }
    
@@ -234,7 +230,8 @@ public class PlayerManager implements Listener {
 		if (e.getPlayer().hasMetadata("MythicPlayer")) {
 	    	new BukkitRunnable() {
 	    		private Player p = e.getPlayer();
-	            public void run() {
+	            @Override
+				public void run() {
 	            	MythicPlayers.inst().getPlayerManager().attachActivePlayer(this.p,false);
 	            }
 	        }.runTaskLater(mythicplayers.plugin(),50L);
@@ -248,7 +245,7 @@ public class PlayerManager implements Listener {
 		if (maybeActivePlayer.isPresent()) {
 			ActivePlayer ap = maybeActivePlayer.get();
 	        e.getPlayer().setMetadata("READYREASON", new FixedMetadataValue(mythicplayers.plugin(),"ITEMCHANGE"));
-			new TriggeredSkill(SkillTrigger.READY, ap, ap.getEntity(), false);
+			new TriggeredSkillAP(SkillTrigger.READY, ap, ap.getEntity());
 		}
 	}
     

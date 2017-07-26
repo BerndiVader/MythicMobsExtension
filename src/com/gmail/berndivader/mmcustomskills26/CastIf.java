@@ -1,11 +1,13 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+
+import com.gmail.berndivader.jboolexpr.BooleanExpression;
+import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -28,35 +30,21 @@ ITargetedEntitySkill,
 ITargetedLocationSkill {
 	
 	protected String meetAction,elseAction;
-	protected List<String> tConditionLines = new ArrayList<>();
-	protected List<String> cConditionLines = new ArrayList<>();
-    protected HashSet<SkillCondition> targetConditions = new HashSet<>();
-    protected HashSet<SkillCondition> casterConditions = new HashSet<>();
-	
-	protected boolean outcome;
+	protected String cConditionLine, tConditionLine;
+	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
+	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
+    protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
+    protected HashMap<Integer, SkillCondition> casterConditions = new HashMap<>();
     protected Optional<Skill> meetSkill = Optional.empty();
     protected Optional<Skill> elseSkill = Optional.empty();
 
 	public CastIf(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-
-		String ms =  mlc.getString(new String[]{"conditions","c"});
-		if (ms!=null) {
-			ms = ms.substring(1, ms.length()-1);
-			ms = SkillString.parseMessageSpecialChars(ms);
-			String[]parse=ms.split("\\&\\&");
-			if (parse!=null && parse.length>0) {
-				this.cConditionLines.addAll(Arrays.asList(parse));
-			}
-		}
-		ms =  mlc.getString(new String[]{"targetconditions","tc"});
-		if (ms!=null) {
-			ms = ms.substring(1, ms.length()-1);
-			ms = SkillString.parseMessageSpecialChars(ms);
-			String[]parse=ms.split("\\&\\&");
-			if (parse!=null && parse.length>0) this.tConditionLines.addAll(Arrays.asList(parse));
-		}
 		
+		String ms =  mlc.getString(new String[]{"conditions","c"});
+		this.parseConditionLines(ms, false);
+		ms =  mlc.getString(new String[]{"targetconditions","tc"});
+		this.parseConditionLines(ms, true);
 		this.meetAction = mlc.getString(new String[]{"meet"});
 		this.elseAction = mlc.getString(new String[]{"else"});
 		if (this.meetAction!=null) {
@@ -109,59 +97,78 @@ ITargetedLocationSkill {
 	}
 	
 	private boolean handleConditions(SkillMetadata data) {
-		boolean cmeet = true;
+		boolean meet = true;
 		if (!this.casterConditions.isEmpty()) {
-			cmeet = this.checkConditions(data, this.casterConditions, false);
+			meet = this.checkConditions(data, this.casterConditions, false);
 		} 
-		if (!this.targetConditions.isEmpty() && cmeet) {
-			cmeet = this.checkConditions(data, this.targetConditions, true);
+		if (!this.targetConditions.isEmpty() 
+				&& meet) {
+			meet = this.checkConditions(data, this.targetConditions, true);
 		}
-		return cmeet;
+		return meet;
 	}
 	
-	private boolean checkConditions(SkillMetadata data, HashSet<SkillCondition>conditions, boolean isTarget) {
-        for (SkillCondition condition : conditions) {
+	private boolean checkConditions(SkillMetadata data, HashMap<Integer, SkillCondition>conditions, boolean isTarget) {
+		String cline = isTarget?this.tConditionLine:this.cConditionLine;
+        for (int a=0;a<conditions.size();a++) {
+        	SkillMetadata sdata=null;
+			try {
+				sdata = data.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+        	SkillCondition condition = conditions.get(a);
         	if (isTarget) {
-                if (!condition.evaluateTargets(data)) return false;
+        		cline = cline.replaceFirst(Pattern.quote(this.tConditionLines.get(a)), Boolean.toString(condition.evaluateTargets(sdata)));
         	} else {
-            	if (!condition.evaluateCaster(data)) return false;
+        		cline = cline.replaceFirst(Pattern.quote(this.cConditionLines.get(a)), Boolean.toString(condition.evaluateCaster(sdata)));
         	}
         }
-        return true;
+        BooleanExpression be = null;
+        try {
+			be = BooleanExpression.readLR(cline);
+		} catch (MalformedBooleanException e) {
+			e.printStackTrace();
+		}
+        return be.booleanValue();
 	}
 	
-	private HashSet<SkillCondition>getConditions(List<String>conditionList) {
-		HashSet<SkillCondition>conditions = new HashSet<SkillCondition>();
-        Iterator<String> it = conditionList.iterator();
-        while (it.hasNext()) {
-            SkillCondition sc;
-            String s = (String)it.next();
+	private HashMap<Integer, SkillCondition>getConditions(HashMap<Integer, String>conditionList) {
+		HashMap<Integer, SkillCondition>conditions = new HashMap<Integer, SkillCondition>();
+        for (int a=0;a<conditionList.size();a++) {
+        	SkillCondition sc;
+            String s = conditionList.get(a);
             if (s.startsWith(" ")) s = s.substring(1);
             if ((sc = SkillCondition.getCondition(s)) instanceof InvalidCondition) continue;
-            conditions.add(sc);
+            conditions.put(a,sc);
         }
 		return conditions;
 	}
 	
-	public class oCondition {
-		private SkillCondition sc;
-		private String op;
-		
-		public oCondition(SkillCondition sc, String op) {
-			this.setSc(sc);
-			this.setOp(op);
-		}
-		public SkillCondition getSc() {
-			return sc;
-		}
-		public void setSc(SkillCondition sc) {
-			this.sc = sc;
-		}
-		public String getOp() {
-			return op;
-		}
-		public void setOp(String op) {
-			this.op = op;
+	private void parseConditionLines(String ms, boolean istarget) {
+		if (ms!=null 
+				&& (ms.startsWith("\"") 
+						&& ms.endsWith("\""))) {
+			ms = ms.substring(1, ms.length()-1);
+			ms = SkillString.parseMessageSpecialChars(ms);
+			if (istarget) {
+				this.tConditionLine=ms;
+			} else {
+				this.cConditionLine=ms;
+			}
+			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
+			String[]parse=ms.split("\\&\\&|\\|\\|");
+			if (parse!=null 
+					&& parse.length>0) {
+				for (int a=0;a<Arrays.asList(parse).size();a++) {
+					String p = Arrays.asList(parse).get(a);
+					if (istarget) {
+						this.tConditionLines.put(a, p);
+					} else {
+						this.cConditionLines.put(a, p);
+					}
+				}
+			}
 		}
 	}
 }

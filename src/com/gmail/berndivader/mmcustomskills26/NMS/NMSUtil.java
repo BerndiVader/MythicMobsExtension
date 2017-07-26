@@ -57,6 +57,7 @@ public class NMSUtil {
     protected static int WITHER_SKULL_TYPE = 66;
     protected static int FIREWORK_TYPE = 76;
 
+    protected static Class<?> class_GenericAttributes;
     protected static Class<?> class_Block;
     protected static Class<?> class_ItemStack;
     protected static Class<?> class_NBTBase;
@@ -143,6 +144,7 @@ public class NMSUtil {
     protected static Class<?> class_ChatComponentText;
     protected static Class<?> class_IChatBaseComponent;
 
+    protected static Method class_GenericAttributes_setMethod;
     protected static Method class_NBTTagList_addMethod;
     protected static Method class_NBTTagList_getMethod;
     protected static Method class_NBTTagList_getDoubleMethod;
@@ -162,6 +164,7 @@ public class NMSUtil {
     protected static Method class_NBTTagCompound_setBooleanMethod;
     protected static Method class_NBTTagCompound_setStringMethod;
     protected static Method class_NBTTagCompound_setDoubleMethod;
+    protected static Method class_NBTTagCompound_setFloatMethod;
     protected static Method class_NBTTagCompound_setLongMethod;
     protected static Method class_NBTTagCompound_setIntMethod;
     protected static Method class_NBTTagCompound_removeMethod;
@@ -169,12 +172,15 @@ public class NMSUtil {
     protected static Method class_NBTTagCompound_getBooleanMethod;
     protected static Method class_NBTTagCompound_getIntMethod;
     protected static Method class_NBTTagCompound_getByteMethod;
+    protected static Method class_NBTTagCompound_getFloatMethod;
+    protected static Method class_NBTTagCompound_getDoubleMethod;
     protected static Method class_NBTTagCompound_getMethod;
     protected static Method class_NBTTagCompound_getCompoundMethod;
     protected static Method class_NBTTagCompound_getShortMethod;
     protected static Method class_NBTTagCompound_getByteArrayMethod;
     protected static Method class_NBTTagCompound_getListMethod;
     protected static Method class_Entity_saveMethod;
+    protected static Method class_EntityLiving_writeNBTMethod;
     protected static Method class_Entity_getTypeMethod;
     protected static Method class_TileEntity_loadMethod;
     protected static Method class_TileEntity_saveMethod;
@@ -303,6 +309,7 @@ public class NMSUtil {
         }
 
         try {
+        	class_GenericAttributes = fixBukkitClass("net.minecraft.server.GenericAttributes");
             class_Block = fixBukkitClass("net.minecraft.server.Block");
             class_Entity = fixBukkitClass("net.minecraft.server.Entity");
             class_EntityLiving = fixBukkitClass("net.minecraft.server.EntityLiving");
@@ -377,6 +384,9 @@ public class NMSUtil {
             class_EntityArrow = NMSUtil.getBukkitClass("net.minecraft.server.EntityArrow");
             class_CraftArrow = NMSUtil.getBukkitClass("org.bukkit.craftbukkit.entity.CraftArrow");
 
+            class_EntityLiving_writeNBTMethod = class_EntityLiving.getMethod("a", class_NBTTagCompound);
+            class_EntityLiving_writeNBTMethod.setAccessible(true);
+            class_GenericAttributes_setMethod = class_GenericAttributes.getMethod("a", class_NBTTagCompound);
             class_Entity_getBukkitEntityMethod = class_Entity.getMethod("getBukkitEntity");
             class_Entity_setYawPitchMethod = class_Entity.getDeclaredMethod("setYawPitch", Float.TYPE, Float.TYPE);
             class_Entity_setYawPitchMethod.setAccessible(true);
@@ -384,12 +394,15 @@ public class NMSUtil {
             class_NBTTagCompound_setBooleanMethod = class_NBTTagCompound.getMethod("setBoolean", String.class, Boolean.TYPE);
             class_NBTTagCompound_setStringMethod = class_NBTTagCompound.getMethod("setString", String.class, String.class);
             class_NBTTagCompound_setDoubleMethod = class_NBTTagCompound.getMethod("setDouble", String.class, Double.TYPE);
+            class_NBTTagCompound_setFloatMethod = class_NBTTagCompound.getMethod("setFloat", String.class, Float.TYPE);
             class_NBTTagCompound_setLongMethod = class_NBTTagCompound.getMethod("setLong", String.class, Long.TYPE);
             class_NBTTagCompound_setIntMethod = class_NBTTagCompound.getMethod("setInt", String.class, Integer.TYPE);
             class_NBTTagCompound_removeMethod = class_NBTTagCompound.getMethod("remove", String.class);
             class_NBTTagCompound_getStringMethod = class_NBTTagCompound.getMethod("getString", String.class);
             class_NBTTagCompound_getShortMethod = class_NBTTagCompound.getMethod("getShort", String.class);
             class_NBTTagCompound_getIntMethod = class_NBTTagCompound.getMethod("getInt", String.class);
+            class_NBTTagCompound_getFloatMethod = class_NBTTagCompound.getMethod("getFloat", String.class);
+            class_NBTTagCompound_getDoubleMethod = class_NBTTagCompound.getMethod("getDouble", String.class);
             class_NBTTagCompound_getBooleanMethod = class_NBTTagCompound.getMethod("getBoolean", String.class);
             class_NBTTagCompound_getByteMethod = class_NBTTagCompound.getMethod("getByte", String.class);
             class_NBTTagCompound_getByteArrayMethod = class_NBTTagCompound.getMethod("getByteArray", String.class);
@@ -1139,7 +1152,7 @@ public class NMSUtil {
 
         return stack;
     }
-
+    
     public static String getMetaString(ItemStack stack, String tag, String defaultValue) {
         String result = getMetaString(stack, tag);
         return result == null ? defaultValue : result;
@@ -1291,6 +1304,19 @@ public class NMSUtil {
         }
         return meta;
     }
+    
+    public static boolean setAbsorptionAmount(Object node) {
+        if (node == null || !class_NBTTagCompound.isInstance(node)) return false;
+        try {
+        	
+        	Object ga = class_GenericAttributes.newInstance();
+        	class_GenericAttributes_setMethod.invoke(ga, node);
+        	return true;
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+		}
+    	return false;
+    }
 
     public static void setMeta(Object node, String tag, String value) {
         if (node == null|| !class_NBTTagCompound.isInstance(node)) return;
@@ -1331,7 +1357,18 @@ public class NMSUtil {
             ex.printStackTrace();
         }
     }
-
+    
+    public static boolean setMetaFloat(Object node, String tag, float value) {
+        if (node == null|| !class_NBTTagCompound.isInstance(node)) return false;
+        try {
+            class_NBTTagCompound_setFloatMethod.invoke(node, tag, value);
+            return true;
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
     public static void setMetaInt(Object node, String tag, int value) {
         if (node == null|| !class_NBTTagCompound.isInstance(node)) return;
         try {

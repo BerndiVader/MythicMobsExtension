@@ -18,6 +18,7 @@ public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEn
 		this.amount=mlc.getDouble(new String[]{"amount","a"},65536);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (data.getCaster() instanceof ActiveMob) {
@@ -27,7 +28,7 @@ public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEn
 				am.getThreatTable().getAllThreatTargets().clear();
 			}
 			if (target!=null) {
-				am.getThreatTable().threatGain(target, (double)this.amount);
+				am.getThreatTable().threatGain(target, this.amount);
 				am.getThreatTable().targetHighestThreat();
 				new TriggeredSkill(SkillTrigger.ENTERCOMBAT, am, target);
 			}

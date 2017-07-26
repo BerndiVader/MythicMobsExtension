@@ -12,6 +12,11 @@ implements IParentSkill {
     private SkillMetadata data;
     private boolean cancel = false;
 
+    
+    public TriggeredSkillAP(SkillTrigger cause, ActiveMob am, AbstractEntity trigger) {
+        this(cause, am, trigger, null, false);
+    }
+    
     public TriggeredSkillAP(SkillTrigger cause, ActiveMob am, AbstractEntity trigger, AbstractLocation origin, boolean sync) {
         this.data = new SkillMetadata(cause, am, trigger);
         this.data.setCallingEvent(this);

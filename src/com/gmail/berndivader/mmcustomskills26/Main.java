@@ -16,6 +16,7 @@ import com.gmail.berndivader.mmcustomskills26.conditions.MobArena.mmMobArenaCond
 import com.gmail.berndivader.mmcustomskills26.conditions.Own.mmOwnConditions;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.WorldGuardFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.mmWorldGuardFlag;
+import com.gmail.berndivader.nanpatch.NaNpatch;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -71,8 +72,11 @@ public class Main extends JavaPlugin {
 			getNMSUtil();
 			mp = new MythicPlayers(this);
 			Bukkit.getLogger().info("registered MythicPlayers!");
+			new NaNpatch();
+			Bukkit.getLogger().info("NaN patch applied!");
 			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-	    		public void run() {
+	    		@Override
+				public void run() {
 	    			ti = thiefhandler.getThiefs().iterator();
 	    			while (ti.hasNext()) {
 	    				Thief thief = ti.next();if (!mm.getMobManager().isActiveMob(thief.getUuid())) {ti.remove();}}

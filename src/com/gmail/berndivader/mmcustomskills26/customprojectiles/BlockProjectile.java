@@ -26,8 +26,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 public class BlockProjectile
@@ -84,16 +84,20 @@ ITargetedLocationSkill {
         private Map<AbstractEntity, Long> immune;
         private FallingBlock pBlock;
 		private Location pLocation;
-		private boolean targetable,eyedir;
+		private float pSpin;
+		private double pVOff;
+		private double pFOff;
+		private boolean pFaceDir,targetable,eyedir;
+		private float currentBounce,bounceReduce;
 		
-        @SuppressWarnings({ "unchecked", "rawtypes", "deprecation"})
+        @SuppressWarnings({"deprecation"})
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
 
             float noise;
             this.cancelled = false;
             this.gravity = 0.0f;
             this.inRange = ConcurrentHashMap.newKeySet();
-            this.targets = new HashSet();
+            this.targets = new HashSet<AbstractEntity>();
             this.immune = new HashMap<AbstractEntity, Long>();
             this.cancelled = false;
             this.data = data;
@@ -101,8 +105,14 @@ ITargetedLocationSkill {
             this.am = data.getCaster();
             this.power = data.getPower();
             this.startTime = System.currentTimeMillis();
+            this.pSpin = BlockProjectile.this.pEntitySpin;
+            this.pFaceDir = BlockProjectile.this.pFaceDirection;
+            this.pVOff = BlockProjectile.this.pVOffset;
+            this.pFOff = BlockProjectile.this.pFOffset;
             this.targetable = BlockProjectile.this.targetable;
             this.eyedir = BlockProjectile.this.eyedir;
+            this.bounceReduce = BlockProjectile.this.bounceReduce;
+            this.currentBounce = BlockProjectile.this.projectileVelocity;
             double velocity = 0.0;
             
             if (BlockProjectile.this.type == ProjectileType.METEOR) {
@@ -119,7 +129,7 @@ ITargetedLocationSkill {
                 this.startLocation = BlockProjectile.this.sourceIsOrigin ? data.getOrigin().clone() : data.getCaster().getEntity().getLocation().clone();
                 velocity = BlockProjectile.this.projectileVelocity / BlockProjectile.this.ticksPerSecond;
                 if (BlockProjectile.this.startYOffset != 0.0f) {
-                    this.startLocation.setY(this.startLocation.getY() + (double)BlockProjectile.this.startYOffset);
+                    this.startLocation.setY(this.startLocation.getY() + BlockProjectile.this.startYOffset);
                 }
                 if (BlockProjectile.this.startForwardOffset != 0.0f) {
                     this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone().multiply(BlockProjectile.this.startForwardOffset));
@@ -140,7 +150,6 @@ ITargetedLocationSkill {
             	AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
             	this.currentVelocity = al.getDirection().normalize();
             }
-            this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
             if (BlockProjectile.this.projectileVelocityHorizOffset != 0.0f || BlockProjectile.this.projectileVelocityHorizNoise > 0.0f) {
                 noise = 0.0f;
                 if (BlockProjectile.this.projectileVelocityHorizNoise > 0.0f) {
@@ -159,7 +168,7 @@ ITargetedLocationSkill {
                 this.currentVelocity.add(new AbstractVector(0.0f, BlockProjectile.this.projectileVelocityVertOffset + noise, 0.0f)).normalize();
             }
             if (BlockProjectile.this.hugSurface) {
-                this.currentLocation.setY((float)((int)this.currentLocation.getY()) + BlockProjectile.this.heightFromSurface);
+                this.currentLocation.setY(((int)this.currentLocation.getY()) + BlockProjectile.this.heightFromSurface);
                 this.currentVelocity.setY(0).normalize();
             }
             if (BlockProjectile.this.powerAffectsVelocity) {
@@ -167,21 +176,23 @@ ITargetedLocationSkill {
             }
             this.currentVelocity.multiply(velocity);
             if (BlockProjectile.this.projectileGravity > 0.0f) {
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)this.gravity);
+                this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
             }
-            
-            this.pLocation = BukkitAdapter.adapt(currentLocation);
-            
-            Vector v = new Vector();
-            this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation, Material.valueOf(customItemName), (byte)0);
+            this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
+            float yaw = this.pLocation.getYaw();
+            if (this.pFaceDir && !this.eyedir) {
+            	yaw = CustomSkillStuff.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+            	this.pLocation.setYaw(yaw);
+            }
+            this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
+            this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d), Material.valueOf(customItemName), (byte)0);
+            this.pBlock.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+            if (!this.targetable) this.pBlock.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
             this.pBlock.setHurtEntities(false);
             this.pBlock.setDropItem(false);
             this.pBlock.setTicksLived(Integer.MAX_VALUE);
             this.pBlock.setInvulnerable(true);
             this.pBlock.setGravity(false);
-            this.pBlock.setVelocity(v);
-            this.pBlock.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-            if (!this.targetable) this.pBlock.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
             
             this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
             if (BlockProjectile.this.hitPlayers || BlockProjectile.this.hitNonPlayers) {
@@ -226,7 +237,7 @@ ITargetedLocationSkill {
             this.gravity *= p;
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
 		@Override
         public void run() {
             if (this.cancelled) {
@@ -277,22 +288,27 @@ ITargetedLocationSkill {
                             return;
                         }
                     }
-                    this.currentLocation.setY((float)((int)this.currentLocation.getY()) + BlockProjectile.this.heightFromSurface);
+                    this.currentLocation.setY(((int)this.currentLocation.getY()) + BlockProjectile.this.heightFromSurface);
                     this.currentX = this.currentLocation.getBlockX();
                     this.currentZ = this.currentLocation.getBlockZ();
                 }
             } else if (BlockProjectile.this.projectileGravity != 0.0f) {
            		if (BlockProjectile.this.bounce 
            				&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
-           			this.currentVelocity.setY(BlockProjectile.this.projectileVelocity / BlockProjectile.this.ticksPerSecond);
+           			if (this.currentBounce<0.0F) {
+                        this.stop();
+                        return;
+           			}
+           			this.currentBounce-=this.bounceReduce;
+           			this.currentVelocity.setY(this.currentBounce / BlockProjectile.this.ticksPerSecond);
            		}
-                this.currentVelocity.setY(this.currentVelocity.getY() - (double)(BlockProjectile.this.projectileGravity / BlockProjectile.this.ticksPerSecond));
+                this.currentVelocity.setY(this.currentVelocity.getY() - BlockProjectile.this.projectileGravity / BlockProjectile.this.ticksPerSecond);
             }
             if (BlockProjectile.this.stopOnHitGround && !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
                 this.stop();
                 return;
             }
-            if (this.currentLocation.distanceSquared(this.startLocation) >= (double)BlockProjectile.this.maxDistanceSquared) {
+            if (this.currentLocation.distanceSquared(this.startLocation) >= BlockProjectile.this.maxDistanceSquared) {
                 this.stop();
                 return;
             }
@@ -304,7 +320,7 @@ ITargetedLocationSkill {
                     this.immune.put(e, System.currentTimeMillis());
                     break;
                 }
-                this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
+                this.immune.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis() - 2000);
             }
             if (BlockProjectile.this.onTickSkill.isPresent() && BlockProjectile.this.onTickSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
@@ -316,13 +332,13 @@ ITargetedLocationSkill {
                 BlockProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
+                this.doHit((HashSet<AbstractEntity>)this.targets.clone());
                 if (BlockProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }
             }
-            Location loc = BukkitAdapter.adapt(currentLocation);
-            Location eloc = this.pBlock.getLocation();
+            Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+            Location eloc = this.pBlock.getLocation().clone();
             this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));  
             this.targets.clear();
         }

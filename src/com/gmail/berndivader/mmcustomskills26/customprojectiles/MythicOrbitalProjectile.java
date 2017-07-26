@@ -91,7 +91,6 @@ ITargetedLocationSkill {
         private SkillCaster am;
         private ActiveMob cam;
         private long startTime;
-        private AbstractLocation startLocation;
         private AbstractLocation currentLocation;
         private int taskId;
         private Set<AbstractEntity> inRange;
@@ -111,12 +110,11 @@ ITargetedLocationSkill {
 		private boolean targetable, ct, tc, lt;
 		private String tag;
 		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractEntity t) {
 
             this.cancelled = false;
             this.inRange = ConcurrentHashMap.newKeySet();
-            this.targets = new HashSet();
+            this.targets = new HashSet<AbstractEntity>();
             this.immune = new HashMap<AbstractEntity, Long>();
             this.cancelled = false;
             this.data = data;
@@ -135,21 +133,18 @@ ITargetedLocationSkill {
             this.radPerTick = this.radPerSec / 20f;
             this.tick = 0;
             this.target = t;
-            this.centerLocation = BukkitAdapter.adapt(this.target.getLocation());
-            this.startLocation=this.target.getLocation();
-            this.currentLocation = this.startLocation.clone();
+            this.centerLocation = BukkitAdapter.adapt(this.target.getLocation().add(0.0D, this.pVOff, 0.0D).clone());
             this.targetable = MythicOrbitalProjectile.this.targetable;
             this.tag=MythicOrbitalProjectile.this.tag;
             this.ct=MythicOrbitalProjectile.this.ct;
             this.tc=MythicOrbitalProjectile.this.tc;
             this.lt=MythicOrbitalProjectile.this.lifetime;
             if (this.am instanceof ActiveMob) this.cam = (ActiveMob)this.am;
-            if (this.currentLocation == null) {
-                return;
-            }
+            if (this.centerLocation==null) return;
             
 			try {
-				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, this.centerLocation);
+	            this.currentLocation = CustomSkillStuff.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY, this.radPerTick * tick);
+				this.pEntity = MythicMobs.inst().getAPIHelper().spawnMythicMob(customItemName, BukkitAdapter.adapt(this.currentLocation));
 	            this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 	            if (!this.targetable) this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
@@ -210,7 +205,7 @@ ITargetedLocationSkill {
             }
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
 		@Override
         public void run() {
         	this.tick++;
@@ -235,7 +230,7 @@ ITargetedLocationSkill {
             	return;
             }
 
-            this.centerLocation = this.target.getBukkitEntity().getLocation(); //this.data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
+            this.centerLocation = this.target.getBukkitEntity().getLocation().clone().add(0.0D, this.pVOff, 0.0D);
             this.currentLocation = CustomSkillStuff.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY, this.radPerTick * tick);
             if (MythicOrbitalProjectile.this.stopOnHitGround 
             		&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
@@ -251,7 +246,7 @@ ITargetedLocationSkill {
                     this.immune.put(e, System.currentTimeMillis());
                     break;
                 }
-                this.immune.entrySet().removeIf(entry -> (Long)entry.getValue() < System.currentTimeMillis() - 2000);
+                this.immune.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis() - 2000);
             }
             if (MythicOrbitalProjectile.this.onTickSkill.isPresent() 
             		&& MythicOrbitalProjectile.this.onTickSkill.get().isUsable(this.data)) {
@@ -266,19 +261,19 @@ ITargetedLocationSkill {
                 MythicOrbitalProjectile.this.onTickSkill.get().execute(sData);
             }
             if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
+                this.doHit((HashSet<AbstractEntity>)this.targets.clone());
                 if (MythicOrbitalProjectile.this.stopOnHitEntity) {
                     this.stop();
                 }
             }
-        	Location eloc = this.pEntity.getLocation();
+        	Location eloc = this.pEntity.getLocation().clone();
             float yaw = eloc.getYaw();
             if (this.pFaceDir) {
             	yaw = CustomSkillStuff.lookAtYaw(eloc, BukkitAdapter.adapt(this.currentLocation));
             }else if (this.pSpin!=0.0) {
                 yaw = ((yaw + this.pSpin) % 360.0F);
             }
-            NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY()+this.pVOff, this.currentLocation.getZ(), yaw, 0.0F);
+            NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(), this.currentLocation.getZ(), yaw, 0.0F);
             this.targets.clear();
             if (this.ct) {
 				if (this.cam!=null 
