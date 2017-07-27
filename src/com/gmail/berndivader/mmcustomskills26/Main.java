@@ -1,11 +1,8 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
@@ -20,36 +17,36 @@ import com.gmail.berndivader.nanpatch.NaNpatch;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class Main extends JavaPlugin {
-	
-	private BukkitTask taskid;
-	private static ThiefHandler thiefhandler = new ThiefHandler();
-	private Iterator<Thief> ti;
 
 	private static Main plugin;
-	public static MythicMobs mm;
-	public static MythicPlayers mp;
-	public static MobArenaHandler maHandler;
-	public static WorldGuardPlugin wg;
+	public static NMSUtils nmsutils;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
 	public static String mpNameVar = "mythicprojectile";
 	public static String noTargetVar = "nottargetable";
-	public static boolean hasRpgItems=false;
-	private static NMSUtils nmsutils;
-	public static NMSUtils NMSUtils() {return nmsutils;}
-	
+	public static boolean hasRpgItems = false;
+	public MythicMobs mythicmobs;
+	public WorldGuardPlugin wg;
+	private ThiefHandler thiefhandler;
+	private MobManager mobmanager;
+	private MythicPlayers mythicplayers;
+	private MobArenaHandler maHandler;
+
 	@Override
 	public void onEnable() {
 		plugin = this;
 		if (Bukkit.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
-			mm = MythicMobs.inst();
-			getServer().getPluginManager().registerEvents(new UndoBlockListener(), this);
-			getServer().getPluginManager().registerEvents(new mmCustomSkills26(), this);
-			getServer().getPluginManager().registerEvents(new ThiefDamageEvent(), this);
-			getServer().getPluginManager().registerEvents(new CustomSkillStuff(), this);
+			this.mythicmobs = MythicMobs.inst();
+			this.mobmanager = new MobManager(this.mythicmobs);
+			PluginManager pm = this.getServer().getPluginManager();
+			pm.registerEvents(new UndoBlockListener(), this);
+			new CustomSkillStuff();
+			new mmCustomSkills26();
+			this.thiefhandler = new ThiefHandler();
 			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
 			new mmOwnConditions();
 			if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
@@ -57,50 +54,74 @@ public class Main extends JavaPlugin {
 				wgf = new WorldGuardFlags();
 				new mmWorldGuardFlag();
 			}
-			if (Bukkit.getPluginManager().isPluginEnabled("Factions") && Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
+			if (Bukkit.getPluginManager().isPluginEnabled("Factions")
+					&& Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
 				fflags = new FactionsFlags();
 				new mmFactionsFlag();
 			}
-			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems")!=null) {
+			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems") != null) {
 				Bukkit.getLogger().info("RPGItems support enabled!");
-				hasRpgItems=true;
+				hasRpgItems = true;
 			}
 			if (Bukkit.getPluginManager().isPluginEnabled("MobArena")) {
-				maHandler = getMobArena();
+				maHandler = new MobArenaHandler();
 				new mmMobArenaConditions();
 			}
-			getNMSUtil();
-			mp = new MythicPlayers(this);
+			setNMSUtil();
+			this.mythicplayers = new MythicPlayers(this);
 			Bukkit.getLogger().info("registered MythicPlayers!");
 			new NaNpatch();
 			Bukkit.getLogger().info("NaN patch applied!");
-			taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-	    		@Override
-				public void run() {
-	    			ti = thiefhandler.getThiefs().iterator();
-	    			while (ti.hasNext()) {
-	    				Thief thief = ti.next();if (!mm.getMobManager().isActiveMob(thief.getUuid())) {ti.remove();}}
-	    		}}, 1200L, 1200L);
 		}
 	}
-	
+
 	@Override
 	public void onDisable() {
-    	Bukkit.getServer().getScheduler().cancelTask(taskid.getTaskId());
-    	thiefhandler = null;
-    	mp = null;
+		Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
+		this.thiefhandler = null;
+		this.mythicplayers = null;
+		this.mythicmobs = null;
+		this.maHandler = null;
+		this.wg = null;
+		Main.wgf = null;
+		Main.fflags = null;
+		this.getServer().getPluginManager().disablePlugin(this);
 	}
-	public static Main getPlugin() {return plugin;}
-	public static Set<Thief> getThiefs() {return thiefhandler.getThiefs();}
-	public static ThiefHandler thiefhandler() {return thiefhandler;}
+
+	public static Main getPlugin() {
+		return plugin;
+	}
+
+	public NMSUtils getNMSUtils() {
+		return Main.nmsutils;
+	}
+
+	public MythicMobs getMythicMobs() {
+		return this.mythicmobs;
+	}
+
+	public MythicPlayers getMythicPlayers() {
+		return this.mythicplayers;
+	}
+
+	public MobManager getMobManager() {
+		return this.mobmanager;
+	}
+
+	public ThiefHandler getThiefHandler() {
+		return this.thiefhandler;
+	}
+
 	private static WorldGuardPlugin getWorldGuard() {
-	    return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+		return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 	}
-	private static MobArenaHandler getMobArena() {
-		return new MobArenaHandler();
+
+	public MobArenaHandler getMobArenaHandler() {
+		return this.maHandler;
 	}
-	private boolean getNMSUtil() {
-		nmsutils=new NMSUtils();
-		return nmsutils!=null;
+
+	public boolean setNMSUtil() {
+		Main.nmsutils = new NMSUtils();
+		return nmsutils != null;
 	}
 }

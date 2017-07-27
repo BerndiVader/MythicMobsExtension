@@ -10,20 +10,19 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class mmBiomeFixCondition extends mmCustomCondition implements
-ILocationCondition {
+public class mmBiomeFixCondition extends mmCustomCondition implements ILocationCondition {
 	protected Set<AbstractBiome> biome = new HashSet<AbstractBiome>();
 
 	public mmBiomeFixCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		String b = mlc.getString(new String[]{"biome", "b"}, "PLAINS");
+		String b = mlc.getString(new String[] { "biome", "b" }, "PLAINS");
 		for (String s : b.split(",")) {
 			this.biome.add(new AbstractBiome(s));
-	    }
+		}
 	}
 
 	@Override
 	public boolean check(AbstractLocation l) {
-	    return this.biome.contains(l.getBiome());
+		return this.biome.contains(l.getBiome());
 	}
 }

@@ -16,7 +16,7 @@ public class mmClearThreatTableTarget extends SkillMechanic implements INoTarget
 	public boolean cast(SkillMetadata data) {
 		if (data.getCaster() instanceof ActiveMob) {
 			ActiveMob am = (ActiveMob) data.getCaster();
-			if (am.getThreatTable().size()>0) {
+			if (am.getThreatTable().size() > 0) {
 				am.getThreatTable().clearTarget();
 				am.getThreatTable().getAllThreatTargets().clear();
 			}

@@ -15,30 +15,32 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmEquipFix extends SkillMechanic implements ITargetedEntitySkill {
-	
+
+	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	private String itemString;
 
 	public mmEquipFix(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.itemString = mlc.getString(new String[]{"skull","s"});
+		this.ASYNC_SAFE = false;
+		this.itemString = mlc.getString(new String[] { "skull", "s" });
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		SkillCaster caster = data.getCaster();
-		if (!(caster.getEntity().getBukkitEntity() instanceof LivingEntity)) return false;
-		getItem((LivingEntity)caster.getEntity().getBukkitEntity(), this.itemString);
+		if (!(caster.getEntity().getBukkitEntity() instanceof LivingEntity))
+			return false;
+		getItem((LivingEntity) caster.getEntity().getBukkitEntity(), this.itemString);
 		return true;
 	}
-	
+
 	private boolean getItem(LivingEntity caster, String item) {
-        Optional<MythicItem> maybeItem;
-        if ((maybeItem = MythicMobs.inst().getItemManager().getItem(itemString)).isPresent()) {
-            MythicItem mi = maybeItem.get();
-            caster.getEquipment().setHelmet(BukkitAdapter.adapt(mi.generateItemStack(1)));
-            return true;
-        }
-        return false;
+		Optional<MythicItem> maybeItem;
+		if ((maybeItem = this.mythicmobs.getItemManager().getItem(itemString)).isPresent()) {
+			MythicItem mi = maybeItem.get();
+			caster.getEquipment().setHelmet(BukkitAdapter.adapt(mi.generateItemStack(1)));
+			return true;
+		}
+		return false;
 	}
 }

@@ -9,14 +9,13 @@ public final class MalformedBooleanException extends Exception {
 	private List<Integer> booleanExpressionErrorIndexes;
 	private String booleanExpression;
 	private String booleanExpressionErrorMessage;
-	
-	MalformedBooleanException(final String errorMessage, final int errorIndex,
-		final String newBooleanExpression) {
+
+	MalformedBooleanException(final String errorMessage, final int errorIndex, final String newBooleanExpression) {
 		this(errorMessage, toList(errorIndex), newBooleanExpression);
 	}
 
-	MalformedBooleanException(final String errorMessage,
-		final List<Integer> errorIndexes, final String newBooleanExpression) {
+	MalformedBooleanException(final String errorMessage, final List<Integer> errorIndexes,
+			final String newBooleanExpression) {
 		super(format(errorMessage, errorIndexes, newBooleanExpression));
 		this.booleanExpression = newBooleanExpression;
 		this.booleanExpressionErrorIndexes = errorIndexes;
@@ -41,8 +40,8 @@ public final class MalformedBooleanException extends Exception {
 		return errorIndexes;
 	}
 
-	private static String format(final String errorMessage,
-		final List<Integer> errorIndexes, final String newBooleanExpression) {
+	private static String format(final String errorMessage, final List<Integer> errorIndexes,
+			final String newBooleanExpression) {
 		if (errorMessage == null || errorMessage.equals("")) {
 			throw new IllegalArgumentException("errorMessage is null or void");
 		}
@@ -50,8 +49,7 @@ public final class MalformedBooleanException extends Exception {
 			throw new IllegalArgumentException("errorIndexes is null or void");
 		}
 		if (newBooleanExpression == null || newBooleanExpression.equals("")) {
-			throw new IllegalArgumentException(
-				"newBooleanExpression is null or void");
+			throw new IllegalArgumentException("newBooleanExpression is null or void");
 		}
 		StringBuilder error = new StringBuilder();
 		error.append(errorMessage);
@@ -64,8 +62,7 @@ public final class MalformedBooleanException extends Exception {
 			error.append("_");
 			lastIndex = index;
 		}
-		error.append(newBooleanExpression.substring(lastIndex,
-			newBooleanExpression.length()));
+		error.append(newBooleanExpression.substring(lastIndex, newBooleanExpression.length()));
 		error.append(" ]");
 		if (size == 1) {
 			error.append(" - Index [");

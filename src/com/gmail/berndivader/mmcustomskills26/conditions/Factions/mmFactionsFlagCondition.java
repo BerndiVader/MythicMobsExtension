@@ -15,9 +15,9 @@ public class mmFactionsFlagCondition extends SkillCondition implements ILocation
 
 	public mmFactionsFlagCondition(String line, MythicLineConfig mlc) {
 		super(line);
-		this.flagName = mlc.getString(new String[]{"flagtype","flag","f"}, "monster").toLowerCase();
+		this.flagName = mlc.getString(new String[] { "flagtype", "flag", "f" }, "monster").toLowerCase();
 		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action","a"}, "TRUE").toUpperCase());
+			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}

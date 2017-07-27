@@ -14,6 +14,6 @@ public class mmHasTargetCondition extends mmCustomCondition implements IEntityCo
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		return entity.getTarget()!=null;
+		return entity.getTarget() != null;
 	}
 }

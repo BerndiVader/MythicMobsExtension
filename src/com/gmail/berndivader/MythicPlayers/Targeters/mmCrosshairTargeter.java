@@ -13,19 +13,20 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.util.MythicUtil;
 
 public class mmCrosshairTargeter extends IEntitySelector {
-	
+
 	public mmCrosshairTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}
 
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
-        HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
-        SkillCaster caster = data.getCaster();
-        if (caster.getEntity().isPlayer()) { 
-            targets.add(BukkitAdapter.adapt(MythicUtil.getTargetedEntity((Player)BukkitAdapter.adapt(caster.getEntity()))));
-        }
+		HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
+		SkillCaster caster = data.getCaster();
+		if (caster.getEntity().isPlayer()) {
+			targets.add(BukkitAdapter
+					.adapt(MythicUtil.getTargetedEntity((Player) BukkitAdapter.adapt(caster.getEntity()))));
+		}
 		return targets;
 	}
-	
+
 }

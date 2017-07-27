@@ -9,13 +9,12 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class inMobArenaCondition extends mmCustomCondition 
-implements
-ILocationCondition {
-	protected MobArenaHandler maHandler = Main.maHandler;
-	
+public class inMobArenaCondition extends mmCustomCondition implements ILocationCondition {
+	protected MobArenaHandler maHandler;
+
 	public inMobArenaCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
+		this.maHandler = Main.getPlugin().getMobArenaHandler();
 	}
 
 	@Override

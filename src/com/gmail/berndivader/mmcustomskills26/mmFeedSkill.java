@@ -13,14 +13,15 @@ public class mmFeedSkill extends SkillMechanic implements ITargetedEntitySkill {
 
 	public mmFeedSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.amount = mlc.getInteger(new String[]{"amount","a"},1);
+		this.ASYNC_SAFE = false;
+		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()) return false;
-		Player p = (Player)target.getBukkitEntity();
+		if (!target.isPlayer())
+			return false;
+		Player p = (Player) target.getBukkitEntity();
 		p.setFoodLevel(Integer.min(p.getFoodLevel() + amount, 20));
 		return true;
 	}

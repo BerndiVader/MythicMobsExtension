@@ -17,19 +17,22 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.mechanics.CustomMechanic;
 
 public class mmDropStolenItems extends SkillMechanic implements INoTargetSkill {
+	protected ThiefHandler thiefhandler;
 
 	public mmDropStolenItems(CustomMechanic skill, MythicLineConfig mlc) {
 		super(skill.getConfigLine(), mlc);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE = false;
+		thiefhandler = Main.getPlugin().getThiefHandler();
 	}
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		
+
 		SkillCaster caster = data.getCaster();
-		if (!(caster instanceof ActiveMob)) return false;
-		ActiveMob am = (ActiveMob)caster;
-		Iterator<Thief>ti = Main.thiefhandler().getThiefs().iterator();
+		if (!(caster instanceof ActiveMob))
+			return false;
+		ActiveMob am = (ActiveMob) caster;
+		Iterator<Thief> ti = thiefhandler.getThiefs().iterator();
 		UUID uuid = am.getUniqueId();
 		while (ti.hasNext()) {
 			Thief thief = ti.next();
