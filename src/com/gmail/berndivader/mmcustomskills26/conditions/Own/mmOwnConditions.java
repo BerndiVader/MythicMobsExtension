@@ -31,7 +31,7 @@ public class mmOwnConditions implements Listener {
 			break;
 		}
 		case "mobsinradius": {
-			SkillCondition c = new mmVerticalDistanceCondition(e.getConfig().getLine(), e.getConfig());
+			SkillCondition c = new mmMobsInRadiusCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;
 		}

@@ -33,7 +33,7 @@ public class mmCustomSkills26 implements Listener {
 			e.register(skill);
 			break;
 		} case "unequip": {
-			skill = new mmDamageArmorSkill(e.getContainer().getConfigLine(), e.getConfig());
+			skill = new mmUnequipSkill(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
 			break;
 		} case "grenade": {

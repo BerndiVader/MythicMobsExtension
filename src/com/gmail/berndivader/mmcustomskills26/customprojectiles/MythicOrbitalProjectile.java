@@ -33,7 +33,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 
 	protected String pEntityName;
 	protected float pEntitySpin;
-	protected float pEntityPitchOffset;
+	protected int pEntityPitchOffset;
 	protected float oRadiusX;
 	protected float oRadiusZ;
 	protected float oRadiusY;
@@ -45,7 +45,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 		super(skill, mlc);
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectilemythic", "pmythic" }, "MINECART");
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
-		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
+		this.pEntityPitchOffset = mlc.getInteger("ppOff", 0);
 		this.pFaceDirection = mlc.getBoolean("pfacedir", false);
 		this.pVOffset = mlc.getDouble("pvoff", 0.0D);
 		this.pFOffset = mlc.getFloat("pfoff", 0.0F);
@@ -94,7 +94,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 		private Location centerLocation;
 		private float radiusX, radiusZ, radiusY, radPerSec, radPerTick;
 		private float pSpin;
-		private float ppOff;
+		private int ppOff;
 		private float pFOff;
 		private double pVOff;
 		private boolean pFaceDir;
@@ -124,7 +124,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 			this.radiusY = MythicOrbitalProjectile.this.oRadiusY;
 			this.radPerSec = MythicOrbitalProjectile.this.oRadiusPerSec;
 			this.radPerTick = this.radPerSec / 20f;
-			this.tick = 0;
+			this.tick = this.ppOff;
 			this.target = t;
 			this.centerLocation = BukkitAdapter.adapt(this.target.getLocation().add(0.0D, this.pVOff, 0.0D).clone());
 			this.targetable = MythicOrbitalProjectile.this.targetable;
@@ -205,6 +205,9 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 		@Override
 		public void run() {
 			this.tick++;
+			if ((this.radPerTick*this.tick)>360) {
+				this.tick = 0;
+			}
 			if (this.cancelled) {
 				return;
 			}
@@ -212,7 +215,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				this.stop();
 				return;
 			}
-			if (!this.lt && (this.startTime + MythicOrbitalProjectile.this.duration < System.currentTimeMillis())) {
+			if (this.lt && (this.startTime + MythicOrbitalProjectile.this.duration < System.currentTimeMillis())) {
 				this.stop();
 				return;
 			}

@@ -394,4 +394,37 @@ public class CustomSkillStuff implements Listener {
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
+	
+    public static Vector calculateBowVelocity(Vector f, Vector t, int hG, double g) {
+        int eG = t.getBlockY()-f.getBlockY();
+        double hD = Math.sqrt(distanceSquared(f,t));
+        int ga = hG;
+        double mGa = ga>(eG+ga)?ga:(eG+ga);
+ 
+        double a = -hD*hD/(4*mGa);
+        double b = hD;
+        double c = -eG;
+ 
+        double s =-b/(2*a)-Math.sqrt(b*b-4*a*c)/(2*a);
+        double vy = Math.sqrt(mGa*g);
+        double vh = vy/s;
+ 
+        int dx = t.getBlockX()-f.getBlockX();
+        int dz = t.getBlockZ()-f.getBlockZ();
+        double mag = Math.sqrt(dx*dx+dz*dz);
+        double dirx = dx/mag;
+        double dirz = dz/mag;
+ 
+        double vx = vh*dirx;
+        double vz = vh*dirz;
+ 
+        return new Vector(vx,vy,vz);
+    }
+ 
+    public static double distanceSquared(Vector f, Vector t) {
+        double dx = t.getBlockX() - f.getBlockX();
+        double dz = t.getBlockZ() - f.getBlockZ();
+        return dx * dx + dz * dz;
+    }	
+	
 }

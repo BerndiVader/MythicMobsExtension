@@ -10,7 +10,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -27,18 +26,17 @@ public class mmEquipFix extends SkillMechanic implements ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		SkillCaster caster = data.getCaster();
-		if (!(caster.getEntity().getBukkitEntity() instanceof LivingEntity))
+		if (!(target.getBukkitEntity() instanceof LivingEntity))
 			return false;
-		getItem((LivingEntity) caster.getEntity().getBukkitEntity(), this.itemString);
+		getItem((LivingEntity) target.getBukkitEntity(), this.itemString);
 		return true;
 	}
 
-	private boolean getItem(LivingEntity caster, String item) {
+	private boolean getItem(LivingEntity target, String item) {
 		Optional<MythicItem> maybeItem;
 		if ((maybeItem = this.mythicmobs.getItemManager().getItem(itemString)).isPresent()) {
 			MythicItem mi = maybeItem.get();
-			caster.getEquipment().setHelmet(BukkitAdapter.adapt(mi.generateItemStack(1)));
+			target.getEquipment().setHelmet(BukkitAdapter.adapt(mi.generateItemStack(1)));
 			return true;
 		}
 		return false;
