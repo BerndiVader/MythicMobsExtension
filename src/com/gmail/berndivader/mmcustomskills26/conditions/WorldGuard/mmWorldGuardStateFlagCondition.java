@@ -13,19 +13,19 @@ public class mmWorldGuardStateFlagCondition extends SkillCondition implements IL
 
 	private WorldGuardFlags wgf = Main.wgf;
 	private String flagName;
-	
+
 	public mmWorldGuardStateFlagCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action","a"}, "TRUE").toUpperCase());
+			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
-		this.flagName = mlc.getString(new String[]{"flagname","flag","f"},"mob-spawning");
+		this.flagName = mlc.getString(new String[] { "flagname", "flag", "f" }, "mob-spawning");
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return wgf.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location),  flagName);
+		return wgf.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
 	}
 }

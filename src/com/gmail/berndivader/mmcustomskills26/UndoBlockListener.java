@@ -24,39 +24,34 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class UndoBlockListener implements Listener {
-	
-	private Collection<Material> dList = new ArrayList<Material>(Arrays.asList(
-			Material.CHEST,
-			Material.TRAPPED_CHEST,
-			Material.ENDER_CHEST,
-			Material.ANVIL,
-			Material.DISPENSER,
-			Material.BREWING_STAND,
-			Material.FURNACE
-	));
+
+	private Collection<Material> dList = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.TRAPPED_CHEST,
+			Material.ENDER_CHEST, Material.ANVIL, Material.DISPENSER, Material.BREWING_STAND, Material.FURNACE));
 	private int utime;
 	private boolean ueffect;
-	
-    public static Double getRandomVel(Double min, Double max) {
-        Random rnd = new Random();
-        return rnd.nextDouble() * (max - min) + min;
-    }
-    
-    @EventHandler
-    public void removeFallingBlock(EntityChangeBlockEvent e) {
-   		if (e.getEntity().hasMetadata("removeit")==false) return;
-   		e.setCancelled(true);
-    }
-    
-	@EventHandler(priority=EventPriority.HIGHEST)
+
+	public static Double getRandomVel(Double min, Double max) {
+		Random rnd = new Random();
+		return rnd.nextDouble() * (max - min) + min;
+	}
+
+	@EventHandler
+	public void removeFallingBlock(EntityChangeBlockEvent e) {
+		if (e.getEntity().hasMetadata("removeit") == false)
+			return;
+		e.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void GrenadeBlockDestroy(EntityExplodeEvent e) {
-		if (e.getEntityType() == EntityType.PRIMED_TNT && e.isCancelled()==false && !e.blockList().isEmpty()) {
-			if (!e.getEntity().hasMetadata("customgrenade")) return;
+		if (e.getEntityType() == EntityType.PRIMED_TNT && e.isCancelled() == false && !e.blockList().isEmpty()) {
+			if (!e.getEntity().hasMetadata("customgrenade"))
+				return;
 			if (e.getEntity().hasMetadata("noblkdmg")) {
 				if (!e.getEntity().getMetadata("noblkdmg").get(0).asBoolean()) {
 					e.setCancelled(true);
-					e.getLocation().getWorld().createExplosion(
-						e.getLocation().getX(), e.getLocation().getY(), e.getLocation().getZ(), 2, false, false);
+					e.getLocation().getWorld().createExplosion(e.getLocation().getX(), e.getLocation().getY(),
+							e.getLocation().getZ(), 2, false, false);
 					return;
 				}
 			}
@@ -65,7 +60,7 @@ public class UndoBlockListener implements Listener {
 					return;
 				}
 			}
-			
+
 			if (e.getEntity().hasMetadata("ueffect")) {
 				this.ueffect = e.getEntity().getMetadata("ueffect").get(0).asBoolean();
 			}
@@ -85,7 +80,8 @@ public class UndoBlockListener implements Listener {
 						blocks.add(b.getState());
 						@SuppressWarnings("deprecation")
 						FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(), Material.FIRE, (byte) 0);
-						fb.setVelocity(new Vector(getRandomVel(-0.5, 0.5), getRandomVel(0.1, 0.5), getRandomVel(-0.5, 0.5)));
+						fb.setVelocity(
+								new Vector(getRandomVel(-0.5, 0.5), getRandomVel(0.1, 0.5), getRandomVel(-0.5, 0.5)));
 						fb.setMetadata("removeit", new FixedMetadataValue(Main.getPlugin(), true));
 					}
 				}
@@ -99,23 +95,28 @@ public class UndoBlockListener implements Listener {
 			}.runTaskLater(Main.getPlugin(), utime);
 		}
 	}
-	
-    public static void regen(final List<BlockState> blocks, boolean effect, int speed) {
-        new BukkitRunnable() {
-            int i = -1;
-            @Override
+
+	public static void regen(final List<BlockState> blocks, boolean effect, int speed) {
+		new BukkitRunnable() {
+			int i = -1;
+
+			@Override
 			@SuppressWarnings("deprecation")
-            public void run() {
-                if (i != blocks.size() - 1) {
-                    i++; BlockState bs = blocks.get(i);
-                    bs.getBlock().setType(bs.getType());
-                    bs.getBlock().setData(bs.getBlock().getData());
-                    bs.update();
-                    if (effect) bs.getBlock().getWorld().playEffect(bs.getLocation(), Effect.STEP_SOUND, bs.getBlock().getType());
-                } else {
-                    blocks.clear(); this.cancel();
-                }
-            }
-        }.runTaskTimer(Main.getPlugin(), speed, speed);
-    }	
+			public void run() {
+				if (i != blocks.size() - 1) {
+					i++;
+					BlockState bs = blocks.get(i);
+					bs.getBlock().setType(bs.getType());
+					bs.getBlock().setData(bs.getBlock().getData());
+					bs.update();
+					if (effect)
+						bs.getBlock().getWorld().playEffect(bs.getLocation(), Effect.STEP_SOUND,
+								bs.getBlock().getType());
+				} else {
+					blocks.clear();
+					this.cancel();
+				}
+			}
+		}.runTaskTimer(Main.getPlugin(), speed, speed);
+	}
 }

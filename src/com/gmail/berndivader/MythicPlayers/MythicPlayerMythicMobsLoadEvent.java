@@ -14,31 +14,33 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class MythicPlayerMythicMobsLoadEvent implements Listener {
-	
-	private String MechName, TargeterName;
+
 	private SkillMechanic skill;
 	private SkillTargeter targeter;
-	
+
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
-		MechName = e.getMechanicName().toLowerCase();
-		if (MechName.equals("activeplayer")) {
-			skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(),e.getConfig());
+		String mech = e.getMechanicName().toLowerCase();
+		switch (mech) {
+		case "activeplayer": {
+			skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-		} else if (MechName.equals("normalplayer")) {
+			break;
+		} case "normalplayer": {
 			skill = new mmNormalPlayer(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-		} else if (MechName.equals("settarget")) {
+			break;
+		} case "settarget": {
 			skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(skill);
-		}
+			break;
+		}}
 	}
-	
+
 	@EventHandler
 	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
-		TargeterName = e.getTargeterName().toLowerCase();
-		if (TargeterName.equals("corsshairentity") 
-				|| TargeterName.equals("che")) {
+		String TargeterName = e.getTargeterName().toLowerCase();
+		if (TargeterName.equals("corsshairentity") || TargeterName.equals("che")) {
 			targeter = new mmCrosshairTargeter(e.getConfig());
 			e.register(targeter);
 		}

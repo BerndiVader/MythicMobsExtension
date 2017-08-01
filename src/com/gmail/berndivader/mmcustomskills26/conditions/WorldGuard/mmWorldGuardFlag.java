@@ -10,12 +10,12 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
 public class mmWorldGuardFlag implements Listener {
-	
+
 	public mmWorldGuardFlag() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 		Bukkit.getLogger().info("registered WorldGuard conditions!");
 	}
-	
+
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
 		if (e.getConditionName().toLowerCase().equals("wgstateflag")) {

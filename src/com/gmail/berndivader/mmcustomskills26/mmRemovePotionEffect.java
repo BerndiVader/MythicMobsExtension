@@ -18,8 +18,8 @@ public class mmRemovePotionEffect extends SkillMechanic implements ITargetedEnti
 
 	public mmRemovePotionEffect(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.type = mlc.getString(new String[]{"potion","p","type","t"},"ALL").toUpperCase().split(",");
+		this.ASYNC_SAFE = false;
+		this.type = mlc.getString(new String[] { "potion", "p", "type", "t" }, "ALL").toUpperCase().split(",");
 	}
 
 	@Override

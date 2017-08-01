@@ -10,15 +10,13 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class mmStunSkill extends SkillMechanic 
-implements 
-ITargetedEntitySkill {
+public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 
 	private int duration;
 
 	public mmStunSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.duration = mlc.getInteger(new String[]{"duration","d"},120);
+		this.duration = mlc.getInteger(new String[] { "duration", "d" }, 120);
 	}
 
 	@Override
@@ -28,10 +26,11 @@ ITargetedEntitySkill {
 		final int dur = this.duration;
 		target.getBukkitEntity().setMetadata("mmStunned", new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
-			int count=0;
+			int count = 0;
+
 			@Override
 			public void run() {
-				if (t==null || t.isDead() || count >= dur) {
+				if (t == null || t.isDead() || count >= dur) {
 					target.getBukkitEntity().removeMetadata("mmStunned", Main.getPlugin());
 					this.cancel();
 				} else {

@@ -16,15 +16,16 @@ public class mmWorldGuardDenySpawnFlagCondition extends SkillCondition implement
 	public mmWorldGuardDenySpawnFlagCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action","a"}, "TRUE").toUpperCase());
+			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.FALSE;
 		}
-		this.entities = mlc.getString(new String[]{"entitytypes","entitytype","types","type","t"},"zombie").toUpperCase().split(",");
+		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie")
+				.toUpperCase().split(",");
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return wgf.checkRegionDenySpawnFlagAtLocation(BukkitAdapter.adapt(location),  entities);
+		return wgf.checkRegionDenySpawnFlagAtLocation(BukkitAdapter.adapt(location), entities);
 	}
 }

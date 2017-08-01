@@ -31,43 +31,41 @@ import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTOrigin;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 
-public class mmCustomTeleportSkill extends SkillMechanic
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill
-{
+public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	protected boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
 	protected double delay, noise, maxTargets;
 	protected AbstractEntity entityTarget;
 	protected AbstractLocation startLocation;
 
-    public mmCustomTeleportSkill(String line, MythicLineConfig mlc) {
-        super(line, mlc);
-        this.ASYNC_SAFE = false;
-        this.noise = mlc.getDouble(new String[]{"noise","n"},0D);
-        this.delay = mlc.getDouble(new String[]{"teleportdelay","tdelay","td"},0D);
-        if ((this.maxTargets = mlc.getDouble(new String[]{"maxtargets","mt"},0D))<0) this.maxTargets=0D;
-        this.inFrontOf = mlc.getBoolean(new String[]{"infront","front","f"},false);
-        this.returnToStart = mlc.getBoolean(new String[]{"returntostart","return","r"},false);
-        this.targetInsight = mlc.getBoolean(new String[]{"targetinsight","insight","is"},false);
-        this.ignoreOwner = mlc.getBoolean(new String[]{"ignoreowner","io"},false);
-        this.inBetweenLastSignal = mlc.getString(new String[]{"betweenlastentitysignal","bls"},null);
-        this.inBetweenNextSignal = mlc.getString(new String[]{"betweennextentitysignal","bns"},null);
-        this.FinalSignal = mlc.getString(new String[]{"finalsignal","fs"},null);
-        
-        String s = mlc.getString(new String[]{"destination","dest","d"},"@self").toLowerCase();
-        s=s.replaceAll("<&lc>", "{");
-        s=s.replaceAll("<&rc>", "}");
-        s=s.replaceAll("<&eq>", "=");
-        s=s.replaceAll("<&sc>", ";");
-        s=s.replaceAll("<&cm>", ",");
-        s=s.replaceAll("<&lb>", "[");
-        s=s.replaceAll("<&rb>", "]");
-        this.stargeter = s = s.substring(1, s.length() - 1);
-        if (!this.stargeter.startsWith("@")) this.stargeter = "@"+this.stargeter;
-    }
-    
+	public mmCustomTeleportSkill(String line, MythicLineConfig mlc) {
+		super(line, mlc);
+		this.ASYNC_SAFE = false;
+		this.noise = mlc.getDouble(new String[] { "noise", "n" }, 0D);
+		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
+		if ((this.maxTargets = mlc.getDouble(new String[] { "maxtargets", "mt" }, 0D)) < 0)
+			this.maxTargets = 0D;
+		this.inFrontOf = mlc.getBoolean(new String[] { "infront", "front", "f" }, false);
+		this.returnToStart = mlc.getBoolean(new String[] { "returntostart", "return", "r" }, false);
+		this.targetInsight = mlc.getBoolean(new String[] { "targetinsight", "insight", "is" }, false);
+		this.ignoreOwner = mlc.getBoolean(new String[] { "ignoreowner", "io" }, false);
+		this.inBetweenLastSignal = mlc.getString(new String[] { "betweenlastentitysignal", "bls" }, null);
+		this.inBetweenNextSignal = mlc.getString(new String[] { "betweennextentitysignal", "bns" }, null);
+		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "fs" }, null);
+
+		String s = mlc.getString(new String[] { "destination", "dest", "d" }, "@self").toLowerCase();
+		s = s.replaceAll("<&lc>", "{");
+		s = s.replaceAll("<&rc>", "}");
+		s = s.replaceAll("<&eq>", "=");
+		s = s.replaceAll("<&sc>", ";");
+		s = s.replaceAll("<&cm>", ",");
+		s = s.replaceAll("<&lb>", "[");
+		s = s.replaceAll("<&rb>", "]");
+		this.stargeter = s = s.substring(1, s.length() - 1);
+		if (!this.stargeter.startsWith("@"))
+			this.stargeter = "@" + this.stargeter;
+	}
+
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		return this.doMechanic(data, target);
@@ -77,55 +75,57 @@ ITargetedLocationSkill
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return this.doMechanic(data, target);
 	}
-	
-    @SuppressWarnings("unchecked")
+
+	@SuppressWarnings("unchecked")
 	private boolean doMechanic(SkillMetadata data, Object target) {
-    	String targeter = this.stargeter;
-    	if (target.getClass().equals(BukkitEntity.class) || target.getClass().equals(BukkitPlayer.class)) {
-        	targeter = SkillString.parseMobVariables(this.stargeter, data.getCaster(), (AbstractEntity)target, data.getTrigger());
-    		this.entityTarget = (AbstractEntity)target;
-    		this.startLocation = ((AbstractEntity)target).getLocation();
-    	} else {
-    		Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
-    		return false;
-    	}
-		HashSet<Object>osources=(HashSet<Object>) getDestination(targeter, data);
-    	Map<Double,Object>sortedsources = new TreeMap<Double,Object>();
-    	if (!osources.iterator().hasNext()) return false;
-    	this.isLocations=osources.iterator().next() instanceof AbstractLocation?true:false;
-    	if (this.maxTargets>0 && osources.size()>this.maxTargets) {
-    		HashSet<Object>lsrc = new HashSet<>();
-    		Iterator<?>it = osources.iterator();
-    		int c = 1;
-    		while (it.hasNext()) {
-    			if (c>this.maxTargets) {
-    				osources.clear();
-    				osources.addAll(lsrc);
-    				break;
-    			}
-    			lsrc.add(it.next());
-    			c++;
-    		}
-    	}
-    	if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
-    			&& ((ActiveMob)data.getCaster()).getOwner().isPresent()) {
-    		osources.remove(BukkitAdapter.adapt(Bukkit.getEntity(((ActiveMob)data.getCaster()).getOwner().get())));
-    	}
-    	if (this.sortTargets) {
-    		Iterator<?>it = osources.iterator();
-    		while (it.hasNext()) {
-    			Object o = it.next();
-    			AbstractLocation l;
-    			if (this.isLocations) {
-    				l = ((AbstractLocation)o);
-    			} else {
-    				l = ((AbstractEntity)o).getLocation();
-    			}
-   				double distance = data.getCaster().getLocation().distanceSquared(l);
-   				sortedsources.put(distance, o);
-    		}
-    	}
-    	
+		String targeter = this.stargeter;
+		if (target.getClass().equals(BukkitEntity.class) || target.getClass().equals(BukkitPlayer.class)) {
+			targeter = SkillString.parseMobVariables(this.stargeter, data.getCaster(), (AbstractEntity) target,
+					data.getTrigger());
+			this.entityTarget = (AbstractEntity) target;
+			this.startLocation = ((AbstractEntity) target).getLocation();
+		} else {
+			Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
+			return false;
+		}
+		HashSet<Object> osources = (HashSet<Object>) getDestination(targeter, data);
+		Map<Double, Object> sortedsources = new TreeMap<Double, Object>();
+		if (!osources.iterator().hasNext())
+			return false;
+		this.isLocations = osources.iterator().next() instanceof AbstractLocation ? true : false;
+		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
+			HashSet<Object> lsrc = new HashSet<>();
+			Iterator<?> it = osources.iterator();
+			int c = 1;
+			while (it.hasNext()) {
+				if (c > this.maxTargets) {
+					osources.clear();
+					osources.addAll(lsrc);
+					break;
+				}
+				lsrc.add(it.next());
+				c++;
+			}
+		}
+		if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
+				&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
+			osources.remove(BukkitAdapter.adapt(Bukkit.getEntity(((ActiveMob) data.getCaster()).getOwner().get())));
+		}
+		if (this.sortTargets) {
+			Iterator<?> it = osources.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				AbstractLocation l;
+				if (this.isLocations) {
+					l = ((AbstractLocation) o);
+				} else {
+					l = ((AbstractEntity) o).getLocation();
+				}
+				double distance = data.getCaster().getLocation().distanceSquared(l);
+				sortedsources.put(distance, o);
+			}
+		}
+
 		new BukkitRunnable() {
 			AbstractEntity sourceEntity = entityTarget;
 			AbstractEntity lastEntity;
@@ -133,79 +133,93 @@ ITargetedLocationSkill
 			boolean ifo = inFrontOf;
 			boolean is = targetInsight;
 			boolean sorted = sortTargets;
-			Iterator<?>it = osources.iterator();
-			Map<Double,Object>sosources = sortedsources;
+			Iterator<?> it = osources.iterator();
+			Map<Double, Object> sosources = sortedsources;
 			double n = noise;
 			String bls = inBetweenLastSignal;
 			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
 			AbstractLocation start = startLocation;
-			
+
 			@Override
 			public void run() {
-			block: {
-				if (!this.it.hasNext()) {
-					if (returnToStart) this.sourceEntity.teleport(this.start);
-					if (this.fs!=null) {
-						if (this.isLoc) {
-							((ActiveMob)data.getCaster()).signalMob(null, this.fs);
-						} else {
-							((ActiveMob)data.getCaster()).signalMob((AbstractEntity)target, this.fs);
+				block: {
+					if (!this.it.hasNext()) {
+						if (returnToStart)
+							this.sourceEntity.teleport(this.start);
+						if (this.fs != null) {
+							if (this.isLoc) {
+								((ActiveMob) data.getCaster()).signalMob(null, this.fs);
+							} else {
+								((ActiveMob) data.getCaster()).signalMob((AbstractEntity) target, this.fs);
+							}
 						}
+						this.cancel();
+						return;
 					}
-					this.cancel();
-					return;
+					Object target = this.it.next();
+					if (this.isLoc) {
+						if (this.n > 0)
+							target = MobManager.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
+									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
+						this.sourceEntity.teleport((AbstractLocation) target);
+						if (this.bls != null)
+							((ActiveMob) data.getCaster()).signalMob(null, this.bls);
+					} else {
+						if (lastEntity == null)
+							lastEntity = this.sourceEntity;
+						AbstractEntity t = (AbstractEntity) target;
+						target = ((AbstractEntity) target).getLocation();
+						if (this.is && !this.sourceEntity.hasLineOfSight(t))
+							break block;
+						if (this.ifo)
+							target = t.getLocation()
+									.add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
+						if (this.n > 0)
+							target = MobManager.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
+									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
+						if (this.bns != null)
+							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
+						this.sourceEntity.teleport((AbstractLocation) target);
+						if (this.bls != null)
+							((ActiveMob) data.getCaster()).signalMob(this.lastEntity, this.bls);
+						this.lastEntity = t;
+					}
 				}
-				Object target = this.it.next();
-				if (this.isLoc) {
-					if (this.n>0) target = MobManager.findSafeSpawnLocation((AbstractLocation)target, (int)this.n, 0, ((ActiveMob)data.getCaster()).getType().getMythicEntity().getHeight(), false);
-					this.sourceEntity.teleport((AbstractLocation)target);
-					if (this.bls!=null) ((ActiveMob)data.getCaster()).signalMob(null, this.bls);
-				} else {
-					if (lastEntity==null) lastEntity = this.sourceEntity;
-					AbstractEntity t = (AbstractEntity)target;
-					target = ((AbstractEntity)target).getLocation();
-					if (this.is && !this.sourceEntity.hasLineOfSight(t)) break block;
-					if (this.ifo) target = t.getLocation().add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
-					if (this.n>0) target = MobManager.findSafeSpawnLocation(((AbstractLocation)target), (int)this.n, 0, ((ActiveMob)data.getCaster()).getType().getMythicEntity().getHeight(), false);
-					if (this.bns!=null) ((ActiveMob)data.getCaster()).signalMob(t, this.bns);
-					this.sourceEntity.teleport((AbstractLocation)target);
-					if (this.bls!=null) ((ActiveMob)data.getCaster()).signalMob(this.lastEntity, this.bls);
-					this.lastEntity=t;
-				}
-			}}
-		}.runTaskTimer(Main.getPlugin(), 0L, (long)this.delay);
-    	return true;
-    }
-    
+			}
+		}.runTaskTimer(Main.getPlugin(), 0L, (long) this.delay);
+		return true;
+	}
+
 	protected static HashSet<?> getDestination(String target, SkillMetadata skilldata) {
-        SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(), skilldata.getOrigin(), null, null, 1.0f);
-    	Optional<SkillTargeter>maybeTargeter;
-    	maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(target));
-	    if (maybeTargeter.isPresent()) {
-            SkillTargeter targeter = maybeTargeter.get();
-            if (targeter instanceof IEntitySelector) {
-                data.setEntityTargets(((IEntitySelector)targeter).getEntities(data));
-                ((IEntitySelector)targeter).filter(data, false);
-                return data.getEntityTargets();
-            }
-            if (targeter instanceof ILocationSelector) {
-                data.setLocationTargets(((ILocationSelector)targeter).getLocations(data));
-                ((ILocationSelector)targeter).filter(data);
-            } else if (targeter instanceof MTOrigin) {
-                data.setLocationTargets(((MTOrigin)targeter).getLocation(data.getOrigin()));
-            } else if (targeter instanceof MTTriggerLocation) {
-                HashSet<AbstractLocation> lTargets = new HashSet<AbstractLocation>();
-                lTargets.add(data.getTrigger().getLocation());
-                data.setLocationTargets(lTargets);
-            }
-            if (targeter instanceof ConsoleTargeter) {
-                data.setEntityTargets(null);
-                data.setLocationTargets(null);
-            }
-            return data.getLocationTargets();
-        }
-	    return null;
-    }
-	
+		SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),
+				skilldata.getOrigin(), null, null, 1.0f);
+		Optional<SkillTargeter> maybeTargeter;
+		maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(target));
+		if (maybeTargeter.isPresent()) {
+			SkillTargeter targeter = maybeTargeter.get();
+			if (targeter instanceof IEntitySelector) {
+				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));
+				((IEntitySelector) targeter).filter(data, false);
+				return data.getEntityTargets();
+			}
+			if (targeter instanceof ILocationSelector) {
+				data.setLocationTargets(((ILocationSelector) targeter).getLocations(data));
+				((ILocationSelector) targeter).filter(data);
+			} else if (targeter instanceof MTOrigin) {
+				data.setLocationTargets(((MTOrigin) targeter).getLocation(data.getOrigin()));
+			} else if (targeter instanceof MTTriggerLocation) {
+				HashSet<AbstractLocation> lTargets = new HashSet<AbstractLocation>();
+				lTargets.add(data.getTrigger().getLocation());
+				data.setLocationTargets(lTargets);
+			}
+			if (targeter instanceof ConsoleTargeter) {
+				data.setEntityTargets(null);
+				data.setLocationTargets(null);
+			}
+			return data.getLocationTargets();
+		}
+		return null;
+	}
+
 }

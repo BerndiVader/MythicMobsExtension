@@ -11,11 +11,11 @@ import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEntitySkill {
 	protected double amount;
-	
+
 	public mmSetThreatTableTarget(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=true;
-		this.amount=mlc.getDouble(new String[]{"amount","a"},65536);
+		this.ASYNC_SAFE = true;
+		this.amount = mlc.getDouble(new String[] { "amount", "a" }, 65536);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -23,11 +23,11 @@ public class mmSetThreatTableTarget extends SkillMechanic implements ITargetedEn
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (data.getCaster() instanceof ActiveMob) {
 			ActiveMob am = (ActiveMob) data.getCaster();
-			if (am.getThreatTable().size()>0) {
+			if (am.getThreatTable().size() > 0) {
 				am.getThreatTable().clearTarget();
 				am.getThreatTable().getAllThreatTargets().clear();
 			}
-			if (target!=null) {
+			if (target != null) {
 				am.getThreatTable().threatGain(target, this.amount);
 				am.getThreatTable().targetHighestThreat();
 				new TriggeredSkill(SkillTrigger.ENTERCOMBAT, am, target);

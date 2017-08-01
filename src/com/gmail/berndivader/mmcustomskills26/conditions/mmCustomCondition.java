@@ -9,7 +9,7 @@ public class mmCustomCondition extends SkillCondition {
 	public mmCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[]{"action","a"}, "TRUE").toUpperCase());
+			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
