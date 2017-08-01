@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -142,7 +143,7 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug) {
+			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -162,7 +163,7 @@ public class CustomSkillStuff implements Listener {
 			damage = 0.001D;
 		round(damage, 3);
 		target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(), damage));
-		target.damage(damage, source);
+        target.damage(damage, source);
 		if (preventImmunity)
 			target.setNoDamageTicks(0);
 		am.setUsingDamageSkill(false);

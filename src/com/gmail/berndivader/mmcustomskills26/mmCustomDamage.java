@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -10,6 +12,7 @@ import io.lumine.xikage.mythicmobs.util.MathParser;
 public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkill {
 
 	private boolean pk, pi, ia, iabs, ip, p, pcur, debug;
+	private DamageCause cause=DamageCause.CUSTOM;
 	private String amount;
 
 	public mmCustomDamage(String skill, MythicLineConfig mlc) {
@@ -26,8 +29,14 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 		this.ip = mlc.getBoolean(new String[] { "ignorepower", "ip" }, false);
 		this.p = mlc.getBoolean(new String[] { "percentage", "p" }, false);
 		this.pcur = mlc.getBoolean(new String[] { "pcur", "pc" }, false);
+		String ca = mlc.getString(new String[] { "damagecause", "cause" }, "CUSTOM").toUpperCase();
+		for (DamageCause dc : DamageCause.values()) {
+			if (dc.toString().equals(ca)) {
+				this.cause=dc;
+				break;
+			}
+		}
 		this.debug = mlc.getBoolean("debug", false);
-
 	}
 
 	@Override
@@ -40,7 +49,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 		}
 		if (!this.ip)
 			dmg = dmg * data.getPower();
-		CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug);
+		CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug, this.cause);
 		return true;
 	}
 }
