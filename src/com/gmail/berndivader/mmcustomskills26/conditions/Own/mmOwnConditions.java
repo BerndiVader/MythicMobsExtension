@@ -56,6 +56,22 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "behind": {
+			SkillCondition c = new mmIsBehindCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+			break;
+		}
+		case "infront": {
+			SkillCondition c = new mmInFrontCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+			break;
+		}
+		case "damageable":
+		case "attackable": {
+			SkillCondition c = new mmIsAttackableCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

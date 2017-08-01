@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -34,13 +33,13 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 		this.t = mlc.getString(new String[] { "mobtypes", "types", "mobs", "mob", "type", "t", "m" }, "ALL").split(",");
 		if (this.t[0].toUpperCase().equals("ALL"))
 			this.t[0] = "ALL";
-		this.a = new RangedDouble(mlc.getString(new String[] { "amount", "a" }, "0"), false);
+		this.a = new RangedDouble(mlc.getString(new String[] { "amount","a" }, "0"), false);
 		this.r = mlc.getDouble(new String[] { "radius", "r" }, 5);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				for (String s : t) {
-					MythicMob mm = MythicMobs.inst().getMobManager().getMythicMob(s);
+					MythicMob mm = mmMobsInRadiusCondition.this.mobmanager.getMythicMob(s);
 					if (mm != null) {
 						mmT.add(mm);
 					}
@@ -52,8 +51,7 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 	@Override
 	public boolean check(AbstractLocation l) {
 		int count = 0;
-		for (Iterator<AbstractEntity> it = this.entitymanager.getLivingEntities(l.getWorld()).iterator(); it
-				.hasNext();) {
+		for (Iterator<AbstractEntity> it = this.entitymanager.getLivingEntities(l.getWorld()).iterator(); it.hasNext();) {
 			AbstractEntity e = it.next();
 			double diffsq = l.distanceSquared(e.getLocation());
 			if (diffsq <= Math.pow(this.r, 2.0D)) {

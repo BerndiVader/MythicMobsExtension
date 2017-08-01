@@ -41,7 +41,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		if (Bukkit.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
 			this.mythicmobs = MythicMobs.inst();
-			this.mobmanager = new MobManager(this.mythicmobs);
+			this.mobmanager = this.mythicmobs.getMobManager();
 			PluginManager pm = this.getServer().getPluginManager();
 			pm.registerEvents(new UndoBlockListener(), this);
 			new CustomSkillStuff();
