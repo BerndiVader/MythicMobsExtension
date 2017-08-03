@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.175 release
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
 #### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
 #### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
 #### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
@@ -132,11 +133,12 @@ PlayEffectOnTarget:
 
 	Use this mechanic to compare conditions and targetconditions inside of skills and execute a skill if meet or another if not meet.
 	
-		- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;else=elseSkill} @trigger ~onDamaged
+		- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;meettargeter="@[any_targeter]";else=elseSkill;elsetargeter="@[any_targeter]"} @trigger ~onDamaged
 			conditions=c= (Optional) The conditions to compare with the caster. Can be an arraylist split by &&
 			targetconditions=tc= (Optional) The conditions to compare with the targeted entity. Can be an arraylist split by &&
 			meet= (Optional) The skill to be executed if the conditions are meet.
 			else= (Optional) The skill to be executed if the conditions not meet.
+			meettargeter / elsetargeter= (Optional) Renew the meet / else skills targeter if present. Surrounded with ""!!
 			The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
 			
 			Now possible, to use && || expressions. Example:
