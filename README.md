@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.175 release
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
 #### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
 #### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
 #### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
