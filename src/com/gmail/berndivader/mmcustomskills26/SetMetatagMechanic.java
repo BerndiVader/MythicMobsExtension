@@ -24,7 +24,7 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
 		String ms = mlc.getString(new String[] { "meta", "m" }, "");
-		ms = ms.substring(1, ms.length() - 1);
+		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String parse[] = ms.split(";");
 		String t = null, v = null, vt = null;

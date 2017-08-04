@@ -72,6 +72,12 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "parsedstance":
+		case "pstance": {
+			SkillCondition c = new mmParsedStanceCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

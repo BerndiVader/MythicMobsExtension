@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.175 release
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
 #### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
 #### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
 #### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
@@ -127,6 +128,13 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## parsedStance mechanic:
+
+	Set a the stance of an activemob filled parsed variables, like <mob.uuid> <target.uuid> and so on. In addition see parsedstance condition to compare parsed stances.
+	
+		- parsedstance{s="<trigger.uuid>"} @self
 
 
 ## CastIf mechanic:
@@ -719,12 +727,17 @@ FleeButGotNothing:
 
 ```
   TargetConditions:
+  - parsedstance{s="<target.uuid>";cs=true;action=true}
+```
+If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
+```
+  TargetConditions:
   - attackable{cause=DAMAGECAUSE;action=boolean}
   - damageable{cause=DAMAGECAUSE;action=boolean}
 ```
 Use this condition to check if the target is attackable by the caster. Only avail as TargetConditions / CompareConditions
 ```
-  TargetCondition:
+  TargetConditions:
   - infront{view=[angle_value];action=[boolean]}
   - behind{view=[angle_value];action=[boolean]}
 ```
