@@ -34,7 +34,7 @@ public class mmHasMetaTagCondition extends mmCustomCondition implements ILocatio
 		this.mobmanager = Main.getPlugin().getMobManager();
 		this.compareToSelf = mlc.getBoolean(new String[] { "compareself", "cs" }, false);
 		String ms = mlc.getString(new String[] { "metalist", "list", "l" });
-		ms = ms.substring(1, ms.length() - 1);
+		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String metaStrings[] = ms.split("\\|\\|");
 		for (String metaString : metaStrings) {
