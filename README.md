@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.176 dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
 #### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
 #### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
 #### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
@@ -150,14 +151,25 @@ PlayEffectOnTarget:
 ### Pathfindergoals:
 
 	*runfromsun:*
+
+		advaipathfinder{goal="[goalpriority_value] runfromsun [speed_value]"}
 	
 		Syntax in advaipathfinder: - advaipathfinder{goal="1 runfromsun 5"}
 		Set goal 1 to PathfindergoalFleeSun with a speed of 5
 		
 	*rangedmelee:*
+
+		advaipathfinder{goal="[goalpriority_value] rangedmelee [range_value]"}
 	
 		Syntax in advaipathfinder: - advaipathfinder{goal="1 rangedmelee 5"}
 		Set goal 1 to PathfinderMeleeAttack with a range of 5 blocks.
+		
+	*followentity:*
+	
+		advaipathfinder{goal="[goalpriority_value] followentity [speed_value] [entity_uuid]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 1 <trigger.uuid>"}
+		Set goal 1 to PathfinderFollowEntity with speed 1 to the trigger of the skill.
 	
 
 

@@ -154,8 +154,8 @@ public class mmCustomSkills26 implements Listener {
 			skill = new ParsedStance(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		} case "showhealthbar": {
-			skill = new showHealthBarMechanic(e.getContainer().getConfigLine(),e.getConfig());
+		} case "createfollowhologram": {
+			skill = new createFollowHologram(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		} case "advaipathfinder": {

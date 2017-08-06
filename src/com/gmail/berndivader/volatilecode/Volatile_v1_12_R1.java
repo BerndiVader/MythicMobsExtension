@@ -3,8 +3,13 @@ package com.gmail.berndivader.volatilecode;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -25,12 +30,17 @@ implements VolatileHandler {
 	}
 	
 	@Override
-	public void aiPathfinderGoal(LivingEntity entity, String uGoal) {
-    	EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
+	public void aiPathfinderGoal(LivingEntity entity, String uGoal, LivingEntity target) {
+        EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
+        EntityLiving tE = null;
+        if (target!=null) {
+        	tE = (EntityLiving)((CraftLivingEntity)entity).getHandle();
+        }
         Field goalsField;
         int i=0;
         String goal=uGoal;
         String data=null;
+        String data1=null;
         String[] parse = uGoal.split(" ");
         if (parse[0].matches("[0-9]*")) {
         	i = Integer.parseInt(parse[0]);
@@ -38,6 +48,9 @@ implements VolatileHandler {
         		goal = parse[1];
         		if (parse.length>2) {
         			data = parse[2];
+        		}
+        		if (parse.length>3) {
+        			data1 = parse[3];
         		}
         	}
         }
@@ -66,6 +79,25 @@ implements VolatileHandler {
 	        	}
 	        	break;
 	        }
+	        case "followentity": {
+	        	UUID uuid=null;
+	        	if (e instanceof EntityCreature) {
+	        		double speed = 1.0d;
+	        		if (CustomSkillStuff.isNumeric(data)) {
+	        			speed = Double.parseDouble(data);
+	        		}
+	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
+	        			Entity ee = Bukkit.getServer().getEntity(uuid);
+	        			if (ee instanceof LivingEntity) {
+	        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
+	        			}
+	        		}
+	        		if (tE!=null && tE.isAlive()) {
+		            	goals.a(i, (PathfinderGoal)new PathfinderGoalFollowEntity(e,tE, speed));
+	        		}
+	        	}
+	        	break;
+	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
 	        	gList.add(uGoal);
@@ -74,7 +106,7 @@ implements VolatileHandler {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-    }
+	}
     
 	public class PathfinderGoalMeleeRangeAttack extends PathfinderGoalMeleeAttack {
 		protected float range;
@@ -89,5 +121,44 @@ implements VolatileHandler {
 		    return (double)(this.b.width * this.range * this.b.width * this.range + entity.width);
 		}
 	}
+	
+    public class PathfinderGoalFollowEntity extends PathfinderGoal {
+        private double speed;
+        private EntityInsentient entity;
+        private EntityLiving entity1;
+
+        public PathfinderGoalFollowEntity(EntityInsentient e, EntityLiving e1, double s) {
+            this.entity = e;
+            this.entity1 = e1;
+            this.speed = s;
+        }
+        
+        public boolean a() {
+            try {
+            	if (this.entity1==null 
+            			|| !this.entity1.isAlive() 
+            			|| !this.entity1.getWorld().equals(this.entity.getWorld())) {
+            		return false;
+            	}
+            	World world = this.entity1.getWorld().getWorld();
+            	Location dLoc = new Location(world,this.entity1.locX,this.entity1.locY,this.entity1.locZ);
+            	Location sLoc = new Location(world,this.entity.locX,this.entity.locY,this.entity.locZ);
+            	if (sLoc.distanceSquared(dLoc)>1024.0) {
+            		this.entity.teleportTo(dLoc, false);
+            		return true;
+            	}
+                if (sLoc.distanceSquared(dLoc)>this.speed) {
+                    this.entity.getNavigation().a(dLoc.getX(), dLoc.getY(), dLoc.getZ(), this.speed);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+    }
+	
 	
 }

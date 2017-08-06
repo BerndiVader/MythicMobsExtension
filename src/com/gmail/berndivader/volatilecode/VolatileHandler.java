@@ -4,7 +4,7 @@ import org.bukkit.entity.LivingEntity;
 
 public interface VolatileHandler {
 
-    public void aiPathfinderGoal(LivingEntity livingEntity, String goalList);
+    public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     
 	
 }

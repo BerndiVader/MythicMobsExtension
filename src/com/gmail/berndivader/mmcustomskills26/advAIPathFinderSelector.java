@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.volatilecode.VolatileHandler;
@@ -17,7 +16,7 @@ implements
 ITargetedEntitySkill {
 	
 	protected VolatileHandler vh = Main.getPlugin().getVolatileHandler();
-	protected String goal;
+	protected String g;
 	
 	public advAIPathFinderSelector(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -25,15 +24,21 @@ ITargetedEntitySkill {
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse=parse.substring(1, parse.length()-1);
 		}
-		this.goal=SkillString.parseMessageSpecialChars(parse);
+		this.g=SkillString.parseMessageSpecialChars(parse);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		Entity e = data.getCaster().getEntity().getBukkitEntity();
-		if (e instanceof LivingEntity) {
-			String pGoal = SkillString.parseMobVariables(this.goal, data.getCaster(), target, data.getTrigger());
-			vh.aiPathfinderGoal((LivingEntity)data.getCaster().getEntity().getBukkitEntity(), pGoal);
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+		LivingEntity lS = null, lT = null;
+		if (t!=null && t.isLiving()) {
+			lT = (LivingEntity)t.getBukkitEntity();
+		}
+		if (data.getCaster().getEntity().isLiving()) {
+			lS = (LivingEntity)data.getCaster().getEntity().getBukkitEntity();
+		}
+		if (lS!=null) {
+			String pG = SkillString.parseMobVariables(this.g, data.getCaster(), t, data.getTrigger());
+			vh.aiPathfinderGoal(lS, pG, lT);
 			return true;
 		}
 		return false;
