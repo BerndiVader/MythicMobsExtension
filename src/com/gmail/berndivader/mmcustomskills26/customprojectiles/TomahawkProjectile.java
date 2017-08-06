@@ -29,7 +29,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
-import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
+import com.gmail.berndivader.NMS.NMSUtils;
 
 public class TomahawkProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 

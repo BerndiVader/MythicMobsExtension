@@ -426,6 +426,10 @@ public class CustomSkillStuff implements Listener {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();
         return dx * dx + dz * dz;
-    }	
+    }
+    
+    public static boolean isNumeric(String s) {
+    	return s.matches("[0-9]*");
+    }
 	
 }

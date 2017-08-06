@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
 import com.gmail.berndivader.mmcustomskills26.conditions.MobArena.mmMobArenaConditions;
@@ -14,6 +14,7 @@ import com.gmail.berndivader.mmcustomskills26.conditions.Own.mmOwnConditions;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.WorldGuardFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.WorldGuard.mmWorldGuardFlag;
 import com.gmail.berndivader.nanpatch.NaNpatch;
+import com.gmail.berndivader.volatilecode.VolatileHandler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -35,6 +36,7 @@ public class Main extends JavaPlugin {
 	private MobManager mobmanager;
 	private MythicPlayers mythicplayers;
 	private MobArenaHandler maHandler;
+	private VolatileHandler volatilehandler;
 
 	@Override
 	public void onEnable() {
@@ -67,7 +69,8 @@ public class Main extends JavaPlugin {
 				maHandler = new MobArenaHandler();
 				new mmMobArenaConditions();
 			}
-			setNMSUtil();
+			Main.nmsutils = new NMSUtils();
+			this.volatilehandler = this.getVolatileHandler();
 			this.mythicplayers = new MythicPlayers(this);
 			Bukkit.getLogger().info("registered MythicPlayers!");
 			new NaNpatch();
@@ -90,10 +93,6 @@ public class Main extends JavaPlugin {
 
 	public static Main getPlugin() {
 		return plugin;
-	}
-
-	public NMSUtils getNMSUtils() {
-		return Main.nmsutils;
 	}
 
 	public MythicMobs getMythicMobs() {
@@ -120,8 +119,28 @@ public class Main extends JavaPlugin {
 		return this.maHandler;
 	}
 
-	public boolean setNMSUtil() {
-		Main.nmsutils = new NMSUtils();
-		return nmsutils != null;
+	public NMSUtils getNMSUtils() {
+		return Main.nmsutils;
 	}
+	
+    public VolatileHandler getVolatileHandler() {
+        if (this.volatilehandler != null) return this.volatilehandler;
+		String v, n;
+    	VolatileHandler vh=null;
+		n = Bukkit.getServer().getClass().getPackage().getName();
+        v = n.substring(n.lastIndexOf(46) + 1);
+        try {
+            Class<?> c = Class.forName("com.gmail.berndivader.volatilecode.Volatile_"+v);
+            if (VolatileHandler.class.isAssignableFrom(c)) {
+            	vh = (VolatileHandler)c.getConstructor(new Class[0]).newInstance(new Object[0]);
+            }
+        } catch (Exception ex) {
+        	if (ex instanceof ClassNotFoundException) {
+        		Bukkit.getLogger().warning("Server version not supported!");
+        	}
+        	ex.printStackTrace();
+        }
+        return vh;
+    }
+	
 }

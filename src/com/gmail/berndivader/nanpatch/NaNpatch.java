@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
-import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
+import com.gmail.berndivader.NMS.NMSUtils;
 
 public class NaNpatch implements Listener {
 	protected NMSUtils nmsutils = Main.getPlugin().getNMSUtils();

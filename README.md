@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.175 release
+# CustomSkillMechanics v1.176 dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
 #### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
 #### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
 #### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
@@ -129,6 +130,34 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## advaipathfinder mechanic:
+
+	Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal. Its a NoTargetMechanic and therefor always be used at caster.
+	  
+	  - advaipathfinder{goal="[goalpriority_value] [pathfindergoal_text] [data_text]"}
+	  
+	  Some examples:
+	  
+		- advaipathfinder{goal="clear"}
+		- advaipathfinder{goal="2 runfromsun 2"}
+		- advaipathfinder{goal="3 goto 0,0,0"}
+		- advaipathfinder{goal="1 randomstroll"}
+		
+		
+### Pathfindergoals:
+
+	*runfromsun:*
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 runfromsun 5"}
+		Set goal 1 to PathfindergoalFleeSun with a speed of 5
+		
+	*rangedmelee:*
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 rangedmelee 5"}
+		Set goal 1 to PathfinderMeleeAttack with a range of 5 blocks.
+	
 
 
 ## parsedStance mechanic:
