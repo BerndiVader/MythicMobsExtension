@@ -5,15 +5,16 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
+import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
+import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
 public class advAIPathFinderSelector extends SkillMechanic 
 implements
-INoTargetSkill {
+ITargetedEntitySkill {
 	
 	protected VolatileHandler vh = Main.getPlugin().getVolatileHandler();
 	protected String goal;
@@ -28,10 +29,11 @@ INoTargetSkill {
 	}
 
 	@Override
-	public boolean cast(SkillMetadata data) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		Entity e = data.getCaster().getEntity().getBukkitEntity();
 		if (e instanceof LivingEntity) {
-			vh.aiPathfinderGoal((LivingEntity)data.getCaster().getEntity().getBukkitEntity(), this.goal);
+			String pGoal = SkillString.parseMobVariables(this.goal, data.getCaster(), target, data.getTrigger());
+			vh.aiPathfinderGoal((LivingEntity)data.getCaster().getEntity().getBukkitEntity(), pGoal);
 			return true;
 		}
 		return false;

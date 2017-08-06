@@ -134,7 +134,7 @@ PlayEffectOnTarget:
 
 ## advaipathfinder mechanic:
 
-	Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal. Its a NoTargetMechanic and therefor always be used at caster.
+	Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal parsed for variables. Its a NoTargetMechanic and therefor always be used at caster.
 	  
 	  - advaipathfinder{goal="[goalpriority_value] [pathfindergoal_text] [data_text]"}
 	  
@@ -143,6 +143,7 @@ PlayEffectOnTarget:
 		- advaipathfinder{goal="clear"}
 		- advaipathfinder{goal="2 runfromsun 2"}
 		- advaipathfinder{goal="3 goto 0,0,0"}
+		- advaipathfinder{goal="4 goto <target.l.x>,<target.l.y>,<target.l.z>"}
 		- advaipathfinder{goal="1 randomstroll"}
 		
 		
