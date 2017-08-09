@@ -34,7 +34,6 @@ public class Healthbar extends CraftHologram {
 		this.addLine(line);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean update() {
 		if (this.isDeleted()) return false;
@@ -43,7 +42,9 @@ public class Healthbar extends CraftHologram {
 		double x = l.getX();
 		double y = l.getY();
 		double z = l.getZ();
-//		this.setLine(1, this.line+Double.toString(this.getHealth()));
+/**
+ * 		this.setLine(1, this.line+Double.toString(this.getHealth()));
+ */
 		this.teleport(w, x, y+this.offset, z);
 		return true;
 	}

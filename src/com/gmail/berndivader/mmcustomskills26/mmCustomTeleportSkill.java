@@ -7,7 +7,10 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.gmail.berndivader.NMS.NMSUtil;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -109,7 +112,8 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 		}
 		if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
 				&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
-			osources.remove(BukkitAdapter.adapt(Bukkit.getEntity(((ActiveMob) data.getCaster()).getOwner().get())));
+			World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
+			osources.remove(BukkitAdapter.adapt(NMSUtil.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
 		}
 		if (this.sortTargets) {
 			Iterator<?> it = osources.iterator();

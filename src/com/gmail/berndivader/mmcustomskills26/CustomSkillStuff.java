@@ -44,7 +44,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
-@SuppressWarnings("deprecation")
 public class CustomSkillStuff implements Listener {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();

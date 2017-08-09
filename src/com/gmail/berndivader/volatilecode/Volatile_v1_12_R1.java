@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
+import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
+import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import net.minecraft.server.v1_12_R1.EntityCreature;
@@ -31,6 +32,7 @@ implements VolatileHandler {
 	
 	@Override
 	public void aiPathfinderGoal(LivingEntity entity, String uGoal, LivingEntity target) {
+		World w = entity.getWorld();
         EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
         EntityLiving tE = null;
         if (target!=null) {
@@ -87,7 +89,8 @@ implements VolatileHandler {
 	        			speed = Double.parseDouble(data);
 	        		}
 	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
-	        			Entity ee = Bukkit.getServer().getEntity(uuid);
+	        			Main.getPlugin().getNMSUtils();
+						Entity ee = NMSUtil.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
 	        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
 	        			}

@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.176 dev
+# CustomSkillMechanics v1.177 dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
 #### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
 #### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
 #### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
