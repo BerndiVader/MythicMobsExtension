@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
 import com.gmail.berndivader.mmcustomskills26.conditions.MobArena.mmMobArenaConditions;
@@ -23,6 +26,7 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager;
 public class Main extends JavaPlugin {
 
 	private static Main plugin;
+	public static HealthbarHandler healthbarhandler;
 	public static NMSUtils nmsutils;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
@@ -30,6 +34,8 @@ public class Main extends JavaPlugin {
 	public static String mpNameVar = "mythicprojectile";
 	public static String noTargetVar = "nottargetable";
 	public static boolean hasRpgItems = false;
+	public static Logger logger;
+	public static PluginManager pluginmanager;
 	public MythicMobs mythicmobs;
 	public WorldGuardPlugin wg;
 	private ThiefHandler thiefhandler;
@@ -41,40 +47,45 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		if (Bukkit.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
+		pluginmanager = plugin.getServer().getPluginManager();
+		logger = plugin.getLogger();
+		if (pluginmanager.getPlugin("MythicMobs") != null) {
 			this.mythicmobs = MythicMobs.inst();
 			this.mobmanager = this.mythicmobs.getMobManager();
-			PluginManager pm = this.getServer().getPluginManager();
-			pm.registerEvents(new UndoBlockListener(), this);
+			pluginmanager.registerEvents(new UndoBlockListener(), this);
 			new CustomSkillStuff();
 			new mmCustomSkills26();
 			this.thiefhandler = new ThiefHandler();
-			Bukkit.getLogger().info("Found MythicMobs, registered CustomSkills.");
+			logger.info("Found MythicMobs, registered CustomSkills.");
 			new mmOwnConditions();
-			if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+			if (pluginmanager.isPluginEnabled("WorldGuard")) {
 				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new mmWorldGuardFlag();
 			}
-			if (Bukkit.getPluginManager().isPluginEnabled("Factions")
-					&& Bukkit.getPluginManager().isPluginEnabled("MassiveCore")) {
+			if (pluginmanager.isPluginEnabled("Factions")
+					&& pluginmanager.isPluginEnabled("MassiveCore")) {
 				fflags = new FactionsFlags();
 				new mmFactionsFlag();
 			}
-			if (Bukkit.getServer().getPluginManager().getPlugin("RPGItems") != null) {
-				Bukkit.getLogger().info("RPGItems support enabled!");
+			if (pluginmanager.getPlugin("RPGItems") != null) {
+				logger.info("RPGItems support enabled!");
 				hasRpgItems = true;
 			}
-			if (Bukkit.getPluginManager().isPluginEnabled("MobArena")) {
+			if (pluginmanager.isPluginEnabled("MobArena")) {
 				maHandler = new MobArenaHandler();
 				new mmMobArenaConditions();
+			}
+			if (pluginmanager.isPluginEnabled("HolographicDisplays")) {
+				logger.info("HolographicDisplays support enabled!");
+				new HealthbarHandler(this);
 			}
 			Main.nmsutils = new NMSUtils();
 			this.volatilehandler = this.getVolatileHandler();
 			this.mythicplayers = new MythicPlayers(this);
-			Bukkit.getLogger().info("registered MythicPlayers!");
+			logger.info("registered MythicPlayers!");
 			new NaNpatch();
-			Bukkit.getLogger().info("NaN patch applied!");
+			logger.info("NaN patch applied!");
 		}
 	}
 
@@ -85,10 +96,11 @@ public class Main extends JavaPlugin {
 		this.mythicplayers = null;
 		this.mythicmobs = null;
 		this.maHandler = null;
+		this.volatilehandler = null;
 		this.wg = null;
 		Main.wgf = null;
 		Main.fflags = null;
-		this.getServer().getPluginManager().disablePlugin(this);
+		pluginmanager.disablePlugin(this);
 	}
 
 	public static Main getPlugin() {
@@ -112,7 +124,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private static WorldGuardPlugin getWorldGuard() {
-		return (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+		return (WorldGuardPlugin) pluginmanager.getPlugin("WorldGuard");
 	}
 
 	public MobArenaHandler getMobArenaHandler() {
@@ -136,7 +148,7 @@ public class Main extends JavaPlugin {
             }
         } catch (Exception ex) {
         	if (ex instanceof ClassNotFoundException) {
-        		Bukkit.getLogger().warning("Server version not supported!");
+        		logger.warning("Server version not supported!");
         	}
         	ex.printStackTrace();
         }

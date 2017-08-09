@@ -154,10 +154,6 @@ public class mmCustomSkills26 implements Listener {
 			skill = new ParsedStance(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		} case "createfollowhologram": {
-			skill = new createFollowHologram(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
 		} case "advaipathfinder": {
 			skill = new advAIPathFinderSelector(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
