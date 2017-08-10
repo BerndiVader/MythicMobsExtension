@@ -41,7 +41,7 @@ public class HealthbarHandler implements Listener {
 			this.healthbars = HealthbarHandler.healthbars;
 			this.taskId = Bukkit.getScheduler().runTaskTimer(HealthbarHandler.plugin, () -> {
 				this.run();
-	        },0L,0L);
+	        },0L,1L);
 		}
 		
 		@Override

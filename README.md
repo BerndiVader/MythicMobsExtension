@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.177 dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
 #### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
 #### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
@@ -133,6 +134,16 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## createhealthbar mechanic:
+
+	Use this mechanic to display a healthbar above the mythicmobs head.
+	
+	  - createhealthbar{offset=2.5} @self ~onSpawn
+	  
+	Creates a healthbar for the spawned mob with an offset of 2.5. The healthbar is removed after the mob is removed.
+
 
 
 ## advaipathfinder mechanic:
