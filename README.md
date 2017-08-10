@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.177 dev
+# CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
 #### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
@@ -135,6 +136,15 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## changehealthbar mechanic:
+
+	Use this mechanic to change the display of the mobs healthbar if exists.
+	
+	  - changehealthbar{display="[>>>$h<<<]"} @self ~onDamaged
+	  
+	Changes the healthbar display if the mob is damaged.
 
 
 ## createhealthbar mechanic:

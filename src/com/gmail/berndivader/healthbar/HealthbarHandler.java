@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mmcustomskills26.changeHealthbar;
 import com.gmail.berndivader.mmcustomskills26.createHealthbar;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
@@ -65,6 +66,11 @@ public class HealthbarHandler implements Listener {
 		switch (mechanic) {
 		case "createhealthbar": {
 			skill = new createHealthbar(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
+		case "changehealthbar": {
+			skill = new changeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}

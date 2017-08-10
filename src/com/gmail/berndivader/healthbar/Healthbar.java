@@ -62,6 +62,13 @@ public class Healthbar extends CraftHologram {
 		this.delete();
 	}
 	
+	public void changeDisplay(String display) {
+		if (display.contains("$h")) {
+			this.template=display;
+			this.updateHealth();
+		}
+	}
+	
     private String composeHealthLine() {
         int hp = (int)this.getHealth();
         if (this.template.equals("$h")) {
