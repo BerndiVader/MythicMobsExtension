@@ -27,9 +27,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
-import com.gmail.berndivader.mmcustomskills26.NMS.NMSUtils;
 
 public class EntityProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 

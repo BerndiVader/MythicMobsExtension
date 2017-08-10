@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mmcustomskills26.NMS;
+package com.gmail.berndivader.NMS;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

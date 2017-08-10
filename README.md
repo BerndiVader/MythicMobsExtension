@@ -1,6 +1,13 @@
-# CustomSkillMechanics v1.175 release
+# CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
+#### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
+#### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
+#### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
+#### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
+#### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
+#### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
 #### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
 #### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
 #### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
@@ -129,6 +136,65 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## changehealthbar mechanic:
+
+	Use this mechanic to change the display of the mobs healthbar if exists.
+	
+	  - changehealthbar{display="[>>>$h<<<]"} @self ~onDamaged
+	  
+	Changes the healthbar display if the mob is damaged.
+
+
+## createhealthbar mechanic:
+
+	Use this mechanic to display a healthbar above the mythicmobs head.
+	
+	  - createhealthbar{offset=2.5;display="[|||$h|||]"} @self ~onSpawn
+	  
+	Creates a healthbar for the spawned mob with an offset of 2.5. The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
+
+
+
+## advaipathfinder mechanic:
+
+	Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal parsed for variables. Its a NoTargetMechanic and therefor always be used at caster.
+	  
+	  - advaipathfinder{goal="[goalpriority_value] [pathfindergoal_text] [data_text]"}
+	  
+	  Some examples:
+	  
+		- advaipathfinder{goal="clear"}
+		- advaipathfinder{goal="2 runfromsun 2"}
+		- advaipathfinder{goal="3 goto 0,0,0"}
+		- advaipathfinder{goal="4 goto <target.l.x>,<target.l.y>,<target.l.z>"}
+		- advaipathfinder{goal="1 randomstroll"}
+		
+		
+### Pathfindergoals:
+
+	*runfromsun:*
+
+		advaipathfinder{goal="[goalpriority_value] runfromsun [speed_value]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 runfromsun 5"}
+		Set goal 1 to PathfindergoalFleeSun with a speed of 5
+		
+	*rangedmelee:*
+
+		advaipathfinder{goal="[goalpriority_value] rangedmelee [range_value]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 rangedmelee 5"}
+		Set goal 1 to PathfinderMeleeAttack with a range of 5 blocks.
+		
+	*followentity:*
+	
+		advaipathfinder{goal="[goalpriority_value] followentity [speed_value] [entity_uuid]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 1 <trigger.uuid>"}
+		Set goal 1 to PathfinderFollowEntity with speed 1 to the trigger of the skill.
+	
 
 
 ## parsedStance mechanic:

@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mmcustomskills26.NMS;
+package com.gmail.berndivader.NMS;
 
 import com.google.common.io.BaseEncoding;
 

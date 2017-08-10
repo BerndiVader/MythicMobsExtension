@@ -15,6 +15,7 @@ public class mmSwapSkill extends SkillMechanic implements ITargetedEntitySkill {
 		super(skill, mlc);
 		this.keepTargetYaw = mlc.getBoolean(new String[] { "keeptargetyaw", "kty" }, false);
 		this.keepCasterYaw = mlc.getBoolean(new String[] { "keepcasteryaw", "kcy" }, false);
+		this.ASYNC_SAFE=false;
 	}
 
 	@Override

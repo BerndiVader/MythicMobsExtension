@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +44,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
-@SuppressWarnings("deprecation")
 public class CustomSkillStuff implements Listener {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
@@ -426,6 +426,20 @@ public class CustomSkillStuff implements Listener {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();
         return dx * dx + dz * dz;
-    }	
+    }
+    
+    public static boolean isNumeric(String s) {
+    	return s.matches("[0-9]*");
+    }
+
+	public static UUID isUUID(String data) {
+		UUID uuid = null;
+		try {
+			uuid = UUID.fromString(data);
+		} catch (IllegalArgumentException ex) {
+			return null;
+		}
+		return uuid;
+	}
 	
 }

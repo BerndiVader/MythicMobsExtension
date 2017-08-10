@@ -17,6 +17,7 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 	public mmStunSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.duration = mlc.getInteger(new String[] { "duration", "d" }, 120);
+		this.ASYNC_SAFE=false;
 	}
 
 	@Override
