@@ -49,6 +49,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 
 	public CastIf(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.ASYNC_SAFE=false;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		String ms = mlc.getString(new String[] { "conditions", "c" });

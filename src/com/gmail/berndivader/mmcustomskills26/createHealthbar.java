@@ -18,6 +18,7 @@ ITargetedEntitySkill {
 	
 	public createHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.ASYNC_SAFE=false;
 		this.offset = mlc.getDouble("offset",2D);
 		this.string = mlc.getString("text","Health: ");
 	}

@@ -3,23 +3,23 @@ package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.EntityManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
 public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocationCondition {
-	protected EntityManager entitymanager;
 	protected MobManager mobmanager;
 	private String[] t;
 	private RangedDouble a;
@@ -28,7 +28,6 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 
 	public mmMobsInRadiusCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.entitymanager = Main.getPlugin().mythicmobs.getEntityManager();
 		this.mobmanager = Main.getPlugin().getMobManager();
 		this.t = mlc.getString(new String[] { "mobtypes", "types", "mobs", "mob", "type", "t", "m" }, "ALL").split(",");
 		if (this.t[0].toUpperCase().equals("ALL"))
@@ -49,10 +48,12 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 	}
 
 	@Override
-	public boolean check(AbstractLocation l) {
+	public boolean check(AbstractLocation location) {
 		int count = 0;
-		for (Iterator<AbstractEntity> it = this.entitymanager.getLivingEntities(l.getWorld()).iterator(); it.hasNext();) {
-			AbstractEntity e = it.next();
+		Location l = BukkitAdapter.adapt(location);
+		for (Iterator<LivingEntity> it = l.getWorld().getLivingEntities().iterator(); it.hasNext();) {
+			LivingEntity e = it.next();
+			if (!e.getWorld().equals(l.getWorld())) continue;
 			double diffsq = l.distanceSquared(e.getLocation());
 			if (diffsq <= Math.pow(this.r, 2.0D)) {
 				ActiveMob am = this.mobmanager.getMythicMobInstance(e);

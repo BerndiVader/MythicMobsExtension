@@ -15,6 +15,7 @@ public class DeleteMetatagMechanic extends SetMetatagMechanic {
 
 	public DeleteMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.ASYNC_SAFE=false;
 	}
 
 	@Override
