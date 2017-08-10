@@ -15,25 +15,30 @@ public class Healthbar extends CraftHologram {
 	protected LivingEntity entity;
 	protected UUID uuid;
 	protected double offset;
-	protected String line;
+	protected String template;
 	protected TextLine textline;
 	
 	public Healthbar(LivingEntity entity) {
-		this(entity, 0.0d, "");
+		this(entity, 0.0d, "$h");
 	}
 	public Healthbar(LivingEntity entity, double offset) {
-		this(entity,offset,"");
+		this(entity,offset,"$h");
 	}
 	public Healthbar(LivingEntity entity, double offset, String l) {
 		super(entity.getLocation().add(0, offset, 0));
 		this.uuid = entity.getUniqueId();
-		this.line = l;
+		if (!l.contains("$h")) l = "$h";
+		this.template = l;
 		this.entity = entity;
 		this.offset = offset;
 		HealthbarHandler.healthbars.put(this.uuid, this);
 		this.textline = this.appendTextLine(this.composeHealthLine());
 	}
-	
+
+	public void updateHealth() {
+		this.textline.setText(this.composeHealthLine());
+	}
+
 	@Override
 	public boolean update() {
 		if (this.isDeleted()) return false;
@@ -42,7 +47,6 @@ public class Healthbar extends CraftHologram {
 		double x = l.getX();
 		double y = l.getY();
 		double z = l.getZ();
-		this.textline.setText(this.composeHealthLine());
 		this.teleport(w, x, y+this.offset, z);
 		return true;
 	}
@@ -60,36 +64,42 @@ public class Healthbar extends CraftHologram {
 	
     private String composeHealthLine() {
         int hp = (int)this.getHealth();
-        double percent = hp / this.entity.getMaxHealth();
-        String sHP = String.valueOf(hp);
-        int hplength = sHP.length();
-        int length = 10 + hplength;
-        int gray = (int)Math.floor(percent * (double)length);
-        StringBuilder line = new StringBuilder().append((Object)ChatColor.DARK_RED).append("[");
-        boolean passed = false;
-        for (int i = 0; i < length; ++i) {
-            if (!passed && i > gray) {
-                passed = true;
-            }
-            if (i < 5) {
+        if (this.template.equals("$h")) {
+            double percent = hp / this.entity.getMaxHealth();
+            String sHP = String.valueOf(hp);
+            int hplength = sHP.length();
+            int length = 10 + hplength;
+            int gray = (int)Math.floor(percent * (double)length);
+            StringBuilder line = new StringBuilder().append((Object)ChatColor.DARK_RED).append("[");
+            boolean passed = false;
+            for (int i = 0; i < length; ++i) {
+                if (!passed && i > gray) {
+                    passed = true;
+                }
+                if (i < 5) {
+                    line.append((Object)(passed ? ChatColor.DARK_GRAY : ChatColor.RED));
+                    line.append("|");
+                    continue;
+                }
+                if (i < 5 + hplength) {
+                    line.append((Object)(passed ? ChatColor.GRAY : ChatColor.DARK_RED));
+                    try {
+                        line.append(sHP.substring(i - 5, i - 4));
+                    }
+                    catch (Exception exception) {}
+                    continue;
+                }
+                if (i == hplength + 2 && !passed) {
+                    line.append((Object)ChatColor.RED);
+                }
                 line.append((Object)(passed ? ChatColor.DARK_GRAY : ChatColor.RED));
                 line.append("|");
-                continue;
             }
-            if (i < 5 + hplength) {
-                line.append((Object)(passed ? ChatColor.GRAY : ChatColor.DARK_RED));
-                try {
-                    line.append(sHP.substring(i - 5, i - 4));
-                }
-                catch (Exception exception) {}
-                continue;
-            }
-            if (i == hplength + 2 && !passed) {
-                line.append((Object)ChatColor.RED);
-            }
-            line.append((Object)(passed ? ChatColor.DARK_GRAY : ChatColor.RED));
-            line.append("|");
+            return line.append((Object)ChatColor.DARK_RED).append("]").toString();
+        } else {
+        	String line=this.template;
+        	line=line.replace("$h", Integer.toString(hp));
+        	return line;
         }
-        return line.append((Object)ChatColor.DARK_RED).append("]").toString();
     }	
 }

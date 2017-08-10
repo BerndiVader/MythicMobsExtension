@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -68,6 +69,15 @@ public class HealthbarHandler implements Listener {
 			break;
 		}
 	    }
+	}
+	
+	@EventHandler
+	public void updateHealthbar(EntityDamageEvent e) {
+		if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
+			UUID uuid = e.getEntity().getUniqueId();
+			Healthbar h = HealthbarHandler.healthbars.get(uuid);
+			h.updateHealth();
+		}
 	}
 	
 }
