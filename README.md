@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
 #### *** 25.8.2017 *** added 1.12.1 support.
 #### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
@@ -152,9 +153,11 @@ PlayEffectOnTarget:
 
 	Use this mechanic to display a healthbar above the mythicmobs head.
 	
-	  - createhealthbar{offset=2.5;display="[|||$h|||]"} @self ~onSpawn
+	  - createhealthbar{offset=2.5;counter=10;display="[|||$h|||]"} @self ~onSpawn
 	  
-	Creates a healthbar for the spawned mob with an offset of 2.5. The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
+	Creates a healthbar for the spawned mob with an offset of 2.5. 
+	The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
+	If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
 
 

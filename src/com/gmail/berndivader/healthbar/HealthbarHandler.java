@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
@@ -79,11 +80,18 @@ public class HealthbarHandler implements Listener {
 	
 	@EventHandler
 	public void updateHealthbar(EntityDamageEvent e) {
-		if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
-			UUID uuid = e.getEntity().getUniqueId();
-			Healthbar h = HealthbarHandler.healthbars.get(uuid);
-			h.updateHealth();
-		}
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
+						UUID uuid = e.getEntity().getUniqueId();
+						Healthbar h = HealthbarHandler.healthbars.get(uuid);
+						if (h!=null) {
+							h.updateHealth();
+						}
+					}
+				}
+			}.runTaskLater(HealthbarHandler.plugin, 1L);
 	}
 	
 }
