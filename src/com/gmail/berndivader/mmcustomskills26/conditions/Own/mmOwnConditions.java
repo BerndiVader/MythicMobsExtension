@@ -78,6 +78,11 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "health": {
+			SkillCondition c = new Healthcondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }
