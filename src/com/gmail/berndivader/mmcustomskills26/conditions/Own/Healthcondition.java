@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
-import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -25,8 +24,7 @@ IEntityCondition {
 		double maxHealth=entity.getMaxHealth();
 		double health=entity.getHealth();
 		double percent=(health*100)/maxHealth;
-		Main.logger.info(Double.toString(CustomSkillStuff.round(percent,0)));
-		return this.pc.equals(percent);
+		return this.pc.equals(CustomSkillStuff.round(percent,0));
 	}
 
 }
