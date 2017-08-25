@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 25.8.2017 *** added 1.12.1 support.
 #### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
 #### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
