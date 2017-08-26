@@ -27,6 +27,8 @@ public class Healthbar extends CraftHologram {
 	}
 	public Healthbar(LivingEntity entity, double offset,int showCounter, String l) {
 		super(entity.getLocation().add(0, offset, 0));
+		this.uuid = entity.getUniqueId();
+		HealthbarHandler.healthbars.put(this.uuid, this);
 		if (showCounter == -1) {
 			this.showCounterDefault = -1;
 			this.getVisibilityManager().setVisibleByDefault(true);
@@ -34,13 +36,11 @@ public class Healthbar extends CraftHologram {
 			this.showCounterDefault = showCounter;
 			this.getVisibilityManager().setVisibleByDefault(false);
 		}
-		this.uuid = entity.getUniqueId();
 		if (!l.contains("$h")) l = "$h";
 		this.template = l;
 		this.entity = entity;
 		this.offset = offset;
 		this.showCounter = 0;
-		HealthbarHandler.healthbars.put(this.uuid, this);
 		this.textline = this.appendTextLine(this.composeHealthLine());
 	}
 

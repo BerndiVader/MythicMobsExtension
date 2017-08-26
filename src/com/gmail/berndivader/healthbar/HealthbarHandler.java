@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.changeHealthbar;
 import com.gmail.berndivader.mmcustomskills26.createHealthbar;
@@ -23,6 +24,7 @@ public class HealthbarHandler implements Listener {
 	protected static Plugin plugin=Main.getPlugin();
 	protected static Logger logger=Main.logger;
 	protected static HealthbarClock clock;
+	protected static NMSUtils nmsutils;
 	public static ConcurrentHashMap<UUID,Healthbar> healthbars;
 	
 	public HealthbarHandler(Plugin plugin) {
@@ -30,6 +32,7 @@ public class HealthbarHandler implements Listener {
 		HealthbarHandler.healthbars = new ConcurrentHashMap<UUID,Healthbar>();
 		HealthbarHandler.clock = new HealthbarClock();
 		Main.pluginmanager.registerEvents(this, plugin);
+		nmsutils=Main.nmsutils;
 	}
 	
 	public ConcurrentHashMap<UUID,Healthbar> getHealthbars() {
@@ -38,10 +41,8 @@ public class HealthbarHandler implements Listener {
 	
 	public class HealthbarClock implements Runnable {
 		protected BukkitTask taskId;
-		protected ConcurrentHashMap<UUID,Healthbar>healthbars;
 		
 		public HealthbarClock() {
-			this.healthbars = HealthbarHandler.healthbars;
 			this.taskId = Bukkit.getScheduler().runTaskTimer(HealthbarHandler.plugin, () -> {
 				this.run();
 	        },0L,1L);
