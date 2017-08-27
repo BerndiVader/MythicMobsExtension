@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -97,6 +96,19 @@ public class CustomSkillStuff implements Listener {
 			victim.removeMetadata("MythicDamage", Main.getPlugin());
 			onEntityDamageTaken(e, victim);
 		}
+	}
+
+	@EventHandler(priority=EventPriority.LOWEST)
+	public void storeDamageCause(EntityDamageEvent e) {
+		Entity victim = e.getEntity();
+		DamageCause cause = e.getCause();
+		if (e instanceof EntityDamageByEntityEvent) {
+			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
+			victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
+		} else if (victim.hasMetadata("LastDamager")) {
+			victim.removeMetadata("LastDamager", Main.getPlugin());
+		}
+		victim.setMetadata("LastDamageCause", new FixedMetadataValue(Main.getPlugin(), cause.toString()));
 	}
 	
 	@EventHandler

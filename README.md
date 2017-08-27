@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
 #### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
 #### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
 #### *** 25.8.2017 *** added 1.12.1 support.
