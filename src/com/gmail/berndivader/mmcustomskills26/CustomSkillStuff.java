@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -98,22 +98,37 @@ public class CustomSkillStuff implements Listener {
 			onEntityDamageTaken(e, victim);
 		}
 	}
+	
+	@EventHandler
+	public void triggerDamageForNoneEntity(EntityDamageEvent e) {
+		TriggeredSkillAP ts;
+		final Entity victim = e.getEntity();
+		if (e instanceof EntityDamageByEntityEvent
+				|| !(victim instanceof LivingEntity) 
+				|| victim instanceof Player
+				|| mobmanager.getVoidList().contains(victim.getUniqueId())) return;
+		ActiveMob am = mobmanager.getMythicMobInstance(victim);
+		if (am==null
+				|| !am.getType().getConfig().getBoolean("onDamageForOtherCause")) return;
+		ts = new TriggeredSkillAP(SkillTrigger.DAMAGED, am, null);
+		if (ts.getCancelled()) e.setCancelled(true);
+	}
 
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
 		if (debug)
-			Bukkit.getLogger().info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
+			Main.logger.info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled())
 			return;
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
 		double df = round(md / e.getDamage(DamageModifier.BASE), 3);
 		if (debug) {
-			Bukkit.getLogger().info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
-			Bukkit.getLogger().info("Custom MythicDamage.: " + Double.toString(md));
-			Bukkit.getLogger().info("DamageFactor: " + Double.toString(df));
-			Bukkit.getLogger().info("-----------------------------");
+			Main.logger.info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
+			Main.logger.info("Custom MythicDamage.: " + Double.toString(md));
+			Main.logger.info("DamageFactor: " + Double.toString(df));
+			Main.logger.info("-----------------------------");
 		}
 		if (Double.isNaN(md))
 			md = 0.001D;
@@ -137,7 +152,7 @@ public class CustomSkillStuff implements Listener {
 			victim.damage(damage);
 		}
 		if (debug) {
-			Bukkit.getLogger().info("Finaldamage amount after modifiers: " + Double.toString(damage));
+			Main.logger.info("Finaldamage amount after modifiers: " + Double.toString(damage));
 		}
 
 	}
