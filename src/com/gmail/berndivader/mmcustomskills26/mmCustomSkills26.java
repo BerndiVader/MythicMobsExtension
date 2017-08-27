@@ -158,6 +158,10 @@ public class mmCustomSkills26 implements Listener {
 			skill = new advAIPathFinderSelector(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		} case "advrandomskill": {
+			skill = new advRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}

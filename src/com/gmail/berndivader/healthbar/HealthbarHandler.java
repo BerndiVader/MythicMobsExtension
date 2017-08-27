@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -24,7 +25,6 @@ public class HealthbarHandler implements Listener {
 	protected static Plugin plugin=Main.getPlugin();
 	protected static Logger logger=Main.logger;
 	protected static HealthbarClock clock;
-	protected static NMSUtils nmsutils;
 	public static ConcurrentHashMap<UUID,Healthbar> healthbars;
 	
 	public HealthbarHandler(Plugin plugin) {
@@ -32,7 +32,6 @@ public class HealthbarHandler implements Listener {
 		HealthbarHandler.healthbars = new ConcurrentHashMap<UUID,Healthbar>();
 		HealthbarHandler.clock = new HealthbarClock();
 		Main.pluginmanager.registerEvents(this, plugin);
-		nmsutils=Main.nmsutils;
 	}
 	
 	public ConcurrentHashMap<UUID,Healthbar> getHealthbars() {
@@ -51,11 +50,11 @@ public class HealthbarHandler implements Listener {
 		@Override
 		public void run() {
 			HealthbarHandler.healthbars.forEach((uuid,healthbar)-> {
-				if (healthbar.entity!=null
-						&& !healthbar.entity.isDead()) {
-					healthbar.update();
-				} else {
+				Entity e = NMSUtils.getEntity(healthbar.getWorld(), uuid);
+				if (e==null || e.isDead()) {
 					healthbar.remove();
+				} else {
+					healthbar.update();
 				}
 			});
 		}
