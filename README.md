@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
 #### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
 #### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
 #### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
@@ -142,6 +143,20 @@ PlayEffectOnTarget:
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
 
+
+## advrandomskill mechanic:
+
+	Use this mechanic to execute a random skill by chance and priority.
+	
+	  - advrandomskill{skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged
+	  
+	This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
+	
+	  - advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged
+	  
+	Same as above but if no chance match nothing will be executed.
+
+	
 
 ## changehealthbar mechanic:
 

@@ -80,18 +80,18 @@ public class HealthbarHandler implements Listener {
 	
 	@EventHandler
 	public void updateHealthbar(EntityDamageEvent e) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
-						UUID uuid = e.getEntity().getUniqueId();
-						Healthbar h = HealthbarHandler.healthbars.get(uuid);
-						if (h!=null) {
-							h.updateHealth();
-						}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
+					UUID uuid = e.getEntity().getUniqueId();
+					Healthbar h = HealthbarHandler.healthbars.get(uuid);
+					if (h!=null) {
+						h.updateHealth();
 					}
 				}
-			}.runTaskLater(HealthbarHandler.plugin, 1L);
+			}
+		}.runTaskLater(HealthbarHandler.plugin, 1L);
 	}
 	
 }
