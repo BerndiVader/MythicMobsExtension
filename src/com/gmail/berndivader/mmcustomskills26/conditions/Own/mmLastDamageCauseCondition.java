@@ -3,10 +3,7 @@ package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 import java.util.Arrays;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -21,26 +18,31 @@ public class mmLastDamageCauseCondition extends mmCustomCondition implements IEn
 		this.attacker = mlc.getString(new String[] { "attacker", "damager" }, "any").toUpperCase().split(",");
 		this.cause = mlc.getString(new String[] { "cause", "c" }, "any").toUpperCase().split(",");
 	}
-
+	
 	@Override
 	public boolean check(AbstractEntity ae) {
-		boolean match = false;
+		boolean match=false;
+		String damager = null, cause = null;
 		Entity entity = ae.getBukkitEntity();
-		EntityDamageEvent e = entity.getLastDamageCause();
-		if (e == null)
-			return false;
-		if (e instanceof EntityDamageByEntityEvent) {
-			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
-			if (damager != null) {
-				if (Arrays.asList(this.attacker).contains(damager.getType().toString())
-						|| this.attacker[0].equals("ANY")) {
-					match = true;
-				}
-			}
+		if (entity.hasMetadata("LastDamager")) {
+			damager = entity.getMetadata("LastDamager").get(0).asString();
 		}
-		match = (Arrays.asList(this.cause).contains(e.getCause().name().toUpperCase()) || this.cause[0].equals("ANY"))
-				? true : false;
+		if (entity.hasMetadata("LastDamageCause")) {
+			cause = entity.getMetadata("LastDamageCause").get(0).asString();
+		}
+		if (damager!=null) {
+			if (Arrays.asList(this.attacker).contains(damager)
+					|| this.attacker[0].equals("ANY")) {
+				match = true;
+			}
+		} else {
+			match = true;
+		}
+		if (match && cause!=null) {
+			match = (Arrays.asList(this.cause).contains(cause.toUpperCase()) || this.cause[0].equals("ANY"))
+					? true : false;
+		}
 		return match;
 	}
-
+	
 }

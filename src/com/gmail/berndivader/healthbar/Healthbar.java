@@ -17,26 +17,39 @@ public class Healthbar extends CraftHologram {
 	protected double offset;
 	protected String template;
 	protected TextLine textline;
+	protected int showCounter,showCounterDefault;
 	
 	public Healthbar(LivingEntity entity) {
-		this(entity, 0.0d, "$h");
+		this(entity, 0.0d, -1, "$h");
 	}
 	public Healthbar(LivingEntity entity, double offset) {
-		this(entity,offset,"$h");
+		this(entity,offset, -1, "$h");
 	}
-	public Healthbar(LivingEntity entity, double offset, String l) {
+	public Healthbar(LivingEntity entity, double offset,int showCounter, String l) {
 		super(entity.getLocation().add(0, offset, 0));
 		this.uuid = entity.getUniqueId();
+		HealthbarHandler.healthbars.put(this.uuid, this);
+		if (showCounter == -1) {
+			this.showCounterDefault = -1;
+			this.getVisibilityManager().setVisibleByDefault(true);
+		} else {
+			this.showCounterDefault = showCounter;
+			this.getVisibilityManager().setVisibleByDefault(false);
+		}
 		if (!l.contains("$h")) l = "$h";
 		this.template = l;
 		this.entity = entity;
 		this.offset = offset;
-		HealthbarHandler.healthbars.put(this.uuid, this);
+		this.showCounter = 0;
 		this.textline = this.appendTextLine(this.composeHealthLine());
 	}
 
 	public void updateHealth() {
 		this.textline.setText(this.composeHealthLine());
+		if (this.showCounterDefault>-1) {
+			this.showCounter = this.showCounterDefault;
+			this.getVisibilityManager().setVisibleByDefault(true);
+		}
 	}
 
 	@Override
@@ -47,6 +60,14 @@ public class Healthbar extends CraftHologram {
 		double x = l.getX();
 		double y = l.getY();
 		double z = l.getZ();
+		if (this.showCounterDefault>-1) {
+			if (this.showCounter==0) {
+				this.getVisibilityManager().setVisibleByDefault(false);
+				this.showCounter=-1;
+			} else {
+				this.showCounter--;
+			}
+		}
 		this.teleport(w, x, y+this.offset, z);
 		return true;
 	}

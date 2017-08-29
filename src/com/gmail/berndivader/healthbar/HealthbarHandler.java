@@ -5,12 +5,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.changeHealthbar;
 import com.gmail.berndivader.mmcustomskills26.createHealthbar;
@@ -37,10 +40,8 @@ public class HealthbarHandler implements Listener {
 	
 	public class HealthbarClock implements Runnable {
 		protected BukkitTask taskId;
-		protected ConcurrentHashMap<UUID,Healthbar>healthbars;
 		
 		public HealthbarClock() {
-			this.healthbars = HealthbarHandler.healthbars;
 			this.taskId = Bukkit.getScheduler().runTaskTimer(HealthbarHandler.plugin, () -> {
 				this.run();
 	        },0L,1L);
@@ -49,11 +50,11 @@ public class HealthbarHandler implements Listener {
 		@Override
 		public void run() {
 			HealthbarHandler.healthbars.forEach((uuid,healthbar)-> {
-				if (healthbar.entity!=null
-						&& !healthbar.entity.isDead()) {
-					healthbar.update();
-				} else {
+				Entity e = NMSUtils.getEntity(healthbar.getWorld(), uuid);
+				if (e==null || e.isDead()) {
 					healthbar.remove();
+				} else {
+					healthbar.update();
 				}
 			});
 		}
@@ -79,11 +80,18 @@ public class HealthbarHandler implements Listener {
 	
 	@EventHandler
 	public void updateHealthbar(EntityDamageEvent e) {
-		if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
-			UUID uuid = e.getEntity().getUniqueId();
-			Healthbar h = HealthbarHandler.healthbars.get(uuid);
-			h.updateHealth();
-		}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (HealthbarHandler.healthbars.containsKey(e.getEntity().getUniqueId())) {
+					UUID uuid = e.getEntity().getUniqueId();
+					Healthbar h = HealthbarHandler.healthbars.get(uuid);
+					if (h!=null) {
+						h.updateHealth();
+					}
+				}
+			}
+		}.runTaskLater(HealthbarHandler.plugin, 1L);
 	}
 	
 }

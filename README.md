@@ -1,6 +1,12 @@
-# CustomSkillMechanics v1.18
+# CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
+#### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
+#### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
+#### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
+#### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
+#### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
 #### *** 25.8.2017 *** added 1.12.1 support.
 #### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
 #### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
@@ -139,6 +145,20 @@ PlayEffectOnTarget:
 ```
 
 
+## advrandomskill mechanic:
+
+	Use this mechanic to execute a random skill by chance and priority.
+	
+	  - advrandomskill{skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged
+	  
+	This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
+	
+	  - advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged
+	  
+	Same as above but if no chance match nothing will be executed.
+
+	
+
 ## changehealthbar mechanic:
 
 	Use this mechanic to change the display of the mobs healthbar if exists.
@@ -152,9 +172,11 @@ PlayEffectOnTarget:
 
 	Use this mechanic to display a healthbar above the mythicmobs head.
 	
-	  - createhealthbar{offset=2.5;display="[|||$h|||]"} @self ~onSpawn
+	  - createhealthbar{offset=2.5;counter=10;display="[|||$h|||]"} @self ~onSpawn
 	  
-	Creates a healthbar for the spawned mob with an offset of 2.5. The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
+	Creates a healthbar for the spawned mob with an offset of 2.5. 
+	The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
+	If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
 
 
@@ -548,6 +570,12 @@ Or use some variables in the destination targeter:
 	- customsummon{t=mobname;setowner=true} @selflocation
 	
 	This summon the mob mobname and set its owner to the mob which casted the skill.
+	
+	Use tag option to add a parsed string to the scoreboard of the summoned mob. Variables are allowed and are parsed.
+	
+	- customsummon{t=mobname;tag=<target.uuid>} @self
+	
+	This summon the mob mobname and add the uuid of the target to the summoned mobs scoreboard.
 
 
 

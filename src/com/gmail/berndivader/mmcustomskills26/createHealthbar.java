@@ -18,11 +18,13 @@ ITargetedEntitySkill {
 	
 	protected double offset;
 	protected String template;
+	protected int counter;
 	
 	public createHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.offset = mlc.getDouble("offset",2D);
+		this.counter = mlc.getInteger("counter",200);
 		String parse = mlc.getString("display");
 		if (parse.startsWith("\"") 
 				&& parse.endsWith("\"")) {
@@ -36,7 +38,7 @@ ITargetedEntitySkill {
 		if (!HealthbarHandler.healthbars.containsKey(target.getUniqueId())
 				&& target.isLiving()) {
 			LivingEntity entity = (LivingEntity)target.getBukkitEntity();
-			new Healthbar(entity,this.offset,this.template);
+			new Healthbar(entity,this.offset,this.counter,this.template);
 			return true;
 		};
 		return false;

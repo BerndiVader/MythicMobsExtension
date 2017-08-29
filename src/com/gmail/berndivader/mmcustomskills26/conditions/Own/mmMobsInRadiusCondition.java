@@ -53,16 +53,16 @@ public class mmMobsInRadiusCondition extends mmCustomCondition implements ILocat
 		Location l = BukkitAdapter.adapt(location);
 		for (Iterator<LivingEntity> it = l.getWorld().getLivingEntities().iterator(); it.hasNext();) {
 			LivingEntity e = it.next();
-			if (!e.getWorld().equals(l.getWorld())) continue;
-			double diffsq = l.distanceSquared(e.getLocation());
+			Location el = e.getLocation();
+			if (!el.getWorld().equals(l.getWorld())) continue;
+			double diffsq = l.distanceSquared(el);
 			if (diffsq <= Math.pow(this.r, 2.0D)) {
 				ActiveMob am = this.mobmanager.getMythicMobInstance(e);
-				if (am != null) {
-					if (mmT.contains(am.getType()) || this.t[0].equals("ALL")) {
-						count++;
-						am = null;
-					}
+				if (am==null) continue;
+				if (mmT.contains(am.getType()) || this.t[0].equals("ALL")) {
+					count++;
 				}
+				am = null;
 			}
 		}
 		return this.a.equals(count);

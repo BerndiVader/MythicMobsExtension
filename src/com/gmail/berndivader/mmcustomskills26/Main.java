@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	public static HealthbarHandler healthbarhandler;
 	public static NMSUtils nmsutils;
+	public static Random random;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
@@ -47,6 +49,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
 		if (pluginmanager.getPlugin("MythicMobs") != null) {
