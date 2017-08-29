@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.18
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
 #### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
 #### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
 #### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
@@ -569,6 +570,12 @@ Or use some variables in the destination targeter:
 	- customsummon{t=mobname;setowner=true} @selflocation
 	
 	This summon the mob mobname and set its owner to the mob which casted the skill.
+	
+	Use tag option to add a parsed string to the scoreboard of the summoned mob. Variables are allowed and are parsed.
+	
+	- customsummon{t=mobname;tag=<target.uuid>} @self
+	
+	This summon the mob mobname and add the uuid of the target to the summoned mobs scoreboard.
 
 
 

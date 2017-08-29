@@ -162,6 +162,10 @@ public class mmCustomSkills26 implements Listener {
 			skill = new advRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		} case "advsetowner": {
+			skill = new advSetOwnerMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}

@@ -13,13 +13,14 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.SkillString;
 
 public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
 	private MythicMob mm;
 	private MythicEntity me;
-	private String strType;
+	private String strType,tag;
 	private int amount;
 	@SuppressWarnings("unused")
 	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection, setowner;
@@ -38,6 +39,8 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		} catch (Exception var3_3) {
 			// empty catch block
 		}
+		this.tag=mlc.getString(new String[]{"addtag","tag"});
+		
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "yradiusonlyup", "yruo", "yu" }, false);
@@ -54,7 +57,16 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
-		AbstractLocation target = t.clone();
+		return cast(data,t,null);
+	}
+
+	@Override
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		return cast(data,target.getLocation(),target);
+	}
+	
+	private boolean cast(SkillMetadata data, AbstractLocation tl, AbstractEntity te) {
+		AbstractLocation target = tl.clone();
 		if (this.useEyeDirection) {
 			target = BukkitAdapter
 					.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
@@ -76,6 +88,11 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 					if (ams == null)
 						continue;
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
+					if (this.tag!=null) {
+						String tt = SkillString.unparseMessageSpecialChars(this.tag);
+						tt = SkillString.parseMobVariables(tt, data.getCaster(), te, data.getTrigger());
+						ams.getEntity().addScoreboardTag(tt);
+					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
 						ams.setParent(am);
@@ -148,10 +165,5 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		}
 		return true;
 	}
-
-	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		this.castAtLocation(data, target.getLocation());
-		return true;
-	}
+	
 }
