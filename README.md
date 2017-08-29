@@ -1,4 +1,4 @@
-# CustomSkillMechanics v1.18
+# CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 #### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
