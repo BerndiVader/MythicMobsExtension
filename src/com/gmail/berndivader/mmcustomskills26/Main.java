@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.FactionsFlags;
 import com.gmail.berndivader.mmcustomskills26.conditions.Factions.mmFactionsFlag;
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 
 	private static Main plugin;
 	public static HealthbarHandler healthbarhandler;
+	public static CachedOwnerHandler cachedOwnerHandler;
 	public static NMSUtils nmsutils;
 	public static Random random;
 	public static Integer wgVer;
@@ -38,11 +40,12 @@ public class Main extends JavaPlugin {
 	public static boolean hasRpgItems = false;
 	public static Logger logger;
 	public static PluginManager pluginmanager;
-	public MythicMobs mythicmobs;
+	public static boolean slappyNewBorn = true;
+	public static MythicMobs mythicmobs;
 	public WorldGuardPlugin wg;
 	private ThiefHandler thiefhandler;
-	private MobManager mobmanager;
-	private MythicPlayers mythicplayers;
+	private static MobManager mobmanager;
+	private static MythicPlayers mythicplayers;
 	private MobArenaHandler maHandler;
 	private VolatileHandler volatilehandler;
 
@@ -52,14 +55,21 @@ public class Main extends JavaPlugin {
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
+		Main.nmsutils = new NMSUtils();
+		this.volatilehandler = this.getVolatileHandler();
 		if (pluginmanager.getPlugin("MythicMobs") != null) {
-			this.mythicmobs = MythicMobs.inst();
-			this.mobmanager = this.mythicmobs.getMobManager();
+			Main.mythicmobs = MythicMobs.inst();
+			Main.mobmanager = Main.mythicmobs.getMobManager();
 			pluginmanager.registerEvents(new UndoBlockListener(), this);
+			this.thiefhandler = new ThiefHandler();
+			logger.info("registered ThiefHandlers!");
 			new CustomSkillStuff();
 			new mmCustomSkills26();
-			this.thiefhandler = new ThiefHandler();
 			logger.info("Found MythicMobs, registered CustomSkills.");
+			Main.mythicplayers = new MythicPlayers(this);
+			logger.info("registered MythicPlayers!");
+			new NaNpatch();
+			logger.info("NaN patch applied!");
 			new mmOwnConditions();
 			if (pluginmanager.isPluginEnabled("WorldGuard")) {
 				wg = getWorldGuard();
@@ -80,27 +90,25 @@ public class Main extends JavaPlugin {
 				new mmMobArenaConditions();
 			}
 			if (pluginmanager.isPluginEnabled("HolographicDisplays")) {
+				Main.healthbarhandler = new HealthbarHandler(this);
 				logger.info("HolographicDisplays support enabled!");
-				new HealthbarHandler(this);
 			}
-			Main.nmsutils = new NMSUtils();
-			this.volatilehandler = this.getVolatileHandler();
-			this.mythicplayers = new MythicPlayers(this);
-			logger.info("registered MythicPlayers!");
-			new NaNpatch();
-			logger.info("NaN patch applied!");
+			cachedOwnerHandler = new CachedOwnerHandler(plugin);
+			logger.info("CachedOwner support enabled!");
 		}
 	}
 
 	@Override
 	public void onDisable() {
 		Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
+		CachedOwnerHandler.saveCachedOwners();
 		this.thiefhandler = null;
-		this.mythicplayers = null;
-		this.mythicmobs = null;
+		Main.mythicplayers = null;
+		Main.mythicmobs = null;
 		this.maHandler = null;
 		this.volatilehandler = null;
 		this.wg = null;
+		Main.cachedOwnerHandler = null;
 		Main.wgf = null;
 		Main.fflags = null;
 		pluginmanager.disablePlugin(this);
@@ -111,15 +119,15 @@ public class Main extends JavaPlugin {
 	}
 
 	public MythicMobs getMythicMobs() {
-		return this.mythicmobs;
+		return Main.mythicmobs;
 	}
 
 	public MythicPlayers getMythicPlayers() {
-		return this.mythicplayers;
+		return Main.mythicplayers;
 	}
 
 	public MobManager getMobManager() {
-		return this.mobmanager;
+		return Main.mobmanager;
 	}
 
 	public ThiefHandler getThiefHandler() {

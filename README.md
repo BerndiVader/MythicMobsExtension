@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
 #### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
 #### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
 #### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
@@ -145,6 +146,14 @@ PlayEffectOnTarget:
 ```
 
 
+## setcachedowner mechanic:
+
+	set the targeter entity to perma owner of the activemob. Resistent against reload and server restart until the mob is dead. Althought only make sense on despawn false mobs.
+	
+	  - setcachedowner @trigger ~onInteract	
+
+	
+	
 ## advrandomskill mechanic:
 
 	Use this mechanic to execute a random skill by chance and priority.
