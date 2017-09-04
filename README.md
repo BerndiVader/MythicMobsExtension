@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
 #### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
 #### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
 #### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
@@ -226,6 +227,13 @@ PlayEffectOnTarget:
 	
 		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 1 <trigger.uuid>"}
 		Set goal 1 to PathfinderFollowEntity with speed 1 to the trigger of the skill.
+		
+	*breakblocks:*
+	
+		advaipathfinder{goal="[goalpriority_value] breakblocks"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks"}
+		Set goal 1 to PathfinderBreakBlocks. Right now there are no further options. But some more tuning options will be added soon.
 	
 
 
