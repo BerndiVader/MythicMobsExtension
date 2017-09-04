@@ -5,11 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -19,6 +28,9 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.MathHelper;
+import net.minecraft.server.v1_12_R1.PathEntity;
+import net.minecraft.server.v1_12_R1.PathPoint;
 import net.minecraft.server.v1_12_R1.PathfinderGoal;
 import net.minecraft.server.v1_12_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_12_R1.PathfinderGoalMeleeAttack;
@@ -101,6 +113,14 @@ implements VolatileHandler {
 	        	}
 	        	break;
 	        }
+	        case "breakblocks": {
+	        	if (e instanceof EntityCreature) {
+	        		if (tE!=null && tE.isAlive()) {
+		            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e));
+	        		}
+	        	}
+	        	break;
+	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
 	        	gList.add(uGoal);
@@ -110,7 +130,7 @@ implements VolatileHandler {
 			e1.printStackTrace();
 		}
 	}
-    
+	
 	public class PathfinderGoalMeleeRangeAttack extends PathfinderGoalMeleeAttack {
 		protected float range;
 
@@ -162,6 +182,94 @@ implements VolatileHandler {
             }
         }
     }
-	
-	
+	public class PathfinderGoalBreakBlocks extends PathfinderGoal {
+		protected EntityInsentient entity;
+		protected boolean isBreaking;
+
+		public PathfinderGoalBreakBlocks(EntityInsentient entity) {
+			this.isBreaking=false;
+			this.entity=entity;
+		}
+		
+		@Override
+		public boolean a() {
+			EntityLiving target = this.entity.getGoalTarget();
+			if (target !=null
+					&& target.isAlive()
+					&& !this.isBreaking
+					&& !this.isReachable(target)) {
+				Block[] blocks=new Block[2];
+	            blocks[0] = this.getBreakableTargetBlock(target);
+	            blocks[1] = blocks[0].getRelative(BlockFace.UP);
+	            for (Block block : blocks) {
+	                this.attemptBreakBlock(block);
+	            }
+	            return true;
+			}
+			return false;
+		}
+		
+	    private Block getBreakableTargetBlock(EntityLiving target) {
+	        Location direction = target.getBukkitEntity().getLocation().subtract(this.entity.getBukkitEntity().getLocation());
+	        double dx = direction.getX();
+	        double dz = direction.getY();
+	        int bdx = 0;
+	        int bdz = 0;
+	        if (Math.abs(dx) > Math.abs(dz)) {
+	            bdx = (dx > 0) ? 1 : -1;
+	        } else {
+	            bdz = (dx > 0) ? 1 : -1;
+	        }
+	        return this.entity.world.getWorld().getBlockAt((int) Math.floor(this.entity.locX + bdx),
+	        		(int) Math.floor(this.entity.locY),
+	        		(int) Math.floor(this.entity.locZ + bdz));
+	    }
+	    
+	    @SuppressWarnings("deprecation")
+		private void attemptBreakBlock(Block block) {
+	        Material type = block.getType();
+	        if (!this.isBreaking
+	        		&& type!=Material.AIR 
+	        		&& type.isSolid()) {
+	            Location location = block.getLocation();
+	            if (Main.random.nextInt(100) < 90) {
+	                if (Main.random.nextInt(100) < 50) {
+	                    this.entity.world.getWorld().playEffect(location, Effect.ZOMBIE_DESTROY_DOOR, 0);
+	                }
+	            } else {
+	            	this.isBreaking=true;
+                    PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, 20, 4, false, false);
+                    ((LivingEntity)this.entity.getBukkitEntity()).addPotionEffect(effect);
+	            	new BukkitRunnable() {
+						@Override
+						public void run() {
+			                EntityChangeBlockEvent event = new EntityChangeBlockEvent(PathfinderGoalBreakBlocks.this.entity.getBukkitEntity(), block, Material.AIR, (byte) 0);
+			                Main.getPlugin().getServer().getPluginManager().callEvent(event);
+			                if (!event.isCancelled()) {
+			                    PathfinderGoalBreakBlocks.this.entity.world.getWorld().playSound(location, Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, Math.min(Main.random.nextFloat() + 0.2f, 1.0f), 1.0f);
+		                        block.breakNaturally();
+		                        PathfinderGoalBreakBlocks.this.isBreaking=false;
+			                }
+						}
+					}.runTaskLaterAsynchronously(Main.getPlugin(), 20L);
+	            }
+	        }
+	    }
+	    private boolean isReachable(EntityLiving target) {
+	    	if (this.entity.getEntitySenses().a(target)) return true;
+	        PathEntity pe=this.entity.getNavigation().a(target);
+	        if (pe==null) {
+	            return false;
+	        } else {
+	            PathPoint pp=pe.c();
+	            if (pp==null) {
+	                return false;
+	            } else {
+	                int i=pp.a-MathHelper.floor(target.locX);
+	                int j=pp.c-MathHelper.floor(target.locZ);
+	                return (double)(i*i+j*j)<=2.25D;
+	            }
+	        }
+	    }
+	}
 }

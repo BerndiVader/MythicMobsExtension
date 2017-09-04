@@ -16,7 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 public class CustomParticleEffect extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
-	protected MythicMobs mythicmobs;
+	protected static MythicMobs mythicmobs;
 	String strParticle;
 	float hSpread;
 	float vSpread;
@@ -34,7 +34,7 @@ public class CustomParticleEffect extends SkillMechanic implements ITargetedEnti
 
 	public CustomParticleEffect(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.mythicmobs = Main.getPlugin().getMythicMobs();
+		CustomParticleEffect.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.strParticle = mlc.getString("particle", "reddust");
 		this.strParticle = mlc.getString("p", this.strParticle);
 		this.amount = mlc.getInteger("amount", 10);
@@ -96,8 +96,8 @@ public class CustomParticleEffect extends SkillMechanic implements ITargetedEnti
 	}
 
 	protected void playParticleEffect(Location origin, Location target) {
-		if (this.mythicmobs.getMinecraftVersion() < 7) {
-			this.mythicmobs.getVolatileCodeHandler().doParticleEffect(target, this.strParticle, this.hSpread,
+		if (CustomParticleEffect.mythicmobs.getMinecraftVersion() < 7) {
+			CustomParticleEffect.mythicmobs.getVolatileCodeHandler().doParticleEffect(target, this.strParticle, this.hSpread,
 					this.vSpread, this.amount, this.pSpeed, this.yOffset, 256);
 			return;
 		}

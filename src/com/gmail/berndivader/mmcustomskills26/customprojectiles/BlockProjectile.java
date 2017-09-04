@@ -38,7 +38,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 
 	public BlockProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.entitymanager = Main.getPlugin().mythicmobs.getEntityManager();
+		this.entitymanager = Main.mythicmobs.getEntityManager();
 
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
@@ -51,7 +51,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			new ProjectileTracker(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
-			Main.getPlugin().mythicmobs.handleException(ex);
+			Main.mythicmobs.handleException(ex);
 			return false;
 		}
 	}

@@ -30,8 +30,8 @@ import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill, ITargetedLocationSkill {
 
-	protected MythicMobs mythicmobs;
-	protected SkillManager skillmanager;
+	protected static MythicMobs mythicmobs;
+	protected static SkillManager skillmanager;
 	protected String meetAction, elseAction;
 	protected Optional<String> 
 		meetTargeter=Optional.empty(),
@@ -50,8 +50,8 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	public CastIf(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.mythicmobs = Main.getPlugin().getMythicMobs();
-		this.skillmanager = this.mythicmobs.getSkillManager();
+		CastIf.mythicmobs = Main.getPlugin().getMythicMobs();
+		CastIf.skillmanager = CastIf.mythicmobs.getSkillManager();
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
@@ -61,10 +61,10 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.meetTargeter = Optional.ofNullable(mlc.getString("meettargeter"));
 		this.elseTargeter = Optional.ofNullable(mlc.getString("elsetargeter"));
 		if (this.meetAction != null) {
-			this.meetSkill = this.skillmanager.getSkill(this.meetAction);
+			this.meetSkill = CastIf.skillmanager.getSkill(this.meetAction);
 		}
 		if (this.elseAction != null) {
-			this.elseSkill = this.skillmanager.getSkill(this.elseAction);
+			this.elseSkill = CastIf.skillmanager.getSkill(this.elseAction);
 		}
 		if (this.cConditionLines != null && !this.cConditionLines.isEmpty()) {
 			this.casterConditions = this.getConditions(this.cConditionLines);
