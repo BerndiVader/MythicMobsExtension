@@ -28,6 +28,9 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.MathHelper;
+import net.minecraft.server.v1_12_R1.PathEntity;
+import net.minecraft.server.v1_12_R1.PathPoint;
 import net.minecraft.server.v1_12_R1.PathfinderGoal;
 import net.minecraft.server.v1_12_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_12_R1.PathfinderGoalMeleeAttack;
@@ -191,8 +194,10 @@ implements VolatileHandler {
 		@Override
 		public boolean a() {
 			EntityLiving target = this.entity.getGoalTarget();
-			if (target !=null 
-					&& target.isAlive()) {
+			if (target !=null
+					&& target.isAlive()
+					&& !this.isBreaking
+					&& !this.isReachable(target)) {
 				Block[] blocks=new Block[2];
 	            blocks[0] = this.getBreakableTargetBlock(target);
 	            blocks[1] = blocks[0].getRelative(BlockFace.UP);
@@ -247,6 +252,22 @@ implements VolatileHandler {
 			                }
 						}
 					}.runTaskLaterAsynchronously(Main.getPlugin(), 20L);
+	            }
+	        }
+	    }
+	    private boolean isReachable(EntityLiving target) {
+	    	if (this.entity.getEntitySenses().a(target)) return true;
+	        PathEntity pe=this.entity.getNavigation().a(target);
+	        if (pe==null) {
+	            return false;
+	        } else {
+	            PathPoint pp=pe.c();
+	            if (pp==null) {
+	                return false;
+	            } else {
+	                int i=pp.a-MathHelper.floor(target.locX);
+	                int j=pp.c-MathHelper.floor(target.locZ);
+	                return (double)(i*i+j*j)<=2.25D;
 	            }
 	        }
 	    }
