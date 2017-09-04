@@ -2,6 +2,7 @@ package com.gmail.berndivader.volatilecode;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,6 @@ import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.EntityLiving;
@@ -116,7 +116,7 @@ implements VolatileHandler {
 	        case "breakblocks": {
 	        	if (e instanceof EntityCreature) {
 	        		if (tE!=null && tE.isAlive()) {
-		            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e));
+		            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data));
 	        		}
 	        	}
 	        	break;
@@ -124,7 +124,7 @@ implements VolatileHandler {
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
 	        	gList.add(uGoal);
-	            MythicMobs.inst().getVolatileCodeHandler().aiGoalSelectorHandler(entity, gList);
+	            Main.mythicmobs.getVolatileCodeHandler().aiGoalSelectorHandler(entity, gList);
 	        }}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -185,10 +185,22 @@ implements VolatileHandler {
 	public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 		protected EntityInsentient entity;
 		protected boolean isBreaking;
+		protected HashSet<Material>materials;
 
-		public PathfinderGoalBreakBlocks(EntityInsentient entity) {
+		public PathfinderGoalBreakBlocks(EntityInsentient entity, String mL) {
 			this.isBreaking=false;
 			this.entity=entity;
+			this.materials=new HashSet<>();
+			if (mL!=null) {
+				String[]parse=mL.toUpperCase().split(",");
+				for(int a=0;a<parse.length;a++) {
+					try {
+						this.materials.add(Material.valueOf(parse[a]));
+					} catch (Exception ex) {
+						continue;
+					}
+				}
+			}
 		}
 		
 		@Override
@@ -199,10 +211,11 @@ implements VolatileHandler {
 					&& !this.isBreaking
 					&& !this.isReachable(target)) {
 				Block[] blocks=new Block[2];
-	            blocks[0] = this.getBreakableTargetBlock(target);
-	            blocks[1] = blocks[0].getRelative(BlockFace.UP);
-	            for (Block block : blocks) {
-	                this.attemptBreakBlock(block);
+	            blocks[1] = this.getBreakableTargetBlock(target);
+	            blocks[0] = blocks[1].getRelative(BlockFace.UP);
+	            for (int a=0;a<blocks.length;a++) {
+	            	if (this.materials.isEmpty() 
+	            			|| this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
 	            }
 	            return true;
 			}
