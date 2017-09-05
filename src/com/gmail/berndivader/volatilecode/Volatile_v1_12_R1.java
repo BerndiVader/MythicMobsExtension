@@ -115,9 +115,7 @@ implements VolatileHandler {
 	        }
 	        case "breakblocks": {
 	        	if (e instanceof EntityCreature) {
-	        		if (tE!=null && tE.isAlive()) {
-		            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data));
-	        		}
+	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data));
 	        	}
 	        	break;
 	        }
@@ -182,6 +180,7 @@ implements VolatileHandler {
             }
         }
     }
+    
 	public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 		protected EntityInsentient entity;
 		protected boolean isBreaking;
@@ -202,36 +201,52 @@ implements VolatileHandler {
 				}
 			}
 		}
-		
-		@Override
+
 		public boolean a() {
+			return this.entity.isAlive();
+		}
+		
+		public boolean b() {
+			if (this.entity.getGoalTarget()!=null
+					&& this.entity.getGoalTarget().isAlive()) {
+				return true;
+			}
+			return false;
+		}
+
+		public void e() {
+			if (!this.canContinue()) return;
+			EntityLiving target=this.entity.getGoalTarget();
+			Block[] blocks=new Block[2];
+            blocks[0] = this.getBreakableTargetBlock(target);
+            blocks[1] = blocks[0].getRelative(BlockFace.UP);
+            for (int a=0;a<blocks.length;a++) {
+            	if (this.materials.isEmpty() 
+           			|| this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
+            }
+		}
+		
+		private boolean canContinue() {
 			EntityLiving target = this.entity.getGoalTarget();
 			if (target !=null
 					&& target.isAlive()
 					&& !this.isBreaking
 					&& !this.isReachable(target)) {
-				Block[] blocks=new Block[2];
-	            blocks[1] = this.getBreakableTargetBlock(target);
-	            blocks[0] = blocks[1].getRelative(BlockFace.UP);
-	            for (int a=0;a<blocks.length;a++) {
-	            	if (this.materials.isEmpty() 
-	            			|| this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
-	            }
-	            return true;
+				return true;
 			}
 			return false;
 		}
 		
 	    private Block getBreakableTargetBlock(EntityLiving target) {
 	        Location direction = target.getBukkitEntity().getLocation().subtract(this.entity.getBukkitEntity().getLocation());
-	        double dx = direction.getX();
-	        double dz = direction.getY();
-	        int bdx = 0;
-	        int bdz = 0;
-	        if (Math.abs(dx) > Math.abs(dz)) {
-	            bdx = (dx > 0) ? 1 : -1;
+	        double dx=direction.getX();
+	        double dz=direction.getY();
+	        int bdx=0;
+	        int bdz=0;
+	        if (Math.abs(dx)>Math.abs(dz)) {
+	            bdx=(dx>0)?1:-1;
 	        } else {
-	            bdz = (dx > 0) ? 1 : -1;
+	            bdz=(dx>0)?1:-1;
 	        }
 	        return this.entity.world.getWorld().getBlockAt((int) Math.floor(this.entity.locX + bdx),
 	        		(int) Math.floor(this.entity.locY),
@@ -245,10 +260,8 @@ implements VolatileHandler {
 	        		&& type!=Material.AIR 
 	        		&& type.isSolid()) {
 	            Location location = block.getLocation();
-	            if (Main.random.nextInt(100) < 90) {
-	                if (Main.random.nextInt(100) < 50) {
-	                    this.entity.world.getWorld().playEffect(location, Effect.ZOMBIE_DESTROY_DOOR, 0);
-	                }
+	            if (Main.random.nextInt(100) < 50) {
+                    this.entity.world.getWorld().playEffect(location, Effect.ZOMBIE_DESTROY_DOOR, 0);
 	            } else {
 	            	this.isBreaking=true;
                     PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, 20, 4, false, false);
