@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
 #### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
 #### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
 #### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
@@ -224,10 +225,10 @@ PlayEffectOnTarget:
 		
 	*followentity:*
 	
-		advaipathfinder{goal="[goalpriority_value] followentity [speed_value] [entity_uuid]"}
+		advaipathfinder{goal="[goalpriority_value] followentity [speed_value],[follow_rad_min],[follow_rad_start] [entity_uuid]"}
 	
-		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 1 <trigger.uuid>"}
-		Set goal 1 to PathfinderFollowEntity with speed 1 to the trigger of the skill.
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 2,3,10 <trigger.uuid>"}
+		Set goal 1 to PathfinderFollowEntity with speed 2 to the trigger of the skill, start following if entity outside [follow_rad_start] radius and follow until entity is within [follow_rad_min].
 		
 	*breakblocks:*
 	

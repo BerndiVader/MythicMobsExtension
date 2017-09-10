@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mmcustomskills26.Main;
 
@@ -130,7 +131,8 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
-				AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
+				LivingEntity bukkitEntity = (LivingEntity) this.am.getEntity().getBukkitEntity();
+				AbstractLocation al = BukkitAdapter.adapt(bukkitEntity.getEyeLocation());
 				this.currentVelocity = al.getDirection().normalize();
 			}
 			if (EffectProjectile.this.projectileVelocityHorizOffset != 0.0f

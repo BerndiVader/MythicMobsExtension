@@ -15,7 +15,7 @@ public class advAIPathFinderSelector extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	protected static VolatileHandler vh = Main.getPlugin().getVolatileHandler();
+	protected VolatileHandler vh = Main.getPlugin().getVolatileHandler();
 	protected String g;
 	
 	public advAIPathFinderSelector(String skill, MythicLineConfig mlc) {

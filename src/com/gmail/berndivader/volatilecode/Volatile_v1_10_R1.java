@@ -35,6 +35,12 @@ import net.minecraft.server.v1_10_R1.PathfinderGoal;
 import net.minecraft.server.v1_10_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_10_R1.BlockPosition;
+import net.minecraft.server.v1_10_R1.EntityHuman;
+import net.minecraft.server.v1_10_R1.IBlockData;
+import net.minecraft.server.v1_10_R1.Navigation;
+import net.minecraft.server.v1_10_R1.NavigationAbstract;
+import net.minecraft.server.v1_10_R1.PathType;
 import net.minecraft.server.v1_10_R1.MathHelper;
 import net.minecraft.server.v1_10_R1.PathEntity;
 import net.minecraft.server.v1_10_R1.PathPoint;
@@ -99,7 +105,21 @@ implements VolatileHandler {
 	        case "followentity": {
 	        	UUID uuid=null;
 	        	if (e instanceof EntityCreature) {
-	        		double speed = 1.0d;
+	        		double speed=1.0d;
+	        		float aR=2.0F;
+	        		float zR=10.0F;
+	        		String[]p=data.split(",");
+	        		for (int a=0;a<p.length;a++) {
+	        			if (CustomSkillStuff.isNumeric(p[a])) {
+	        				if (a==0) {
+	        					speed=Double.parseDouble(p[a]);
+	        				} else if (a==1) {
+	        					aR=Float.parseFloat(p[a]);
+	        				} else if (a==2) {
+	        					zR=Float.parseFloat(p[a]);
+	        				}
+	        			}
+	        		}
 	        		if (CustomSkillStuff.isNumeric(data)) {
 	        			speed = Double.parseDouble(data);
 	        		}
@@ -111,7 +131,7 @@ implements VolatileHandler {
 	        			}
 	        		}
 	        		if (tE!=null && tE.isAlive()) {
-		            	goals.a(i, (PathfinderGoal)new PathfinderGoalFollowEntity(e,tE, speed));
+		            	goals.a(i, (PathfinderGoal)new PathfinderGoalFollowEntity(e,tE,speed,zR,aR));
 	        		}
 	        	}
 	        	break;
@@ -146,43 +166,93 @@ implements VolatileHandler {
 		}
 	}
 	
-    public class PathfinderGoalFollowEntity extends PathfinderGoal {
-        private double speed;
-        private EntityInsentient entity;
-        private EntityLiving entity1;
-
-        public PathfinderGoalFollowEntity(EntityInsentient e, EntityLiving e1, double s) {
-            this.entity = e;
-            this.entity1 = e1;
-            this.speed = s;
-        }
-        
-        public boolean a() {
-            try {
-            	if (this.entity1==null 
-            			|| !this.entity1.isAlive() 
-            			|| !this.entity1.getWorld().equals(this.entity.getWorld())) {
-            		return false;
-            	}
-            	World world = this.entity1.getWorld().getWorld();
-            	Location dLoc = new Location(world,this.entity1.locX,this.entity1.locY,this.entity1.locZ);
-            	Location sLoc = new Location(world,this.entity.locX,this.entity.locY,this.entity.locZ);
-            	if (sLoc.distanceSquared(dLoc)>1024.0) {
-            		this.entity.teleportTo(dLoc, false);
-            		return true;
-            	}
-                if (sLoc.distanceSquared(dLoc)>this.speed) {
-                    this.entity.getNavigation().a(dLoc.getX(), dLoc.getY(), dLoc.getZ(), this.speed);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                return false;
-            }
-        }
-    }
+	public class PathfinderGoalFollowEntity extends PathfinderGoal {
+		private final EntityInsentient d;
+		private final EntityLiving d1;
+		private EntityLiving e;
+		net.minecraft.server.v1_10_R1.World a;
+		private final double f;
+		private final NavigationAbstract g;
+		private int h;
+		float b;
+		float c;
+		private float i;
+	  
+		public PathfinderGoalFollowEntity(EntityInsentient entity, EntityLiving entity1, double d0, float f, float f1) {
+			this.d=entity;
+			this.a=entity.world;
+			this.d1=entity1;
+			this.f = d0;
+			g = entity.getNavigation();
+			c = f;
+			b = f1;
+			a(3);
+			if ((!(entity.getNavigation() instanceof Navigation))) {
+				throw new IllegalArgumentException("Unsupported mob type for FollowEntityGoal");
+			}
+		}
+	  
+		public boolean a() {
+			if (this.d1!=null 
+					&& this.d1.isAlive()) this.e=this.d1;
+			if (this.e == null) return false;
+			if (((this.e instanceof EntityHuman)) 
+					&& (((EntityHuman)this.e).isSpectator())) return false;
+			if (d.h(this.e) < c * c) return false;
+			return true;
+		}
+	  
+		public boolean b() {
+			return (!g.n()) && (d.h(e) > b * b);
+		}
+	  
+		public void c() {
+			h = 0;
+			i = d.a(PathType.WATER);
+			d.a(PathType.WATER, 0.0F);
+		}
+	  
+		public void d() {
+		    e=null;
+		    g.o();
+		    d.a(PathType.WATER, i);
+		}
+	  
+		public void e() {
+			d.getControllerLook().a(e, 10.0F, d.N());
+			if (--h<=0) {
+				h=10;
+				if ((!g.a(e, f)) 
+						&& (!d.isLeashed()) && (!d.isPassenger())
+						&& (d.h(e) >= 144.0D)) {
+					int j = MathHelper.floor(e.locX) - 2;
+					int k = MathHelper.floor(e.locZ) - 2;
+					int m = MathHelper.floor(e.getBoundingBox().b);
+					
+				    for (int n = 0; n <= 4; n++) {
+				    	for (int i1 = 0; i1 <= 4; i1++) {
+				    		if ((n < 1) || (i1 < 1) || (n > 3) || (i1 > 3)) {
+				    			if ((a.getType(new BlockPosition(j + n, m - 1, k + i1)).q()) && (a(new BlockPosition(j + n, m, k + i1))) && (a(new BlockPosition(j + n, m + 1, k + i1)))) {
+				    				d.setPositionRotation(j + n + 0.5F, m, k + i1 + 0.5F, d.yaw, d.pitch);
+				    				g.o();
+				    				return;
+				    			}
+				    		}
+				       	}
+				    }
+				}
+			}
+		}
+	  
+		protected boolean a(BlockPosition paramBlockPosition) {
+			IBlockData localIBlockData = a.getType(paramBlockPosition);
+			if (localIBlockData.getMaterial() == net.minecraft.server.v1_10_R1.Material.AIR) {
+				return true;
+			}
+			return !localIBlockData.h();
+		}
+	}
+	
 	public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 		protected EntityInsentient entity;
 		protected boolean isBreaking;
@@ -283,6 +353,7 @@ implements VolatileHandler {
 	            }
 	        }
 	    }
+	    
 	    private boolean isReachable(EntityLiving target) {
 	    	if (this.entity.getEntitySenses().a(target)) return true;
 	        PathEntity pe=this.entity.getNavigation().a(target);
@@ -300,5 +371,19 @@ implements VolatileHandler {
 	        }
 	    }
 	}
+	
+	public class PathfinderGoalJumpAttack extends PathfinderGoalMeleeAttack {
+		protected float range;
 
+		public PathfinderGoalJumpAttack(EntityCreature entityCreature, double d, boolean b, float range) {
+			super(entityCreature, d, b);
+			this.range=range;
+		}
+
+		@Override
+		protected double a(EntityLiving entity) {
+		    return (double)(this.b.width * this.range * this.b.width * this.range + entity.width);
+		}
+	}
+	
 }

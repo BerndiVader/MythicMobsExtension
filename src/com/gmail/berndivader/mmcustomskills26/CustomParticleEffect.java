@@ -13,6 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import java.awt.Color;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 public class CustomParticleEffect extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -81,7 +82,8 @@ public class CustomParticleEffect extends SkillMechanic implements ITargetedEnti
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		Location l = this.useEyeLocation ? target.getEyeLocation() : BukkitAdapter.adapt(target.getLocation());
+		LivingEntity bukkitEntity = (LivingEntity)target.getBukkitEntity();
+		Location l = this.useEyeLocation ? bukkitEntity.getEyeLocation() : BukkitAdapter.adapt(target.getLocation());
 		if (this.fOffset > 0.0f || this.sOffset != 0.0f) {
 			l.setPitch(0.0f);
 			l = CustomParticleEffect.move(l, this.fOffset, 0.0, this.sOffset);
