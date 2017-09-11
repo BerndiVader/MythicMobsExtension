@@ -138,7 +138,10 @@ implements VolatileHandler {
 	        }
 	        case "breakblocks": {
 	        	if (e instanceof EntityCreature) {
-	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data));
+	        		int chance=50;
+	        		if (data1!=null 
+	        				&& CustomSkillStuff.isNumeric(data1)) chance=Integer.parseInt(data1);
+	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
 	        }
@@ -256,12 +259,14 @@ implements VolatileHandler {
 	public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 		protected EntityInsentient entity;
 		protected boolean isBreaking;
+		protected int chance;
 		protected HashSet<Material>materials;
 
-		public PathfinderGoalBreakBlocks(EntityInsentient entity, String mL) {
+		public PathfinderGoalBreakBlocks(EntityInsentient entity, String mL, int chance) {
 			this.isBreaking=false;
 			this.entity=entity;
 			this.materials=new HashSet<>();
+			this.chance=chance>100?100:chance<0?0:chance;
 			if (mL!=null) {
 				String[]parse=mL.toUpperCase().split(",");
 				for(int a=0;a<parse.length;a++) {

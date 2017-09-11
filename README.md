@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
 #### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
 #### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
 #### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
@@ -233,10 +234,11 @@ PlayEffectOnTarget:
 		
 	*breakblocks:*
 	
-		advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array]"}
+		advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array] [blockbreakchance_value]"}
 	
-		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks grass,dirt,stone"}
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}
 		Set goal 1 to PathfinderBreakBlocks. Blocks that can be broken are grass, dirt and stone. If none is given all blocks can be broken. Respect worldguards block-break deny flag.
+		The entity have a chance of 50% to break the block. Possible chances 0-100;
 	
 
 
