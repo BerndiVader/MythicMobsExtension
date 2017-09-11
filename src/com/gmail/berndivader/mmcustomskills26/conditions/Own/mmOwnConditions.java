@@ -83,6 +83,11 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "facingdirection": {
+			SkillCondition c = new FacingDirectionCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

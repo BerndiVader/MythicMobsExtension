@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
 #### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
 #### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
 #### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
@@ -840,6 +841,11 @@ FleeButGotNothing:
 
 
 
+```
+  Conditions:
+  - facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}
+```
+Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
 ```
   TargetConditions:
   - parsedstance{s="<target.uuid>";cs=true;action=true}

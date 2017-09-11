@@ -448,7 +448,7 @@ public class CustomSkillStuff implements Listener {
  
         return new Vector(vx,vy,vz);
     }
- 
+    
     public static double distanceSquared(Vector f, Vector t) {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();
