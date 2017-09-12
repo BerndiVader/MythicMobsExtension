@@ -196,12 +196,10 @@ implements VolatileHandler {
 		}
 	  
 		public boolean a() {
-			if (this.d1!=null 
-					&& this.d1.isAlive()) this.e=this.d1;
-			if (this.e == null) return false;
-			if (((this.e instanceof EntityHuman)) 
-					&& (((EntityHuman)this.e).isSpectator())) return false;
-			if (d.h(this.e) < c * c) return false;
+			this.e=this.d1;
+			if ((this.e==null||!this.e.isAlive())
+					|| (this.e instanceof EntityHuman)&&((EntityHuman)this.e).isSpectator()
+					|| (d.h(this.e) < c * c)) return false;
 			return true;
 		}
 	  

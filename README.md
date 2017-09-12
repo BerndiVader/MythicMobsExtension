@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details.
 #### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
 #### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
 #### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
@@ -239,7 +240,16 @@ PlayEffectOnTarget:
 		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}
 		Set goal 1 to PathfinderBreakBlocks. Blocks that can be broken are grass, dirt and stone. If none is given all blocks can be broken. Respect worldguards block-break deny flag.
 		The entity have a chance of 50% to break the block. Possible chances 0-100;
+
+	*returnhome:*
 	
+		advaipathfinder{goal="[goalpriority_value] returnhome [speed_value] [x],[y],[z],[travel_radius],[tp_radius],[boolean_ignoretarget]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 returnhome 2 <mob.l.x>,<mob.l.y>,<mob.l.z>,200,1024,false"}
+		Set goal 1 to PathfinderGoalReturnHome. The entity will return to the mobs location present at execution of the mechanic. With speed of 2. Mob can travel inside a radius of 200 disq and has a 
+		tp radius of 1024. Means if the mob is outside of 1024 it will be teleported. Because of the last false the mob will not go home aslong it has a target. Set it to true and the mob will run home
+		whenever its outside of its range.
+		
 
 
 ## parsedStance mechanic:
