@@ -1,7 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-#### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details.
+#### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details. Meanwhile 1_12 only. Needs some more testing.
 #### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
 #### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
 #### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
@@ -249,6 +249,9 @@ PlayEffectOnTarget:
 		Set goal 1 to PathfinderGoalReturnHome. The entity will return to the mobs location present at execution of the mechanic. With speed of 2. Mob can travel inside a radius of 200 disq and has a 
 		tp radius of 1024. Means if the mob is outside of 1024 it will be teleported. Because of the last false the mob will not go home aslong it has a target. Set it to true and the mob will run home
 		whenever its outside of its range.
+		In addition there are two signals send:
+		GOAL_STARTRETURNHOME - Send to mob if the entity start to travel home.
+		GOAL_ENDRETURNHOME - Send to mob if the entity is arrived at home.
 		
 
 

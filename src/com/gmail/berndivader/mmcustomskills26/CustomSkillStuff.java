@@ -104,7 +104,7 @@ public class CustomSkillStuff implements Listener {
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
 			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
-			victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
+			if (damager!=null) victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
 		} else if (victim.hasMetadata("LastDamager")) {
 			victim.removeMetadata("LastDamager", Main.getPlugin());
 		}
