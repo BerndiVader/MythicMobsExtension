@@ -860,6 +860,11 @@ FleeButGotNothing:
 
 ```
   Conditions:
+  - inmotion{action=[BOOLEAN]}
+```
+Checks if the entity is in motion. Do not work for players or none living entities.
+```
+  Conditions:
   - facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}
 ```
 Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
