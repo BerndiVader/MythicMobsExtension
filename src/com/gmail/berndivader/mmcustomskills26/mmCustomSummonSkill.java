@@ -29,18 +29,8 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.strType = mlc.getString("type", "SKELETON");
-		this.strType = mlc.getString("t", this.strType);
-		this.strType = mlc.getString("mob", this.strType);
-		this.strType = mlc.getString("m", this.strType);
-		try {
-			this.amount = mlc.getInteger("amount", 1);
-			this.amount = mlc.getInteger("a", this.amount);
-		} catch (Exception var3_3) {
-			// empty catch block
-		}
+		this.strType=mlc.getString(new String[]{"type","t","mob","m"},null);
 		this.tag=mlc.getString(new String[]{"addtag","tag"});
-		
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "yradiusonlyup", "yruo", "yu" }, false);
