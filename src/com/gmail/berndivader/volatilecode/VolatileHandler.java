@@ -5,6 +5,7 @@ import org.bukkit.entity.LivingEntity;
 public interface VolatileHandler {
 
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
+    public boolean inMotion(LivingEntity entity);
     
 	
 }

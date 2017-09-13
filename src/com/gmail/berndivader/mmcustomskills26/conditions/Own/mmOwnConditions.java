@@ -88,6 +88,11 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "inmotion": {
+			SkillCondition c = new InMotionCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

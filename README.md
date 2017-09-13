@@ -1,6 +1,8 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+#### *** 13.9.2017 *** PathfinderGoalReturnHome now 1.10-1.12.1 compatible.
+#### *** 13.9.2017 *** added inmotion condition. See conditions for more details.
 #### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details. Meanwhile 1_12 only. Needs some more testing.
 #### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
 #### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details

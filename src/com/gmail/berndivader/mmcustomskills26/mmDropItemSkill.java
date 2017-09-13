@@ -21,7 +21,10 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
+public class mmDropItemSkill extends SkillMechanic 
+implements 
+ITargetedEntitySkill, 
+ITargetedLocationSkill {
 
 	protected String itemtype, dropname;
 	protected int amount;
@@ -35,7 +38,7 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
 		this.stackable = mlc.getBoolean(new String[] { "stackable", "sa" }, true);
 	}
-
+	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation ltarget) {
 		SkillCaster caster = data.getCaster();
@@ -89,5 +92,4 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 				w.dropItem(l, is);
 		}
 	}
-
 }
