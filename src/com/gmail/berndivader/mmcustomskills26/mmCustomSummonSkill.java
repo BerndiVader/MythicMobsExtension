@@ -28,18 +28,18 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
-		this.strType=mlc.getString(new String[]{"type","t","mob","m"},null);
-		this.tag=mlc.getString(new String[]{"addtag","tag"});
+		this.ASYNC_SAFE = false
+		this.strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
+		this.tag = mlc.getString(new String[] { "addtag", "tag" } );
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "yradiusonlyup", "yruo", "yu" }, false);
 		this.onSurface = mlc.getBoolean(new String[] { "onsurface", "os", "s" }, true);
 		this.copyThreatTable = mlc.getBoolean(new String[] { "copythreattable", "ctt" }, false);
 		this.inheritThreatTable = mlc.getBoolean(new String[] { "inheritthreattable", "itt" }, false);
-		this.addx = mlc.getDouble(new String[] { "addx", "ax" }, 0);
-		this.addy = mlc.getDouble(new String[] { "addy", "ay" }, 0);
-		this.addz = mlc.getDouble(new String[] { "addz", "az" }, 0);
+		this.addx = mlc.getDouble(new String[] { "addx", "ax", "relx", "rx" }, 0);
+		this.addy = mlc.getDouble(new String[] { "addy", "ay", "rely", "ry" }, 0);
+		this.addz = mlc.getDouble(new String[] { "addz", "az", "relz", "rz" }, 0);
 		this.useEyeDirection = mlc.getBoolean(new String[] { "useeyedirection", "eyedirection", "ued" }, false);
 		this.inFrontBlocks = mlc.getDouble(new String[] { "inFrontBlocks", "inFront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
