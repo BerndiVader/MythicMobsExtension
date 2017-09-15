@@ -13,16 +13,16 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 
 	private boolean pk, pi, ia, iabs, ip, p, pcur, debug;
 	private DamageCause cause=DamageCause.CUSTOM;
-	private String amount;
+	private Double amount;
 
 	public mmCustomDamage(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
 		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
-		this.amount = mlc.getString(new String[] { "amount", "a" }, "1.0");
+		this.amount = mlc.getDouble(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-"))
-			this.amount = "1.0";
+			this.amount = "1";
 		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
 		this.iabs = mlc.getBoolean(new String[] { "ignoreabs", "iabs" }, false);
