@@ -23,13 +23,13 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 		this.amount = mlc.getDouble(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-"))
 			this.amount = "1";
-		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ia", "i" }, false);
+		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
-		this.iabs = mlc.getBoolean(new String[] { "ignoreabs", "iabs" }, false);
+		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
 		this.ip = mlc.getBoolean(new String[] { "ignorepower", "ip" }, false);
 		this.p = mlc.getBoolean(new String[] { "percentage", "p" }, false);
-		this.pcur = mlc.getBoolean(new String[] { "pcur", "pc" }, false);
-		String ca = mlc.getString(new String[] { "damagecause", "cause" }, "CUSTOM").toUpperCase();
+		this.pcur = mlc.getBoolean(new String[] { "percentcurrent", "pcur", "pc" }, false);
+		String ca = mlc.getString(new String[] { "damagecause", "cause", "dc" }, "CUSTOM").toUpperCase();
 		for (DamageCause dc : DamageCause.values()) {
 			if (dc.toString().equals(ca)) {
 				this.cause=dc;
