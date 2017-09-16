@@ -30,6 +30,7 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
 		this.strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
+		this.amount = mlc.getInteger(new String[] { "amount", "a" } 1);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
