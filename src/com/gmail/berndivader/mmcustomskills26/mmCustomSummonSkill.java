@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -9,31 +11,28 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
 public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
 	private MythicMob mm;
 	private MythicEntity me;
-	private String strType,tag;
-	private int amount, noise, yNoise;
+	private String tag, amount;
 	@SuppressWarnings("unused")
 	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection, setowner;
-	private double addx, addy, addz, inFrontBlocks;
+	private double noise, yNoise, addx, addy, addz, inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
-		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
+		this.amount=mlc.getString(new String[]{"amount","a"},"1");
+		if (this.amount.startsWith("-")) this.amount = "1";
+		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
-		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
-		this.yNoise = mlc.getInteger(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
+		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0);
+		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "ynoiseuponly", "yruo", "ynuo", "yu" }, false);
 		this.onSurface = mlc.getBoolean(new String[] { "onsurface", "os", "s" }, true);
 		this.copyThreatTable = mlc.getBoolean(new String[] { "copythreattable", "ctt" }, false);
@@ -44,6 +43,8 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		this.useEyeDirection = mlc.getBoolean(new String[] { "useeyedirection", "eyedirection", "ued" }, false);
 		this.inFrontBlocks = mlc.getDouble(new String[] { "infrontblocks", "infront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
+		this.mm = this.mobmanager.getMythicMob(strType);
+		if (this.mm == null) this.me = MythicEntity.getMythicEntity(strType);
 	}
 
 	@Override
@@ -63,15 +64,10 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 					.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
 		}
 		target.add(this.addx, this.addy, this.addz);
-		if (this.mm == null && this.me == null) {
-			this.mm = this.mobmanager.getMythicMob(this.strType);
-			if (this.mm == null) {
-				this.me = MythicEntity.getMythicEntity(this.strType);
-			}
-		}
+		int amount=CustomSkillStuff.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			if (this.noise > 0) {
-				for (int i = 1; i <= this.amount; ++i) {
+				for (int i = 1; i <= amount; ++i) {
 					this.mythicmobs.getMobManager();
 					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
 							this.mm.getMythicEntity().getHeight(), this.yUpOnly);
@@ -86,7 +82,10 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
-						ams.setParent(am);
+/**
+  						TODO: incompatible between ~4.2&&4.3
+ 						ams.setParent(am);
+ */
 						ams.setFaction(am.getFaction());
 						if (this.setowner) {
 							ams.setOwner(data.getCaster().getEntity().getUniqueId());
@@ -104,18 +103,20 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 							continue;
 						ams.importThreatTable(am.getThreatTable());
 						ams.getThreatTable().targetHighestThreat();
-						continue;
 					}
 				}
 			} else {
-				for (int i = 1; i <= this.amount; ++i) {
+				for (int i = 1; i <= amount; ++i) {
 					ActiveMob ams = this.mm.spawn(target, data.getCaster().getLevel());
 					if (ams == null)
 						continue;
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
-						ams.setParent(am);
+/**
+ 						TODO: incompatible between ~4.2&&4.3
+ 						ams.setParent(am);
+ */
 						ams.setFaction(am.getFaction());
 						if (this.setowner) {
 							ams.setOwner(data.getCaster().getEntity().getUniqueId());
@@ -133,7 +134,6 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 							continue;
 						ams.importThreatTable(am.getThreatTable());
 						ams.getThreatTable().targetHighestThreat();
-						continue;
 					}
 				}
 			}
@@ -141,14 +141,13 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		}
 		if (this.me != null) {
 			if (this.noise > 0) {
-				for (int i = 1; i <= this.amount; ++i) {
-					this.mythicmobs.getMobManager();
+				for (int i = 1; i <= amount; ++i) {
 					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
 							this.me.getHeight(), this.yUpOnly);
 					this.me.spawn(BukkitAdapter.adapt(l));
 				}
 			} else {
-				for (int i = 1; i <= this.amount; ++i) {
+				for (int i = 1; i <= amount; ++i) {
 					this.me.spawn(BukkitAdapter.adapt(target));
 				}
 			}

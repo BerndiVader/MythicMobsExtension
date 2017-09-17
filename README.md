@@ -1,76 +1,80 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-#### *** 13.9.2017 *** PathfinderGoalReturnHome now 1.10-1.12.1 compatible.
-#### *** 13.9.2017 *** added inmotion condition. See conditions for more details.
-#### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details. Meanwhile 1_12 only. Needs some more testing.
-#### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
-#### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
-#### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
-#### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
-#### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
-#### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
-#### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
-#### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
-#### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
-#### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
-#### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
-#### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
-#### *** 25.8.2017 *** added 1.12.1 support.
-#### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
-#### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
-#### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
-#### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
-#### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
-#### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
-#### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
-#### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
-#### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
-#### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
-#### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
-#### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
-#### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
-#### *** 19.7.2017 *** final fix for location bug in orbit projectile.
-#### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
-#### *** 17.7.2017 *** added inMobArena condition.
-#### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
-#### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
-#### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
-#### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
-#### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
-#### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
-#### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
-#### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
-#### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
-#### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
-#### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
-#### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
-#### *** 27.6.2017 *** fixed compatibility with 4.0.1
-#### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
-#### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
-#### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
-#### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
-#### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
-#### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
-#### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
-#### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
-#### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
-#### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details. MythicMobs 4.1.0 or higher
-#### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
-#### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
-#### *** 24.5.2017 *** added swap mechanic.
-#### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
-#### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
-#### *** 19.5.2017 *** added stun mechanic & isstunned condition.
-#### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
-#### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
-#### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
-#### *** 8.5.2017 **** added lastdamagecause condition.
-#### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
-#### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
-#### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
-#### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
-#### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+##### *** 17.9.2017 *** some improvments and cleanup.
+##### *** 17.9.2017 *** added range value to customsummon amount option.
+##### *** 17.9.2017 *** fixed issue where customsummon not working properly at MythicMobs 4.3
+##### *** 17.9.2017 *** added https://github.com/lucko/helper loader for further usage.
+##### *** 13.9.2017 *** PathfinderGoalReturnHome now 1.10-1.12.1 compatible.
+##### *** 13.9.2017 *** added inmotion condition. See conditions for more details.
+##### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details. Meanwhile 1_12 only. Needs some more testing.
+##### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
+##### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
+##### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
+##### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
+##### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
+##### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
+##### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
+##### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
+##### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
+##### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
+##### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
+##### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
+##### *** 25.8.2017 *** added 1.12.1 support.
+##### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
+##### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
+##### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
+##### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
+##### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
+##### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
+##### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
+##### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
+##### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
+##### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
+##### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
+##### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
+##### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
+##### *** 19.7.2017 *** final fix for location bug in orbit projectile.
+##### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
+##### *** 17.7.2017 *** added inMobArena condition.
+##### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
+##### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
+##### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
+##### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
+##### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
+##### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
+##### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
+##### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
+##### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
+##### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
+##### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
+##### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
+##### *** 27.6.2017 *** fixed compatibility with 4.0.1
+##### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
+##### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
+##### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
+##### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
+##### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
+##### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
+##### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
+##### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
+##### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
+##### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details. MythicMobs 4.1.0 or higher
+##### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
+##### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
+##### *** 24.5.2017 *** added swap mechanic.
+##### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
+##### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
+##### *** 19.5.2017 *** added stun mechanic & isstunned condition.
+##### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
+##### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
+##### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
+##### *** 8.5.2017 **** added lastdamagecause condition.
+##### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
+##### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
+##### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
+##### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
+##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
 
@@ -588,7 +592,11 @@ Or use some variables in the destination targeter:
 
 ## CustomSummonSkill:
 
-	Use this mechanic to add ax,ay,az to the targetlocation.
+	Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option.
+	
+	- customsummon{a=2to20;type=mobname} @self
+	
+	Summon 2 to 20 mobs of type mobname.
 	
 	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;ax=5;ay=1;az=2} @self
 	

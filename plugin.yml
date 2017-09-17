@@ -1,5 +1,5 @@
 name: mmCustomSkills26
 main: com.gmail.berndivader.mmcustomskills26.Main
-version: 1.197dev
+version: 1.198dev
 softdepend: [RPGItems, MobArena, HolographicDisplays, WorldGuard, Factions, MassiveCore, Helper]
 depend: [MythicMobs]

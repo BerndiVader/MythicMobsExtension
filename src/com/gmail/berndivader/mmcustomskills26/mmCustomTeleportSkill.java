@@ -92,10 +92,9 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 			return false;
 		}
 		HashSet<Object> osources = (HashSet<Object>) getDestination(targeter, data);
-		Map<Double, Object> sortedsources = new TreeMap<Double, Object>();
-		if (!osources.iterator().hasNext())
-			return false;
-		this.isLocations = osources.iterator().next() instanceof AbstractLocation ? true : false;
+		Map<Double, Object> sortedsources = new TreeMap<>();
+		if (osources==null||!osources.iterator().hasNext()) return false;
+		this.isLocations = osources.iterator().next() instanceof AbstractLocation;
 		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
 			HashSet<Object> lsrc = new HashSet<>();
 			Iterator<?> it = osources.iterator();
@@ -116,15 +115,8 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 			osources.remove(BukkitAdapter.adapt(NMSUtil.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
 		}
 		if (this.sortTargets) {
-			Iterator<?> it = osources.iterator();
-			while (it.hasNext()) {
-				Object o = it.next();
-				AbstractLocation l;
-				if (this.isLocations) {
-					l = ((AbstractLocation) o);
-				} else {
-					l = ((AbstractEntity) o).getLocation();
-				}
+			for(Object o:osources) {
+				AbstractLocation l=this.isLocations?((AbstractLocation)o):((AbstractEntity)o).getLocation();
 				double distance = data.getCaster().getLocation().distanceSquared(l);
 				sortedsources.put(distance, o);
 			}

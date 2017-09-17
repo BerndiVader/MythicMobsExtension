@@ -93,6 +93,11 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "iteminhand": {
+			SkillCondition c = new hasItemCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

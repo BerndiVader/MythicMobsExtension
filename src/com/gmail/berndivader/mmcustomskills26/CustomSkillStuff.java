@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -46,9 +47,8 @@ import think.rpgitems.item.RPGItem;
 public class CustomSkillStuff implements Listener {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
-	protected Plugin plugin = Main.getPlugin();
 
-	public CustomSkillStuff() {
+	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -197,25 +197,19 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static LivingEntity getAttacker(Entity damager) {
+		LivingEntity shooter=null;
 		if (damager instanceof Projectile) {
 			if (((Projectile) damager).getShooter() instanceof LivingEntity) {
-				LivingEntity shooter = (LivingEntity) ((Projectile) damager).getShooter();
-				if (shooter != null && shooter instanceof LivingEntity) {
-					return shooter;
-				}
-			} else {
-				return null;
+				shooter = (LivingEntity) ((Projectile) damager).getShooter();
 			}
+		} else if (damager instanceof LivingEntity) {
+			shooter=(LivingEntity)damager;
 		}
-		if (damager instanceof LivingEntity) {
-			return (LivingEntity) damager;
-		}
-		return null;
+		return shooter;
 	}
 
 	public static Location getLocationInFront(Location start, double range) {
-		Location l = start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
-		return l;
+		return start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
 	}
 
 	public static double rpgItemPlayerHit(Player p, double damage) {
@@ -237,7 +231,7 @@ public class CustomSkillStuff implements Listener {
 			}
 		}
 		if (useDamage)
-			p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), useDamage));
+			p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), true));
 		return round(damage, 3);
 	}
 
@@ -245,13 +239,13 @@ public class CustomSkillStuff implements Listener {
 		int range = 32;
 		BlockIterator bi;
 		List<Entity> ne = player.getNearbyEntities(range, range, range);
-		List<LivingEntity> entities = new ArrayList<LivingEntity>();
+		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en : ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Main.noTargetVar)) {
 				entities.add((LivingEntity) en);
 			}
 		}
-		LivingEntity target = null;
+		LivingEntity target;
 		bi = new BlockIterator(player, range);
 		int bx;
 		int by;
@@ -468,5 +462,33 @@ public class CustomSkillStuff implements Listener {
 		}
 		return uuid;
 	}
-	
+
+	public static int randomRangeInt(String range) {
+		ThreadLocalRandom r = ThreadLocalRandom.current();
+		int amount=0;
+		String[] split;
+		int min, max;
+		if (range.contains("to")) {
+			split = range.split("to");
+			min = Integer.parseInt(split[0]);
+			max = Integer.parseInt(split[1]);
+			amount = r.nextInt(min, max+1);
+		} else amount = Integer.parseInt(range);
+		return amount;
+	}
+
+	public static double randomRangeDouble(String range) {
+		ThreadLocalRandom r = ThreadLocalRandom.current();
+		double amount = 0.0D;
+		String[] split;
+		double min, max;
+		if (range.contains("to")) {
+			split = range.split("to");
+			min = Double.parseDouble(split[0]);
+			max = Double.parseDouble(split[1]);
+			amount = r.nextDouble(min, max);
+		} else amount = Double.parseDouble(range);
+		return amount;
+	}
+
 }

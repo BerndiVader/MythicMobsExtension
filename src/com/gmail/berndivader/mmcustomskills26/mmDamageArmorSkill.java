@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -20,14 +21,15 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 
-	protected String[] armortype;
+	protected HashSet<String> armortype;
 	protected int rndMin, rndMax;
 	protected String signal;
 
 	public mmDamageArmorSkill(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.ASYNC_SAFE = false;
-		this.armortype = mlc.getString(new String[] { "armor", "a", "armour" }, "all").toLowerCase().split(",");
+		this.armortype=new HashSet<>();
+		this.armortype.addAll(Arrays.asList(mlc.getString(new String[] { "armor", "a", "armour" }, "all").toLowerCase().split(",")));
 		String[] maybeRnd = mlc.getString(new String[] { "damage", "dmg", "d" }, "1").split("to");
 		if (maybeRnd.length > 1) {
 			this.rndMin = Integer.valueOf(maybeRnd[0]);
@@ -52,11 +54,11 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 			am = (ActiveMob) data.getCaster();
 		}
 		LivingEntity e = (LivingEntity) BukkitAdapter.adapt(target);
-		ItemStack armor = null;
-		short dur = 0;
+		ItemStack armor;
+		short dur;
 		boolean broken = false;
 		int damagevalue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
-		if (Arrays.asList(this.armortype).contains("offhand") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("offhand") || this.armortype.contains("all")) {
 			armor = ver >= 9 ? e.getEquipment().getItemInOffHand() : null;
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -67,7 +69,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 				}
 			}
 		}
-		if (Arrays.asList(this.armortype).contains("hand") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("hand")||this.armortype.contains("all")) {
 			armor = ver >= 9 ? e.getEquipment().getItemInMainHand() : e.getEquipment().getItemInHand();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -83,7 +85,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 				}
 			}
 		}
-		if (Arrays.asList(this.armortype).contains("helmet") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("helmet") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getHelmet();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -94,7 +96,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 				}
 			}
 		}
-		if (Arrays.asList(this.armortype).contains("chest") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("chest") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getChestplate();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -105,7 +107,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 				}
 			}
 		}
-		if (Arrays.asList(this.armortype).contains("leggings") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("leggings") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getLeggings();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -116,7 +118,7 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 				}
 			}
 		}
-		if (Arrays.asList(this.armortype).contains("boots") || Arrays.asList(this.armortype).contains("all")) {
+		if (this.armortype.contains("boots") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getBoots();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);

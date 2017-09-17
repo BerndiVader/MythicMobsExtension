@@ -148,7 +148,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	private boolean checkConditions(SkillMetadata data, HashMap<Integer, SkillCondition> conditions, boolean isTarget) {
 		String cline = isTarget ? this.tConditionLine : this.cConditionLine;
 		for (int a = 0; a < conditions.size(); a++) {
-			SkillMetadata sdata = null;
+			SkillMetadata sdata;
 			sdata = data.deepClone();
 			SkillCondition condition = conditions.get(a);
 			if (isTarget) {
@@ -159,7 +159,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 						Boolean.toString(condition.evaluateCaster(sdata)));
 			}
 		}
-		BooleanExpression be = null;
+		BooleanExpression be=null;
 		try {
 			be = BooleanExpression.readLR(cline);
 		} catch (MalformedBooleanException e) {
@@ -193,7 +193,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 			}
 			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
 			String[] parse = ms.split("\\&\\&|\\|\\|");
-			if (parse != null && parse.length > 0) {
+			if (parse.length > 0) {
 				for (int a = 0; a < Arrays.asList(parse).size(); a++) {
 					String p = Arrays.asList(parse).get(a);
 					if (istarget) {

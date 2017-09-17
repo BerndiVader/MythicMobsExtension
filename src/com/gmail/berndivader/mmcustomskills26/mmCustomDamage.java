@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import io.lumine.xikage.mythicmobs.util.MathParser;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -7,22 +8,22 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.util.MathParser;
 
 public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkill {
 
 	private boolean pk, pi, ia, iabs, ip, p, pcur, debug;
 	private DamageCause cause=DamageCause.CUSTOM;
-	private Double amount;
+	private String amount;
 
 	public mmCustomDamage(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
 		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
-		this.amount = mlc.getDouble(new String[] { "amount", "a" }, "1");
-		if (this.amount.startsWith("-"))
+ 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
+		if (this.amount.startsWith("-")) {
 			this.amount = "1";
+		}
 		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
 		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
@@ -43,7 +44,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
 			return false;
-		double dmg = MathParser.evalRange(this.amount);
+		double dmg = CustomSkillStuff.randomRangeDouble(this.amount);
 		if (this.p) {
 			dmg = this.pcur ? t.getHealth() * dmg : t.getMaxHealth() * dmg;
 		}

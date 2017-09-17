@@ -65,7 +65,7 @@ ITargetedLocationSkill {
 			ActiveMob dropper, AbstractEntity trigger) {
 		DropManager dropmanager = Main.getPlugin().getMythicMobs().getDropManager();
 		Optional<MythicDropTable> maybeDropTable = dropmanager.getDropTable(itemtype);
-		ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> loot = new ArrayList<>();
 		MythicDropTable dt;
 		if (maybeDropTable.isPresent()) {
 			dt = maybeDropTable.get();
