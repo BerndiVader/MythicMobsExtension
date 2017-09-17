@@ -21,8 +21,9 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 	private MythicEntity me;
 	private String tag, amount;
 	@SuppressWarnings("unused")
+	private int noise, yNoise;
 	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection, setowner;
-	private double noise, yNoise, addx, addy, addz, inFrontBlocks;
+	private double addx, addy, addz, inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -31,8 +32,8 @@ public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocat
 		if (this.amount.startsWith("-")) this.amount = "1";
 		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
-		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0);
-		this.yNoise = mlc.getDouble(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
+		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
+		this.yNoise = mlc.getInteger(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "ynoiseuponly", "yruo", "ynuo", "yu" }, false);
 		this.onSurface = mlc.getBoolean(new String[] { "onsurface", "os", "s" }, true);
 		this.copyThreatTable = mlc.getBoolean(new String[] { "copythreattable", "ctt" }, false);
