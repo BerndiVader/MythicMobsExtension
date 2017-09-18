@@ -416,33 +416,65 @@ public class CustomSkillStuff implements Listener {
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
-	
-    public static Vector calculateBowVelocity(Vector f, Vector t, int hG, double g) {
-        int eG = t.getBlockY()-f.getBlockY();
-        double hD = Math.sqrt(distanceSquared(f,t));
-        int ga = hG;
-        double mGa = ga>(eG+ga)?ga:(eG+ga);
- 
-        double a = -hD*hD/(4*mGa);
-        double b = hD;
-        double c = -eG;
- 
-        double s =-b/(2*a)-Math.sqrt(b*b-4*a*c)/(2*a);
-        double vy = Math.sqrt(mGa*g);
-        double vh = vy/s;
- 
-        int dx = t.getBlockX()-f.getBlockX();
-        int dz = t.getBlockZ()-f.getBlockZ();
-        double mag = Math.sqrt(dx*dx+dz*dz);
-        double dirx = dx/mag;
-        double dirz = dz/mag;
- 
-        double vx = vh*dirx;
-        double vz = vh*dirz;
- 
-        return new Vector(vx,vy,vz);
-    }
-    
+
+	public static Vector calculateTrajectory(Vector from, Vector to, double heightGain, double gravity) {
+		int endGain = to.getBlockY() - from.getBlockY();
+		double horizDist = Math.sqrt(distanceSquared(from, to));
+		double maxGain = heightGain > (endGain + heightGain) ? heightGain : (endGain + heightGain);
+		double a = -horizDist * horizDist / (4 * maxGain);
+		double b = horizDist;
+		double c = -endGain;
+		double slope = -b / (2 * a) - Math.sqrt(b * b - 4 * a * c) / (2 * a);
+		double vy = Math.sqrt(maxGain * (gravity + 0.0013675090252708 * heightGain));
+		double vh = vy / slope;
+		int dx = to.getBlockX() - from.getBlockX();
+		int dz = to.getBlockZ() - from.getBlockZ();
+		double mag = Math.sqrt(dx * dx + dz * dz);
+		double dirx = dx / mag;
+		double dirz = dz / mag;
+		double vx = vh * dirx;
+		double vz = vh * dirz;
+		if (Double.isNaN(vx)) vx=0.0D;
+		if (Double.isNaN(vz)) vz=0.0D;
+		return new Vector(vx, vy, vz);
+	}
+
+	public static Vector spread(Vector from, double yaw, double pitch) {
+		Vector vec = from.clone();
+
+		float cosyaw = (float)Math.cos(yaw);
+		float cospitch = (float)Math.cos(pitch);
+		float sinyaw = (float)Math.sin(yaw);
+		float sinpitch = (float)Math.sin(pitch);
+		float bX = (float) (vec.getY() * sinpitch + vec.getX() * cospitch);
+		float bY = (float) (vec.getY() * cospitch - vec.getX() * sinpitch);
+		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
+	}
+
+	public static double launchAngle(Location from, Vector to, double v, double elev, double g) {
+		Vector victor = from.toVector().subtract(to);
+		Double dist = Math.sqrt(Math.pow(victor.getX(), 2) + Math.pow(victor.getZ(), 2));
+		double v2 = Math.pow(v,2);
+		double v4 = Math.pow(v,4);
+		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
+		if( v4 < derp) {
+			// Max optimal (won't hit!)
+			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
+		}
+		else {
+			return Math.atan((v2 - Math.sqrt(v4 - derp)) / (g * dist));
+		}
+	}
+
+	public static double hangtime(double launchAngle, double v, double elev, double g) {
+		double a = v * Math.sin(launchAngle);
+		double b = -2*g*elev;
+		if(Math.pow(a, 2) + b < 0){
+			return 0;
+		}
+		return (a + Math.sqrt(Math.pow(a, 2) + b)) / g;
+	}
+
     public static double distanceSquared(Vector f, Vector t) {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();

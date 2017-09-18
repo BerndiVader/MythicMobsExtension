@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -12,9 +10,11 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
 import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class mmCustomSummonSkill extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
+public class mmCustomSummonSkill extends SkillMechanic
+		implements
+		ITargetedLocationSkill,
+		ITargetedEntitySkill {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
 	private MythicMob mm;

@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 18.9.2017 *** improved grenade skill to work with eyedirection and targetdirection. See grenade mechanic for details.
 ##### *** 17.9.2017 *** some improvments and cleanup.
 ##### *** 17.9.2017 *** added range value to customsummon amount option.
 ##### *** 17.9.2017 *** fixed issue where customsummon not working properly at MythicMobs 4.3
@@ -743,7 +744,7 @@ dmgpig:
 
 ## GrenadeSkill:
 
-	- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true}
+	- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true;ued=boolean}
 		size: radius of the explosion
 		amount: how many grenades the mob throw at once
 		fuse: how long the fuse tick
@@ -752,6 +753,7 @@ dmgpig:
 		utime: how many ticks until restore the blocks
 		ueffect: should there be a restore effect? true / false
 		undotnt: should the blocks be restored at all? true / false
+		ued: if true the grenade is thrown in eye direction. if false the grenade is thrown in target direction
 
 Example:
 ```
@@ -759,7 +761,8 @@ grenadezombie:
   Type: zombie
   Health: 20
   Skills:
-  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200 1
+  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200
+  - grenade{size=2;amount=1;fuse=60;fire=false;breakblocks=false;utime=40;ueffect=false;undotnt=false} @pir{r=20} ~onTimer:60
 ```
 
 

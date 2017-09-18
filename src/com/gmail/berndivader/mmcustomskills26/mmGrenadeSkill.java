@@ -1,10 +1,11 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.Random;
-
+import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -12,14 +13,15 @@ import org.bukkit.util.Vector;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.mechanics.CustomMechanic;
 
-public class mmGrenadeSkill extends SkillMechanic implements ITargetedEntitySkill {
+public class mmGrenadeSkill extends SkillMechanic
+		implements
+		ITargetedEntitySkill,
+		ITargetedLocationSkill {
 
 	protected Plugin plugin = Main.getPlugin();
 	protected int size;
@@ -27,12 +29,12 @@ public class mmGrenadeSkill extends SkillMechanic implements ITargetedEntitySkil
 	protected int fuse;
 	protected boolean fire;
 	protected boolean breakBlocks;
-	protected Block tblock;
-	protected Location sloc;
-	protected Random rnd;
 	protected boolean ueffect;
 	protected int utime;
 	protected boolean undotnt;
+	protected boolean ued;
+	protected double hGain;
+	private double gravity;
 
 	public mmGrenadeSkill(CustomMechanic h, MythicLineConfig mlc) {
 		super(h.getConfigLine(), mlc);
@@ -46,31 +48,34 @@ public class mmGrenadeSkill extends SkillMechanic implements ITargetedEntitySkil
 		this.ueffect = mlc.getBoolean(new String[] { "effect", "undoeffect", "ueffect", "ue" }, true);
 		this.breakBlocks = mlc.getBoolean(new String[] { "break", "breakblocks", "b" }, false);
 		this.undotnt = mlc.getBoolean(new String[] { "undotnt", "undo", "u" }, true);
-		this.rnd = new Random();
+		this.ued=mlc.getBoolean(new String[]{"useeyedirection","ued"},false);
+		this.hGain=mlc.getDouble(new String[]{"heighgain","g"},3.0D);
+		this.gravity=mlc.getDouble(new String[]{"gravity"},0.0975);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		SkillCaster caster = data.getCaster();
-		if (!(caster instanceof ActiveMob)) {
-			return false;
+		return this.castAtLocation(data,target.getLocation());
+	}
+
+	@Override
+	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
+		if (!data.getCaster().getEntity().isLiving()
+				||!data.getCaster().getEntity().getWorld().equals(t.getWorld())) return false;
+		Location source = ((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().clone();
+		Location target = BukkitAdapter.adapt(t);
+		Vector v;
+		if (this.ued) {
+			v=source.getDirection();
+		} else {
+			v=CustomSkillStuff.calculateTrajectory(source.toVector(),target.toVector(),this.hGain,this.gravity);
 		}
-		ActiveMob am = (ActiveMob) caster;
-		tblock = target.getBukkitEntity().getLocation().getBlock();
-		sloc = am.getLivingEntity().getEyeLocation();
 		for (int a = 0; a < this.amount; a++) {
-			Location spawnloc = sloc.clone();
-			if (this.amount > 1) {
-				spawnloc.setX(spawnloc.getX() + this.rnd.nextInt(2 * this.amount) - this.amount);
-				spawnloc.setZ(spawnloc.getZ() + this.rnd.nextInt(2 * this.amount) - this.amount);
-			}
-			TNTPrimed grenade = (TNTPrimed) am.getLivingEntity().getWorld().spawnEntity(spawnloc,
+			Location sl = source.clone();
+			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl,
 					EntityType.PRIMED_TNT);
-			if (grenade == null) {
-				return false;
-			}
-			Vector aim = am.getLivingEntity().getLocation().getDirection();
-			grenade.setVelocity(aim);
+			if (grenade == null) return false;
+			grenade.setVelocity(v);
 			grenade.setYield(size);
 			grenade.setFuseTicks(this.fuse);
 			grenade.setIsIncendiary(this.fire);
