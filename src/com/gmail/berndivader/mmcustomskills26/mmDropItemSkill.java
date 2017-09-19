@@ -26,7 +26,8 @@ implements
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
 
-	private String itemtype, dropname;
+	private String itemtype;
+	private String dropname;
 	private Integer amount;
 	private Boolean stackable;
 
