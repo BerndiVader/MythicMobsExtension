@@ -11,8 +11,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 
 public class mmInFrontCondition extends mmCustomCondition 
-implements
-IEntityComparisonCondition {
+implements IEntityComparisonCondition {
 	protected double viewAngle;
 
 	public mmInFrontCondition(String line, MythicLineConfig mlc) {
