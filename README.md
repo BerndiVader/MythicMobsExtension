@@ -1,6 +1,9 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 19.9.2017 *** fixed helper class not loading properly.
+##### *** 19.9.2017 *** added renameentity mechanic. See renameentity for details
+##### *** 19.9.2017 *** added hasitem condition. See hasitem condition for details.
 ##### *** 18.9.2017 *** improved grenade skill to work with eyedirection and targetdirection. See grenade mechanic for details.
 ##### *** 17.9.2017 *** some improvments and cleanup.
 ##### *** 17.9.2017 *** added range value to customsummon amount option.
@@ -159,6 +162,15 @@ PlayEffectOnTarget:
 ```
 
 
+## renameentity mechanic:
+    
+    Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed.
+    You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity.
+	
+	  - renameentity{name=[PARSEDSTRING];visible=[BOOLEAN]}	
+
+	
+	
 ## setcachedowner mechanic:
 
 	set the targeter entity to perma owner of the activemob. Resistent against reload and server restart until the mob is dead. Althought only make sense on despawn false mobs.
@@ -871,41 +883,51 @@ FleeButGotNothing:
 
 ```
   Conditions:
+  - hasitem{list="where=[ANY||HAND||ARMOR||INVENTORY],material=[ANY||MATERIALTYPE],amount=[RANGEDVALUE],lore=[LORETEXT]";action=[BOOLEAN]}
+```
+Works as target oder entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
+INVENTORY where type only works for players. `hasitem{list="where=HAND,material=DIRT,amount=20to30","where=ARMOR,material=DIAMOND_CHESTPLATE,amount=1,lore=Expensive"` This condition return true if a)
+the entity holds a stack of dirt with the amount between 20 and 30 in its hand or if b) the entity wears a chestplate made of diamonds and the lore of the plate
+contains the word *Expensive*.
+#
+```
+  Conditions:
   - inmotion{action=[BOOLEAN]}
 ```
 Checks if the entity is in motion. Do not work for players or none living entities.
+#
 ```
   Conditions:
   - facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}
 ```
 Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
+#
 ```
   TargetConditions:
   - parsedstance{s="<target.uuid>";cs=true;action=true}
 ```
 If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
+#
 ```
   TargetConditions:
   - attackable{cause=DAMAGECAUSE;action=boolean}
   - damageable{cause=DAMAGECAUSE;action=boolean}
 ```
 Use this condition to check if the target is attackable by the caster. Only avail as TargetConditions / CompareConditions
+#
 ```
   TargetConditions:
   - infront{view=[angle_value];action=[boolean]}
   - behind{view=[angle_value];action=[boolean]}
 ```
 Use this condition to check if the target is behind the caster or infront of the caster.
+#
 ```
   Conditions:
   - inmobarena
 ```
 Check if the location is in a MobArena arena. Requires MobArena plugin to work.
-```
-  Conditions:
-  - inmobarena
-```
-Check if the location is in a MobArena arena. Requires MobArena plugin to work.
+#
 ```
   Conditions:
   - biomefix{biome=PLAINS,DESSERT;action=true}
@@ -913,12 +935,14 @@ Check if the location is in a MobArena arena. Requires MobArena plugin to work.
 Check if the target is in a certain biome.
 biome=b= A list with valid biome names.
 action=a= true / false
+#
 ```
   TargetConditions:
   - isstunned{a=false}
 ```
 Check if the target is stunned (true) or not (false) The example will match if the target isnt stunned. Please notice that this can be used at the caster, or as TargetConditions.
 If used as TargetConditions the targeter for the metaskill is important.
+#
 ```
   Conditions:
   - lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}
@@ -926,6 +950,7 @@ If used as TargetConditions the targeter for the metaskill is important.
 Check what caused the last damage to the MythicMob mob. cause and damager can be a single value or a List
 cause=c= The cause of the last damage. Valid is "ANY" or Bukkit's DamageCause https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
 damager=attacker= The EntityType of the attacker. Valid is "ANY" or Bukkit's EntityTypes https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+#
 ```
   Conditions:
   - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}
@@ -935,6 +960,7 @@ mobtypes=types=mobs=mob=t=m= The mythicmobs or mythicentities to check. Or use A
 amount=a=ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for range
 radius=r=radius to check
 action=true/false
+#
 ```
   Conditions:
   - wgstateflag{flag=mob-spawning;action=false}
@@ -943,30 +969,31 @@ action=true/false
   .....
 ``` 
 This condition can be used on every allow/deny flag. If region has no flag set, it inherits the flag of the parent region.
-
+#
 ```
   Conditions:
   - wgdenyspawnflag{types=zombie,skeleton;action=true}
 ```
 This condition can be used to check if the region denys the spawning of some entitytypes. If region has no flag set, it inherits the flag of the parent region.
-
+#
 ```
   Conditions:
   - factionsflag{flag=monsters;action=true}
 ```
 This condition can be used to check if the faction has a specific flag set to true or false. Here is a list of all flagnames: animals, monsters, peaceful, endergrief, explosions, firespread, friendlyfire, infpower, offlineexplosions, open, permanent, powergain, powerloss, pvp, zombiegrief
-
+#
 ```
   Conditions:
   - hastarget{action=true}
 ```
 This condition meets if the mob has a target (true) or no target (false).
-
+#
 ```
   TargetConditions:
   - vdistance{d=2to3;action=true}
 ```
 This condition checks for the vertical distance between target and mob. Use ">" for greater "<" smaller or "to" for range.
+#
 
 Example:
 ```
