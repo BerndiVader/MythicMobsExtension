@@ -19,16 +19,26 @@ public class mmCustomSummonSkill extends SkillMechanic
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
 	private MythicMob mm;
 	private MythicEntity me;
-	private String tag, amount;
+	private String tag;
+	private String amount;
 	@SuppressWarnings("unused")
-	private int noise, yNoise;
-	private boolean yUpOnly, onSurface, inheritThreatTable, copyThreatTable, useEyeDirection, setowner;
-	private double addx, addy, addz, inFrontBlocks;
+	private Integer noise;
+	private Integer yNoise;
+	private Boolean yUpOnly;
+	private Boolean onSurface;
+	private Boolean inheritThreatTable;
+	private Boolean copyThreatTable;
+	private Boolean useEyeDirection;
+	private Boolean setowner;
+	private Double addx;
+	private Double addy;
+	private Double addz;
+	private Double inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.amount=mlc.getString(new String[]{"amount","a"},"1");
+		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-")) this.amount = "1";
 		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );

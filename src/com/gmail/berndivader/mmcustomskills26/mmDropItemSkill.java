@@ -26,9 +26,9 @@ implements
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
 
-	protected String itemtype, dropname;
-	protected int amount;
-	protected boolean stackable;
+	private String itemtype, dropname;
+	private Integer amount;
+	private Boolean stackable;
 
 	public mmDropItemSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

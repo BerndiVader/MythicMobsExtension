@@ -21,14 +21,15 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 
-	protected HashSet<String> armortype;
-	protected int rndMin, rndMax;
-	protected String signal;
+	private HashSet<String> armortype;
+	private Integer rndMin;
+	private Integer rndMax;
+	private String signal;
 
 	public mmDamageArmorSkill(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.ASYNC_SAFE = false;
-		this.armortype=new HashSet<>();
+		this.armortype = new HashSet<>();
 		this.armortype.addAll(Arrays.asList(mlc.getString(new String[] { "armor", "a", "armour" }, "all").toLowerCase().split(",")));
 		String[] maybeRnd = mlc.getString(new String[] { "damage", "dmg", "d" }, "1").split("to");
 		if (maybeRnd.length > 1) {

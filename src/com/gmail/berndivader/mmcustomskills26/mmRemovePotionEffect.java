@@ -27,16 +27,15 @@ public class mmRemovePotionEffect extends SkillMechanic implements ITargetedEnti
 		LivingEntity le = (LivingEntity) target.getBukkitEntity();
 		if (this.type[0].equals("ALL")) {
 			if (target.hasPotionEffect()) {
-				Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
-				while (i.hasNext()) {
+				for (Iterator<PotionEffect> i = le.getActivePotionEffects().iterator(); i.hasNext(); ) {
 					le.removePotionEffect(i.next().getType());
 				}
 			}
 		} else {
 			try {
-				for (String pt : Arrays.asList(this.type)) {
-					if (target.hasPotionEffect(pt)) {
-						le.removePotionEffect(PotionEffectType.getByName(pt));
+				for (String potiontype : Arrays.asList(this.type)) {
+					if (target.hasPotionEffect(potiontype)) {
+						le.removePotionEffect(PotionEffectType.getByName(potiontype));
 					}
 				}
 			} catch (Exception ex) {
