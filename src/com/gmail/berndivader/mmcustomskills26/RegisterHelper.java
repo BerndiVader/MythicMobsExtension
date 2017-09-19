@@ -24,8 +24,11 @@ public class RegisterHelper {
 	public static Plugin init() {
 		try {
 			final File lib=new File(CACHE_DIR, "helper.jar");
-			if (lib.exists()) lib.delete();
-			RegisterHelper.extractFromJar(lib.getName(),lib.getAbsolutePath());
+			if (lib.exists()) {
+			    if (lib.delete()) RegisterHelper.extractFromJar(lib.getName(),lib.getAbsolutePath());
+            } else {
+                RegisterHelper.extractFromJar(lib.getName(),lib.getAbsolutePath());
+            }
 			if (!lib.exists()) {
 				Main.logger.warning("There was a critical error! Could not find lib: "+lib.getName());
                 return null;
