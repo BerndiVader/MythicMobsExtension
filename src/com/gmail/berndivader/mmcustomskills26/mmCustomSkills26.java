@@ -161,6 +161,10 @@ public class mmCustomSkills26 implements Listener {
 			skill = new advRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "renameentity": {
+			skill = new RenameEntityMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}}
 	}
 }
