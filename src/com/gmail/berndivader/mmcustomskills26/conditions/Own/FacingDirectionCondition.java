@@ -11,7 +11,7 @@ implements
 IEntityCondition {
 	
 	protected FacingDirectionType t;
-	private enum FacingDirectionType {
+	public enum FacingDirectionType {
 		NORTH,
 		NORTH_EAST,
 		EAST,
@@ -20,8 +20,7 @@ IEntityCondition {
 		SOUTH_WEST,
 		WEST,
 		NORTH_WEST;
-		private FacingDirectionType() {
-		}
+
 		public static FacingDirectionType get(String s) {
 	        if (s==null) return null;
 	        try {
@@ -44,7 +43,7 @@ IEntityCondition {
 		return this.t.equals(fd);
 	}
 	
-	private static FacingDirectionType getFacingDirection(double r) {
+	public static FacingDirectionType getFacingDirection(double r) {
 		if ((0<=r&&r<22.5)
 				||(337.5<=r&&r<360.0)) {
 			return FacingDirectionType.NORTH;
