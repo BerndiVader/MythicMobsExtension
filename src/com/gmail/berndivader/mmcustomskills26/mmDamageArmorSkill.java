@@ -22,8 +22,8 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 
 	private HashSet<String> armortype;
-	private Integer rndMin;
-	private Integer rndMax;
+	protected Integer rndMin;
+	protected Integer rndMax;
 	private String signal;
 
 	public mmDamageArmorSkill(String line, MythicLineConfig mlc) {
