@@ -14,34 +14,39 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 
 public class RegisterHelper {
 	
     private static boolean RUNNING_FROM_JAR = false;
-    private static final String CACHE_DIR = Main.CACHE_DIR;
-    
+
 	public static Plugin init() {
+        final File lib=new File(Main.getPlugin().getDataFolder(), "helper.jar");
 		try {
-			final File lib=new File(CACHE_DIR, "helper.jar");
 			if (lib.exists()) {
 			    if (lib.delete()) RegisterHelper.extractFromJar(lib.getName(),lib.getAbsolutePath());
             } else {
                 RegisterHelper.extractFromJar(lib.getName(),lib.getAbsolutePath());
             }
 			if (!lib.exists()) {
-				Main.logger.warning("There was a critical error! Could not find lib: "+lib.getName());
+				Main.logger.warning("There was a critical error! Could not find nor install lib: "+lib.getName());
                 return null;
             }
-			Plugin pl = Main.pluginmanager.loadPlugin(lib);
-			pl.onLoad();
-			Bukkit.getServer().getPluginManager().enablePlugin(pl);
-			return pl;
 		} catch (final Exception ex) {
-			Main.logger.warning("There was a critical error enabling helper");
-			ex.printStackTrace();
+			Main.logger.warning("There was a permission problem to inject helper.jar try to load prev version.");
         }
-		return null;
+        Plugin pl;
+        try {
+            pl = Main.pluginmanager.loadPlugin(lib);
+        } catch (InvalidPluginException | InvalidDescriptionException e ) {
+            e.printStackTrace();
+            return null;
+        }
+        pl.onLoad();
+        Bukkit.getServer().getPluginManager().enablePlugin(pl);
+        return pl;
 	}
 	
     public static boolean extractFromJar(final String fileName,
@@ -77,7 +82,7 @@ public class RegisterHelper {
         return false;
     }
  
-    private final static void copyInputStream(final InputStream in,
+    private static void copyInputStream(final InputStream in,
             final OutputStream out) throws IOException {
         try {
             final byte[] buff = new byte[4096];

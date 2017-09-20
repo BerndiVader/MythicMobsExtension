@@ -1,8 +1,8 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.io.File;
 import java.util.Random;
 import java.util.logging.Logger;
+
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -27,7 +27,6 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class Main extends JavaPlugin {
-    public static final String CACHE_DIR = System.getProperty("java.io.tmpdir") + File.separatorChar + "mmcustomskills.26.0.0_";
 	private static Main plugin;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
@@ -65,6 +64,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 		}
+
 		Main.nmsutils = new NMSUtils();
 		this.volatilehandler = this.getVolatileHandler();
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
@@ -175,5 +175,5 @@ public class Main extends JavaPlugin {
         }
         return vh;
     }
-	
+
 }
