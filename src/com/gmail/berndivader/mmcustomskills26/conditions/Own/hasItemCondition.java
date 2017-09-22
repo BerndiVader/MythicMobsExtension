@@ -28,8 +28,7 @@ IEntityCondition {
 		ARMOR,
 		INVENTORY,
 		ANY;
-		private WhereType() {
-		}
+
 		public static WhereType get(String s) {
 	        if (s==null) return null;
 	        try {
