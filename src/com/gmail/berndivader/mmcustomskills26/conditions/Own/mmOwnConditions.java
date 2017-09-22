@@ -97,8 +97,8 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c = new hasItemCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;
-		}case "damagerdirection": {
-			SkillCondition c = new DamagerComesFromCondition(e.getConfig().getLine(),e.getConfig());
+		}case "relativedirection": {
+			SkillCondition c = new DirectionalDamageCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
 		}
