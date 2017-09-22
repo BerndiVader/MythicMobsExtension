@@ -1,6 +1,8 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 20.9.2017 *** added relativedirection condition. See relativedirection condition for details.
+##### *** 20.9.2017 *** hopefully fixed helper finally.
 ##### *** 19.9.2017 *** fixed helper class not loading properly.
 ##### *** 19.9.2017 *** added renameentity mechanic. See renameentity for details
 ##### *** 19.9.2017 *** added hasitem condition. See hasitem condition for details.
@@ -883,9 +885,41 @@ FleeButGotNothing:
 
 ```
   Conditions:
+  - relativedirection{angle=[RANGEDVALUE];action=[BOOLEAN]}
+```
+Use this condition to determinate the relative direction to the target. Use this condition in **TargetConditions**. Where 180 is the right side. 90 degree is straight infront and 270 degrees are exact behind.
+If you use `angle=0to180` the it compares if the target comes from infront, where `angle=90to270` means the targeted entity is somewhere on the right side of the caster. etc...
+*Example:*
+```yaml
+skillfile:
+
+    targetsonleft:
+      TargetConditions:
+      - relativedirection{angle=>315}
+      - relativedirection{angle=<45}
+      Skills:
+      - message{msg="Found <trigger.name> on my left!"} @world
+      
+mobfile:
+
+    Monkey:
+      Health: 500
+      Type: zombie
+      AITargetSelectors:
+      - 0 clear
+      AIGoalSelectors:
+      - 0 clear
+      - 1 randomstroll
+      Display: "Me Monkey"
+      Skills:
+      - skill{s=targetsonleft} @pir{r=20} ~onTimer:20
+```
+#
+```
+  Conditions:
   - hasitem{list="where=[ANY||HAND||ARMOR||INVENTORY],material=[ANY||MATERIALTYPE],amount=[RANGEDVALUE],lore=[LORETEXT]";action=[BOOLEAN]}
 ```
-Works as target oder entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
+Works as target or entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
 INVENTORY where type only works for players. `hasitem{list="where=HAND,material=DIRT,amount=20to30","where=ARMOR,material=DIAMOND_CHESTPLATE,amount=1,lore=Expensive"` This condition return true if a)
 the entity holds a stack of dirt with the amount between 20 and 30 in its hand or if b) the entity wears a chestplate made of diamonds and the lore of the plate
 contains the word *Expensive*.
