@@ -57,7 +57,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.meetAction = mlc.getString(new String[] { "meet", "m" });
 		this.elseAction = mlc.getString(new String[] { "else", "e" });
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
-		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[]{ "elsetargeter", "et" }));
+		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
 		if (this.meetAction != null) {
 			this.meetSkill = this.skillmanager.getSkill(this.meetAction);
 		}
