@@ -1,69 +1,87 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-#### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
-#### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
-#### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
-#### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
-#### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
-#### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
-#### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
-#### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
-#### *** 25.8.2017 *** added 1.12.1 support.
-#### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
-#### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
-#### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
-#### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
-#### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
-#### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
-#### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
-#### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
-#### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
-#### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
-#### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
-#### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
-#### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
-#### *** 19.7.2017 *** final fix for location bug in orbit projectile.
-#### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
-#### *** 17.7.2017 *** added inMobArena condition.
-#### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
-#### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
-#### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
-#### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
-#### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
-#### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
-#### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
-#### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
-#### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
-#### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
-#### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
-#### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
-#### *** 27.6.2017 *** fixed compatibility with 4.0.1
-#### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
-#### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
-#### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
-#### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
-#### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
-#### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
-#### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
-#### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
-#### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
-#### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details. MythicMobs 4.1.0 or higher
-#### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
-#### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
-#### *** 24.5.2017 *** added swap mechanic.
-#### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
-#### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
-#### *** 19.5.2017 *** added stun mechanic & isstunned condition.
-#### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
-#### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
-#### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
-#### *** 8.5.2017 **** added lastdamagecause condition.
-#### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
-#### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
-#### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
-#### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
-#### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+##### *** 24.9.2017 *** added facing true/false for stun mechanic. See stun mechanic for details.
+##### *** 20.9.2017 *** added relativedirection condition. See relativedirection condition for details.
+##### *** 20.9.2017 *** hopefully fixed helper finally.
+##### *** 19.9.2017 *** fixed helper class not loading properly.
+##### *** 19.9.2017 *** added renameentity mechanic. See renameentity for details
+##### *** 19.9.2017 *** added hasitem condition. See hasitem condition for details.
+##### *** 18.9.2017 *** improved grenade skill to work with eyedirection and targetdirection. See grenade mechanic for details.
+##### *** 17.9.2017 *** some improvments and cleanup.
+##### *** 17.9.2017 *** added range value to customsummon amount option.
+##### *** 17.9.2017 *** fixed issue where customsummon not working properly at MythicMobs 4.3
+##### *** 17.9.2017 *** added https://github.com/lucko/helper loader for further usage.
+##### *** 13.9.2017 *** PathfinderGoalReturnHome now 1.10-1.12.1 compatible.
+##### *** 13.9.2017 *** added inmotion condition. See conditions for more details.
+##### *** 12.9.2017 *** added returnhome pathfindergoal. See advaipathfinder for more details. Meanwhile 1_12 only. Needs some more testing.
+##### *** 11.9.2017 *** added Block break chance to PathfinderBreakBlocks. See advaipathfinder for details.
+##### *** 11.9.2017 *** added FacingDirection condition. See FacingDirection condition for details
+##### *** 10.9.2017 *** improved PathfingerGoalFollowEntity. See advaipathfinder for details.
+##### *** 04.9.2017 *** added materialtypes to breakblocks pathfindergoal. See advaipathfinder for details.
+##### *** 04.9.2017 *** added breakblocks pathfindergoal. See advaipathfinder for more details.
+##### *** 01.9.2017 *** added setcachedowner mechanics. See setcachedowner for details.
+##### *** 29.8.2017 *** added tag option to customsummon mechanic. See customsummon for details.
+##### *** 27.8.2017 *** added advrandomskill mechanic. See advrandomskill for details.
+##### *** 27.8.2017 *** maybefix for issue where healthbars are not removed.
+##### *** 27.8.2017 *** fixed an issue where lastdamagecause condition not working propertly.
+##### *** 27.8.2017 *** added mobs config node "onDamageForOtherCause: true/false" to activate onDamage trigger for all none entity damage like lava fire etc... use lastdamagecause to react on the damagecause.
+##### *** 25.8.2017 *** added counter option to createhealthbar mechanic. See createhealthbar for details.
+##### *** 25.8.2017 *** added 1.12.1 support.
+##### *** 10.8.2017 *** added changehealthbar mechanic. See changehealthbar mechanic for details.
+##### *** 10.8.2017 *** fixed createhealthbar mechanic & added display option to skill. See createhealthbar for details.
+##### *** 10.8.2017 *** added createhealthbar mechanic. Requires the holographicdisplay plugin to work. See createhealthbar mechanic for details.
+##### *** 10.8.2017 *** fixed (maybe) several issues with other plugins & fixed mobsinradius compare distance with different worlds. 
+##### *** 09.8.2017 *** fixed compatibility issues with 1.10 and 1.11 server.
+##### *** 06.8.2107 *** added followentity pathfindergoal. See advaipathfinder mechanic for details.
+##### *** 06.8.2017 *** added advaipathfinder mechanic, rangedmelee & runfromsun pathfindergoal. See advaipathfinder mechanic for more.
+##### *** 04.8.2017 *** since now, take care of the wiki: https://github.com/BerndiVader/mmCustomSkills26/wiki made by muhahahahahe thx alot to him.
+##### *** 04.8.2017 *** added parsedstance mechanic & parsedstance target/compare condition. See parsedstance mechanic for details.
+##### *** 03.8.2017 *** added meettargeter & elsetargeter to castif mechanic. See castif for details.
+##### *** 01.8.2017 *** fixed some bugs. Fixed compatibility with MM 4.2, added infront, behind & attackable/damageable condition. See conditions for more info.
+##### *** 26.7.2017 *** added patch to fix NaN in player.dat's AbsorptionAmount tag.
+##### *** 20.7.2017 *** some work on item, block & entity projectile. now working with bounce.
+##### *** 19.7.2017 *** final fix for location bug in orbit projectile.
+##### *** 19.7.2017 *** added unequip mechanic. More work on castif, now possible to use it like boolean expressions. See castif for more info.
+##### *** 17.7.2017 *** added inMobArena condition.
+##### *** 16.7.2017 *** added castif mechanic. See CastIf mechanic for details.
+##### *** 14.7.2017 *** added bounce=true/false(default) & bred=0.2f(default) & onbounceskill to effect/mythicprojecitle mechanic Use this options to bounce the projectile.
+##### *** 13.7.2017 *** added MythicEffectProjectile, fixed pfacedir for mythicprojectiles and some more. See MythicProjectiles for details.
+##### *** 10.7.2017 *** added setmeta, delmeta mechanics & hasmeta condition. See MetaMechanics for details.
+##### *** 08.7.2017 *** fixed issue for MythicPlayers when change world by teleport or portal.
+##### *** 05.7.2017 *** some work on the projectiles & mythicplayers. See CustomProjectiles/MythicPlayers for details.
+##### *** 04.7.2017 *** (alpha)implemented MythicPlayers addon. See MythicPlayers for more details and examples.
+##### *** 03.7.2017 *** (alpha)added mythicorbitalprojectile & some cleanup. See mythicorbitalprojectile for details and example. (known issue: the voffset applies very very late)
+##### *** 02.7.2017 *** added mythicprojectile and customparticles. See customprojectiles mechanic for details and example.
+##### *** 30.6.2017 *** last finally added rpgitem armor support to customdamage & added pspin to entityprojectile
+##### *** 29.6.2017 *** finally (hopefully) added rpgitem armor support to customdamage mechanic.
+##### *** 29.6.2017 *** some optimization of customdamage and maybe fix for rpgitems plugin
+##### *** 27.6.2017 *** fixed compatibility with 4.0.1
+##### *** 25.6.2017 *** added itemprojectile, blockprojectile & entityprojectile. Beta in meanwhile. Report issues. See CustomPrjectiles for more details. MythicMobs 4.1.0 or higher
+##### *** 22.6.2017 *** added targetinsight option to customteleport mechanic. destination targeter now parse variables. Changed sdelay to teleportdelay. See customteleport for more details.
+##### *** 21.6.2017 *** added some more improvements to customteleport. See customteleport for details and example.
+##### *** 20.6.2017 *** added setowner boolean to customsummon. See customsummon for details.
+##### *** 14.6.2017 *** added customteleport mechanic. See customteleport for details. Beta in meanwhile. Released in hurry.
+##### *** 14.6.2017 *** added ranged amount to customdamage. See customdamage mechanic for details.
+##### *** 11.6.2017 *** added temporary biome condition fix for randomspawners with spawn method ADD. See biomefix for details.
+##### *** 10.6.2017 *** added dropmythicitem skill. See dropmythicitem mechanic for details.
+##### *** 26.5.2017 *** added ignoredestoffsetyaw (idoy) to customparticleline. See customparticleline mechnic.
+##### *** 25.5.2017 *** added customparticleline & added keeptargetyaw and keepcasteryaw to swap mechanic. See customparticleline and swap mechanic for details. MythicMobs 4.1.0 or higher
+##### *** 24.5.2017 *** added percentage to customdamage. See customdamage for details.
+##### *** 24.5.2017 *** added setthreattarget & clearthreattarget mechanics.
+##### *** 24.5.2017 *** added swap mechanic.
+##### *** 20.5.2017 *** added useEyeDirection and inFrontBlocks attributes to customsummon mechanic.
+##### *** 20.5.2017 *** finally fixed all attribute in mobsinradius.
+##### *** 19.5.2017 *** added stun mechanic & isstunned condition.
+##### *** 19.5.2017 *** added CustomSummon mechanic. Usage same as the original MythicMobs summon but in addition you can use addx(ax),addy(ay),addz(az) to the location. 
+##### *** 19.5.2017 *** fixed casesensitive for all in mobsinradius condition.
+##### *** 9.5.2017 **** activated MythicMobs ~onKill trigger for all ActiveMobs (see example at the end of the readme)
+##### *** 8.5.2017 **** added lastdamagecause condition.
+##### *** 6.5.2017 **** merged with CustomConditions & added mobsinradius condition.
+##### *** 30.4.2017 *** added removepotion, feed & oxygen mechanics.
+##### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
+##### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
+##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
 
@@ -147,6 +165,15 @@ PlayEffectOnTarget:
 ```
 
 
+## renameentity mechanic:
+    
+    Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed.
+    You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity.
+	
+	  - renameentity{name=[PARSEDSTRING];visible=[BOOLEAN]}	
+
+	
+	
 ## setcachedowner mechanic:
 
 	set the targeter entity to perma owner of the activemob. Resistent against reload and server restart until the mob is dead. Althought only make sense on despawn false mobs.
@@ -223,18 +250,31 @@ PlayEffectOnTarget:
 		
 	*followentity:*
 	
-		advaipathfinder{goal="[goalpriority_value] followentity [speed_value] [entity_uuid]"}
+		advaipathfinder{goal="[goalpriority_value] followentity [speed_value],[follow_rad_min],[follow_rad_start] [entity_uuid]"}
 	
-		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 1 <trigger.uuid>"}
-		Set goal 1 to PathfinderFollowEntity with speed 1 to the trigger of the skill.
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 followentity 2,3,10 <trigger.uuid>"}
+		Set goal 1 to PathfinderFollowEntity with speed 2 to the trigger of the skill, start following if entity outside [follow_rad_start] radius and follow until entity is within [follow_rad_min].
 		
 	*breakblocks:*
 	
-		advaipathfinder{goal="[goalpriority_value] breakblocks"}
+		advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array] [blockbreakchance_value]"}
 	
-		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks"}
-		Set goal 1 to PathfinderBreakBlocks. Right now there are no further options. But some more tuning options will be added soon.
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}
+		Set goal 1 to PathfinderBreakBlocks. Blocks that can be broken are grass, dirt and stone. If none is given all blocks can be broken. Respect worldguards block-break deny flag.
+		The entity have a chance of 50% to break the block. Possible chances 0-100;
+
+	*returnhome:*
 	
+		advaipathfinder{goal="[goalpriority_value] returnhome [speed_value] [x],[y],[z],[travel_radius],[tp_radius],[boolean_ignoretarget]"}
+	
+		Syntax in advaipathfinder: - advaipathfinder{goal="1 returnhome 2 <mob.l.x>,<mob.l.y>,<mob.l.z>,200,1024,false"}
+		Set goal 1 to PathfinderGoalReturnHome. The entity will return to the mobs location present at execution of the mechanic. With speed of 2. Mob can travel inside a radius of 200 disq and has a 
+		tp radius of 1024. Means if the mob is outside of 1024 it will be teleported. Because of the last false the mob will not go home aslong it has a target. Set it to true and the mob will run home
+		whenever its outside of its range.
+		In addition there are two signals send:
+		GOAL_STARTRETURNHOME - Send to mob if the entity start to travel home.
+		GOAL_ENDRETURNHOME - Send to mob if the entity is arrived at home.
+		
 
 
 ## parsedStance mechanic:
@@ -560,15 +600,20 @@ Or use some variables in the destination targeter:
 	
 	Use this mechanic to stun the target. 
 	
-	- stun{duration=Ticks} @target
+	- stun{duration=Ticks;facing=true/false} @target
 	
-	Where duration=d=how many ticks the target will be stunned. In addition there is the isstunned condition. Look at Conditions.
+	Where duration=d=how many ticks the target will be stunned and facing=true/false if yaw pitch of entity shall remain.
+	In addition there is the isstunned condition. Look at Conditions.
 	
 
 
 ## CustomSummonSkill:
 
-	Use this mechanic to add ax,ay,az to the targetlocation.
+	Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option.
+	
+	- customsummon{a=2to20;type=mobname} @self
+	
+	Summon 2 to 20 mobs of type mobname.
 	
 	- customsummon{type=WITHER_SKELETON;amount=5;radius=4;ax=5;ay=1;az=2} @self
 	
@@ -715,7 +760,7 @@ dmgpig:
 
 ## GrenadeSkill:
 
-	- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true}
+	- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true;ued=boolean}
 		size: radius of the explosion
 		amount: how many grenades the mob throw at once
 		fuse: how long the fuse tick
@@ -724,6 +769,7 @@ dmgpig:
 		utime: how many ticks until restore the blocks
 		ueffect: should there be a restore effect? true / false
 		undotnt: should the blocks be restored at all? true / false
+		ued: if true the grenade is thrown in eye direction. if false the grenade is thrown in target direction
 
 Example:
 ```
@@ -731,7 +777,8 @@ grenadezombie:
   Type: zombie
   Health: 20
   Skills:
-  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200 1
+  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200
+  - grenade{size=2;amount=1;fuse=60;fire=false;breakblocks=false;utime=40;ueffect=false;undotnt=false} @pir{r=20} ~onTimer:60
 ```
 
 
@@ -839,32 +886,84 @@ FleeButGotNothing:
 
 
 ```
+  Conditions:
+  - relativedirection{angle=[RANGEDVALUE];action=[BOOLEAN]}
+```
+Use this condition to determinate the relative direction to the target. Use this condition in **TargetConditions**. Where 180 is the right side. 90 degree is straight infront and 270 degrees are exact behind.
+If you use `angle=0to180` the it compares if the target comes from infront, where `angle=90to270` means the targeted entity is somewhere on the right side of the caster. etc...
+*Example:*
+```yaml
+skillfile:
+
+    targetsonleft:
+      TargetConditions:
+      - relativedirection{angle=>315}
+      - relativedirection{angle=<45}
+      Skills:
+      - message{msg="Found <trigger.name> on my left!"} @world
+      
+mobfile:
+
+    Monkey:
+      Health: 500
+      Type: zombie
+      AITargetSelectors:
+      - 0 clear
+      AIGoalSelectors:
+      - 0 clear
+      - 1 randomstroll
+      Display: "Me Monkey"
+      Skills:
+      - skill{s=targetsonleft} @pir{r=20} ~onTimer:20
+```
+#
+```
+  Conditions:
+  - hasitem{list="where=[ANY||HAND||ARMOR||INVENTORY],material=[ANY||MATERIALTYPE],amount=[RANGEDVALUE],lore=[LORETEXT]";action=[BOOLEAN]}
+```
+Works as target or entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
+INVENTORY where type only works for players. `hasitem{list="where=HAND,material=DIRT,amount=20to30","where=ARMOR,material=DIAMOND_CHESTPLATE,amount=1,lore=Expensive"` This condition return true if a)
+the entity holds a stack of dirt with the amount between 20 and 30 in its hand or if b) the entity wears a chestplate made of diamonds and the lore of the plate
+contains the word *Expensive*.
+#
+```
+  Conditions:
+  - inmotion{action=[BOOLEAN]}
+```
+Checks if the entity is in motion. Do not work for players or none living entities.
+#
+```
+  Conditions:
+  - facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}
+```
+Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
+#
+```
   TargetConditions:
   - parsedstance{s="<target.uuid>";cs=true;action=true}
 ```
 If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
+#
 ```
   TargetConditions:
   - attackable{cause=DAMAGECAUSE;action=boolean}
   - damageable{cause=DAMAGECAUSE;action=boolean}
 ```
 Use this condition to check if the target is attackable by the caster. Only avail as TargetConditions / CompareConditions
+#
 ```
   TargetConditions:
   - infront{view=[angle_value];action=[boolean]}
   - behind{view=[angle_value];action=[boolean]}
 ```
 Use this condition to check if the target is behind the caster or infront of the caster.
+#
 ```
   Conditions:
   - inmobarena
 ```
 Check if the location is in a MobArena arena. Requires MobArena plugin to work.
-```
-  Conditions:
-  - inmobarena
-```
-Check if the location is in a MobArena arena. Requires MobArena plugin to work.
+#
 ```
   Conditions:
   - biomefix{biome=PLAINS,DESSERT;action=true}
@@ -872,12 +971,14 @@ Check if the location is in a MobArena arena. Requires MobArena plugin to work.
 Check if the target is in a certain biome.
 biome=b= A list with valid biome names.
 action=a= true / false
+#
 ```
   TargetConditions:
   - isstunned{a=false}
 ```
 Check if the target is stunned (true) or not (false) The example will match if the target isnt stunned. Please notice that this can be used at the caster, or as TargetConditions.
 If used as TargetConditions the targeter for the metaskill is important.
+#
 ```
   Conditions:
   - lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}
@@ -885,6 +986,7 @@ If used as TargetConditions the targeter for the metaskill is important.
 Check what caused the last damage to the MythicMob mob. cause and damager can be a single value or a List
 cause=c= The cause of the last damage. Valid is "ANY" or Bukkit's DamageCause https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
 damager=attacker= The EntityType of the attacker. Valid is "ANY" or Bukkit's EntityTypes https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+#
 ```
   Conditions:
   - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}
@@ -894,6 +996,7 @@ mobtypes=types=mobs=mob=t=m= The mythicmobs or mythicentities to check. Or use A
 amount=a=ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for range
 radius=r=radius to check
 action=true/false
+#
 ```
   Conditions:
   - wgstateflag{flag=mob-spawning;action=false}
@@ -902,30 +1005,31 @@ action=true/false
   .....
 ``` 
 This condition can be used on every allow/deny flag. If region has no flag set, it inherits the flag of the parent region.
-
+#
 ```
   Conditions:
   - wgdenyspawnflag{types=zombie,skeleton;action=true}
 ```
 This condition can be used to check if the region denys the spawning of some entitytypes. If region has no flag set, it inherits the flag of the parent region.
-
+#
 ```
   Conditions:
   - factionsflag{flag=monsters;action=true}
 ```
 This condition can be used to check if the faction has a specific flag set to true or false. Here is a list of all flagnames: animals, monsters, peaceful, endergrief, explosions, firespread, friendlyfire, infpower, offlineexplosions, open, permanent, powergain, powerloss, pvp, zombiegrief
-
+#
 ```
   Conditions:
   - hastarget{action=true}
 ```
 This condition meets if the mob has a target (true) or no target (false).
-
+#
 ```
   TargetConditions:
   - vdistance{d=2to3;action=true}
 ```
 This condition checks for the vertical distance between target and mob. Use ">" for greater "<" smaller or "to" for range.
+#
 
 Example:
 ```

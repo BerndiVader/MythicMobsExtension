@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -46,9 +47,8 @@ import think.rpgitems.item.RPGItem;
 public class CustomSkillStuff implements Listener {
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
-	protected Plugin plugin = Main.getPlugin();
 
-	public CustomSkillStuff() {
+	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -104,7 +104,7 @@ public class CustomSkillStuff implements Listener {
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
 			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
-			victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
+			if (damager!=null) victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
 		} else if (victim.hasMetadata("LastDamager")) {
 			victim.removeMetadata("LastDamager", Main.getPlugin());
 		}
@@ -197,25 +197,19 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static LivingEntity getAttacker(Entity damager) {
+		LivingEntity shooter=null;
 		if (damager instanceof Projectile) {
 			if (((Projectile) damager).getShooter() instanceof LivingEntity) {
-				LivingEntity shooter = (LivingEntity) ((Projectile) damager).getShooter();
-				if (shooter != null && shooter instanceof LivingEntity) {
-					return shooter;
-				}
-			} else {
-				return null;
+				shooter = (LivingEntity) ((Projectile) damager).getShooter();
 			}
+		} else if (damager instanceof LivingEntity) {
+			shooter=(LivingEntity)damager;
 		}
-		if (damager instanceof LivingEntity) {
-			return (LivingEntity) damager;
-		}
-		return null;
+		return shooter;
 	}
 
 	public static Location getLocationInFront(Location start, double range) {
-		Location l = start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
-		return l;
+		return start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
 	}
 
 	public static double rpgItemPlayerHit(Player p, double damage) {
@@ -237,7 +231,7 @@ public class CustomSkillStuff implements Listener {
 			}
 		}
 		if (useDamage)
-			p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), useDamage));
+			p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), true));
 		return round(damage, 3);
 	}
 
@@ -245,13 +239,13 @@ public class CustomSkillStuff implements Listener {
 		int range = 32;
 		BlockIterator bi;
 		List<Entity> ne = player.getNearbyEntities(range, range, range);
-		List<LivingEntity> entities = new ArrayList<LivingEntity>();
+		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en : ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Main.noTargetVar)) {
 				entities.add((LivingEntity) en);
 			}
 		}
-		LivingEntity target = null;
+		LivingEntity target;
 		bi = new BlockIterator(player, range);
 		int bx;
 		int by;
@@ -422,33 +416,65 @@ public class CustomSkillStuff implements Listener {
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
-	
-    public static Vector calculateBowVelocity(Vector f, Vector t, int hG, double g) {
-        int eG = t.getBlockY()-f.getBlockY();
-        double hD = Math.sqrt(distanceSquared(f,t));
-        int ga = hG;
-        double mGa = ga>(eG+ga)?ga:(eG+ga);
- 
-        double a = -hD*hD/(4*mGa);
-        double b = hD;
-        double c = -eG;
- 
-        double s =-b/(2*a)-Math.sqrt(b*b-4*a*c)/(2*a);
-        double vy = Math.sqrt(mGa*g);
-        double vh = vy/s;
- 
-        int dx = t.getBlockX()-f.getBlockX();
-        int dz = t.getBlockZ()-f.getBlockZ();
-        double mag = Math.sqrt(dx*dx+dz*dz);
-        double dirx = dx/mag;
-        double dirz = dz/mag;
- 
-        double vx = vh*dirx;
-        double vz = vh*dirz;
- 
-        return new Vector(vx,vy,vz);
-    }
- 
+
+	public static Vector calculateTrajectory(Vector from, Vector to, double heightGain, double gravity) {
+		int endGain = to.getBlockY() - from.getBlockY();
+		double horizDist = Math.sqrt(distanceSquared(from, to));
+		double maxGain = heightGain > (endGain + heightGain) ? heightGain : (endGain + heightGain);
+		double a = -horizDist * horizDist / (4 * maxGain);
+		double b = horizDist;
+		double c = -endGain;
+		double slope = -b / (2 * a) - Math.sqrt(b * b - 4 * a * c) / (2 * a);
+		double vy = Math.sqrt(maxGain * (gravity + 0.0013675090252708 * heightGain));
+		double vh = vy / slope;
+		int dx = to.getBlockX() - from.getBlockX();
+		int dz = to.getBlockZ() - from.getBlockZ();
+		double mag = Math.sqrt(dx * dx + dz * dz);
+		double dirx = dx / mag;
+		double dirz = dz / mag;
+		double vx = vh * dirx;
+		double vz = vh * dirz;
+		if (Double.isNaN(vx)) vx=0.0D;
+		if (Double.isNaN(vz)) vz=0.0D;
+		return new Vector(vx, vy, vz);
+	}
+
+	public static Vector spread(Vector from, double yaw, double pitch) {
+		Vector vec = from.clone();
+
+		float cosyaw = (float)Math.cos(yaw);
+		float cospitch = (float)Math.cos(pitch);
+		float sinyaw = (float)Math.sin(yaw);
+		float sinpitch = (float)Math.sin(pitch);
+		float bX = (float) (vec.getY() * sinpitch + vec.getX() * cospitch);
+		float bY = (float) (vec.getY() * cospitch - vec.getX() * sinpitch);
+		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
+	}
+
+	public static double launchAngle(Location from, Vector to, double v, double elev, double g) {
+		Vector victor = from.toVector().subtract(to);
+		Double dist = Math.sqrt(Math.pow(victor.getX(), 2) + Math.pow(victor.getZ(), 2));
+		double v2 = Math.pow(v,2);
+		double v4 = Math.pow(v,4);
+		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
+		if( v4 < derp) {
+			// Max optimal (won't hit!)
+			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
+		}
+		else {
+			return Math.atan((v2 - Math.sqrt(v4 - derp)) / (g * dist));
+		}
+	}
+
+	public static double hangtime(double launchAngle, double v, double elev, double g) {
+		double a = v * Math.sin(launchAngle);
+		double b = -2*g*elev;
+		if(Math.pow(a, 2) + b < 0){
+			return 0;
+		}
+		return (a + Math.sqrt(Math.pow(a, 2) + b)) / g;
+	}
+
     public static double distanceSquared(Vector f, Vector t) {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();
@@ -468,5 +494,33 @@ public class CustomSkillStuff implements Listener {
 		}
 		return uuid;
 	}
-	
+
+	public static int randomRangeInt(String range) {
+		ThreadLocalRandom r = ThreadLocalRandom.current();
+		int amount=0;
+		String[] split;
+		int min, max;
+		if (range.contains("to")) {
+			split = range.split("to");
+			min = Integer.parseInt(split[0]);
+			max = Integer.parseInt(split[1]);
+			amount = r.nextInt(min, max+1);
+		} else amount = Integer.parseInt(range);
+		return amount;
+	}
+
+	public static double randomRangeDouble(String range) {
+		ThreadLocalRandom r = ThreadLocalRandom.current();
+		double amount = 0.0D;
+		String[] split;
+		double min, max;
+		if (range.contains("to")) {
+			split = range.split("to");
+			min = Double.parseDouble(split[0]);
+			max = Double.parseDouble(split[1]);
+			amount = r.nextDouble(min, max);
+		} else amount = Double.parseDouble(range);
+		return amount;
+	}
+
 }

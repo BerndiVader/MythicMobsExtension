@@ -9,7 +9,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmFeedSkill extends SkillMechanic implements ITargetedEntitySkill {
-	private int amount;
+	private Integer amount;
 
 	public mmFeedSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

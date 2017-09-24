@@ -11,9 +11,10 @@ import com.gmail.berndivader.NMS.NMSUtils;
 
 public class NaNpatch implements Listener {
 	protected NMSUtils nmsutils = Main.getPlugin().getNMSUtils();
-	protected Plugin plugin = Main.getPlugin();
+	protected Plugin plugin;
 
-	public NaNpatch() {
+	public NaNpatch(Plugin plugin) {
+		this.plugin=plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -23,9 +24,8 @@ public class NaNpatch implements Listener {
 		if (p.isOnline()) {
 			if (Float.isNaN(nmsutils.getAbsAmount(p))) {
 				if (!nmsutils.setAbsAmount(p, 0.0f)) {
-					plugin.getLogger().warning("Unable to patch NaN for " + p.getName() + "!");
+					this.plugin.getLogger().warning("Unable to patch NaN for " + p.getName() + "!");
 				}
-				;
 			}
 		}
 	}

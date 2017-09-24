@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import io.lumine.xikage.mythicmobs.util.MathParser;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -7,7 +8,6 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.util.MathParser;
 
 public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkill {
 
@@ -20,16 +20,17 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 
 		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
-		this.amount = mlc.getString(new String[] { "amount", "a" }, "1.0");
-		if (this.amount.startsWith("-"))
-			this.amount = "1.0";
-		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ia", "i" }, false);
+ 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
+		if (this.amount.startsWith("-")) {
+			this.amount = "1";
+		}
+		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
-		this.iabs = mlc.getBoolean(new String[] { "ignoreabs", "iabs" }, false);
+		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
 		this.ip = mlc.getBoolean(new String[] { "ignorepower", "ip" }, false);
 		this.p = mlc.getBoolean(new String[] { "percentage", "p" }, false);
-		this.pcur = mlc.getBoolean(new String[] { "pcur", "pc" }, false);
-		String ca = mlc.getString(new String[] { "damagecause", "cause" }, "CUSTOM").toUpperCase();
+		this.pcur = mlc.getBoolean(new String[] { "percentcurrent", "pcur", "pc" }, false);
+		String ca = mlc.getString(new String[] { "damagecause", "cause", "dc" }, "CUSTOM").toUpperCase();
 		for (DamageCause dc : DamageCause.values()) {
 			if (dc.toString().equals(ca)) {
 				this.cause=dc;
@@ -43,7 +44,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
 			return false;
-		double dmg = MathParser.evalRange(this.amount);
+		double dmg = CustomSkillStuff.randomRangeDouble(this.amount);
 		if (this.p) {
 			dmg = this.pcur ? t.getHealth() * dmg : t.getMaxHealth() * dmg;
 		}

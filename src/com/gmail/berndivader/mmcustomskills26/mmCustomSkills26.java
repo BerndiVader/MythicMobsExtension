@@ -15,16 +15,15 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class mmCustomSkills26 implements Listener {
-	private String mech;
-	private SkillMechanic skill;
-	protected Plugin plugin = Main.getPlugin();
 
-	public mmCustomSkills26() {
+	public mmCustomSkills26(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
+		String mech;
+		SkillMechanic skill;
 		mech = e.getMechanicName().toLowerCase();
 		
 		switch (mech) {
@@ -160,6 +159,10 @@ public class mmCustomSkills26 implements Listener {
 			break;
 		} case "advrandomskill": {
 			skill = new advRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "renameentity": {
+			skill = new RenameEntityMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}}

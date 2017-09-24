@@ -1,8 +1,9 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -17,14 +18,14 @@ implements
 IMetaSkill {
 	protected MythicMobs mythicmobs;
 	protected SkillManager skillmanager;
-	protected HashMap<Integer,SkillEntry>entrylist;
+	protected LinkedHashMap<Integer,SkillEntry> entrylist;
 	
 	public advRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
         this.target_creative = true;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
-		this.entrylist = new HashMap<>();
+		this.entrylist = new LinkedHashMap<>();
 		
 		String parse[] = mlc.getString(new String[]{"skills","s"}).split(",");
 
@@ -43,8 +44,8 @@ IMetaSkill {
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		double r = Main.random.nextDouble();
-		for (Map.Entry<Integer,SkillEntry> entry:entrylist.entrySet()) {
+		double r = ThreadLocalRandom.current().nextDouble();
+		for (Entry<Integer,SkillEntry> entry:entrylist.entrySet()) {
 			SkillEntry sentry = entry.getValue();
 			if (r<=sentry.getChance()) {
 				if (sentry.isSkillPresent()

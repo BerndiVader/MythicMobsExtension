@@ -83,6 +83,25 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "facingdirection": {
+			SkillCondition c = new FacingDirectionCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
+		case "inmotion": {
+			SkillCondition c = new InMotionCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
+		case "iteminhand": {
+			SkillCondition c = new hasItemCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+			break;
+		}case "relativedirection": {
+			SkillCondition c = new DirectionalDamageCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		}
 	}
 }

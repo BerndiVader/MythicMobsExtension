@@ -21,11 +21,15 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
+public class mmDropItemSkill extends SkillMechanic 
+implements 
+ITargetedEntitySkill, 
+ITargetedLocationSkill {
 
-	protected String itemtype, dropname;
-	protected int amount;
-	protected boolean stackable;
+	private String itemtype;
+	private String dropname;
+	private Integer amount;
+	private Boolean stackable;
 
 	public mmDropItemSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -35,7 +39,7 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
 		this.stackable = mlc.getBoolean(new String[] { "stackable", "sa" }, true);
 	}
-
+	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation ltarget) {
 		SkillCaster caster = data.getCaster();
@@ -62,7 +66,7 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 			ActiveMob dropper, AbstractEntity trigger) {
 		DropManager dropmanager = Main.getPlugin().getMythicMobs().getDropManager();
 		Optional<MythicDropTable> maybeDropTable = dropmanager.getDropTable(itemtype);
-		ArrayList<ItemStack> loot = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> loot = new ArrayList<>();
 		MythicDropTable dt;
 		if (maybeDropTable.isPresent()) {
 			dt = maybeDropTable.get();
@@ -89,5 +93,4 @@ public class mmDropItemSkill extends SkillMechanic implements ITargetedEntitySki
 				w.dropItem(l, is);
 		}
 	}
-
 }

@@ -44,19 +44,19 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 	public mmCustomTeleportSkill(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.ASYNC_SAFE = false;
-		this.noise = mlc.getDouble(new String[] { "noise", "n" }, 0D);
+		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
 		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
 		if ((this.maxTargets = mlc.getDouble(new String[] { "maxtargets", "mt" }, 0D)) < 0)
 			this.maxTargets = 0D;
-		this.inFrontOf = mlc.getBoolean(new String[] { "infront", "front", "f" }, false);
-		this.returnToStart = mlc.getBoolean(new String[] { "returntostart", "return", "r" }, false);
+		this.inFrontOf = mlc.getBoolean(new String[] { "infrontof", "infront", "front", "f" }, false);
+		this.returnToStart = mlc.getBoolean(new String[] { "returntostart", "return", "rs" }, false);
 		this.targetInsight = mlc.getBoolean(new String[] { "targetinsight", "insight", "is" }, false);
 		this.ignoreOwner = mlc.getBoolean(new String[] { "ignoreowner", "io" }, false);
 		this.inBetweenLastSignal = mlc.getString(new String[] { "betweenlastentitysignal", "bls" }, null);
 		this.inBetweenNextSignal = mlc.getString(new String[] { "betweennextentitysignal", "bns" }, null);
-		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "fs" }, null);
+		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "final", "fs" }, null);
 
-		String s = mlc.getString(new String[] { "destination", "dest", "d" }, "@self").toLowerCase();
+		String s = mlc.getString(new String[] { "destination", "dest", "d", "location", "loc", "l" }, "@self").toLowerCase();
 		s = s.replaceAll("<&lc>", "{");
 		s = s.replaceAll("<&rc>", "}");
 		s = s.replaceAll("<&eq>", "=");
@@ -92,10 +92,9 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 			return false;
 		}
 		HashSet<Object> osources = (HashSet<Object>) getDestination(targeter, data);
-		Map<Double, Object> sortedsources = new TreeMap<Double, Object>();
-		if (!osources.iterator().hasNext())
-			return false;
-		this.isLocations = osources.iterator().next() instanceof AbstractLocation ? true : false;
+		Map<Double, Object> sortedsources = new TreeMap<>();
+		if (osources==null||!osources.iterator().hasNext()) return false;
+		this.isLocations = osources.iterator().next() instanceof AbstractLocation;
 		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
 			HashSet<Object> lsrc = new HashSet<>();
 			Iterator<?> it = osources.iterator();
@@ -116,15 +115,8 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 			osources.remove(BukkitAdapter.adapt(NMSUtil.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
 		}
 		if (this.sortTargets) {
-			Iterator<?> it = osources.iterator();
-			while (it.hasNext()) {
-				Object o = it.next();
-				AbstractLocation l;
-				if (this.isLocations) {
-					l = ((AbstractLocation) o);
-				} else {
-					l = ((AbstractEntity) o).getLocation();
-				}
+			for(Object o:osources) {
+				AbstractLocation l=this.isLocations?((AbstractLocation)o):((AbstractEntity)o).getLocation();
 				double distance = data.getCaster().getLocation().distanceSquared(l);
 				sortedsources.put(distance, o);
 			}

@@ -30,8 +30,8 @@ import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill, ITargetedLocationSkill {
 
-	protected static MythicMobs mythicmobs;
-	protected static SkillManager skillmanager;
+	protected MythicMobs mythicmobs;
+	protected SkillManager skillmanager;
 	protected String meetAction, elseAction;
 	protected Optional<String> 
 		meetTargeter=Optional.empty(),
@@ -50,8 +50,8 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	public CastIf(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		CastIf.mythicmobs = Main.getPlugin().getMythicMobs();
-		CastIf.skillmanager = CastIf.mythicmobs.getSkillManager();
+		this.mythicmobs = Main.getPlugin().getMythicMobs();
+		this.skillmanager = this.mythicmobs.getSkillManager();
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
@@ -61,10 +61,10 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.meetTargeter = Optional.ofNullable(mlc.getString("meettargeter"));
 		this.elseTargeter = Optional.ofNullable(mlc.getString("elsetargeter"));
 		if (this.meetAction != null) {
-			this.meetSkill = CastIf.skillmanager.getSkill(this.meetAction);
+			this.meetSkill = this.skillmanager.getSkill(this.meetAction);
 		}
 		if (this.elseAction != null) {
-			this.elseSkill = CastIf.skillmanager.getSkill(this.elseAction);
+			this.elseSkill = this.skillmanager.getSkill(this.elseAction);
 		}
 		if (this.cConditionLines != null && !this.cConditionLines.isEmpty()) {
 			this.casterConditions = this.getConditions(this.cConditionLines);
@@ -148,7 +148,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	private boolean checkConditions(SkillMetadata data, HashMap<Integer, SkillCondition> conditions, boolean isTarget) {
 		String cline = isTarget ? this.tConditionLine : this.cConditionLine;
 		for (int a = 0; a < conditions.size(); a++) {
-			SkillMetadata sdata = null;
+			SkillMetadata sdata;
 			sdata = data.deepClone();
 			SkillCondition condition = conditions.get(a);
 			if (isTarget) {
@@ -159,7 +159,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 						Boolean.toString(condition.evaluateCaster(sdata)));
 			}
 		}
-		BooleanExpression be = null;
+		BooleanExpression be=null;
 		try {
 			be = BooleanExpression.readLR(cline);
 		} catch (MalformedBooleanException e) {
@@ -193,7 +193,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 			}
 			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
 			String[] parse = ms.split("\\&\\&|\\|\\|");
-			if (parse != null && parse.length > 0) {
+			if (parse.length > 0) {
 				for (int a = 0; a < Arrays.asList(parse).size(); a++) {
 					String p = Arrays.asList(parse).get(a);
 					if (istarget) {

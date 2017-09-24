@@ -25,6 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.NMS.NMSUtils;
@@ -146,7 +147,8 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
-				AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
+				LivingEntity bukkitEntity = (LivingEntity) this.am.getEntity().getBukkitEntity();
+				AbstractLocation al = BukkitAdapter.adapt(bukkitEntity.getEyeLocation());
 				this.currentVelocity = al.getDirection().normalize();
 			}
 			if (EntityProjectile.this.projectileVelocityHorizOffset != 0.0f

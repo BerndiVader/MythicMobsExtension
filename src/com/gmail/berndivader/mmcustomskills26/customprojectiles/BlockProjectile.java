@@ -25,6 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -146,7 +147,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
-				AbstractLocation al = BukkitAdapter.adapt(this.am.getEntity().getEyeLocation());
+				LivingEntity bukkitEntity = (LivingEntity) this.am.getEntity().getBukkitEntity();
+				AbstractLocation al = BukkitAdapter.adapt(bukkitEntity.getEyeLocation());
 				this.currentVelocity = al.getDirection().normalize();
 			}
 			if (BlockProjectile.this.projectileVelocityHorizOffset != 0.0f
