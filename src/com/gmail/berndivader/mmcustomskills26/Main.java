@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,6 +53,8 @@ public class Main extends JavaPlugin {
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
+/**
+ *TODO: implement helper if needed
 		if (!pluginmanager.isPluginEnabled("Helper")) {
 			Plugin helper;
 			logger.info("Helper not found. Try to register");
@@ -64,7 +65,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 		}
-
+ */
 		Main.nmsutils = new NMSUtils();
 		this.volatilehandler = this.getVolatileHandler();
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {

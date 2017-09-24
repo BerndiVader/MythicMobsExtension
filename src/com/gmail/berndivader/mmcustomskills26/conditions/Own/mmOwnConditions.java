@@ -93,7 +93,8 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
-		case "iteminhand": {
+		case "iteminhand":
+			case "ownsitem": {
 			SkillCondition c = new hasItemCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;
@@ -101,7 +102,12 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c = new DirectionalDamageCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-		}
+		}case "lookatme":
+			case "looksatme": {
+			SkillCondition c = new LookingAtMeCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+			}
 		}
 	}
 }

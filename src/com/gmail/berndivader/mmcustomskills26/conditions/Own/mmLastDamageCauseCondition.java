@@ -39,8 +39,7 @@ public class mmLastDamageCauseCondition extends mmCustomCondition implements IEn
 			match = true;
 		}
 		if (match && cause!=null) {
-			match = (Arrays.asList(this.cause).contains(cause.toUpperCase()) || this.cause[0].equals("ANY"))
-					? true : false;
+			match = Arrays.asList(this.cause).contains(cause.toUpperCase()) || this.cause[0].equals("ANY");
 		}
 		return match;
 	}
