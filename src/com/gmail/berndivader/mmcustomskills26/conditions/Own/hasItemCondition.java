@@ -2,6 +2,7 @@ package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 public class hasItemCondition extends mmCustomCondition
 implements
 IEntityCondition {
-	
+
 	private enum WhereType {
 		HAND,
 		ARMOR,
@@ -155,8 +156,21 @@ IEntityCondition {
 	}
 
 	private static boolean checkContent(ItemStack[]i, ItemHolding entry) {
-		return Arrays.stream(i).filter(is -> is != null
-				&& (entry.isMaterialAny() || entry.material.equals(is.getType()))
-				&& entry.amount.equals(is.getAmount())).anyMatch(is -> entry.lore.equals("ANY") || (is.hasItemMeta() && is.getItemMeta().hasLore() && is.getItemMeta().getLore().contains(entry.lore)));
+		for (int a=0;a<i.length;a++) {
+			ItemStack is = i[a];
+			if (is==null) continue;
+			if ((entry.isMaterialAny()||entry.material.equals(is.getType()))
+					&& entry.amount.equals(is.getAmount())) {
+				if (entry.lore.equals("ANY")) return true;
+				if (is.hasItemMeta()&&is.getItemMeta().hasLore()) {
+					for(Iterator<String>it=is.getItemMeta().getLore().iterator();it.hasNext();) {
+						String l=it.next();
+						if (l.contains(entry.lore)) return true;
+					}
+				}
+
+			}
+		}
+		return false;
 	}
 }
