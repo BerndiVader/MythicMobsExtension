@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 24.9.2017 *** added parseddisguise mechanic. See parseddisguise mechanic for details.
 ##### *** 24.9.2017 *** added facing true/false for stun mechanic. See stun mechanic for details.
 ##### *** 20.9.2017 *** added relativedirection condition. See relativedirection condition for details.
 ##### *** 20.9.2017 *** hopefully fixed helper finally.
@@ -163,6 +164,15 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+## parseddisguise mechanic:
+
+    Same as the build-in disguise mechanic. But additional it parse every variable that is present while the skill
+    is executed.    
+	
+	  - parseddisguise{d=PLAYER:<mob.name>:<target.name>} @trigger ~onDamaged
+	
 
 
 ## renameentity mechanic:
@@ -919,10 +929,10 @@ mobfile:
 #
 ```
   Conditions:
-  - hasitem{list="where=[ANY||HAND||ARMOR||INVENTORY],material=[ANY||MATERIALTYPE],amount=[RANGEDVALUE],lore=[LORETEXT]";action=[BOOLEAN]}
+  - iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}
 ```
 Works as target or entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
-INVENTORY where type only works for players. `hasitem{list="where=HAND,material=DIRT,amount=20to30","where=ARMOR,material=DIAMOND_CHESTPLATE,amount=1,lore=Expensive"` This condition return true if a)
+INVENTORY where type only works for players. `iteminhand{list="where=HAND;material=DIRT;amount=20to30","where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1;lore=Expensive"` This condition return true if a)
 the entity holds a stack of dirt with the amount between 20 and 30 in its hand or if b) the entity wears a chestplate made of diamonds and the lore of the plate
 contains the word *Expensive*.
 #
