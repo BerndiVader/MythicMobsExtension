@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 24.9.2017 *** added facing true/false for stun mechanic. See stun mechanic for details.
 ##### *** 20.9.2017 *** added relativedirection condition. See relativedirection condition for details.
 ##### *** 20.9.2017 *** hopefully fixed helper finally.
 ##### *** 19.9.2017 *** fixed helper class not loading properly.
@@ -599,9 +600,10 @@ Or use some variables in the destination targeter:
 	
 	Use this mechanic to stun the target. 
 	
-	- stun{duration=Ticks} @target
+	- stun{duration=Ticks;facing=true/false} @target
 	
-	Where duration=d=how many ticks the target will be stunned. In addition there is the isstunned condition. Look at Conditions.
+	Where duration=d=how many ticks the target will be stunned and facing=true/false if yaw pitch of entity shall remain.
+	In addition there is the isstunned condition. Look at Conditions.
 	
 
 
