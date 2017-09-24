@@ -9,10 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -436,12 +433,12 @@ public class CustomSkillStuff implements Listener {
 		double vz = vh * dirz;
 		if (Double.isNaN(vx)) vx=0.0D;
 		if (Double.isNaN(vz)) vz=0.0D;
-		return new Vector(vx, vy, vz);
+		Vector Vt=new Vector(vx, vy, vz);
+		return Vt;
 	}
 
 	public static Vector spread(Vector from, double yaw, double pitch) {
 		Vector vec = from.clone();
-
 		float cosyaw = (float)Math.cos(yaw);
 		float cospitch = (float)Math.cos(pitch);
 		float sinyaw = (float)Math.sin(yaw);
@@ -451,13 +448,32 @@ public class CustomSkillStuff implements Listener {
 		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
 	}
 
+	public static Vector calculateVelocity(Double speed, Location originLocation, Location destination) {
+		double g = 20;
+		double v = speed;
+		Vector relative = destination.clone().subtract(originLocation).toVector();
+		double testAng = launchAngle(originLocation, destination.toVector(), v, relative.getY(), g);
+		double hangTime = hangtime(testAng, v, relative.getY(), g);
+		Vector to = destination.clone().add(originLocation.clone().multiply(hangTime)).toVector();
+		relative = to.clone().subtract(originLocation.toVector());
+		Double dist = Math.sqrt(relative.getX() * relative.getX() + relative.getZ() * relative.getZ());
+		if (dist == 0) {
+			dist = 0.1d;
+		}
+		testAng = launchAngle(originLocation, to, v, relative.getY(), g);
+		relative.setY(Math.tan(testAng) * dist);
+		relative = relative.normalize();
+		v = v + (1.188 * Math.pow(hangTime, 2));
+		return relative.multiply(v / 20.0d);
+	}
+
 	public static double launchAngle(Location from, Vector to, double v, double elev, double g) {
 		Vector victor = from.toVector().subtract(to);
 		Double dist = Math.sqrt(Math.pow(victor.getX(), 2) + Math.pow(victor.getZ(), 2));
-		double v2 = Math.pow(v,2);
-		double v4 = Math.pow(v,4);
+		double v2 = Math.pow(v, 2);
+		double v4 = Math.pow(v, 4);
 		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
-		if( v4 < derp) {
+		if (v4 < derp) {
 			// Max optimal (won't hit!)
 			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
 		}

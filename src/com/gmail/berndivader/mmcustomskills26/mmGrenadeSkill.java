@@ -62,14 +62,10 @@ public class mmGrenadeSkill extends SkillMechanic
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
 		if (!data.getCaster().getEntity().isLiving()
 				||!data.getCaster().getEntity().getWorld().equals(t.getWorld())) return false;
-		Location source = ((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().clone();
+		Location source = data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
 		Location target = BukkitAdapter.adapt(t);
-		Vector v;
-		if (this.ued) {
-			v=source.getDirection();
-		} else {
-			v=CustomSkillStuff.calculateTrajectory(source.toVector(),target.toVector(),this.hGain,this.gravity);
-		}
+		Vector v=this.ued?((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().getDirection()
+				:CustomSkillStuff.calculateTrajectory(source.toVector(),target.toVector(),this.hGain,this.gravity);
 		for (int a = 0; a < this.amount; a++) {
 			Location sl = source.clone();
 			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl,

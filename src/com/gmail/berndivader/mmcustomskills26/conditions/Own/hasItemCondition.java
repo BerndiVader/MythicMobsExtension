@@ -3,8 +3,6 @@ package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -16,7 +14,6 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
-import me.lucko.helper.Scheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -122,37 +119,28 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity t) {
-		boolean check=false;
 		if (t.isLiving()) {
 			final boolean isPlayer=t.isPlayer();
 			final LivingEntity target=(LivingEntity)t.getBukkitEntity();
-			final CompletableFuture<Boolean>bool=Scheduler.supplyAsync(()-> {
-				for(ItemHolding entry:hasItemCondition.this.holdinglist) {
-					if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
-						if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) {
-							return true;
-						}
-					}
-					if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
-						if (checkContent(target.getEquipment().getArmorContents(),entry)) {
-							return true;
-						}
-					}
-					if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
- 						if (checkContent(((Player)target).getInventory().getContents(),entry)) {
-							return true;
-						}
+			for(ItemHolding entry:hasItemCondition.this.holdinglist) {
+				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
+					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) {
+						return true;
 					}
 				}
-				return false;
-			});
-			try {
-				check=bool.get();
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
+				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
+					if (checkContent(target.getEquipment().getArmorContents(),entry)) {
+						return true;
+					}
+				}
+				if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
+					if (checkContent(((Player)target).getInventory().getContents(),entry)) {
+						return true;
+					}
+				}
 			}
 		}
-		return check;
+		return false;
 	}
 
 	private static boolean checkContent(ItemStack[]i, ItemHolding entry) {

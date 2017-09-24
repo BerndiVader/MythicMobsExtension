@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 24.9.2017 *** added lookatme condition. See lookatme condition for details.
 ##### *** 24.9.2017 *** fixed lore issue in iteminhand condition & added ownsitem alias for it.
 ##### *** 24.9.2017 *** added parseddisguise mechanic. See parseddisguise mechanic for details.
 ##### *** 24.9.2017 *** added facing true/false for stun mechanic. See stun mechanic for details.
@@ -896,6 +897,39 @@ FleeButGotNothing:
 
 
 
+```
+  Conditions:
+  - lookatme{fov=[double];yo=[double];debug=[boolean]}
+  - looksatme{fov=[double];yo=[double];debug=[boolean]}
+```
+This condition can determine if the target is looking at the caster. Therefor a **field-of-view-ratio** defined in fov as a double is used.
+For normal sized entities a fov-ratio of **1.999D** (used by default) is a good value to use. You can also adjust the Yoffset by define **yo**. For the standard
+sized entities a yo of **-0.4D** (used by default) is a good value. Usually the default offsets working very well on almost all entities. But
+if you need to adjust them, you can set **debug=true** and if the condition is used the fov and vecY offsets are written into the console.
+With that info you can easy adjust the values to your need.
+*Example:*
+```yaml
+mobfile:
+
+WeepingMonkey:
+  Health: 500
+  Type: zombie
+  Display: "Weeping Monkey"
+  Skills:
+  - skill{s=freeze} @pir{r=32} ~onTimer:20
+  
+skillfile:
+
+freeze:
+  Conditions:
+  - isstunned{action=false}
+  TargetConditions:
+  - infront{view=90}
+  - lookatme
+  Skills:
+  - stun{d=60;facing=true} @self
+```
+#
 ```
   Conditions:
   - relativedirection{angle=[RANGEDVALUE];action=[BOOLEAN]}
