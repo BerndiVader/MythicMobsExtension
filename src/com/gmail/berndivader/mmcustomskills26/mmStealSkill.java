@@ -26,7 +26,8 @@ public class mmStealSkill extends SkillMechanic implements ITargetedEntitySkill 
 	private ArrayList<String> items;
 	private String[] temp;
 	private ActiveMob am;
-	private String signal_fail, signal_ok;
+	private String signal_fail;
+	private String signal_ok;
 
 	public mmStealSkill(CustomMechanic skill, MythicLineConfig mlc) {
 		super(skill.getConfigLine(), mlc);
