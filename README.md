@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.19
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 24.9.2017 *** fixed lore issue in iteminhand condition & added ownsitem alias for it.
 ##### *** 24.9.2017 *** added parseddisguise mechanic. See parseddisguise mechanic for details.
 ##### *** 24.9.2017 *** added facing true/false for stun mechanic. See stun mechanic for details.
 ##### *** 20.9.2017 *** added relativedirection condition. See relativedirection condition for details.
