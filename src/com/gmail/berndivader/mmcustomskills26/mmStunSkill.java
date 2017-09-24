@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
