@@ -28,5 +28,4 @@ public class mmCrosshairTargeter extends IEntitySelector {
 		}
 		return targets;
 	}
-
 }

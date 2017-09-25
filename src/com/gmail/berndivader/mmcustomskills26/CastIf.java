@@ -157,11 +157,12 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 						Boolean.toString(condition.evaluateCaster(sdata)));
 			}
 		}
-		BooleanExpression be=null;
+		BooleanExpression be;
 		try {
 			be = BooleanExpression.readLR(cline);
 		} catch (MalformedBooleanException e) {
-			e.printStackTrace();
+			Main.logger.warning("There was a problem parsing BoolExpr: "+this.getConfigLine());
+			return false;
 		}
 		return be.booleanValue();
 	}
