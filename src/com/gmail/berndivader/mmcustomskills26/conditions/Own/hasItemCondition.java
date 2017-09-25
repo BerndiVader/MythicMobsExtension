@@ -1,9 +1,12 @@
 package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
+import com.gmail.berndivader.jboolexpr.BooleanExpression;
+import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
+import com.gmail.berndivader.mmcustomskills26.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 
@@ -49,7 +52,7 @@ IEntityCondition {
 			this.material=null;
 			this.matAny=true;
 			this.lore="ANY";
-			this.amount=new RangedDouble("0to64");
+			this.amount=new RangedDouble(">0");
 			this.where=WhereType.ANY;
 		}
 		
@@ -73,25 +76,29 @@ IEntityCondition {
 			this.lore=(l==null||l.isEmpty()||l.toUpperCase().equals("ANY"))?"ANY":l;
 		}
 		public void setAmount(String a) {
-			this.amount=a==null||a.isEmpty()?new RangedDouble("0to64"):new RangedDouble(a);
+			this.amount=a==null||a.isEmpty()?new RangedDouble(">0"):new RangedDouble(a);
 		}
 		public void setWhere(String w) { this.where=WhereType.get(w); }
 		public boolean isMaterialAny(){
 			return this.matAny;
 		}
 	}
-	
-	private HashSet<ItemHolding> holdinglist;
-	
+
+	private String conditionLine;
+	private LinkedHashSet<ItemHolding> holdinglist;
+
 	public hasItemCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.holdinglist=new HashSet<>();
+		this.holdinglist=new LinkedHashSet<>();
 		final String tmp=mlc.getString(new String[]{"list","l"},null);
+		this.conditionLine=SkillString.parseMessageSpecialChars(tmp);
 		if (tmp!=null) {
-			String[]list=tmp.split(",");
-			Arrays.stream(list).forEach(parse-> {
+			String[]list=tmp.split("&&|\\|\\|");
+			for (int a=0;a<list.length;a++) {
+				String parse=list[a];
 				ItemHolding itemholding=new ItemHolding();
 				parse=SkillString.parseMessageSpecialChars(parse);
+				this.conditionLine=this.conditionLine.replaceFirst(parse,"\\$"+Integer.toString(a));
 				if (parse.startsWith("\"")
 						&& parse.endsWith("\"")) {
 					parse=parse.substring(1, parse.length()-1);
@@ -113,32 +120,44 @@ IEntityCondition {
 					});
 				}
 				this.holdinglist.add(itemholding);
-			});
+			}
 		}
 	}
 
 	@Override
 	public boolean check(AbstractEntity t) {
 		if (t.isLiving()) {
+			String c=this.conditionLine;
+			boolean bool;
 			final boolean isPlayer=t.isPlayer();
 			final LivingEntity target=(LivingEntity)t.getBukkitEntity();
+			int a=0;
 			for(ItemHolding entry:hasItemCondition.this.holdinglist) {
+				bool=false;
 				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
 					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) {
-						return true;
+						bool=true;
 					}
-				}
-				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
+				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
 					if (checkContent(target.getEquipment().getArmorContents(),entry)) {
-						return true;
+						bool=true;
 					}
-				}
-				if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
+				} else if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
 					if (checkContent(((Player)target).getInventory().getContents(),entry)) {
-						return true;
+						bool=true;
 					}
 				}
+				c=c.replaceFirst("\\$"+Integer.toString(a),Boolean.toString(bool));
+				a++;
 			}
+			BooleanExpression be;
+			try {
+				be = BooleanExpression.readLR(c);
+			} catch (MalformedBooleanException e) {
+				Main.logger.warning("Invalid bool expression: "+this.conditionLine);
+				return false;
+			}
+			return be.booleanValue();
 		}
 		return false;
 	}

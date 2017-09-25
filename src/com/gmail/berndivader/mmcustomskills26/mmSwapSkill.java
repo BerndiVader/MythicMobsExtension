@@ -9,13 +9,14 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmSwapSkill extends SkillMechanic implements ITargetedEntitySkill {
 
-	protected boolean keepTargetYaw, keepCasterYaw;
+	protected Boolean keepTargetYaw;
+	protected Boolean keepCasterYaw;
 
 	public mmSwapSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.keepTargetYaw = mlc.getBoolean(new String[] { "keeptargetyaw", "kty" }, false);
 		this.keepCasterYaw = mlc.getBoolean(new String[] { "keepcasteryaw", "kcy" }, false);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE = false;
 	}
 
 	@Override

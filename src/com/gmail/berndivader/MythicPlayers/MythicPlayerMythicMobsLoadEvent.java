@@ -15,11 +15,9 @@ import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class MythicPlayerMythicMobsLoadEvent implements Listener {
 
-	private SkillMechanic skill;
-	private SkillTargeter targeter;
-
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
+		SkillMechanic skill;
 		String mech = e.getMechanicName().toLowerCase();
 		switch (mech) {
 		case "activeplayer": {
@@ -40,8 +38,8 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 	@EventHandler
 	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
 		String TargeterName = e.getTargeterName().toLowerCase();
-		if (TargeterName.equals("corsshairentity") || TargeterName.equals("che")) {
-			targeter = new mmCrosshairTargeter(e.getConfig());
+		if (TargeterName.equals("targetertest") || TargeterName.equals("che")) {
+			SkillTargeter targeter = new mmCrosshairTargeter(e.getConfig());
 			e.register(targeter);
 		}
 	}

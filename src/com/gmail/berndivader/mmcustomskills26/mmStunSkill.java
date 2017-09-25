@@ -13,14 +13,14 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 
-	private int duration;
-	private boolean f;
+	private Integer duration;
+	private Boolean f;
 
 	public mmStunSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.duration = mlc.getInteger(new String[] { "duration", "d" }, 120);
-		this.f=mlc.getBoolean(new String[]{"facing","face","f"},false);
-		this.ASYNC_SAFE=false;
+		this.f = mlc.getBoolean(new String[] { "facing", "face", "f" }, false);
+		this.ASYNC_SAFE = false;
 	}
 
 	@Override

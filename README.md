@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.19
+# CustomSkillMechanics v1.20
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 24.9.2017 *** added boolean expression to iteminhand condition. See iteminhand condition for details. 
 ##### *** 24.9.2017 *** added lookatme condition. See lookatme condition for details.
 ##### *** 24.9.2017 *** fixed lore issue in iteminhand condition & added ownsitem alias for it.
 ##### *** 24.9.2017 *** added parseddisguise mechanic. See parseddisguise mechanic for details.
@@ -964,12 +965,17 @@ mobfile:
 #
 ```
   Conditions:
+  - ownsitem or 
   - iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}
 ```
-Works as target or entitycondtion and checks if the entity owns one of the itemstacks. A array can be given (see example). This condition works on all living entities, where the 
-INVENTORY where type only works for players. `iteminhand{list="where=HAND;material=DIRT;amount=20to30","where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1;lore=Expensive"` This condition return true if a)
-the entity holds a stack of dirt with the amount between 20 and 30 in its hand or if b) the entity wears a chestplate made of diamonds and the lore of the plate
-contains the word *Expensive*.
+Works as target or entitycondition. A single value or a boolean expression argument can be given (see below for some examples).
+This condition works on all living entities, where the INVENTORY where type only works for players.
+`ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"`
+Returns true if the entity holds an *iron sword* **AND** wears a *diamond chestplate*.
+`ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"||"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"`
+True if the entity holds an *iron sword* **OR** wears a *diamond chestplate*.
+`ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"||"where=INVENTORY;material=DIRT;amount=1"`
+True if the player holds an *iron sword* **AND** wears a *diamond chestplate* **OR** has 1 piece of *dirt* in its inventory.
 #
 ```
   Conditions:

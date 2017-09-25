@@ -32,34 +32,32 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 
 	protected MythicMobs mythicmobs;
 	protected SkillManager skillmanager;
-	protected String meetAction, elseAction;
-	protected Optional<String> 
-		meetTargeter=Optional.empty(),
-		elseTargeter=Optional.empty();
-	protected String cConditionLine, tConditionLine;
-	protected HashMap<Integer, String> 
-		tConditionLines = new HashMap<>(),
-		cConditionLines = new HashMap<>();
-	protected HashMap<Integer, SkillCondition> 
-		targetConditions = new HashMap<>(),
-		casterConditions = new HashMap<>();
-	protected Optional<Skill> 
-		meetSkill = Optional.empty(),
-		elseSkill = Optional.empty();
+	protected String meetAction;
+	protected String elseAction;
+	protected String cConditionLine;
+	protected String tConditionLine;
+	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
+	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
+	protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
+	protected HashMap<Integer, SkillCondition> casterConditions = new HashMap<>();
+	protected Optional<Skill> meetSkill = Optional.empty();
+	protected Optional<Skill> elseSkill = Optional.empty();
+	protected Optional<String> meetTargeter = Optional.empty();
+	protected Optional<String> elseTargeter = Optional.empty();
 
 	public CastIf(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE = false;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
 		this.parseConditionLines(ms, true);
-		this.meetAction = mlc.getString(new String[] { "meet" });
-		this.elseAction = mlc.getString(new String[] { "else" });
-		this.meetTargeter = Optional.ofNullable(mlc.getString("meettargeter"));
-		this.elseTargeter = Optional.ofNullable(mlc.getString("elsetargeter"));
+		this.meetAction = mlc.getString(new String[] { "meet", "m" });
+		this.elseAction = mlc.getString(new String[] { "else", "e" });
+		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
+		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
 		if (this.meetAction != null) {
 			this.meetSkill = this.skillmanager.getSkill(this.meetAction);
 		}
@@ -159,11 +157,12 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 						Boolean.toString(condition.evaluateCaster(sdata)));
 			}
 		}
-		BooleanExpression be=null;
+		BooleanExpression be;
 		try {
 			be = BooleanExpression.readLR(cline);
 		} catch (MalformedBooleanException e) {
-			e.printStackTrace();
+			Main.logger.warning("There was a problem parsing BoolExpr: "+this.getConfigLine());
+			return false;
 		}
 		return be.booleanValue();
 	}
