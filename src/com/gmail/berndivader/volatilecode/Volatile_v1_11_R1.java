@@ -57,6 +57,16 @@ implements VolatileHandler {
 	}
 
 	@Override
+	public void teleportEntityPacket(Entity entity) {
+
+	}
+
+	@Override
+	public void setMotion(Entity entity) {
+
+	}
+
+	@Override
 	public boolean inMotion(LivingEntity entity) {
 		EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
 		if (e.lastX!=e.locX 
@@ -64,7 +74,7 @@ implements VolatileHandler {
 				|| e.lastZ!=e.locZ) return true;
         return false;
 	}
-	
+
 	@Override
 	public void aiPathfinderGoal(LivingEntity entity, String uGoal, LivingEntity target) {
 		World w = entity.getWorld();

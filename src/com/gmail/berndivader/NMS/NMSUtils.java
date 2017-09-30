@@ -1,5 +1,6 @@
 package com.gmail.berndivader.NMS;
 
+import com.gmail.berndivader.mmcustomskills26.Main;
 import com.google.common.io.BaseEncoding;
 
 import org.bukkit.Art;
@@ -1369,4 +1370,18 @@ public class NMSUtils extends NMSUtil {
 		return false;
 	}
 
+	public boolean setRotationNBT(Entity e, float yaw) {
+		try {
+			Main.logger.info("muhaha");
+			String tag = "Rotation";
+			Object entityHandle = getHandle(e);
+			Object data = getEntityData(e);
+			setMeta(data,tag,"0.0f,180.0f");
+			class_EntityLiving_writeNBTMethod.invoke(entityHandle, data);
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
 }

@@ -1,6 +1,8 @@
 # CustomSkillMechanics v1.20
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 29.9.2017 *** added setfaction mechanic. See setfaction mechanic for details.
+##### *** 29.9.2017 *** added usecaster option to setmeta mechanic. See setmeta mechanic for details.
 ##### *** 24.9.2017 *** added boolean expression to iteminhand condition. See iteminhand condition for details. 
 ##### *** 24.9.2017 *** added lookatme condition. See lookatme condition for details.
 ##### *** 24.9.2017 *** fixed lore issue in iteminhand condition & added ownsitem alias for it.
@@ -167,6 +169,15 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## setfaction mechanic:
+
+    Set the faction of the targeted entity if its an MythicMobs mob. Any variable present at runtime can be used.
+	
+	  - setfaction{faction=SomeFaction} @self ~onSpawn
+	
 
 
 ## parseddisguise mechanic:
@@ -434,10 +445,11 @@ IP-bounce-effect:
 	### setmeta mechchanic:
 		Set parsed(!) metadata for the target. You can use all variables that are avaible while the skill is executed.
 		
-			- setmeta{meta="tag=tagname;value=tagvalue;type=BOOLEAN/NUMERIC/STRING"}
+			- setmeta{meta="tag=tagname;value=tagvalue;type=BOOLEAN/NUMERIC/STRING";usecaster=BOOLEAN}
 			
 		The tags "tag" and "value" can contain any mob variable. Example: [- setmeta{meta=<target.uuid>} @self] add the uuid of the target as metatag to the mob.
-		You can also use values and types, but this is more for further purpose. Still you can go form them too.
+		You can also use values and types, but this is more for further purpose. Still you can go form them too. If usecaster is set to
+		true the metatag is always set for the caster of the skill. No matter what targeter is used.
 		
 			- setmeta{meta="tag=lastdamagedentity;value=<trigger.uuid>;type=STRING"} @self ~onAttack
 			

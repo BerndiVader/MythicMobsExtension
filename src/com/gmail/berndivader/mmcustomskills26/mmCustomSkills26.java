@@ -169,6 +169,15 @@ public class mmCustomSkills26 implements Listener {
 			skill=new parsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		}}
+		}case "setrotation": {
+			skill=new SetRotationMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "setfaction": {
+			skill=new SetFactionMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+			}
+		}
 	}
 }
