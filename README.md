@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.20
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 30.9.2017 *** added infaction and samefaction conditions. See conditions for details.
 ##### *** 29.9.2017 *** added setfaction mechanic. See setfaction mechanic for details.
 ##### *** 29.9.2017 *** added usecaster option to setmeta mechanic. See setmeta mechanic for details.
 ##### *** 24.9.2017 *** added boolean expression to iteminhand condition. See iteminhand condition for details. 
@@ -175,8 +176,10 @@ PlayEffectOnTarget:
 ## setfaction mechanic:
 
     Set the faction of the targeted entity if its an MythicMobs mob. Any variable present at runtime can be used.
+    (Additional you should look at the conditions infaction and samefaction)
 	
 	  - setfaction{faction=SomeFaction} @self ~onSpawn
+	  - setfaction{faction=<mob.name> @self ~onSpawn
 	
 
 
@@ -910,7 +913,31 @@ FleeButGotNothing:
 
 
 
+```markdown
+  Conditions:
+  - infaction{faction=[STRING]or[ARRAY];action=[BOOLEAN]}
 ```
+Determines if the caster or target (if used in TargetConditions) is in the faction or in one of the factions if used as array. Any mythicmobs
+variable avail at runtime can be used. Eg: `faction=<mob.stance>`
+*Example*
+```yaml
+  Conditions:
+  - infaction{faction=SomeFaction;action=true}
+  - infaction{faction=aFaction,anotherFaction,yetAnotherFaction;action=true}
+```
+```markdown
+  TargetConditions:
+  - samefaction{faction=[STRING]or[ARRAY];action=[BOOLEAN]}
+```
+Determines if the caster **AND** target are in the same faction or in one of the factions if used as array. Any mythicmobs variable avail at
+runtime can be used. Eg: `faction=<trigger.name>`
+*Example*
+```yaml
+  TargetConditions:
+  - samefaction{faction=SomeFaction;action=true}
+  - samefaction{faction=aFaction,anotherFaction,yetAnotherFaction;action=true}
+```
+```markdown
   Conditions:
   - lookatme{fov=[double];yo=[double];debug=[boolean]}
   - looksatme{fov=[double];yo=[double];debug=[boolean]}
@@ -943,7 +970,7 @@ freeze:
   - stun{d=60;facing=true} @self
 ```
 #
-```
+```markdown
   Conditions:
   - relativedirection{angle=[RANGEDVALUE];action=[BOOLEAN]}
 ```
@@ -975,7 +1002,7 @@ mobfile:
       - skill{s=targetsonleft} @pir{r=20} ~onTimer:20
 ```
 #
-```
+```markdown
   Conditions:
   - ownsitem or 
   - iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}
@@ -989,60 +1016,60 @@ True if the entity holds an *iron sword* **OR** wears a *diamond chestplate*.
 `ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"||"where=INVENTORY;material=DIRT;amount=1"`
 True if the player holds an *iron sword* **AND** wears a *diamond chestplate* **OR** has 1 piece of *dirt* in its inventory.
 #
-```
+```markdown
   Conditions:
   - inmotion{action=[BOOLEAN]}
 ```
 Checks if the entity is in motion. Do not work for players or none living entities.
 #
-```
+```markdown
   Conditions:
   - facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}
 ```
 Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
 #
-```
+```markdown
   TargetConditions:
   - parsedstance{s="<target.uuid>";cs=true;action=true}
 ```
 If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
 #
-```
+```markdown
   TargetConditions:
-  - attackable{cause=DAMAGECAUSE;action=boolean}
-  - damageable{cause=DAMAGECAUSE;action=boolean}
+  - attackable{cause=[DAMAGECAUSE];action=[boolean]}
+  - damageable{cause=[DAMAGECAUSE];action=[boolean]}
 ```
 Use this condition to check if the target is attackable by the caster. Only avail as TargetConditions / CompareConditions
 #
-```
+```markdown
   TargetConditions:
   - infront{view=[angle_value];action=[boolean]}
   - behind{view=[angle_value];action=[boolean]}
 ```
 Use this condition to check if the target is behind the caster or infront of the caster.
 #
-```
+```markdown
   Conditions:
   - inmobarena
 ```
 Check if the location is in a MobArena arena. Requires MobArena plugin to work.
 #
-```
+```markdown
   Conditions:
-  - biomefix{biome=PLAINS,DESSERT;action=true}
+  - biomefix{biome=[PLAINS,DESSERT];action=[boolean]}
 ```
 Check if the target is in a certain biome.
 biome=b= A list with valid biome names.
 action=a= true / false
 #
-```
+```markdown
   TargetConditions:
   - isstunned{a=false}
 ```
 Check if the target is stunned (true) or not (false) The example will match if the target isnt stunned. Please notice that this can be used at the caster, or as TargetConditions.
 If used as TargetConditions the targeter for the metaskill is important.
 #
-```
+```markdown
   Conditions:
   - lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}
 ```
@@ -1050,7 +1077,7 @@ Check what caused the last damage to the MythicMob mob. cause and damager can be
 cause=c= The cause of the last damage. Valid is "ANY" or Bukkit's DamageCause https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
 damager=attacker= The EntityType of the attacker. Valid is "ANY" or Bukkit's EntityTypes https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
 #
-```
+```markdown
   Conditions:
   - mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}
 ```
@@ -1060,7 +1087,7 @@ amount=a=ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for ra
 radius=r=radius to check
 action=true/false
 #
-```
+```markdown
   Conditions:
   - wgstateflag{flag=mob-spawning;action=false}
   - wgstateflag{flag=pvp;action=true}
@@ -1069,25 +1096,25 @@ action=true/false
 ``` 
 This condition can be used on every allow/deny flag. If region has no flag set, it inherits the flag of the parent region.
 #
-```
+```markdown
   Conditions:
   - wgdenyspawnflag{types=zombie,skeleton;action=true}
 ```
 This condition can be used to check if the region denys the spawning of some entitytypes. If region has no flag set, it inherits the flag of the parent region.
 #
-```
+```markdown
   Conditions:
   - factionsflag{flag=monsters;action=true}
 ```
 This condition can be used to check if the faction has a specific flag set to true or false. Here is a list of all flagnames: animals, monsters, peaceful, endergrief, explosions, firespread, friendlyfire, infpower, offlineexplosions, open, permanent, powergain, powerloss, pvp, zombiegrief
 #
-```
+```markdown
   Conditions:
   - hastarget{action=true}
 ```
 This condition meets if the mob has a target (true) or no target (false).
 #
-```
+```markdown
   TargetConditions:
   - vdistance{d=2to3;action=true}
 ```
@@ -1095,7 +1122,7 @@ This condition checks for the vertical distance between target and mob. Use ">" 
 #
 
 Example:
-```
+```yaml
 Mobfile:
 
 Monkey:
@@ -1123,7 +1150,7 @@ jumpToTarget:
 
 #### ~onKill trigger with lastdamagecause condition example
 
-```
+```yaml
 BowMonkey:
   Type: skeleton
   Display: "&cBowMonkey"

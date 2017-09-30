@@ -30,6 +30,7 @@ INoTargetSkill {
         ActiveMob am = Main.mythicmobs.getMobManager().getMythicMobInstance(target);
         String f=SkillString.parseMobVariables(this.faction,data.getCaster(),target,data.getTrigger());
         if (am!=null) am.setFaction(f);
+        Main.logger.info("Faction:"+am.getFaction());
         return true;
     }
 }

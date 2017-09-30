@@ -55,9 +55,12 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 				(String) this.mtv.getValue(), data.getCaster(), target, data.getTrigger()) : this.mtv.getValue();
 		if (this.useCaster) {
 			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+			Main.logger.info("set caster meta: " + parsedTag + "caster: " + data.getCaster().getEntity().getBukkitEntity().getType().toString());
 		} else {
 			target.getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+			Main.logger.info("set target meta: " + parsedTag + "target: " + target.getBukkitEntity().getType().toString());
 		}
+		Main.logger.info("tag: " + vo);
 		return true;
 	}
 

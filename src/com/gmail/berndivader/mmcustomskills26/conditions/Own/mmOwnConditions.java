@@ -107,7 +107,15 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c = new LookingAtMeCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-			}
+		}case "samefaction": {
+				SkillCondition c = new SameFactionCondition(e.getConfig().getLine(),e.getConfig());
+				e.register(c);
+				break;
 		}
+		case "infaction": {
+			SkillCondition c = new InFactionCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}}
 	}
 }

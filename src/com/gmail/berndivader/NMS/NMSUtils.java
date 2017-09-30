@@ -1372,7 +1372,6 @@ public class NMSUtils extends NMSUtil {
 
 	public boolean setRotationNBT(Entity e, float yaw) {
 		try {
-			Main.logger.info("muhaha");
 			String tag = "Rotation";
 			Object entityHandle = getHandle(e);
 			Object data = getEntityData(e);
