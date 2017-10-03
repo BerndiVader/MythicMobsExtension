@@ -38,7 +38,7 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 	@EventHandler
 	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
 		String TargeterName = e.getTargeterName().toLowerCase();
-		if (TargeterName.equals("targetertest") || TargeterName.equals("che")) {
+		if (TargeterName.equals("crosshair") || TargeterName.equals("ch")) {
 			SkillTargeter targeter = new mmCrosshairTargeter(e.getConfig());
 			e.register(targeter);
 		}

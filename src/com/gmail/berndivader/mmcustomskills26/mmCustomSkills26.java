@@ -177,7 +177,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new SetFactionMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-			}
-		}
+		}case "customvelocity": {
+			skill=new CustomVelocityMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}}
 	}
 }

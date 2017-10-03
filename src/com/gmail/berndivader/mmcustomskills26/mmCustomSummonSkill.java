@@ -70,6 +70,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 	
 	private boolean cast(SkillMetadata data, AbstractLocation tl, AbstractEntity te) {
 		AbstractLocation target = tl.clone();
+		if (!data.getCaster().getEntity().getWorld().equals(tl.getWorld())) return false;
 		if (this.useEyeDirection) {
 			target = BukkitAdapter
 					.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
@@ -78,12 +79,14 @@ public class mmCustomSummonSkill extends SkillMechanic
 		int amount=CustomSkillStuff.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			if (this.noise > 0) {
-				for (int i = 1; i <= amount; ++i) {
+				for (int i=1;i<=amount;i++) {
 					this.mythicmobs.getMobManager();
 					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
 							this.mm.getMythicEntity().getHeight(), this.yUpOnly);
 					ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
-					if (ams == null)
+					if (ams == null
+							||ams.getEntity()==null
+							||ams.getEntity().isDead())
 						continue;
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
@@ -119,7 +122,10 @@ public class mmCustomSummonSkill extends SkillMechanic
 			} else {
 				for (int i = 1; i <= amount; ++i) {
 					ActiveMob ams = this.mm.spawn(target, data.getCaster().getLevel());
-					if (ams == null)
+					if (ams == null
+							||ams.getEntity()==null
+							||!ams.getEntity().getWorld().equals(data.getCaster().getEntity().getWorld())
+							||ams.getEntity().isDead())
 						continue;
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (data.getCaster() instanceof ActiveMob) {
