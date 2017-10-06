@@ -1,14 +1,11 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.NMS.NMSUtils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 public class SetRotationMechanic extends SkillMechanic

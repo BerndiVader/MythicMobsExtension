@@ -14,15 +14,18 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -38,7 +41,12 @@ implements VolatileHandler {
 
 	@Override
 	public void setMotion(Entity entity) {
-		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+	}
+
+	@Override
+	public void setItemMotion(Item i, Location ol, Location nl) {
+		EntityItem ei=(EntityItem)((CraftItem)i).getHandle();
+		ei.setPosition(ol.getX(), ol.getY(), ol.getZ());
 	}
 
 	@Override
@@ -47,9 +55,7 @@ implements VolatileHandler {
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
 		players.stream().forEach(ap-> {
-			Main.logger.info(me.getCustomName());
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			Main.logger.info(cp.getDisplayName());
 			cp.getHandle().playerConnection.sendPacket(tp);
 		});
 	}

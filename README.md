@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.201dev
+# CustomSkillMechanics v1.202dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 5.10.2017 *** maybe fix for itemprojectile mechanic.
 ##### *** 3.10.2017 *** maybe customsummon mechanic npe fix.
 ##### *** 30.9.2017 *** added infaction and samefaction conditions. See conditions for details.
 ##### *** 29.9.2017 *** added setfaction mechanic. See setfaction mechanic for details.

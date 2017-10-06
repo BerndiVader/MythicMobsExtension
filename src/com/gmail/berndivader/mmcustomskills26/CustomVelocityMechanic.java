@@ -20,6 +20,7 @@ ITargetedEntitySkill {
 
 	public CustomVelocityMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
+		this.ASYNC_SAFE=false;
 		this.debug=mlc.getBoolean("debug",false);
         this.velocityX = mlc.getDouble(new String[]{"velocityx", "vx", "x"}, 0.0D);
         this.velocityY = mlc.getDouble(new String[]{"velocityy", "vy", "y"}, 0.0D);

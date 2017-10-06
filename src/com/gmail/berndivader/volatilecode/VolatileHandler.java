@@ -1,6 +1,8 @@
 package com.gmail.berndivader.volatilecode;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 
 public interface VolatileHandler {
@@ -9,5 +11,5 @@ public interface VolatileHandler {
     public boolean inMotion(LivingEntity entity);
     public void teleportEntityPacket(Entity entity);
     public void setMotion(Entity entity);
-	
+	void setItemMotion(Item i, Location ol, Location nl);
 }

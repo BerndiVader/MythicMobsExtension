@@ -2,12 +2,14 @@ package com.gmail.berndivader.volatilecode;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
@@ -20,6 +22,8 @@ import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 import org.bukkit.Effect;
@@ -31,8 +35,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.Vec3D;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntityTeleport;
+import net.minecraft.server.v1_11_R1.EntityItem;
 import net.minecraft.server.v1_11_R1.BlockPosition;
 import net.minecraft.server.v1_11_R1.EntityHuman;
 import net.minecraft.server.v1_11_R1.IBlockData;
@@ -57,13 +65,25 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public void teleportEntityPacket(Entity entity) {
+	public void setMotion(Entity entity) {
 
+	}
+	
+	@Override
+	public void setItemMotion(Item i, Location ol, Location nl) {
+		EntityItem ei=(EntityItem)((CraftItem)i).getHandle();
+		ei.setPosition(ol.getX(), ol.getY(), ol.getZ());
 	}
 
 	@Override
-	public void setMotion(Entity entity) {
-
+	public void teleportEntityPacket(Entity entity) {
+		net.minecraft.server.v1_11_R1.Entity me = ((CraftEntity)entity).getHandle();
+		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
+		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
+		players.stream().forEach(ap-> {
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(tp);
+		});
 	}
 
 	@Override
