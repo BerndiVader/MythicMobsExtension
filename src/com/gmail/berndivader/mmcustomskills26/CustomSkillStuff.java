@@ -360,6 +360,22 @@ public class CustomSkillStuff implements Listener {
 		newy -= z * sinpitch;
 		return new Vector(newx, newy, newz);
 	}
+	
+	public static Vector getFrontBackOffsetVector(Vector d, double o) {
+		d.normalize();
+		d.multiply(o);
+		return d;
+	}
+	
+	public static Vector getSideOffsetVector(float vYa, double hO, boolean iy) {
+		double y = 0d;
+		if (!iy)
+			y=Math.toRadians(vYa);
+		double xo=Math.cos(y)*hO;
+		double zo=Math.sin(y)*hO;
+		return new Vector(xo,0d,zo);
+	}
+	
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();

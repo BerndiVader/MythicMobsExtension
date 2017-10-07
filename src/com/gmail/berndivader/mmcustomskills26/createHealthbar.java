@@ -16,15 +16,19 @@ public class createHealthbar extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	protected double offset;
+	protected double offset,hOffset,vOffset;
 	protected String template;
 	protected int counter;
+	protected boolean ignoreYaw;
 	
 	public createHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.offset = mlc.getDouble("offset",2D);
 		this.counter = mlc.getInteger("counter",200);
+		this.hOffset=mlc.getDouble("so",0d);
+		this.vOffset=mlc.getDouble("fo",0d);
+		this.ignoreYaw=mlc.getBoolean("iy",false);
 		String parse = mlc.getString("display");
 		if (parse.startsWith("\"") 
 				&& parse.endsWith("\"")) {
@@ -38,7 +42,7 @@ ITargetedEntitySkill {
 		if (!HealthbarHandler.healthbars.containsKey(target.getUniqueId())
 				&& target.isLiving()) {
 			LivingEntity entity = (LivingEntity)target.getBukkitEntity();
-			new Healthbar(entity,this.offset,this.counter,this.template);
+			new Healthbar(entity,this.offset,this.counter,this.template,this.hOffset,this.vOffset,this.ignoreYaw);
 			return true;
 		};
 		return false;

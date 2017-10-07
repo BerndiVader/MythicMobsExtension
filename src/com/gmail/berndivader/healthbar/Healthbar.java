@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
@@ -14,19 +15,30 @@ import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 public class Healthbar extends CraftHologram {
 	protected LivingEntity entity;
 	protected UUID uuid;
-	protected double offset;
+	protected double offset,sOffset,fOffset;
 	protected String template;
 	protected TextLine textline;
 	protected int showCounter,showCounterDefault;
+	protected boolean useOffset,iYaw;
 	
 	public Healthbar(LivingEntity entity) {
-		this(entity, 0.0d, -1, "$h");
+		this(entity, 0d, -1, "$h",0d,0d,false);
 	}
 	public Healthbar(LivingEntity entity, double offset) {
-		this(entity,offset, -1, "$h");
+		this(entity,offset, -1, "$h",0d,0d,false);
 	}
-	public Healthbar(LivingEntity entity, double offset,int showCounter, String l) {
+	public Healthbar(LivingEntity entity, double offset,int showCounter, String l, double sOffset, double fOffset, boolean ignoreYaw) {
 		super(entity.getLocation().add(0, offset, 0));
+		this.fOffset=fOffset;
+		this.sOffset=sOffset;
+		this.iYaw=ignoreYaw;
+		this.useOffset=fOffset!=0d||sOffset!=0d;
+		if (this.useOffset) {
+			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
+			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
+			this.getLocation().add(soV);
+			this.getLocation().add(foV);
+		}
 		this.uuid = entity.getUniqueId();
 		HealthbarHandler.healthbars.put(this.uuid, this);
 		if (showCounter == -1) {
@@ -67,6 +79,12 @@ public class Healthbar extends CraftHologram {
 			} else {
 				this.showCounter--;
 			}
+		}
+		if (this.useOffset) {
+			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
+			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
+			x+=soV.getX()+foV.getX();
+			z+=soV.getZ()+foV.getZ();
 		}
 		this.teleport(w, x, y+this.offset, z);
 		return true;

@@ -1,6 +1,9 @@
-# CustomSkillMechanics v1.202dev
+# CustomSkillMechanics v1.203dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 7.10.2017 *** added owneralive condition. See ownerlaive condition for details.
+##### *** 7.10.2017 *** fixed some problems in parsedstance mechanic.
+##### *** 7.10.2017 *** added sideOffset & frontOffset to createhelthbar mechanic. See createhealthbar mechanic for details.
 ##### *** 5.10.2017 *** maybe fix for itemprojectile mechanic.
 ##### *** 3.10.2017 *** maybe customsummon mechanic npe fix.
 ##### *** 30.9.2017 *** added infaction and samefaction conditions. See conditions for details.
@@ -238,9 +241,12 @@ PlayEffectOnTarget:
 
 	Use this mechanic to display a healthbar above the mythicmobs head.
 	
-	  - createhealthbar{offset=2.5;counter=10;display="[|||$h|||]"} @self ~onSpawn
+	  - createhealthbar{so=0;fo=0;iy=false;offset=2.5;counter=10;display="[|||$h|||]"} @self ~onSpawn
 	  
-	Creates a healthbar for the spawned mob with an offset of 2.5. 
+	Creates a healthbar for the spawned mob with an y-offset of 2.5. 
+	And adds so(sideoffset) to left/right of mob and add fo(frontBackOffset). Use iy(ignoreYaw) if you dont want sideoffset
+	affected by the entity's yaw.
+	
 	The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health.
 	If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
@@ -915,6 +921,11 @@ FleeButGotNothing:
 
 
 
+```markdown
+  Conditions:
+  - owneralive{action=[boolean]}
+```
+Returns true if the mobs owner is online, alive or in same world.
 ```markdown
   Conditions:
   - infaction{faction=[STRING]or[ARRAY];action=[BOOLEAN]}

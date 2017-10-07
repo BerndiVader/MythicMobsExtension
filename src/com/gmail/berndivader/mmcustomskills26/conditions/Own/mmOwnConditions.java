@@ -116,6 +116,10 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c = new InFactionCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "owneralive": {
+			SkillCondition c=new OwnerAliveCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+			}
 		}}
-	}
 }
