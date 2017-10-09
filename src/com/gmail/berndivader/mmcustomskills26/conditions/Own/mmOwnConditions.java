@@ -120,6 +120,14 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new OwnerAliveCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "playerweather":{
+			SkillCondition c=new PlayerWeatherCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}case "playertime":{
+			SkillCondition c=new PlayerTimeCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 			}
 		}}
 }
