@@ -1,6 +1,5 @@
 package com.gmail.berndivader.NMS;
 
-import com.gmail.berndivader.mmcustomskills26.Main;
 import com.google.common.io.BaseEncoding;
 
 import org.bukkit.Art;
