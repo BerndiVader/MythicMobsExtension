@@ -361,7 +361,8 @@ public class CustomSkillStuff implements Listener {
 		return new Vector(newx, newy, newz);
 	}
 	
-	public static Vector getFrontBackOffsetVector(Vector d, double o) {
+	public static Vector getFrontBackOffsetVector(Vector v, double o) {
+		Vector d=v.clone();
 		d.normalize();
 		d.multiply(o);
 		return d;

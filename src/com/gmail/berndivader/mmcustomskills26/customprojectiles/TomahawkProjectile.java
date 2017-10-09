@@ -296,10 +296,10 @@ public class TomahawkProjectile extends CustomProjectile implements ITargetedEnt
 				return;
 			}
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.pam.getLocation(), TomahawkProjectile.this.hitRadius,
+				HitBox hitBox = new HitBox(this.pam.getEntity().getBukkitEntity().getLocation(), TomahawkProjectile.this.hitRadius,
 						TomahawkProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
-					if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0)))
+					if (e.isDead() || !hitBox.contains(e.getBukkitEntity().getLocation().add(0.0, 0.6, 0.0)))
 						continue;
 					this.targets.add(e);
 					this.immune.put(e, System.currentTimeMillis());

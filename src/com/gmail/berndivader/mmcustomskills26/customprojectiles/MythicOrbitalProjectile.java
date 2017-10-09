@@ -144,6 +144,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 						BukkitAdapter.adapt(this.currentLocation));
 				this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 				if (!this.targetable)
+					Main.getPlugin().getVolatileHandler().changeHitBox(this.pEntity,0,0,0);
 					this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();

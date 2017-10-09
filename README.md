@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.203dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 9.10.2017 *** final fix for itemprojectile.
 ##### *** 7.10.2017 *** added owneralive condition. See ownerlaive condition for details.
 ##### *** 7.10.2017 *** fixed some problems in parsedstance mechanic.
 ##### *** 7.10.2017 *** added sideOffset & frontOffset to createhelthbar mechanic. See createhealthbar mechanic for details.

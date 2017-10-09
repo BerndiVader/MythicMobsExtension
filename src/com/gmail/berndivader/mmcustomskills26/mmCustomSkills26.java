@@ -181,6 +181,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new CustomVelocityMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "asequip": {
+			skill=new EquipArmorstandMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}}
 	}
 }

@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -202,6 +203,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pBlock.setTicksLived(Integer.MAX_VALUE);
 			this.pBlock.setInvulnerable(true);
 			this.pBlock.setGravity(false);
+			Main.getPlugin().getVolatileHandler().changeHitBox((Entity)this.pBlock,0,0,0);
 
 			this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
 			if (BlockProjectile.this.hitPlayers || BlockProjectile.this.hitNonPlayers) {

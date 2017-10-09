@@ -49,13 +49,13 @@ ITargetedEntitySkill {
         if (this.mode.equals((Object)VelocityMode.SET)) {
             v = new Vector(this.velocityX, this.velocityY, this.velocityZ);
         } else if (this.mode.equals((Object)VelocityMode.ADD)) {
-            v.setX(v.getX() + this.velocityX);
-            v.setY(v.getY() + this.velocityY);
-            v.setZ(v.getZ() + this.velocityZ);
+            v.setX(v.getX()+this.velocityX);
+            v.setY(v.getY()+this.velocityY);
+            v.setZ(v.getZ()+this.velocityZ);
         } else if (this.mode.equals((Object)VelocityMode.MULTIPLY)) {
-            v.setX(v.getX() * this.velocityX);
-            v.setY(v.getY() * this.velocityY);
-            v.setZ(v.getZ() * this.velocityZ);
+            v.setX(v.getX()*this.velocityX);
+            v.setY(v.getY()*this.velocityY);
+            v.setZ(v.getZ()*this.velocityZ);
         }
         if (debug) System.out.println(
         		"dx:"+v.getX()

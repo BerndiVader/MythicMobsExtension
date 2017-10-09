@@ -17,6 +17,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -44,9 +45,25 @@ implements VolatileHandler {
 	}
 
 	@Override
+	public void changeHitBox(Entity entity, double a0, double a1, double a2) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		me.getBoundingBox().a(a0,a1,a2);
+	}
+
+	@Override
 	public void setItemMotion(Item i, Location ol, Location nl) {
 		EntityItem ei=(EntityItem)((CraftItem)i).getHandle();
 		ei.setPosition(ol.getX(), ol.getY(), ol.getZ());
+	}
+	
+	@Override
+	public void sendArmorstandEquipPacket(ArmorStand entity) {
+		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
+		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
+		players.stream().forEach(ap-> {
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(packet);
+		});
 	}
 
 	@Override

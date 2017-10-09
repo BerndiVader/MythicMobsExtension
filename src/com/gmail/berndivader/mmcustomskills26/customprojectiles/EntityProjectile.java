@@ -199,6 +199,7 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 			if (!this.targetable)
 				this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.pEntity.setGravity(false);
+			Main.getPlugin().getVolatileHandler().changeHitBox(this.pEntity,0,0,0);
 			this.taskId = TaskManager.get().scheduleTask(this, 0, EntityProjectile.this.tickInterval);
 			if (EntityProjectile.this.hitPlayers || EntityProjectile.this.hitNonPlayers) {
 				this.inRange

@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +45,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pItem" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
+		this.tickInterval=2;
+		this.ticksPerSecond=20.0f/this.tickInterval;
 	}
 
 	@Override
@@ -224,6 +227,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			this.pItem.setPickupDelay(Integer.MAX_VALUE);
 			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem,l, null);
 			Main.getPlugin().getVolatileHandler().teleportEntityPacket(this.pItem);
+			Main.getPlugin().getVolatileHandler().changeHitBox((Entity)this.pItem,0,0,0);
 		}
 
 		public void modifyVelocity(double v) {

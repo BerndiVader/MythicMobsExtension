@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -67,6 +68,12 @@ implements VolatileHandler {
 	@Override
 	public void setMotion(Entity entity) {
 
+	}
+	
+	@Override
+	public void changeHitBox(Entity entity, double a0, double a1, double a2) {
+		net.minecraft.server.v1_11_R1.Entity me = ((CraftEntity)entity).getHandle();
+		me.getBoundingBox().a(a0,a1,a2);
 	}
 	
 	@Override
@@ -520,4 +527,9 @@ implements VolatileHandler {
 	    }
 	}
 
+	@Override
+	public void sendArmorstandEquipPacket(ArmorStand entity) {
+		// TODO Auto-generated method stub
+		
+	}
 }

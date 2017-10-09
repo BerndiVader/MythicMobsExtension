@@ -1,11 +1,11 @@
 package com.gmail.berndivader.mmcustomskills26.customprojectiles;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.AbstractWorld;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class HitBox {
-	AbstractWorld world;
+	World world;
 	double lowX;
 	double lowY;
 	double lowZ;
@@ -13,11 +13,11 @@ public class HitBox {
 	double highY;
 	double highZ;
 
-	public HitBox(AbstractLocation center, double radius) {
+	public HitBox(Location center, double radius) {
 		this(center, radius, radius);
 	}
 
-	public HitBox(AbstractLocation center, double horizRadius, double vertRadius) {
+	public HitBox(Location center, double horizRadius, double vertRadius) {
 		this.world = center.getWorld();
 		this.lowX = center.getX() - horizRadius;
 		this.lowY = center.getY() - vertRadius;
@@ -27,7 +27,7 @@ public class HitBox {
 		this.highZ = center.getZ() + horizRadius;
 	}
 
-	public boolean contains(AbstractLocation location) {
+	public boolean contains(Location location) {
 		if (!location.getWorld().equals(this.world)) {
 			return false;
 		}
@@ -38,7 +38,7 @@ public class HitBox {
 				&& z <= this.highZ;
 	}
 
-	public boolean contains(AbstractEntity entity) {
+	public boolean contains(Entity entity) {
 		return this.contains(entity.getLocation());
 	}
 }

@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
@@ -316,11 +318,12 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 				this.stop();
 				return;
 			}
+			Location cl=BukkitAdapter.adapt(this.currentLocation);
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.currentLocation, EffectProjectile.this.hitRadius,
+				HitBox hitBox = new HitBox(cl, EffectProjectile.this.hitRadius,
 						EffectProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
-					if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0)))
+					if (e.isDead() || !hitBox.contains(e.getBukkitEntity().getLocation().add(0.0, 0.6, 0.0)))
 						continue;
 					this.targets.add(e);
 					this.immune.put(e, System.currentTimeMillis());
