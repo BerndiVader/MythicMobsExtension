@@ -185,6 +185,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new EquipArmorstandMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "playerweather": {
+			skill=new PlayerWeatherMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+			break;
 		}}
 	}
 }

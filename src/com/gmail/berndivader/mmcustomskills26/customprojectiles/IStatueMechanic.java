@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -41,25 +42,28 @@ ITargetedLocationSkill {
 	protected SkillManager skillmanager;
 	protected MobManager mobmanager;
 	
-    protected Optional<Skill> onTickSkill = Optional.empty();
-    protected Optional<Skill> onHitSkill = Optional.empty();
-    protected Optional<Skill> onEndSkill = Optional.empty();
-    protected Optional<Skill> onStartSkill = Optional.empty();
+    protected Optional<Skill>onTickSkill=Optional.empty(),
+    		onHitSkill=Optional.empty(),
+    		onEndSkill=Optional.empty(),
+    		onStartSkill=Optional.empty();
     protected Material material;
-    protected String onTickSkillName;
-    protected String onHitSkillName;
-    protected String onEndSkillName;
-    protected String onStartSkillName;
+    protected String onTickSkillName,
+    		onHitSkillName,
+    		onEndSkillName,
+    		onStartSkillName;
     protected int tickInterval;
-    protected float ticksPerSecond;
-    protected float hitRadius;
-    protected float verticalHitRadius;
-    protected float duration;
-    protected float YOffset;
-    protected boolean hitTarget = true;
-    protected boolean hitPlayers = false;
-    protected boolean hitNonPlayers = false;
-    protected boolean hitTargetOnly = false;
+    protected float ticksPerSecond,
+    		hitRadius,
+    		verticalHitRadius,
+    		duration,
+    		YOffset;
+    protected double sOffset,
+    		fOffset;
+    protected boolean 
+    		hitTarget=true,
+    		hitPlayers=false,
+    		hitNonPlayers=false,
+    		hitTargetOnly=false;
 
     public IStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -85,6 +89,8 @@ ITargetedLocationSkill {
         this.duration*= 1000.0f;
         this.verticalHitRadius = mlc.getFloat(new String[] {"verticalradius","vradius","vr"}, this.hitRadius);
         this.YOffset = mlc.getFloat(new String[] {"yoffset","yo"}, 1.0f);
+        this.sOffset=mlc.getDouble(new String[] {"soffset","so"},0d);
+        this.fOffset=mlc.getDouble(new String[] {"foffset","fo"},0d);
         this.hitPlayers = mlc.getBoolean(new String[] {"hitplayers","hp"}, false);
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, false);
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
@@ -118,12 +124,12 @@ ITargetedLocationSkill {
     private class StatueTracker
     implements IParentSkill,
     Runnable {
+        private boolean cancelled;
         private SkillMetadata data;
         private Item item;
-        private boolean cancelled;
-        private SkillCaster am;
-        private long startTime;
+        private SkillCaster caster;
         private Location currentLocation;
+        private long startTime;
         private int taskId;
         private HashSet<LivingEntity> targets;
         private List<LivingEntity> inRange;
@@ -133,9 +139,9 @@ ITargetedLocationSkill {
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
-            this.am = data.getCaster();
+            this.caster = data.getCaster();
             this.startTime = System.currentTimeMillis();
-            this.currentLocation=this.am.getEntity().getBukkitEntity().getLocation();
+            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
             if (IStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+(double)IStatueMechanic.this.YOffset);
             }
@@ -145,7 +151,7 @@ ITargetedLocationSkill {
                 Iterator<LivingEntity> iter = this.inRange.iterator();
                 while (iter.hasNext()) {
                     LivingEntity e = iter.next();
-                    if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
+                    if (e.getUniqueId().equals(this.caster.getEntity().getUniqueId())) {
                         iter.remove();
                         continue;
                     }

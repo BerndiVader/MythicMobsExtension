@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.203dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 9.10.2017 *** added playerweather mechanic. See playerweather for details.
 ##### *** 9.10.2017 *** final fix for itemprojectile.
 ##### *** 7.10.2017 *** added owneralive condition. See ownerlaive condition for details.
 ##### *** 7.10.2017 *** fixed some problems in parsedstance mechanic.
@@ -176,6 +177,14 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## playerweather mechanic:
+
+    Change the weather and time for the targeted player only. The effect will last duration amount of ticks.
+	
+	  - playerweather{weather=w=CLEAR||DOWNFALL;time=t=[time];duration=d=[integer]} @PIR{r=20} ~onSpawn
 
 
 
