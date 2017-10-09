@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.203dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### *** 9.10.2017 *** added ownertarget targeters. Targets the target of the owner of the mob. (Only work with mm 4.3 or patched 4.2)
 ##### *** 9.10.2017 *** added playerweather mechanic. See playerweather for details.
 ##### *** 9.10.2017 *** final fix for itemprojectile.
 ##### *** 7.10.2017 *** added owneralive condition. See ownerlaive condition for details.
