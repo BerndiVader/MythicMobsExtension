@@ -195,6 +195,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					Material.valueOf(customItemName), (byte) 0);
+			Main.entityCache.add(this.pBlock);
 			this.pBlock.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pBlock.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -383,8 +384,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 				BlockProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pBlock.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pBlock.remove();
 			this.cancelled = true;
 		}
 

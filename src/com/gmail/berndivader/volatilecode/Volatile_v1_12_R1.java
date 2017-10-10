@@ -71,7 +71,7 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
-		players.stream().forEach(ap-> {
+		players.forEach(ap-> {
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
 		});

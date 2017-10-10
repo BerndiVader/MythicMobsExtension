@@ -37,6 +37,12 @@ public class HealthbarHandler implements Listener {
 		return HealthbarHandler.healthbars;
 	}
 	
+	public void removeHealthbars() {
+		healthbars.forEach((uuid,healthbar)-> {
+			healthbar.remove();
+		});
+	}
+	
 	public class HealthbarClock implements Runnable {
 		protected BukkitTask taskId;
 		

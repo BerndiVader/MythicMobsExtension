@@ -218,6 +218,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
+			Main.entityCache.add(this.pItem);
 			this.pItem.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pItem.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -377,8 +378,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				ItemProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pItem.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pItem.remove();
 			this.cancelled = true;
 		}
 

@@ -13,8 +13,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.volatilecode.VolatileHandler;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -51,11 +57,10 @@ ITargetedLocationSkill {
     		onHitSkillName,
     		onEndSkillName,
     		onStartSkillName;
-    protected int tickInterval;
+    protected int tickInterval,duration;
     protected float ticksPerSecond,
     		hitRadius,
     		verticalHitRadius,
-    		duration,
     		YOffset;
     protected double sOffset,
     		fOffset;
@@ -85,8 +90,7 @@ ITargetedLocationSkill {
         this.tickInterval=mlc.getInteger(new String[]{"interval","int","i"},4);
         this.ticksPerSecond=20.0f/(float)this.tickInterval;
         this.hitRadius=mlc.getFloat(new String[] {"horizontalradius","hradius","hr","r"},1.25f);
-        this.duration=mlc.getFloat(new String[] {"maxduration","md"},10.0f);
-        this.duration*= 1000.0f;
+        this.duration=mlc.getInteger(new String[] {"maxduration","md"},10);
         this.verticalHitRadius = mlc.getFloat(new String[] {"verticalradius","vradius","vr"}, this.hitRadius);
         this.YOffset = mlc.getFloat(new String[] {"yoffset","yo"}, 1.0f);
         this.sOffset=mlc.getDouble(new String[] {"soffset","so"},0d);
@@ -124,29 +128,45 @@ ITargetedLocationSkill {
     private class StatueTracker
     implements IParentSkill,
     Runnable {
-        private boolean cancelled;
+    	private VolatileHandler vh;
+        private boolean cancelled,useOffset,iYaw;
         private SkillMetadata data;
         private Item item;
         private SkillCaster caster;
-        private Location currentLocation;
-        private long startTime;
+        private Entity owner;
+        private Location currentLocation,oldLocation;
         private int taskId;
         private HashSet<LivingEntity> targets;
         private List<LivingEntity> inRange;
         private Map<LivingEntity,Long> immune;
+        private double sOffset,fOffset,yOffset;
+        private int count,dur;
 
         public StatueTracker(SkillMetadata data, AbstractEntity target) {
+        	this.vh=Main.getPlugin().getVolatileHandler();
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
-            this.startTime = System.currentTimeMillis();
+            this.owner=this.caster.getEntity().getBukkitEntity();
             this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
+            this.yOffset=IStatueMechanic.this.YOffset;
+            this.sOffset=IStatueMechanic.this.sOffset;
+            this.fOffset=IStatueMechanic.this.fOffset;
+            this.count=0;
             if (IStatueMechanic.this.YOffset != 0.0f) {
-                this.currentLocation.setY(this.currentLocation.getY()+(double)IStatueMechanic.this.YOffset);
+                this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
             }
-            this.taskId=TaskManager.get().scheduleTask(this, 0, IStatueMechanic.this.tickInterval);
-            if (IStatueMechanic.this.hitPlayers || IStatueMechanic.this.hitNonPlayers || IStatueMechanic.this.hitTarget) {
+    		this.useOffset=IStatueMechanic.this.fOffset!=0d||IStatueMechanic.this.sOffset!=0d;
+    		if (this.useOffset) {
+    			Vector soV=CustomSkillStuff.getSideOffsetVector(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
+    			this.currentLocation.add(soV);
+    			this.currentLocation.add(foV);
+    		}
+            if (IStatueMechanic.this.hitPlayers
+            		||IStatueMechanic.this.hitNonPlayers
+            		||IStatueMechanic.this.hitTarget) {
                 this.inRange = this.currentLocation.getWorld().getLivingEntities();
                 Iterator<LivingEntity> iter = this.inRange.iterator();
                 while (iter.hasNext()) {
@@ -166,14 +186,25 @@ ITargetedLocationSkill {
                     this.inRange.add((LivingEntity)target.getBukkitEntity());
                 }
             }
-            this.targets = new HashSet<LivingEntity>();
-            this.immune = new HashMap<LivingEntity, Long>();
-            if (IStatueMechanic.this.onStartSkill.isPresent() && IStatueMechanic.this.onStartSkill.get().isUsable(data)) {
+            this.targets=new HashSet<LivingEntity>();
+            this.immune=new HashMap<LivingEntity,Long>();
+            this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.material));
+            Main.entityCache.add(this.item);
+			this.item.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.item.setInvulnerable(true);
+			this.item.setGravity(false);
+			this.item.setTicksLived(Integer.MAX_VALUE);
+			this.item.setPickupDelay(Integer.MAX_VALUE);
+			vh.teleportEntityPacket(this.item);
+			vh.changeHitBox((Entity)this.item,0,0,0);
+            if (IStatueMechanic.this.onStartSkill.isPresent()
+            		&&IStatueMechanic.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
                 sData.setLocationTarget(BukkitAdapter.adapt(this.currentLocation));
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
                 IStatueMechanic.this.onStartSkill.get().execute(sData);
             }
+            this.taskId=TaskManager.get().scheduleTask(this, 0, 1);
         }
 
         @Override
@@ -181,11 +212,18 @@ ITargetedLocationSkill {
             if (this.cancelled) {
                 return;
             }
-            if (IStatueMechanic.this.duration > 0.0f && (float)this.startTime + IStatueMechanic.this.duration < (float)System.currentTimeMillis()) {
+            if(this.count>IStatueMechanic.this.duration) {
                 this.stop();
                 return;
             }
-            if (this.inRange != null) {
+            if (this.item==null) {
+            	this.stop();
+            	return;
+            }
+            this.oldLocation=this.currentLocation.clone();
+            this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
+            if (this.dur>IStatueMechanic.this.tickInterval
+            		&&this.inRange != null) {
                 HitBox hitBox = new HitBox(this.currentLocation,IStatueMechanic.this.hitRadius,IStatueMechanic.this.verticalHitRadius);
                 for (int i=0;i<this.inRange.size();i++) {
                     LivingEntity e=this.inRange.get(i);
@@ -203,19 +241,36 @@ ITargetedLocationSkill {
                     this.inRange.add(entry.getKey());
                 }
             }
-            if (IStatueMechanic.this.onTickSkill.isPresent() && IStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
-                SkillMetadata sData = this.data.deepClone();
-                AbstractLocation location = BukkitAdapter.adapt(this.currentLocation.clone());
-                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
-                targets.add(location);
-                sData.setLocationTargets(targets);
-                sData.setOrigin(location);
-                IStatueMechanic.this.onTickSkill.get().execute(sData);
-            }
+    		double x = this.currentLocation.getX();
+    		double z = this.currentLocation.getZ();
+			Vector soV=CustomSkillStuff.getSideOffsetVector(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
+			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
+			x+=soV.getX()+foV.getX();
+			z+=soV.getZ()+foV.getZ();
+			this.currentLocation.setX(x);
+			this.currentLocation.setZ(z);
+			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
+			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
+			
+			if (this.dur>IStatueMechanic.this.tickInterval) {
+	            if (IStatueMechanic.this.onTickSkill.isPresent()
+	            		&&IStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
+	                SkillMetadata sData = this.data.deepClone();
+	                AbstractLocation location = BukkitAdapter.adapt(this.currentLocation.clone());
+	                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
+	                targets.add(location);
+	                sData.setLocationTargets(targets);
+	                sData.setOrigin(location);
+	                IStatueMechanic.this.onTickSkill.get().execute(sData);
+	            }
+	            this.dur=0;
+			}
             if (this.targets.size() > 0) {
                 this.doHit((HashSet)this.targets.clone());
             }
             this.targets.clear();
+			this.count++;
+			this.dur++;
         }
 
         public void doHit(HashSet<AbstractEntity> targets) {
@@ -234,6 +289,7 @@ ITargetedLocationSkill {
                 		.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
             }
             TaskManager.get().cancelTask(this.taskId);
+            this.item.remove();
             this.cancelled = true;
             if (this.inRange != null) {
                 this.inRange.clear();

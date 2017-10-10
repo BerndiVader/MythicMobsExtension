@@ -301,8 +301,8 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				MythicOrbitalProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pEntity.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pEntity.remove();
 			this.cancelled = true;
 		}
 

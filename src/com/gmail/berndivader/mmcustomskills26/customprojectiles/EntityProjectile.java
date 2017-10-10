@@ -195,6 +195,7 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					EntityType.valueOf(customItemName));
+			Main.entityCache.add(this.pEntity);
 			this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -382,8 +383,8 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 				EntityProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pEntity.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pEntity.remove();
 			this.cancelled = true;
 		}
 

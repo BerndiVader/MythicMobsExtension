@@ -70,6 +70,7 @@ public class mmGrenadeSkill extends SkillMechanic
 			Location sl = source.clone();
 			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl,
 					EntityType.PRIMED_TNT);
+			Main.entityCache.add(grenade);
 			if (grenade == null) return false;
 			grenade.setVelocity(v);
 			grenade.setYield(size);

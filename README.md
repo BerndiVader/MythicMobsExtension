@@ -1,6 +1,8 @@
-# CustomSkillMechanics v1.203dev
+# CustomSkillMechanics v1.204dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 10.10.2017 *** experimental itemfloating mechanic.
+##### *** 9.10.2017 *** fixed several bugs.
 ##### *** 9.10.2017 *** added playerweather & playertime conditions. 
 ##### *** 9.10.2017 *** added asequip mechanic. mainly to equip head of armorstand with any Bukkit Material Type.
 ##### *** 9.10.2017 *** added ownertarget targeters. Targets the target of the owner of the mob. (Only work with mm 4.3 or patched 4.2)
@@ -181,6 +183,16 @@ PlayEffectOnTarget:
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
 
+
+
+## itemfloating mechanic EXPERIMENTAL!!:
+
+    Summon a floating item relative to mobs direction.
+	
+	 - itemfloating{i=SPONGE;md=250;yo=0.4;so=-0.5;fo=0.9} ~onSpawn
+	 
+	 Almost all options like in mythicprojectile possible.
+	 
 
 
 ## asquip mechanic:
