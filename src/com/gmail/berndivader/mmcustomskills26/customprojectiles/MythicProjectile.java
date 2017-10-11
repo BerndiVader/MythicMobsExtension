@@ -352,6 +352,13 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 				this.stop();
 				return;
 			}
+			Location eloc = this.pEntity.getLocation();
+			float yaw = eloc.getYaw();
+			if (this.pSpin != 0.0) {
+				yaw = ((yaw + this.pSpin) % 360.0F);
+			}
+			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY() + this.pVOff,
+					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.pam.getEntity().getBukkitEntity().getLocation(), MythicProjectile.this.hitRadius,
 						MythicProjectile.this.verticalHitRadius);
@@ -382,13 +389,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					this.stop();
 				}
 			}
-			Location eloc = this.pEntity.getLocation();
-			float yaw = eloc.getYaw();
-			if (this.pSpin != 0.0) {
-				yaw = ((yaw + this.pSpin) % 360.0F);
-			}
-			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY() + this.pVOff,
-					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			this.targets.clear();
 		}
 

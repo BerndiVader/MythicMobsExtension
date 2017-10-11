@@ -4,7 +4,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.BStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.BlockProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.EStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.EffectProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.EntityProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.IStatueMechanic;
@@ -192,6 +194,14 @@ public class mmCustomSkills26 implements Listener {
 			break;
 		}case "itemfloating": {
 			skill=new IStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "blockfloating":{
+			skill=new BStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "entityfloating":{
+			skill=new EStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}

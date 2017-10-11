@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
@@ -39,7 +37,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class IStatueMechanic extends SkillMechanic
+public class EStatueMechanic extends SkillMechanic
 implements 
 ITargetedEntitySkill,
 ITargetedLocationSkill {
@@ -52,7 +50,7 @@ ITargetedLocationSkill {
     		onHitSkill=Optional.empty(),
     		onEndSkill=Optional.empty(),
     		onStartSkill=Optional.empty();
-    protected Material material;
+    protected EntityType material;
     protected String onTickSkillName,
     		onHitSkillName,
     		onEndSkillName,
@@ -68,20 +66,21 @@ ITargetedLocationSkill {
     		hitTarget=true,
     		hitPlayers=false,
     		hitNonPlayers=false,
-    		hitTargetOnly=false;
+    		hitTargetOnly=false,
+    		noAI=true;
 
-    public IStatueMechanic(String skill, MythicLineConfig mlc) {
+    public EStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
 		this.mythicmobs=Main.getPlugin().getMythicMobs();
 		this.entitymanager=this.mythicmobs.getEntityManager();
 		this.skillmanager=this.mythicmobs.getSkillManager();
 		this.mobmanager=this.mythicmobs.getMobManager();
-		String i=mlc.getString(new String[] {"item","i"},"DIRT");
+		String i=mlc.getString(new String[] {"material","m"},"DIRT").toUpperCase();
 		try {
-			this.material=Material.valueOf(i);
+			this.material=EntityType.valueOf(i);
 		} catch (Exception e){
-			this.material=Material.DIRT;
+			this.material=EntityType.PLAYER;
 		}
         this.onTickSkillName=mlc.getString(new String[]{"ontickskill","ontick","ot","skill","s","meta","m"});
         this.onHitSkillName=mlc.getString(new String[]{"onhitskill","onhit","oh"});
@@ -99,6 +98,7 @@ ITargetedLocationSkill {
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, false);
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
+        this.noAI=mlc.getBoolean("noai",true);
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = skillmanager.getSkill(this.onTickSkillName);
 		}
@@ -131,7 +131,7 @@ ITargetedLocationSkill {
     	private VolatileHandler vh;
         private boolean cancelled,useOffset,iYaw;
         private SkillMetadata data;
-        private Item item;
+        private Entity entity;
         private SkillCaster caster;
         private Entity owner;
         private Location currentLocation,oldLocation;
@@ -150,23 +150,23 @@ ITargetedLocationSkill {
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
             this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
-            this.yOffset=IStatueMechanic.this.YOffset;
-            this.sOffset=IStatueMechanic.this.sOffset;
-            this.fOffset=IStatueMechanic.this.fOffset;
+            this.yOffset=EStatueMechanic.this.YOffset;
+            this.sOffset=EStatueMechanic.this.sOffset;
+            this.fOffset=EStatueMechanic.this.fOffset;
             this.count=0;
-            if (IStatueMechanic.this.YOffset != 0.0f) {
+            if (EStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
             }
-    		this.useOffset=IStatueMechanic.this.fOffset!=0d||IStatueMechanic.this.sOffset!=0d;
+    		this.useOffset=EStatueMechanic.this.fOffset!=0d||EStatueMechanic.this.sOffset!=0d;
     		if (this.useOffset) {
     			Vector soV=CustomSkillStuff.getSideOffsetVector(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
     			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
-            if (IStatueMechanic.this.hitPlayers
-            		||IStatueMechanic.this.hitNonPlayers
-            		||IStatueMechanic.this.hitTarget) {
+            if (EStatueMechanic.this.hitPlayers
+            		||EStatueMechanic.this.hitNonPlayers
+            		||EStatueMechanic.this.hitTarget) {
                 this.inRange = this.currentLocation.getWorld().getLivingEntities();
                 Iterator<LivingEntity> iter = this.inRange.iterator();
                 while (iter.hasNext()) {
@@ -175,34 +175,34 @@ ITargetedLocationSkill {
                         iter.remove();
                         continue;
                     }
-                    if (!IStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
+                    if (!EStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
                         iter.remove();
                         continue;
                     }
-                    if (IStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
+                    if (EStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
                     iter.remove();
                 }
-                if (IStatueMechanic.this.hitTarget) {
+                if (EStatueMechanic.this.hitTarget) {
                     this.inRange.add((LivingEntity)target.getBukkitEntity());
                 }
             }
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
-            this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.material));
-            Main.entityCache.add(this.item);
-			this.item.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.item.setInvulnerable(true);
-			this.item.setGravity(false);
-			this.item.setTicksLived(Integer.MAX_VALUE);
-			this.item.setPickupDelay(Integer.MAX_VALUE);
-			vh.teleportEntityPacket(this.item);
-			vh.changeHitBox((Entity)this.item,0,0,0);
-            if (IStatueMechanic.this.onStartSkill.isPresent()
-            		&&IStatueMechanic.this.onStartSkill.get().isUsable(data)) {
+            this.entity=this.currentLocation.getWorld().spawnEntity(this.currentLocation,EStatueMechanic.this.material);
+            Main.entityCache.add(this.entity);
+			this.entity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.entity.setInvulnerable(true);
+			this.entity.setGravity(false);
+			this.entity.setTicksLived(Integer.MAX_VALUE);
+			if (this.entity instanceof LivingEntity) ((LivingEntity)this.entity).setAI(!EStatueMechanic.this.noAI);
+			vh.teleportEntityPacket(this.entity);
+			vh.changeHitBox((Entity)this.entity,0,0,0);
+            if (EStatueMechanic.this.onStartSkill.isPresent()
+            		&&EStatueMechanic.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
                 sData.setLocationTarget(BukkitAdapter.adapt(this.currentLocation));
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
-                IStatueMechanic.this.onStartSkill.get().execute(sData);
+                EStatueMechanic.this.onStartSkill.get().execute(sData);
             }
             this.taskId=TaskManager.get().scheduleTask(this, 0, 1);
         }
@@ -212,19 +212,19 @@ ITargetedLocationSkill {
             if (this.cancelled) {
                 return;
             }
-            if(this.count>IStatueMechanic.this.duration) {
+            if(this.count>EStatueMechanic.this.duration) {
                 this.stop();
                 return;
             }
-            if (this.item==null) {
+            if (this.entity==null) {
             	this.stop();
             	return;
             }
             this.oldLocation=this.currentLocation.clone();
             this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
-            if (this.dur>IStatueMechanic.this.tickInterval
+            if (this.dur>EStatueMechanic.this.tickInterval
             		&&this.inRange != null) {
-                HitBox hitBox = new HitBox(this.currentLocation,IStatueMechanic.this.hitRadius,IStatueMechanic.this.verticalHitRadius);
+                HitBox hitBox = new HitBox(this.currentLocation,EStatueMechanic.this.hitRadius,EStatueMechanic.this.verticalHitRadius);
                 for (int i=0;i<this.inRange.size();i++) {
                     LivingEntity e=this.inRange.get(i);
 					if (e.isDead()||!hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
@@ -250,19 +250,17 @@ ITargetedLocationSkill {
 			z+=soV.getZ()+foV.getZ();
 			this.currentLocation.setX(x);
 			this.currentLocation.setZ(z);
-			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
-			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
-			
-			if (this.dur>IStatueMechanic.this.tickInterval) {
-	            if (IStatueMechanic.this.onTickSkill.isPresent()
-	            		&&IStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
+			NMSUtils.setLocation(this.entity,x,this.currentLocation.getY(),z,this.currentLocation.getYaw(), this.currentLocation.getPitch());
+			if (this.dur>EStatueMechanic.this.tickInterval) {
+	            if (EStatueMechanic.this.onTickSkill.isPresent()
+	            		&&EStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
 	                SkillMetadata sData = this.data.deepClone();
 	                AbstractLocation location = BukkitAdapter.adapt(this.currentLocation.clone());
 	                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
 	                targets.add(location);
 	                sData.setLocationTargets(targets);
 	                sData.setOrigin(location);
-	                IStatueMechanic.this.onTickSkill.get().execute(sData);
+	                EStatueMechanic.this.onTickSkill.get().execute(sData);
 	            }
 	            this.dur=0;
 			}
@@ -275,22 +273,22 @@ ITargetedLocationSkill {
         }
 
         public void doHit(HashSet<AbstractEntity> targets) {
-            if (IStatueMechanic.this.onHitSkill.isPresent() && IStatueMechanic.this.onHitSkill.get().isUsable(this.data)) {
+            if (EStatueMechanic.this.onHitSkill.isPresent() && EStatueMechanic.this.onHitSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
                 sData.setEntityTargets(targets);
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
-                IStatueMechanic.this.onHitSkill.get().execute(sData);
+                EStatueMechanic.this.onHitSkill.get().execute(sData);
             }
         }
 
         public void stop() {
-            if (IStatueMechanic.this.onEndSkill.isPresent() && IStatueMechanic.this.onEndSkill.get().isUsable(this.data)) {
+            if (EStatueMechanic.this.onEndSkill.isPresent() && EStatueMechanic.this.onEndSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                IStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
+                EStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
                 		.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
             }
             TaskManager.get().cancelTask(this.taskId);
-            this.item.remove();
+            this.entity.remove();
             this.cancelled = true;
             if (this.inRange != null) {
                 this.inRange.clear();

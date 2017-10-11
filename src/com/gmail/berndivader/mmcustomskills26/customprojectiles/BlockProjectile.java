@@ -332,6 +332,10 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 				this.stop();
 				return;
 			}
+			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+			Location eloc = this.pBlock.getLocation().clone();
+			this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
+			this.targets.clear();
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, BlockProjectile.this.hitRadius,
 						BlockProjectile.this.verticalHitRadius);
@@ -360,10 +364,6 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 					this.stop();
 				}
 			}
-			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
-			Location eloc = this.pBlock.getLocation().clone();
-			this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
-			this.targets.clear();
 		}
 
 		private void doHit(HashSet<AbstractEntity> targets) {

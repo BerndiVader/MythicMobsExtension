@@ -10,10 +10,9 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
@@ -39,7 +38,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class IStatueMechanic extends SkillMechanic
+public class BStatueMechanic extends SkillMechanic
 implements 
 ITargetedEntitySkill,
 ITargetedLocationSkill {
@@ -70,14 +69,14 @@ ITargetedLocationSkill {
     		hitNonPlayers=false,
     		hitTargetOnly=false;
 
-    public IStatueMechanic(String skill, MythicLineConfig mlc) {
+    public BStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
 		this.mythicmobs=Main.getPlugin().getMythicMobs();
 		this.entitymanager=this.mythicmobs.getEntityManager();
 		this.skillmanager=this.mythicmobs.getSkillManager();
 		this.mobmanager=this.mythicmobs.getMobManager();
-		String i=mlc.getString(new String[] {"item","i"},"DIRT");
+		String i=mlc.getString(new String[] {"material","m"},"DIRT");
 		try {
 			this.material=Material.valueOf(i);
 		} catch (Exception e){
@@ -131,7 +130,7 @@ ITargetedLocationSkill {
     	private VolatileHandler vh;
         private boolean cancelled,useOffset,iYaw;
         private SkillMetadata data;
-        private Item item;
+        private FallingBlock block;
         private SkillCaster caster;
         private Entity owner;
         private Location currentLocation,oldLocation;
@@ -150,23 +149,23 @@ ITargetedLocationSkill {
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
             this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
-            this.yOffset=IStatueMechanic.this.YOffset;
-            this.sOffset=IStatueMechanic.this.sOffset;
-            this.fOffset=IStatueMechanic.this.fOffset;
+            this.yOffset=BStatueMechanic.this.YOffset;
+            this.sOffset=BStatueMechanic.this.sOffset;
+            this.fOffset=BStatueMechanic.this.fOffset;
             this.count=0;
-            if (IStatueMechanic.this.YOffset != 0.0f) {
+            if (BStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
             }
-    		this.useOffset=IStatueMechanic.this.fOffset!=0d||IStatueMechanic.this.sOffset!=0d;
+    		this.useOffset=BStatueMechanic.this.fOffset!=0d||BStatueMechanic.this.sOffset!=0d;
     		if (this.useOffset) {
     			Vector soV=CustomSkillStuff.getSideOffsetVector(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
     			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
-            if (IStatueMechanic.this.hitPlayers
-            		||IStatueMechanic.this.hitNonPlayers
-            		||IStatueMechanic.this.hitTarget) {
+            if (BStatueMechanic.this.hitPlayers
+            		||BStatueMechanic.this.hitNonPlayers
+            		||BStatueMechanic.this.hitTarget) {
                 this.inRange = this.currentLocation.getWorld().getLivingEntities();
                 Iterator<LivingEntity> iter = this.inRange.iterator();
                 while (iter.hasNext()) {
@@ -175,34 +174,35 @@ ITargetedLocationSkill {
                         iter.remove();
                         continue;
                     }
-                    if (!IStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
+                    if (!BStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
                         iter.remove();
                         continue;
                     }
-                    if (IStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
+                    if (BStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
                     iter.remove();
                 }
-                if (IStatueMechanic.this.hitTarget) {
+                if (BStatueMechanic.this.hitTarget) {
                     this.inRange.add((LivingEntity)target.getBukkitEntity());
                 }
             }
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
-            this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.material));
-            Main.entityCache.add(this.item);
-			this.item.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.item.setInvulnerable(true);
-			this.item.setGravity(false);
-			this.item.setTicksLived(Integer.MAX_VALUE);
-			this.item.setPickupDelay(Integer.MAX_VALUE);
-			vh.teleportEntityPacket(this.item);
-			vh.changeHitBox((Entity)this.item,0,0,0);
-            if (IStatueMechanic.this.onStartSkill.isPresent()
-            		&&IStatueMechanic.this.onStartSkill.get().isUsable(data)) {
+            this.block=this.currentLocation.getWorld().spawnFallingBlock(this.currentLocation,BStatueMechanic.this.material,(byte)0);
+            Main.entityCache.add(this.block);
+			this.block.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.block.setInvulnerable(true);
+			this.block.setGravity(false);
+			this.block.setTicksLived(Integer.MAX_VALUE);
+			this.block.setHurtEntities(false);
+			this.block.setDropItem(false);
+			vh.teleportEntityPacket(this.block);
+			vh.changeHitBox((Entity)this.block,0,0,0);
+            if (BStatueMechanic.this.onStartSkill.isPresent()
+            		&&BStatueMechanic.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
                 sData.setLocationTarget(BukkitAdapter.adapt(this.currentLocation));
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
-                IStatueMechanic.this.onStartSkill.get().execute(sData);
+                BStatueMechanic.this.onStartSkill.get().execute(sData);
             }
             this.taskId=TaskManager.get().scheduleTask(this, 0, 1);
         }
@@ -212,19 +212,19 @@ ITargetedLocationSkill {
             if (this.cancelled) {
                 return;
             }
-            if(this.count>IStatueMechanic.this.duration) {
+            if(this.count>BStatueMechanic.this.duration) {
                 this.stop();
                 return;
             }
-            if (this.item==null) {
+            if (this.block==null) {
             	this.stop();
             	return;
             }
             this.oldLocation=this.currentLocation.clone();
             this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
-            if (this.dur>IStatueMechanic.this.tickInterval
+            if (this.dur>BStatueMechanic.this.tickInterval
             		&&this.inRange != null) {
-                HitBox hitBox = new HitBox(this.currentLocation,IStatueMechanic.this.hitRadius,IStatueMechanic.this.verticalHitRadius);
+                HitBox hitBox = new HitBox(this.currentLocation,BStatueMechanic.this.hitRadius,BStatueMechanic.this.verticalHitRadius);
                 for (int i=0;i<this.inRange.size();i++) {
                     LivingEntity e=this.inRange.get(i);
 					if (e.isDead()||!hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
@@ -250,19 +250,19 @@ ITargetedLocationSkill {
 			z+=soV.getZ()+foV.getZ();
 			this.currentLocation.setX(x);
 			this.currentLocation.setZ(z);
-			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
-			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
+			this.block.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
+			NMSUtils.setLocation(this.block,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
 			
-			if (this.dur>IStatueMechanic.this.tickInterval) {
-	            if (IStatueMechanic.this.onTickSkill.isPresent()
-	            		&&IStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
+			if (this.dur>BStatueMechanic.this.tickInterval) {
+	            if (BStatueMechanic.this.onTickSkill.isPresent()
+	            		&&BStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
 	                SkillMetadata sData = this.data.deepClone();
 	                AbstractLocation location = BukkitAdapter.adapt(this.currentLocation.clone());
 	                HashSet<AbstractLocation> targets = new HashSet<AbstractLocation>();
 	                targets.add(location);
 	                sData.setLocationTargets(targets);
 	                sData.setOrigin(location);
-	                IStatueMechanic.this.onTickSkill.get().execute(sData);
+	                BStatueMechanic.this.onTickSkill.get().execute(sData);
 	            }
 	            this.dur=0;
 			}
@@ -275,22 +275,22 @@ ITargetedLocationSkill {
         }
 
         public void doHit(HashSet<AbstractEntity> targets) {
-            if (IStatueMechanic.this.onHitSkill.isPresent() && IStatueMechanic.this.onHitSkill.get().isUsable(this.data)) {
+            if (BStatueMechanic.this.onHitSkill.isPresent() && BStatueMechanic.this.onHitSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
                 sData.setEntityTargets(targets);
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
-                IStatueMechanic.this.onHitSkill.get().execute(sData);
+                BStatueMechanic.this.onHitSkill.get().execute(sData);
             }
         }
 
         public void stop() {
-            if (IStatueMechanic.this.onEndSkill.isPresent() && IStatueMechanic.this.onEndSkill.get().isUsable(this.data)) {
+            if (BStatueMechanic.this.onEndSkill.isPresent() && BStatueMechanic.this.onEndSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
-                IStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
+                BStatueMechanic.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))
                 		.setLocationTarget(BukkitAdapter.adapt(this.currentLocation)));
             }
             TaskManager.get().cancelTask(this.taskId);
-            this.item.remove();
+            this.block.remove();
             this.cancelled = true;
             if (this.inRange != null) {
                 this.inRange.clear();

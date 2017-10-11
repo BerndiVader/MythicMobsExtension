@@ -325,6 +325,10 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				this.stop();
 				return;
 			}
+			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+			Location eloc = BukkitAdapter.adapt(this.oldLocation).clone();
+			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem, eloc, eloc);
+			this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, ItemProjectile.this.hitRadius,
 						ItemProjectile.this.verticalHitRadius);
@@ -353,10 +357,6 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 					this.stop();
 				}
 			}
-			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
-			Location eloc = BukkitAdapter.adapt(this.oldLocation).clone();
-			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem, eloc, eloc);
-			this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			this.targets.clear();
 		}
 

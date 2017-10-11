@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.204dev
+# CustomSkillMechanics v1.206dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 10.10.2017 *** added blockfloating and entityfloating mechanic.
 ##### ** 10.10.2017 *** fixed npe at first startup.
 ##### ** 10.10.2017 *** experimental itemfloating mechanic.
 ##### *** 9.10.2017 *** fixed several bugs.

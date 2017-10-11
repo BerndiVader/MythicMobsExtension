@@ -327,6 +327,13 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 				this.stop();
 				return;
 			}
+			Location eloc = this.pEntity.getLocation();
+			float yaw = eloc.getYaw();
+			if (this.pSpin != 0.0) {
+				yaw = ((yaw + this.pSpin) % 360.0F);
+			}
+			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
+					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, EntityProjectile.this.hitRadius,
 						EntityProjectile.this.verticalHitRadius);
@@ -355,13 +362,6 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 					this.stop();
 				}
 			}
-			Location eloc = this.pEntity.getLocation();
-			float yaw = eloc.getYaw();
-			if (this.pSpin != 0.0) {
-				yaw = ((yaw + this.pSpin) % 360.0F);
-			}
-			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
-					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			this.targets.clear();
 		}
 

@@ -166,7 +166,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 						this.am.getEntity());
 				this.pEntity.setMetadata(this.tag, new FixedMetadataValue(Main.getPlugin(), null));
 			}
-			this.taskId = TaskManager.get().scheduleTask(this, 0, MythicOrbitalProjectile.this.tickInterval);
+			this.taskId = TaskManager.get().scheduleTask(this, 0, 1);
 			if (MythicOrbitalProjectile.this.hitPlayers || MythicOrbitalProjectile.this.hitNonPlayers) {
 				this.inRange.addAll(
 						MythicOrbitalProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
@@ -233,6 +233,23 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				this.stop();
 				return;
 			}
+			Location eloc = this.pEntity.getLocation().clone();
+			float yaw = eloc.getYaw();
+			if (this.pFaceDir) {
+				yaw = CustomSkillStuff.lookAtYaw(eloc, BukkitAdapter.adapt(this.currentLocation));
+			} else if (this.pSpin != 0.0) {
+				yaw = ((yaw + this.pSpin) % 360.0F);
+			}
+			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
+					this.currentLocation.getZ(), yaw, 0.0F);
+			this.targets.clear();
+			if (this.ct) {
+				if (this.cam != null && this.cam.hasThreatTable() && this.cam.getThreatTable().size() > 0) {
+					this.pam.setTarget(this.cam.getThreatTable().getTopThreatHolder());
+				} else if (this.cam.getEntity().getTarget() != null) {
+					this.pam.setTarget(this.cam.getEntity().getTarget());
+				}
+			}
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, MythicOrbitalProjectile.this.hitRadius,
 						MythicOrbitalProjectile.this.verticalHitRadius);
@@ -261,23 +278,6 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				this.doHit((HashSet<AbstractEntity>) this.targets.clone());
 				if (MythicOrbitalProjectile.this.stopOnHitEntity) {
 					this.stop();
-				}
-			}
-			Location eloc = this.pEntity.getLocation().clone();
-			float yaw = eloc.getYaw();
-			if (this.pFaceDir) {
-				yaw = CustomSkillStuff.lookAtYaw(eloc, BukkitAdapter.adapt(this.currentLocation));
-			} else if (this.pSpin != 0.0) {
-				yaw = ((yaw + this.pSpin) % 360.0F);
-			}
-			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
-					this.currentLocation.getZ(), yaw, 0.0F);
-			this.targets.clear();
-			if (this.ct) {
-				if (this.cam != null && this.cam.hasThreatTable() && this.cam.getThreatTable().size() > 0) {
-					this.pam.setTarget(this.cam.getThreatTable().getTopThreatHolder());
-				} else if (this.cam.getEntity().getTarget() != null) {
-					this.pam.setTarget(this.cam.getEntity().getTarget());
 				}
 			}
 			this.targets.clear();
