@@ -1,6 +1,8 @@
-# CustomSkillMechanics v1.206dev
+# CustomSkillMechanics v1.207dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 11.10.2017 *** added invisible option to customsummon mechanic.
+##### ** 11.10.2017 *** added mythicfloating and support for location targets to all floating mechanics. See floating mechanics for details.
 ##### ** 10.10.2017 *** added blockfloating and entityfloating mechanic.
 ##### ** 10.10.2017 *** fixed npe at first startup.
 ##### ** 10.10.2017 *** experimental itemfloating mechanic.
@@ -187,13 +189,16 @@ PlayEffectOnTarget:
 
 
 
-## itemfloating mechanic EXPERIMENTAL!!:
+## itemfloating / blockfloating / entityfloating / mythicfloating mechanic:
 
-    Summon a floating item relative to mobs direction.
+    Summon a floating item, block, entity or mythicmobs mob relative to caster or static at location.
 	
 	 - itemfloating{i=SPONGE;md=250;yo=0.4;so=-0.5;fo=0.9} ~onSpawn
+	 - blockfloating{m=DIRT;md=250;yo=2;so=0;fo=0} ~onSpawn
+	 - entityfloating{e=pig;md=250;yo=2;so=0;fo=0;noai=true} ~onSpawn
+	 - mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn
 	 
-	 Almost all options like in mythicprojectile possible.
+	 Almost all options like in mythicprojectile are useable.
 	 
 
 
@@ -711,6 +716,8 @@ Or use some variables in the destination targeter:
 	- customsummon{t=mobname;tag=<target.uuid>} @self
 	
 	This summon the mob mobname and add the uuid of the target to the summoned mobs scoreboard.
+	
+	Use invisible=inv option to summon the mob invisible.
 
 
 

@@ -28,8 +28,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.EntityManager;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -44,9 +42,7 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 	protected MythicMobs mythicmobs;
-	protected EntityManager entitymanager;
 	protected SkillManager skillmanager;
-	protected MobManager mobmanager;
 	
     protected Optional<Skill>onTickSkill=Optional.empty(),
     		onHitSkill=Optional.empty(),
@@ -74,10 +70,8 @@ ITargetedLocationSkill {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
 		this.mythicmobs=Main.getPlugin().getMythicMobs();
-		this.entitymanager=this.mythicmobs.getEntityManager();
 		this.skillmanager=this.mythicmobs.getSkillManager();
-		this.mobmanager=this.mythicmobs.getMobManager();
-		String i=mlc.getString(new String[] {"item","i"},"DIRT");
+		String i=mlc.getString(new String[] {"item","i"},"DIRT").toUpperCase();
 		try {
 			this.material=Material.valueOf(i);
 		} catch (Exception e){
@@ -124,12 +118,23 @@ ITargetedLocationSkill {
             return false;
         }
     }
+	@Override
+	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+        try {
+            new StatueTracker(data, target);
+            return true;
+        }
+        catch (Exception ex) {
+        	System.err.println(ex.getMessage());
+            return false;
+        }
+	}
 
     private class StatueTracker
     implements IParentSkill,
     Runnable {
     	private VolatileHandler vh;
-        private boolean cancelled,useOffset,iYaw;
+        private boolean cancelled,useOffset,iYaw,islocationtarget;
         private SkillMetadata data;
         private Item item;
         private SkillCaster caster;
@@ -141,9 +146,17 @@ ITargetedLocationSkill {
         private Map<LivingEntity,Long> immune;
         private double sOffset,fOffset,yOffset;
         private int count,dur;
-
+        
         public StatueTracker(SkillMetadata data, AbstractEntity target) {
+        	this(data,target,null);
+        }
+        public StatueTracker(SkillMetadata data, AbstractLocation target) {
+        	this(data,null,target);
+        }
+
+        private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Main.getPlugin().getVolatileHandler();
+        	this.islocationtarget=target==null&&location!=null;
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
@@ -182,7 +195,7 @@ ITargetedLocationSkill {
                     if (IStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
                     iter.remove();
                 }
-                if (IStatueMechanic.this.hitTarget) {
+                if (IStatueMechanic.this.hitTarget&&target!=null) {
                     this.inRange.add((LivingEntity)target.getBukkitEntity());
                 }
             }
@@ -221,7 +234,7 @@ ITargetedLocationSkill {
             	return;
             }
             this.oldLocation=this.currentLocation.clone();
-            this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
+            if (!this.islocationtarget) this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
             if (this.dur>IStatueMechanic.this.tickInterval
             		&&this.inRange != null) {
                 HitBox hitBox = new HitBox(this.currentLocation,IStatueMechanic.this.hitRadius,IStatueMechanic.this.verticalHitRadius);
@@ -240,20 +253,10 @@ ITargetedLocationSkill {
                     iter.remove();
                     this.inRange.add(entry.getKey());
                 }
-            }
-            
-    		double x = this.currentLocation.getX();
-    		double z = this.currentLocation.getZ();
-			Vector soV=CustomSkillStuff.getSideOffsetVector(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
-			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
-			x+=soV.getX()+foV.getX();
-			z+=soV.getZ()+foV.getZ();
-			this.currentLocation.setX(x);
-			this.currentLocation.setZ(z);
-			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
-			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
-			
-			if (this.dur>IStatueMechanic.this.tickInterval) {
+	            if (this.targets.size() > 0) {
+	                this.doHit((HashSet)this.targets.clone());
+	            }
+	            this.targets.clear();
 	            if (IStatueMechanic.this.onTickSkill.isPresent()
 	            		&&IStatueMechanic.this.onTickSkill.get().isUsable(this.data)) {
 	                SkillMetadata sData = this.data.deepClone();
@@ -265,11 +268,23 @@ ITargetedLocationSkill {
 	                IStatueMechanic.this.onTickSkill.get().execute(sData);
 	            }
 	            this.dur=0;
-			}
-            if (this.targets.size() > 0) {
-                this.doHit((HashSet)this.targets.clone());
             }
-            this.targets.clear();
+            
+            if (!this.islocationtarget) {
+        		double x = this.currentLocation.getX();
+        		double z = this.currentLocation.getZ();
+    			Vector soV=CustomSkillStuff.getSideOffsetVector(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
+    			x+=soV.getX()+foV.getX();
+    			z+=soV.getZ()+foV.getZ();
+    			this.currentLocation.setX(x);
+    			this.currentLocation.setZ(z);
+    			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
+    			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
+            } else {
+    			this.item.setVelocity(new Vector());
+    			NMSUtils.setLocation(this.item,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());
+            }
 			this.count++;
 			this.dur++;
         }
@@ -306,10 +321,5 @@ ITargetedLocationSkill {
             return false;
         }
     }
-
-	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		return false;
-	}
 
 }

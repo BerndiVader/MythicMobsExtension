@@ -11,6 +11,7 @@ import com.gmail.berndivader.mmcustomskills26.customprojectiles.EffectProjectile
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.EntityProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.IStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.ItemProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.MStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.MythicOrbitalProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.MythicProjectile;
 
@@ -202,6 +203,10 @@ public class mmCustomSkills26 implements Listener {
 			break;
 		}case "entityfloating":{
 			skill=new EStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "mythicfloating":{
+			skill=new MStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}

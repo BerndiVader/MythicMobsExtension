@@ -30,6 +30,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 	private Boolean copyThreatTable;
 	private Boolean useEyeDirection;
 	private Boolean setowner;
+	private Boolean invisible;
 	private Double addx;
 	private Double addy;
 	private Double addz;
@@ -41,6 +42,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-")) this.amount = "1";
 		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
+		this.invisible=mlc.getBoolean(new String[] {"invisible","inv"},false);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getInteger(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
@@ -88,6 +90,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 							||ams.getEntity()==null
 							||ams.getEntity().isDead())
 						continue;
+					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
 						String tt = SkillString.unparseMessageSpecialChars(this.tag);
@@ -127,6 +130,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 							||!ams.getEntity().getWorld().equals(data.getCaster().getEntity().getWorld())
 							||ams.getEntity().isDead())
 						continue;
+					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
