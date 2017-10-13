@@ -26,7 +26,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -71,7 +70,7 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
-		players.forEach(ap-> {
+		players.stream().forEach(ap-> {
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
 		});

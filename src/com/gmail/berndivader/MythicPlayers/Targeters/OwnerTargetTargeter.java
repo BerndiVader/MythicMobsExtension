@@ -4,8 +4,10 @@ import java.util.HashSet;
 
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -26,7 +28,10 @@ public class OwnerTargetTargeter extends IEntitySelector {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity>targets=new HashSet<>();
-		if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
+		if (data.getCaster().getEntity().isPlayer()) {
+			targets.add(BukkitAdapter
+					.adapt(CustomSkillStuff.getTargetedEntity((Player)BukkitAdapter.adapt(data.getCaster().getEntity()))));
+		} else if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am=mobmanager.getMythicMobInstance(data.getCaster().getEntity());
 			if (am.getOwner().isPresent()) {
 				Entity owner=NMSUtils.getEntity(am.getEntity().getBukkitEntity().getWorld(),am.getOwner().get());

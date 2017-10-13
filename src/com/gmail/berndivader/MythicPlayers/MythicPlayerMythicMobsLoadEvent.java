@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmCreateActivePlayer;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmNormalPlayer;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmSetTarget;
+import com.gmail.berndivader.MythicPlayers.Targeters.LastDamagerTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.OwnerTargetTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.mmCrosshairTargeter;
 
@@ -47,6 +48,11 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 		}
 		case "ownertarget": {
 			SkillTargeter targeter=new OwnerTargetTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}
+		case "lastdamager": {
+			SkillTargeter targeter=new LastDamagerTargeter(e.getConfig());
 			e.register(targeter);
 			break;
 		}}
