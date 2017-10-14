@@ -146,6 +146,7 @@ ITargetedLocationSkill {
         private Map<LivingEntity,Long> immune;
         private double sOffset,fOffset,yOffset;
         private int count,dur;
+        private Vector vEmpty=new Vector(0d,0d,0d);
         
         public StatueTracker(SkillMetadata data, AbstractEntity target) {
         	this(data,target,null);
@@ -282,7 +283,7 @@ ITargetedLocationSkill {
     			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
     			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
             } else {
-    			this.item.setVelocity(new Vector());
+    			this.item.setVelocity(this.vEmpty);
     			NMSUtils.setLocation(this.item,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());
             }
 			this.count++;

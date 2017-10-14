@@ -112,14 +112,20 @@ public class Main extends JavaPlugin {
 			cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			logger.info("CachedOwner support enabled!");
 			
+	        new BukkitRunnable() {
+				@Override
+				public void run() {
+					Main.mythicmobs.getRandomSpawningManager().reload();
+				}
+			}.runTask(this);
+			
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					for (Iterator<Entity>it=Main.entityCache.iterator();it.hasNext();) {
-						Entity oe=it.next();
-						if (oe!=null) {
-							Entity entity=NMSUtils.getEntity(oe.getWorld(),oe.getUniqueId());
-							if (entity==null) it.remove();
+						Entity entity=it.next();
+						if (entity!=null) {
+							if (NMSUtils.getEntity(entity.getWorld(),entity.getUniqueId())==null) it.remove();
 						} else {
 							it.remove();
 						}
