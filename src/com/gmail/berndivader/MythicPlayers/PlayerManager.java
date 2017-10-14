@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -33,8 +34,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -173,16 +172,21 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerDamage(EntityDamageEvent e) {
-		if (!MythicMobs.inst().getAPIHelper().isMythicMob(e.getEntity()) || e.isCancelled())
-			return;
+		if (e.isCancelled()
+				||mobmanager==null
+				||mobmanager.isActiveMob(e.getEntity().getUniqueId())) return;
+		Entity victim=e.getEntity();
 		DamageCause cause = e.getCause();
-		e.getEntity().setMetadata("LDC", new FixedMetadataValue(mythicplayers.plugin(), cause.toString()));
-		if (!this.isActivePlayer(e.getEntity().getUniqueId()))
-			return;
-		if (!cause.equals(DamageCause.ENTITY_ATTACK) && !cause.equals(DamageCause.ENTITY_EXPLOSION)
-				&& !cause.equals(DamageCause.CUSTOM) && !cause.equals(DamageCause.PROJECTILE)) {
-			ActivePlayer ap = this.getActivePlayer(e.getEntity().getUniqueId()).get();
-			new TriggeredSkillAP(SkillTrigger.DAMAGED, ap, null);
+		victim.setMetadata("LDC", new FixedMetadataValue(mythicplayers.plugin(), cause.toString()));
+		if (!this.isActivePlayer(victim.getUniqueId()))	return;
+		if (!cause.equals(DamageCause.ENTITY_ATTACK) 
+				&& !cause.equals(DamageCause.ENTITY_EXPLOSION)
+				&& !cause.equals(DamageCause.CUSTOM) 
+				&& !cause.equals(DamageCause.PROJECTILE)) {
+			ActivePlayer ap = this.getActivePlayer(victim.getUniqueId()).get();
+			AbstractEntity trigger=null;
+			if (e instanceof EntityDamageByEntityEvent) trigger=BukkitAdapter.adapt(((EntityDamageByEntityEvent)e).getDamager());
+			new TriggeredSkillAP(SkillTrigger.DAMAGED, ap, trigger);
 		}
 	}
 

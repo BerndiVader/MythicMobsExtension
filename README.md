@@ -1,6 +1,7 @@
-# CustomSkillMechanics v1.207dev
+# CustomSkillMechanics v1.208dev
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 14.10.2017 *** maybe fix for NPE in MythicPlayer DamageEvent.
 ##### ** 12.10.2017 *** added lastdamager & crosshair targeter.
 ##### ** 11.10.2017 *** added invisible option to customsummon mechanic.
 ##### ** 11.10.2017 *** added mythicfloating and support for location targets to all floating mechanics. See floating mechanics for details.
