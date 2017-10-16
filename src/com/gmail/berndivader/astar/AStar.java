@@ -14,7 +14,7 @@ import java.util.*;
 public class AStar {
 
 	private int sx, sy, sz, ex, ey, ez;
-	private static World w;
+	private World w;
 	private final boolean ignoreDamage;
 	private final boolean isPlayer;
 	private static PathfindAlgorithm algorithm;
@@ -54,7 +54,7 @@ public class AStar {
 			return;
 		}
 		this.start = start;
-		AStar.w = start.getWorld();
+		this.w = start.getWorld();
 		this.sx = start.getBlockX();
 		this.sy = start.getBlockY();
 		this.sz = start.getBlockZ();
@@ -310,8 +310,8 @@ public class AStar {
 		return algorithm;
 	}
 
-	public static World getWorld() {
-		return w;
+	public World getWorld() {
+		return this.w;
 	}
 
 	public Location getStart() {

@@ -1,8 +1,9 @@
-# CustomSkillMechanics v1.208dev
+# CustomSkillMechanics v1.210
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 16.10.2017 *** fixed infront & behind condition as it was never finished. :)
 ##### ** 14.10.2017 *** fix for MythicMobs RandomSpawn add not working after server start.
-##### ** 14.10.2017 *** maybe fix for NPE in MythicPlayer DamageEvent.
+##### ** 14.10.2017 *** fix for NPE in MythicPlayer DamageEvent.
 ##### ** 12.10.2017 *** added lastdamager & crosshair targeter.
 ##### ** 11.10.2017 *** added invisible option to customsummon mechanic.
 ##### ** 11.10.2017 *** added mythicfloating and support for location targets to all floating mechanics. See floating mechanics for details.
@@ -1012,7 +1013,7 @@ freeze:
   Conditions:
   - isstunned{action=false}
   TargetConditions:
-  - infront{view=90}
+  - infront{view=45}
   - lookatme
   Skills:
   - stun{d=60;facing=true} @self
@@ -1081,7 +1082,7 @@ Use this condition to check if the target is attackable by the caster. Only avai
 
 ##### `- infront{view=[angle_value];action=[boolean]}`
 ##### `- behind{view=[angle_value];action=[boolean]}`
-Use this condition to check if the target is behind the caster or infront of the caster.
+Use this condition to check if the target is behind the caster or infront of the caster. Use view to define an angular, where 90 is frontal facing and left/right side is 0. A view of 45 will make it have a view field of 45° in facing direction or behind. Use 0 or 1 to check is its infront or behind no matter what angle.
 
 ##### `- inmobarena`
 Check if the location is in a MobArena arena. Requires MobArena plugin to work.

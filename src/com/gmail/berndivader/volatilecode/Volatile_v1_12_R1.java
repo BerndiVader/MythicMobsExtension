@@ -396,7 +396,7 @@ implements VolatileHandler {
 	  
 		public void e() {
 			d.getControllerLook().a(e, 10.0F, d.N());
-			if (--h<=0) {
+			if (h--<=0) {
 				h=10;
 				if ((!g.a(e, f)) 
 						&& (!d.isLeashed()) && (!d.isPassenger())

@@ -209,6 +209,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new MStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "astar":{
+			skill=new AStarMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}
