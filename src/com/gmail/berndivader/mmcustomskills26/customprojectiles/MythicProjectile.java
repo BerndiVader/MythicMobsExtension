@@ -195,6 +195,7 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 						this.pLocation.add(0.0D, this.pVOff, 0.0D));
 				this.pEntity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 				if (!this.targetable)
+					Main.getPlugin().getVolatileHandler().changeHitBox(this.pEntity,0,0,0);
 					this.pEntity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();
@@ -351,11 +352,18 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 				this.stop();
 				return;
 			}
+			Location eloc = this.pEntity.getLocation();
+			float yaw = eloc.getYaw();
+			if (this.pSpin != 0.0) {
+				yaw = ((yaw + this.pSpin) % 360.0F);
+			}
+			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY() + this.pVOff,
+					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.pam.getLocation(), MythicProjectile.this.hitRadius,
+				HitBox hitBox = new HitBox(this.pam.getEntity().getBukkitEntity().getLocation(), MythicProjectile.this.hitRadius,
 						MythicProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
-					if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0)))
+					if (e.isDead() || !hitBox.contains(e.getBukkitEntity().getLocation().add(0.0, 0.6, 0.0)))
 						continue;
 					this.targets.add(e);
 					this.immune.put(e, System.currentTimeMillis());
@@ -381,13 +389,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					this.stop();
 				}
 			}
-			Location eloc = this.pEntity.getLocation();
-			float yaw = eloc.getYaw();
-			if (this.pSpin != 0.0) {
-				yaw = ((yaw + this.pSpin) % 360.0F);
-			}
-			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY() + this.pVOff,
-					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			this.targets.clear();
 		}
 
@@ -409,8 +410,8 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 				MythicProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pEntity.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pEntity.remove();
 			this.cancelled = true;
 		}
 

@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +45,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pItem" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
+		this.tickInterval=2;
+		this.ticksPerSecond=20.0f/this.tickInterval;
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 		private float gravity;
 		private long startTime;
 		private AbstractLocation startLocation;
-		private AbstractLocation currentLocation;
+		private AbstractLocation currentLocation,oldLocation;
 		private AbstractVector currentVelocity;
 		private int currentX;
 		private int currentZ;
@@ -79,7 +82,6 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 		private HashSet<AbstractEntity> targets;
 		private Map<AbstractEntity, Long> immune;
 		private Item pItem;
-		private Location pLocation;
 		private float pSpin;
 		private double pVOff;
 		private double pFOff;
@@ -184,23 +186,6 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			if (ItemProjectile.this.projectileGravity > 0.0f) {
 				this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
 			}
-			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
-			float yaw = this.pLocation.getYaw();
-			if (this.pFaceDir && !this.eyedir) {
-				yaw = CustomSkillStuff.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
-				this.pLocation.setYaw(yaw);
-			}
-			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
-			ItemStack i = new ItemStack(Material.valueOf(customItemName));
-			this.pItem = this.pLocation.getWorld().dropItem(this.pLocation.add(0.0d, this.pVOff, 0.0d), i);
-			this.pItem.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
-			if (!this.targetable)
-				this.pItem.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.pItem.setTicksLived(Integer.MAX_VALUE);
-			this.pItem.setInvulnerable(true);
-			this.pItem.setGravity(false);
-			this.pItem.setPickupDelay(Integer.MAX_VALUE);
-
 			this.taskId = TaskManager.get().scheduleTask(this, 0, ItemProjectile.this.tickInterval);
 			if (ItemProjectile.this.hitPlayers || ItemProjectile.this.hitNonPlayers) {
 				this.inRange
@@ -230,6 +215,20 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				sData.setOrigin(this.currentLocation.clone());
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
+			ItemStack i = new ItemStack(Material.valueOf(customItemName));
+			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
+			this.pItem = l.getWorld().dropItem(l,i);
+			Main.entityCache.add(this.pItem);
+			this.pItem.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			if (!this.targetable)
+				this.pItem.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.pItem.setTicksLived(Integer.MAX_VALUE);
+			this.pItem.setInvulnerable(true);
+			this.pItem.setGravity(false);
+			this.pItem.setPickupDelay(Integer.MAX_VALUE);
+			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem,l, null);
+			Main.getPlugin().getVolatileHandler().teleportEntityPacket(this.pItem);
+			Main.getPlugin().getVolatileHandler().changeHitBox((Entity)this.pItem,0,0,0);
 		}
 
 		public void modifyVelocity(double v) {
@@ -258,7 +257,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				this.stop();
 				return;
 			}
-			this.currentLocation.clone();
+			this.oldLocation=this.currentLocation.clone();
 			this.currentLocation.add(this.currentVelocity);
 			if (ItemProjectile.this.hugSurface) {
 				if (this.currentLocation.getBlockX() != this.currentX
@@ -326,6 +325,10 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				this.stop();
 				return;
 			}
+			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+			Location eloc = BukkitAdapter.adapt(this.oldLocation).clone();
+			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem, eloc, eloc);
+			this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, ItemProjectile.this.hitRadius,
 						ItemProjectile.this.verticalHitRadius);
@@ -354,9 +357,6 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 					this.stop();
 				}
 			}
-			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
-			Location eloc = this.pItem.getLocation().clone();
-			this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			this.targets.clear();
 		}
 
@@ -378,8 +378,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 				ItemProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pItem.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pItem.remove();
 			this.cancelled = true;
 		}
 

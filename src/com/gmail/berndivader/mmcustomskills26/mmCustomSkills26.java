@@ -4,10 +4,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.BStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.BlockProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.EStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.EffectProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.EntityProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.IStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.ItemProjectile;
+import com.gmail.berndivader.mmcustomskills26.customprojectiles.MStatueMechanic;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.MythicOrbitalProjectile;
 import com.gmail.berndivader.mmcustomskills26.customprojectiles.MythicProjectile;
 
@@ -169,6 +173,47 @@ public class mmCustomSkills26 implements Listener {
 			skill=new parsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		}}
+		}case "setrotation": {
+			skill=new SetRotationMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "setfaction": {
+			skill=new SetFactionMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "customvelocity": {
+			skill=new CustomVelocityMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "asequip": {
+			skill=new EquipArmorstandMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "playerweather": {
+			skill=new PlayerWeatherMechanic(e.getContainer().getConfigLine(), e.getConfig());
+			e.register(skill);
+			break;
+		}case "itemfloating": {
+			skill=new IStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "blockfloating":{
+			skill=new BStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "entityfloating":{
+			skill=new EStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "mythicfloating":{
+			skill=new MStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "astar":{
+			skill=new AStarMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
+		}
 	}
 }

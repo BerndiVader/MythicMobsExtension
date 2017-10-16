@@ -19,25 +19,25 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected String tag;
 	protected metaTagValue mtv;
+	protected boolean useCaster;
 
 	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
+		this.useCaster=mlc.getBoolean(new String[]{"usecaster","uc"},false);
 		String ms = mlc.getString(new String[] { "meta", "m" }, "");
 		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String parse[] = ms.split(";");
 		String t = null, v = null, vt = null;
-		for (String p : parse) {
+		for (int a=0;a<parse.length;a++) {
+			String p=parse[a];
 			if (p.startsWith("tag=")) {
 				t = p.substring(4);
-				continue;
 			} else if (p.startsWith("value=")) {
 				v = p.substring(6);
-				continue;
 			} else if (p.startsWith("type=")) {
 				vt = p.substring(5);
-				continue;
 			}
 		}
 		if (t != null) {
@@ -53,7 +53,11 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), target, data.getTrigger());
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ? SkillString.parseMobVariables(
 				(String) this.mtv.getValue(), data.getCaster(), target, data.getTrigger()) : this.mtv.getValue();
-		target.getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+		if (this.useCaster) {
+			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+		} else {
+			target.getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+		}
 		return true;
 	}
 

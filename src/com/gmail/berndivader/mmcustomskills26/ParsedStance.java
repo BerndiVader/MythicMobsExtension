@@ -23,22 +23,21 @@ INoTargetSkill {
 		String s = mlc.getString(new String[]{"stance","s"});
 		if (s.startsWith("\"") && s.endsWith("\"")) s = s.substring(1, s.length()-1);
 		s = SkillString.parseMessageSpecialChars(s);
+		this.stance=s;
 	}
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		castAtEntity(data, data.getCaster().getEntity());
-		return true;
+		return castAtEntity(data, data.getCaster().getEntity());
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target!=null 
-				&& mobmanager.isActiveMob(target)) {
-			ActiveMob am = mobmanager.getMythicMobInstance(target);
+		if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
+			ActiveMob am = mobmanager.getMythicMobInstance(data.getCaster().getEntity());
 			am.setStance(SkillString.parseMobVariables(this.stance, data.getCaster(), target, data.getTrigger()));
+			return  true;
 		}
-		return true;
+		return false;
 	}
-	
 }

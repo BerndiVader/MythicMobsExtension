@@ -13,7 +13,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.Main;
 import com.gmail.berndivader.mmcustomskills26.changeHealthbar;
 import com.gmail.berndivader.mmcustomskills26.createHealthbar;
@@ -38,6 +37,12 @@ public class HealthbarHandler implements Listener {
 		return HealthbarHandler.healthbars;
 	}
 	
+	public void removeHealthbars() {
+		healthbars.forEach((uuid,healthbar)-> {
+			healthbar.remove();
+		});
+	}
+	
 	public class HealthbarClock implements Runnable {
 		protected BukkitTask taskId;
 		
@@ -50,7 +55,7 @@ public class HealthbarHandler implements Listener {
 		@Override
 		public void run() {
 			HealthbarHandler.healthbars.forEach((uuid,healthbar)-> {
-				Entity e = NMSUtils.getEntity(healthbar.getWorld(), uuid);
+				Entity e=healthbar.entity;  // NMSUtils.getEntity(healthbar.getWorld(), uuid);
 				if (e==null || e.isDead()) {
 					healthbar.remove();
 				} else {

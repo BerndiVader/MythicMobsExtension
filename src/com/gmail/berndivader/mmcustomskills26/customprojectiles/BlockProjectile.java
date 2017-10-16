@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -194,6 +195,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					Material.valueOf(customItemName), (byte) 0);
+			Main.entityCache.add(this.pBlock);
 			this.pBlock.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pBlock.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -202,6 +204,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pBlock.setTicksLived(Integer.MAX_VALUE);
 			this.pBlock.setInvulnerable(true);
 			this.pBlock.setGravity(false);
+			Main.getPlugin().getVolatileHandler().changeHitBox((Entity)this.pBlock,0,0,0);
 
 			this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
 			if (BlockProjectile.this.hitPlayers || BlockProjectile.this.hitNonPlayers) {
@@ -329,6 +332,10 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 				this.stop();
 				return;
 			}
+			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
+			Location eloc = this.pBlock.getLocation().clone();
+			this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
+			this.targets.clear();
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, BlockProjectile.this.hitRadius,
 						BlockProjectile.this.verticalHitRadius);
@@ -357,10 +364,6 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 					this.stop();
 				}
 			}
-			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
-			Location eloc = this.pBlock.getLocation().clone();
-			this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
-			this.targets.clear();
 		}
 
 		private void doHit(HashSet<AbstractEntity> targets) {
@@ -381,8 +384,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 				BlockProjectile.this.onEndSkill.get()
 						.execute(sData.setOrigin(this.currentLocation).setLocationTarget(this.currentLocation));
 			}
-			this.pBlock.remove();
 			TaskManager.get().cancelTask(this.taskId);
+			this.pBlock.remove();
 			this.cancelled = true;
 		}
 

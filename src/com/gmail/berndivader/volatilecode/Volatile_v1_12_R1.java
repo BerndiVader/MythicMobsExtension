@@ -1,12 +1,11 @@
 package com.gmail.berndivader.volatilecode;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,8 +14,12 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
@@ -29,31 +32,48 @@ import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.EntityCreature;
-import net.minecraft.server.v1_12_R1.EntityHuman;
-import net.minecraft.server.v1_12_R1.EntityInsentient;
-import net.minecraft.server.v1_12_R1.EntityLiving;
-import net.minecraft.server.v1_12_R1.EnumBlockFaceShape;
-import net.minecraft.server.v1_12_R1.EnumDirection;
-import net.minecraft.server.v1_12_R1.IBlockData;
-import net.minecraft.server.v1_12_R1.MathHelper;
-import net.minecraft.server.v1_12_R1.Navigation;
-import net.minecraft.server.v1_12_R1.NavigationAbstract;
-import net.minecraft.server.v1_12_R1.NavigationFlying;
-import net.minecraft.server.v1_12_R1.PathEntity;
-import net.minecraft.server.v1_12_R1.PathPoint;
-import net.minecraft.server.v1_12_R1.PathType;
-import net.minecraft.server.v1_12_R1.PathfinderGoal;
-import net.minecraft.server.v1_12_R1.PathfinderGoalFleeSun;
-import net.minecraft.server.v1_12_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_12_R1.Vec3D;
 
 public class Volatile_v1_12_R1 
 implements VolatileHandler {
 	
 	public Volatile_v1_12_R1() {
+	}
+
+	@Override
+	public void setMotion(Entity entity) {
+	}
+
+	@Override
+	public void changeHitBox(Entity entity, double a0, double a1, double a2) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		me.getBoundingBox().a(a0,a1,a2);
+	}
+
+	@Override
+	public void setItemMotion(Item i, Location ol, Location nl) {
+		EntityItem ei=(EntityItem)((CraftItem)i).getHandle();
+		ei.setPosition(ol.getX(), ol.getY(), ol.getZ());
+	}
+	
+	@Override
+	public void sendArmorstandEquipPacket(ArmorStand entity) {
+		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
+		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
+		players.stream().forEach(ap-> {
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(packet);
+		});
+	}
+
+	@Override
+	public void teleportEntityPacket(Entity entity) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
+		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
+		players.stream().forEach(ap-> {
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(tp);
+		});
 	}
 
 	@Override
@@ -376,7 +396,7 @@ implements VolatileHandler {
 	  
 		public void e() {
 			d.getControllerLook().a(e, 10.0F, d.N());
-			if (--h<=0) {
+			if (h--<=0) {
 				h=10;
 				if ((!g.a(e, f)) 
 						&& (!d.isLeashed()) && (!d.isPassenger())

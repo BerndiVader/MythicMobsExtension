@@ -16,7 +16,7 @@ implements IEntityComparisonCondition {
 
 	public mmIsBehindCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.viewAngle = CustomSkillStuff.round(mlc.getDouble(new String[]{"view","angle","v"},90.0D),3);
+		this.viewAngle = CustomSkillStuff.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ implements IEntityComparisonCondition {
         double dT = Math.cos(this.viewAngle);
         Vector f = s.getDirection();
         Vector r = s.subtract(t).toVector().normalize();
-        return f.dot(r) >= dT;
+        return Math.toDegrees(Math.asin(f.dot(r))) >= dT;
 	}
 
 }

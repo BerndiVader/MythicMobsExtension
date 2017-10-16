@@ -131,11 +131,12 @@ public class CachedOwnerHandler implements Listener {
 	}
 	
 	public static void saveCachedOwners() {
+		if (CachedOwnerHandler.cachedOwners==null)CachedOwnerHandler.cachedOwners=new ConcurrentHashMap<>();
 		try (Writer writer = new BufferedWriter(
 				new OutputStreamWriter(
 						new FileOutputStream(CachedOwnerHandler.dir+System.getProperty("file.separator")+cacheFileName), StandardCharsets.UTF_8))) {
 			writer.flush();
-			for(Map.Entry<UUID,UUID>entry:CachedOwnerHandler.cachedOwners.entrySet()) {
+ 			for(Map.Entry<UUID,UUID>entry:CachedOwnerHandler.cachedOwners.entrySet()) {
 				String p = entry.getKey().toString()+";"+entry.getValue().toString()+"\n";
 				writer.append(p);
 			}

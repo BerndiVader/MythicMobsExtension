@@ -30,6 +30,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 	private Boolean copyThreatTable;
 	private Boolean useEyeDirection;
 	private Boolean setowner;
+	private Boolean invisible;
 	private Double addx;
 	private Double addy;
 	private Double addz;
@@ -41,6 +42,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-")) this.amount = "1";
 		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
+		this.invisible=mlc.getBoolean(new String[] {"invisible","inv"},false);
 		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getInteger(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
@@ -70,6 +72,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 	
 	private boolean cast(SkillMetadata data, AbstractLocation tl, AbstractEntity te) {
 		AbstractLocation target = tl.clone();
+		if (!data.getCaster().getEntity().getWorld().equals(tl.getWorld())) return false;
 		if (this.useEyeDirection) {
 			target = BukkitAdapter
 					.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
@@ -78,13 +81,16 @@ public class mmCustomSummonSkill extends SkillMechanic
 		int amount=CustomSkillStuff.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			if (this.noise > 0) {
-				for (int i = 1; i <= amount; ++i) {
+				for (int i=1;i<=amount;i++) {
 					this.mythicmobs.getMobManager();
 					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
 							this.mm.getMythicEntity().getHeight(), this.yUpOnly);
 					ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
-					if (ams == null)
+					if (ams == null
+							||ams.getEntity()==null
+							||ams.getEntity().isDead())
 						continue;
+					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
 						String tt = SkillString.unparseMessageSpecialChars(this.tag);
@@ -119,8 +125,12 @@ public class mmCustomSummonSkill extends SkillMechanic
 			} else {
 				for (int i = 1; i <= amount; ++i) {
 					ActiveMob ams = this.mm.spawn(target, data.getCaster().getLevel());
-					if (ams == null)
+					if (ams == null
+							||ams.getEntity()==null
+							||!ams.getEntity().getWorld().equals(data.getCaster().getEntity().getWorld())
+							||ams.getEntity().isDead())
 						continue;
+					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();

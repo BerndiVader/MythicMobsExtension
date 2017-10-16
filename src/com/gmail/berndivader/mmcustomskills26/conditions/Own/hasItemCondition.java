@@ -135,17 +135,11 @@ IEntityCondition {
 			for(ItemHolding entry:hasItemCondition.this.holdinglist) {
 				bool=false;
 				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
-					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) {
-						bool=true;
-					}
+					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) bool=true;
 				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
-					if (checkContent(target.getEquipment().getArmorContents(),entry)) {
-						bool=true;
-					}
+					if (checkContent(target.getEquipment().getArmorContents(),entry)) bool=true;
 				} else if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
-					if (checkContent(((Player)target).getInventory().getContents(),entry)) {
-						bool=true;
-					}
+					if (checkContent(((Player)target).getInventory().getContents(),entry)) bool=true;
 				}
 				c=c.replaceFirst("\\$"+Integer.toString(a),Boolean.toString(bool));
 				a++;

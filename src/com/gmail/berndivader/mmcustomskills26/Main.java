@@ -1,12 +1,16 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
@@ -47,6 +51,7 @@ public class Main extends JavaPlugin {
 	private static MythicPlayers mythicplayers;
 	private MobArenaHandler maHandler;
 	private VolatileHandler volatilehandler;
+	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 
 	public void onEnable() {
 		plugin = this;
@@ -106,11 +111,36 @@ public class Main extends JavaPlugin {
 			}
 			cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			logger.info("CachedOwner support enabled!");
+			
+	        new BukkitRunnable() {
+				@Override
+				public void run() {
+					Main.mythicmobs.getRandomSpawningManager().reload();
+				}
+			}.runTask(this);
+			
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					for (Iterator<Entity>it=Main.entityCache.iterator();it.hasNext();) {
+						Entity entity=it.next();
+						if (entity!=null) {
+							if (NMSUtils.getEntity(entity.getWorld(),entity.getUniqueId())==null) it.remove();
+						} else {
+							it.remove();
+						}
+					}
+				}
+			}.runTaskTimerAsynchronously(this,600L,600L);
 		}
 	}
 
 	@Override
 	public void onDisable() {
+		Main.entityCache.stream().forEach(entity->{
+			if (entity!=null) entity.remove();
+		});
+		Main.healthbarhandler.removeHealthbars();
 		if (this.thiefhandler!=null) Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		this.thiefhandler = null;

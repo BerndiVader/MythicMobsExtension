@@ -360,6 +360,23 @@ public class CustomSkillStuff implements Listener {
 		newy -= z * sinpitch;
 		return new Vector(newx, newy, newz);
 	}
+	
+	public static Vector getFrontBackOffsetVector(Vector v, double o) {
+		Vector d=v.clone();
+		d.normalize();
+		d.multiply(o);
+		return d;
+	}
+	
+	public static Vector getSideOffsetVector(float vYa, double hO, boolean iy) {
+		double y = 0d;
+		if (!iy)
+			y=Math.toRadians(vYa);
+		double xo=Math.cos(y)*hO;
+		double zo=Math.sin(y)*hO;
+		return new Vector(xo,0d,zo);
+	}
+	
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();
@@ -433,8 +450,7 @@ public class CustomSkillStuff implements Listener {
 		double vz = vh * dirz;
 		if (Double.isNaN(vx)) vx=0.0D;
 		if (Double.isNaN(vz)) vz=0.0D;
-		Vector Vt=new Vector(vx, vy, vz);
-		return Vt;
+		return new Vector(vx, vy, vz);
 	}
 
 	public static Vector spread(Vector from, double yaw, double pitch) {
@@ -474,7 +490,6 @@ public class CustomSkillStuff implements Listener {
 		double v4 = Math.pow(v, 4);
 		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
 		if (v4 < derp) {
-			// Max optimal (won't hit!)
 			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
 		}
 		else {
@@ -537,6 +552,18 @@ public class CustomSkillStuff implements Listener {
 			amount = r.nextDouble(min, max);
 		} else amount = Double.parseDouble(range);
 		return amount;
+	}
+
+	public static byte encodeAngle(float angle) {
+		return (byte) (angle * 256f / 360f);
+	}
+
+	public static int encodeVelocity(double v) {
+		return (int) (v * 8000D);
+	}
+
+	public static long encodePosition(double d) {
+		return (long) (d * 4096D);
 	}
 
 }

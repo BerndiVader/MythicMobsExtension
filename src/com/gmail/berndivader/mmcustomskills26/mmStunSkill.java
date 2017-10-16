@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,7 +28,6 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
 		final boolean facing=this.f;
-		final ActiveMob am=Main.mythicmobs.getMobManager().getMythicMobInstance(t);
 		target.getBukkitEntity().setMetadata("mmStunned", new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
 			int count = 0;

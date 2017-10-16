@@ -6,19 +6,30 @@ import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
+import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 public class LookingAtMeCondition extends mmCustomCondition
         implements
         IEntityComparisonCondition {
-    private double yO,FOV;
+    private double yO;
+    private RangedDouble FOV;
     private boolean debug;
 
     public LookingAtMeCondition(String line, MythicLineConfig mlc) {
         super(line, mlc);
         this.yO=mlc.getDouble(new String[]{"yoffset","y","yo","o"},-0.4D);
-        this.FOV=mlc.getDouble("fov",1.999D);
+        String fov=mlc.getString("fov",">1.999");
+        try {
+        	Double.parseDouble(fov);
+        	fov=">"+fov;
+        } catch (NumberFormatException ex){
+        	// empty
+        }
+        System.err.println(fov);
+        this.FOV=new RangedDouble(fov);
         this.debug=mlc.getBoolean("debug",false);
     }
 
@@ -35,7 +46,7 @@ public class LookingAtMeCondition extends mmCustomCondition
                 Main.logger.info("fov-ratio:"+Double.toString(angle));
                 Main.logger.info("yVecOff:::"+Double.toString(Vcaster.getY()));
             }
-            if (angle>this.FOV) return true;
+            if (this.FOV.equals(angle)) return true;
         }
         return false;
     }
