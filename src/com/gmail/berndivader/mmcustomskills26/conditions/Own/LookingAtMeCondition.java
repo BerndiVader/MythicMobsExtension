@@ -28,7 +28,6 @@ public class LookingAtMeCondition extends mmCustomCondition
         } catch (NumberFormatException ex){
         	// empty
         }
-        System.err.println(fov);
         this.FOV=new RangedDouble(fov);
         this.debug=mlc.getBoolean("debug",false);
     }
