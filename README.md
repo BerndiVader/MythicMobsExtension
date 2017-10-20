@@ -1,5 +1,4 @@
-# CustomSkillMechanics v1.211dev
-for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.211 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ##### ** 20.10.2017 *** added targetstarget & triggerstarget targeter. See targeters for details.
 ##### ** 16.10.2017 *** fixed infront & behind condition as it was never finished. :)
