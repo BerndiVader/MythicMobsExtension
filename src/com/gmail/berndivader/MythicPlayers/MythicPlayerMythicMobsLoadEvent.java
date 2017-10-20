@@ -8,6 +8,8 @@ import com.gmail.berndivader.MythicPlayers.Mechanics.mmNormalPlayer;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmSetTarget;
 import com.gmail.berndivader.MythicPlayers.Targeters.LastDamagerTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.OwnerTargetTargeter;
+import com.gmail.berndivader.MythicPlayers.Targeters.TargetsTargetTargeter;
+import com.gmail.berndivader.MythicPlayers.Targeters.TriggerTargetTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.mmCrosshairTargeter;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
@@ -55,6 +57,15 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 			SkillTargeter targeter=new LastDamagerTargeter(e.getConfig());
 			e.register(targeter);
 			break;
-		}}
+		}case "triggerstarget": {
+			SkillTargeter targeter=new TriggerTargetTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}case "targetstarget": {
+			SkillTargeter targeter=new TargetsTargetTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}
+		}
 	}
 }

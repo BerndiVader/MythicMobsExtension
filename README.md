@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.210
 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.10.2017 *** added targetstarget & triggerstarget targeter. See targeters for details.
 ##### ** 16.10.2017 *** fixed infront & behind condition as it was never finished. :)
 ##### ** 14.10.2017 *** fix for MythicMobs RandomSpawn add not working after server start.
 ##### ** 14.10.2017 *** fix for NPE in MythicPlayer DamageEvent.
@@ -1155,6 +1156,7 @@ jumpToTarget:
 
 
 # Targeters
+#### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
 
@@ -1166,6 +1168,12 @@ If caster mob have an owner it returns the target of the owner or if owner is pl
 
 ##### `@lastdamager`
 Returns the entity if the lastdamage was done by an entity.
+
+##### `@targeterstarget`
+Returns the target of the targeted entity. In case of target is a player the crosshair target.
+
+##### `@triggerstarget`
+Returns the target of the triggered entity. In case of target is a player the corsshair target.
 
 
 
