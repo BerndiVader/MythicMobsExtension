@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmCreateActivePlayer;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmNormalPlayer;
 import com.gmail.berndivader.MythicPlayers.Mechanics.mmSetTarget;
+import com.gmail.berndivader.MythicPlayers.Targeters.EyeDirectionTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.LastDamagerTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.OwnerTargetTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.TargetsTargetTargeter;
@@ -63,6 +64,10 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 			break;
 		}case "targetstarget": {
 			SkillTargeter targeter=new TargetsTargetTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}case "eyedirection": {
+			SkillTargeter targeter=new EyeDirectionTargeter(e.getConfig());
 			e.register(targeter);
 			break;
 		}

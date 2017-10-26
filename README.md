@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.211 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.212dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 23.10.2017 *** added eyedirection targeter. See targeters for details.
 ##### ** 20.10.2017 *** added targetstarget & triggerstarget targeter. See targeters for details.
 ##### ** 16.10.2017 *** fixed infront & behind condition as it was never finished. :)
 ##### ** 14.10.2017 *** fix for MythicMobs RandomSpawn add not working after server start.
@@ -1173,6 +1174,10 @@ Returns the target of the targeted entity. In case of target is a player the cro
 
 ##### `@triggerstarget`
 Returns the target of the triggered entity. In case of target is a player the corsshair target.
+
+##### `@eyedirection{length=[VALUE]`
+Returns the location length blocks away from the direction the caster is looking. `@eyelocation{l=20}` returns the location 20 blocks infront of the direction
+the caster is looking at.
 
 
 
