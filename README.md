@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.212dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.213dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 26.10.2017 *** added eir, leir & pir condition. See entitiesinradius condition for details.
 ##### ** 23.10.2017 *** added eyedirection targeter. See targeters for details.
 ##### ** 20.10.2017 *** added targetstarget & triggerstarget targeter. See targeters for details.
 ##### ** 16.10.2017 *** fixed infront & behind condition as it was never finished. :)
@@ -957,6 +958,29 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- eir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+
+##### `- leir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+
+##### `- pir{amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount players are in radius.
+
+*Example*
+
+```yaml
+	Conditions:
+	- eir{types=ARROW,DIAMOND_SWORD;amount=1to10;radius=10}
+	# true if there are 1 to 10 dropped items of type arrow and diamond_sword around.
+	
+	- leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
+	# true if there are more than 5 entities of the type list around.
+	
+	- pir{amount=>0;radius=64}
+	# true if there is atleast 1 player in radius of 64 blocks.
+```
 
 ##### `- playertime{time=[RANGEDVALUE];action=[boolean]}`
 Check the player only time.

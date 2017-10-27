@@ -128,6 +128,15 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new PlayerTimeCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-			}
+		}case "entitiesinradius":
+			case "eir":
+			case "leir":
+			case "livingentitiesinradius":
+			case "pir":
+			case "playersinradius":{
+			SkillCondition c=new EntitiesInRadiusCondition(e.getConfig().getLine(), e.getConfig());
+			e.register(c);
+			break;
 		}}
+	}
 }

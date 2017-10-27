@@ -213,6 +213,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new AStarMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "storecooldown":{
+			skill=new StoreCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}
