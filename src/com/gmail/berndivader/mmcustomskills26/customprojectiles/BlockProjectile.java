@@ -215,6 +215,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
 							return true;
 						}
+						if (e.getBukkitEntity().hasMetadata(Main.noTargetVar)) return true;
 						if (!BlockProjectile.this.hitPlayers && e.isPlayer()) {
 							return true;
 						}

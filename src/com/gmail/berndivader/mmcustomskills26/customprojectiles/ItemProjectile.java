@@ -192,7 +192,8 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 						.addAll(ItemProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
 				this.inRange.removeIf(e -> {
 					if (e != null) {
-						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
+						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
+								||e.getBukkitEntity().hasMetadata(Main.noTargetVar)) {
 							return true;
 						}
 						if (!ItemProjectile.this.hitPlayers && e.isPlayer()) {

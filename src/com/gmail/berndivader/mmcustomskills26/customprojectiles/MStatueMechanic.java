@@ -185,7 +185,8 @@ ITargetedLocationSkill {
                 Iterator<LivingEntity> iter = this.inRange.iterator();
                 while (iter.hasNext()) {
                     LivingEntity e = iter.next();
-                    if (e.getUniqueId().equals(this.caster.getEntity().getUniqueId())) {
+                    if (e.getUniqueId().equals(this.caster.getEntity().getUniqueId())
+                    		||e.hasMetadata(Main.noTargetVar)) {
                         iter.remove();
                         continue;
                     }
@@ -206,6 +207,7 @@ ITargetedLocationSkill {
             this.entity=this.am.getEntity().getBukkitEntity();
             Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.entity.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setInvulnerable(true);
 			this.entity.setGravity(false);
 			this.entity.setTicksLived(Integer.MAX_VALUE);

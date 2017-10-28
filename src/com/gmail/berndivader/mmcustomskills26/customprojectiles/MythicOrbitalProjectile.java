@@ -172,7 +172,8 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 						MythicOrbitalProjectile.this.entitymanager.getLivingEntities(this.currentLocation.getWorld()));
 				this.inRange.removeIf(e -> {
 					if (e != null) {
-						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
+						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
+								||e.getBukkitEntity().hasMetadata(Main.noTargetVar)) {
 							return true;
 						}
 						if (!MythicOrbitalProjectile.this.hitPlayers && e.isPlayer()) {
@@ -241,7 +242,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				yaw = ((yaw + this.pSpin) % 360.0F);
 			}
 			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
-					this.currentLocation.getZ(), yaw, 0.0F);
+					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			this.targets.clear();
 			if (this.ct) {
 				if (this.cam != null && this.cam.hasThreatTable() && this.cam.getThreatTable().size() > 0) {
