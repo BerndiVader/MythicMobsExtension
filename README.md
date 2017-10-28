@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.213dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 28.10.2017 *** added forward offset to customteleport mechanic.
 ##### ** 28.10.2017 *** tweaked customprojectiles abit.
 ##### ** 26.10.2017 *** added eir, leir & pir condition. See entitiesinradius condition for details.
 ##### ** 23.10.2017 *** added eyedirection targeter. See targeters for details.
