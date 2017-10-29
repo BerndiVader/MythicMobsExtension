@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.213dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 28.10.2017 *** added isburning condition.
 ##### ** 28.10.2017 *** added forward offset to customteleport mechanic.
 ##### ** 28.10.2017 *** tweaked customprojectiles abit.
 ##### ** 26.10.2017 *** added eir, leir & pir condition. See entitiesinradius condition for details.
@@ -960,6 +961,9 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- isburning{action=[boolean]}`
+Checks if the entity is burning or not.
 
 ##### `- eir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
