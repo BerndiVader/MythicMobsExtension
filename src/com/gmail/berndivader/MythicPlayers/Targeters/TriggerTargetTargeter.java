@@ -24,12 +24,12 @@ IEntitySelector {
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity>targets=new HashSet<>();
 		AbstractEntity target;
-		if ((target=data.getTrigger().getTarget())!=null) {
-			targets.add(target);
-		} else if (data.getTrigger().isPlayer()) {
+		if (data.getTrigger().isPlayer()) {
 			if ((target=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)data.getTrigger().getBukkitEntity())))!=null) {
 				targets.add(target);
 			};
+		} else if ((target=data.getTrigger().getTarget())!=null) {
+			targets.add(target);
 		}
 		return targets;
 	}

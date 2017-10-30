@@ -7,8 +7,10 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 
@@ -37,7 +39,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	protected boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
-	protected double delay, noise, maxTargets;
+	protected double delay, noise, maxTargets, frontOffset;
 	protected AbstractEntity entityTarget;
 	protected AbstractLocation startLocation;
 
@@ -45,7 +47,9 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 		super(line, mlc);
 		this.ASYNC_SAFE = false;
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
-		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
+		this.delay = mlc.getDouble(new String[] { "teleportdelay"
+				, "tdelay", "td" }, 0D);
+		this.frontOffset=mlc.getDouble(new String[] {"frontoffest","fo"},0.0D);
 		if ((this.maxTargets = mlc.getDouble(new String[] { "maxtargets", "mt" }, 0D)) < 0)
 			this.maxTargets = 0D;
 		this.inFrontOf = mlc.getBoolean(new String[] { "infrontof", "infront", "front", "f" }, false);
@@ -132,6 +136,7 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 			Iterator<?> it = osources.iterator();
 			Map<Double, Object> sosources = sortedsources;
 			double n = noise;
+			double fo=mmCustomTeleportSkill.this.frontOffset;
 			String bls = inBetweenLastSignal;
 			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
@@ -158,6 +163,12 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
+						if (this.fo!=0.0D) {
+							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+			    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			ll.add(foV);
+			    			target=BukkitAdapter.adapt(ll);
+						}
 						this.sourceEntity.teleport((AbstractLocation) target);
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(null, this.bls);
@@ -176,6 +187,12 @@ public class mmCustomTeleportSkill extends SkillMechanic implements ITargetedEnt
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
 						if (this.bns != null)
 							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
+						if (this.fo!=0.0D) {
+							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+			    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			ll.add(foV);
+			    			target=BukkitAdapter.adapt(ll);
+						}
 						this.sourceEntity.teleport((AbstractLocation) target);
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(this.lastEntity, this.bls);

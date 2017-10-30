@@ -186,6 +186,10 @@ ITargetedLocationSkill {
                         iter.remove();
                         continue;
                     }
+					if (e.hasMetadata(Main.noTargetVar)) {
+						iter.remove();
+						continue;
+					}
                     if (!BStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
                         iter.remove();
                         continue;
@@ -202,6 +206,7 @@ ITargetedLocationSkill {
             this.block=this.currentLocation.getWorld().spawnFallingBlock(this.currentLocation,BStatueMechanic.this.material,(byte)0);
             Main.entityCache.add(this.block);
 			this.block.setMetadata(Main.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
+			this.block.setMetadata(Main.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.block.setInvulnerable(true);
 			this.block.setGravity(false);
 			this.block.setTicksLived(Integer.MAX_VALUE);
