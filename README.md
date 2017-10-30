@@ -1,4 +1,4 @@
-# CustomSkillMechanics v1.214dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.215 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ##### ** 29.10.2017 *** tweaked customtargeters.
 ##### ** 28.10.2017 *** added isburning condition.
