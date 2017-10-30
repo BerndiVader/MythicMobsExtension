@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.215 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 30.10.2017 *** added extinguish mechanic.
 ##### ** 29.10.2017 *** tweaked customtargeters.
 ##### ** 28.10.2017 *** added isburning condition.
 ##### ** 28.10.2017 *** added forward offset to customteleport mechanic.
@@ -216,6 +217,16 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 ##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn`
 	 
 Almost all options like in mythicprojectile are useable.
+
+
+## extinguish mechanic:
+
+extinguish the target if its on fire.
+
+##### `- extinguish @self ~onDamaged`
+
+if the mob is damaged and in case the damage came from fire it extinguish the mob.
+	
 
 
 ## asquip mechanic:
