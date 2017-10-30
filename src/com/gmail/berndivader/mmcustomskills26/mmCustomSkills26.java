@@ -217,6 +217,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new StoreCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "extinguish":{
+			skill=new ExtinguishMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}

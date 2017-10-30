@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
-import org.bukkit.entity.LivingEntity;
-
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -20,11 +18,7 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity e) {
-		if (e.isLiving()) {
-			LivingEntity le=(LivingEntity)e.getBukkitEntity();
-			return le.getFireTicks()>-1;
-		}
-		return false;
+		return e.getBukkitEntity().getFireTicks()>-1;
 	}
 
 }
