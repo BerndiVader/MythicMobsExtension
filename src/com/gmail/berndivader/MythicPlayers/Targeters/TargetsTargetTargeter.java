@@ -1,6 +1,7 @@
 package com.gmail.berndivader.MythicPlayers.Targeters;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.bukkit.entity.Player;
 
@@ -24,16 +25,18 @@ IEntitySelector {
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity>targets=new HashSet<>();
 		HashSet<AbstractEntity>tt=data.getEntityTargets();
-		tt.forEach(t-> {
-			AbstractEntity target;
-			if ((target=t.getTarget())!=null) {
-				targets.add(target);
-			} else if (t.isPlayer()) {
-				if ((target=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)t.getBukkitEntity())))!=null) {
+		Iterator<AbstractEntity>it=tt.iterator();
+		while (it.hasNext()) {
+			AbstractEntity target=it.next();
+			if (target!=null) {
+				if (target.isPlayer()) {
+					AbstractEntity pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)target.getBukkitEntity()));
+					if (pt!=null) targets.add(pt);
+				} else {
 					targets.add(target);
 				}
 			}
-		});
+		}
 		return targets;
 	}
 }

@@ -28,16 +28,16 @@ public class OwnerTargetTargeter extends IEntitySelector {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity>targets=new HashSet<>();
-		if (data.getCaster().getEntity().isPlayer()) {
-			targets.add(BukkitAdapter
-					.adapt(CustomSkillStuff.getTargetedEntity((Player)BukkitAdapter.adapt(data.getCaster().getEntity()))));
-		} else if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
+		if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am=mobmanager.getMythicMobInstance(data.getCaster().getEntity());
 			if (am.getOwner().isPresent()) {
 				Entity owner=NMSUtils.getEntity(am.getEntity().getBukkitEntity().getWorld(),am.getOwner().get());
 				if (owner!=null) {
 					if (owner instanceof Creature) {
 						targets.add(BukkitAdapter.adapt(((Creature)owner).getTarget()));
+					} else if (owner instanceof Player) {
+						AbstractEntity pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)owner));
+						if (pt!=null) targets.add(pt);
 					} else if (owner.getLastDamageCause()!=null) {
 						targets.add(BukkitAdapter.adapt(owner.getLastDamageCause().getEntity()));
 					}

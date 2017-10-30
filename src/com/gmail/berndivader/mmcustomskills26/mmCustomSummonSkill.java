@@ -97,6 +97,9 @@ public class mmCustomSummonSkill extends SkillMechanic
 						tt = SkillString.parseMobVariables(tt, data.getCaster(), te, data.getTrigger());
 						ams.getEntity().addScoreboardTag(tt);
 					}
+					if (this.setowner) {
+						ams.setOwner(data.getCaster().getEntity().getUniqueId());
+					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
 /**
@@ -104,9 +107,6 @@ public class mmCustomSummonSkill extends SkillMechanic
  						ams.setParent(am);
  */
 						ams.setFaction(am.getFaction());
-						if (this.setowner) {
-							ams.setOwner(data.getCaster().getEntity().getUniqueId());
-						}
 						if (this.copyThreatTable) {
 							try {
 								ams.importThreatTable(am.getThreatTable().clone());
@@ -132,6 +132,9 @@ public class mmCustomSummonSkill extends SkillMechanic
 						continue;
 					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
+					if (this.setowner) {
+						ams.setOwner(data.getCaster().getEntity().getUniqueId());
+					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
 /**
@@ -139,9 +142,6 @@ public class mmCustomSummonSkill extends SkillMechanic
  						ams.setParent(am);
  */
 						ams.setFaction(am.getFaction());
-						if (this.setowner) {
-							ams.setOwner(data.getCaster().getEntity().getUniqueId());
-						}
 						if (this.copyThreatTable) {
 							try {
 								ams.importThreatTable(am.getThreatTable().clone());
