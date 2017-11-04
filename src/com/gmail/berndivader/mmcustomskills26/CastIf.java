@@ -25,6 +25,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.conditions.InvalidCondition;
+import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
@@ -36,6 +37,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	protected String elseAction;
 	protected String cConditionLine;
 	protected String tConditionLine;
+	protected boolean breakOnMeet,breakOnElse;
 	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
 	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
 	protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
@@ -50,6 +52,8 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.ASYNC_SAFE = false;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
+		this.breakOnMeet=mlc.getBoolean(new String[] {"breakonmeet","breakmeet"},false);
+		this.breakOnElse=mlc.getBoolean(new String[] {"breakonelse","breakelse"},false);
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
@@ -86,15 +90,20 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		if (this.handleConditions(data)) {
-			if (this.meetSkill.isPresent() && this.meetSkill.get().isUsable(data)) {
-				if (this.meetTargeter.isPresent()) renewTargets(this.meetTargeter.get(),data);
-				this.meetSkill.get().execute(data);
+		SkillMetadata sdata=data.deepClone();
+		if (this.handleConditions(sdata)) {
+			if (this.meetSkill.isPresent() && this.meetSkill.get().isUsable(sdata)) {
+				if (this.meetTargeter.isPresent()) renewTargets(this.meetTargeter.get(),sdata);
+				this.meetSkill.get().execute(sdata);
+			}
+			if (this.breakOnMeet) {
 			}
 		} else {
-			if (this.elseSkill.isPresent() && this.elseSkill.get().isUsable(data)) {
-				if (this.elseTargeter.isPresent()) renewTargets(this.elseTargeter.get(),data);
-				this.elseSkill.get().execute(data);
+			if (this.elseSkill.isPresent() && this.elseSkill.get().isUsable(sdata)) {
+				if (this.elseTargeter.isPresent()) renewTargets(this.elseTargeter.get(),sdata);
+				this.elseSkill.get().execute(sdata);
+			}
+			if (this.breakOnElse) {
 			}
 		}
 		return true;
@@ -103,7 +112,11 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	private static void renewTargets(String ts, SkillMetadata data) {
 		Optional<SkillTargeter> maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
-			SkillTargeter st = maybeTargeter.get();
+			SkillTargeter st=maybeTargeter.get();
+			if (st instanceof CustomTargeter
+					&&((CustomTargeter) st).getTargeter().isPresent()) {
+				st=((CustomTargeter) st).getTargeter().get();
+			}
 			if (st instanceof IEntitySelector) {
 	            ((IEntitySelector)st).filter(data, false);
 	            data.setEntityTargets(((IEntitySelector)st).getEntities(data));

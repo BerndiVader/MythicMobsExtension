@@ -141,6 +141,10 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new IsBurningCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "ispresent": {
+			SkillCondition c=new IsTargetPresentCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 		}}
 	}
 }
