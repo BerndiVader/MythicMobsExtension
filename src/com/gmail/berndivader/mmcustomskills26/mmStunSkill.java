@@ -3,6 +3,8 @@ package com.gmail.berndivader.mmcustomskills26;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.NMS.NMSUtils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -31,9 +33,8 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		target.getBukkitEntity().setMetadata("mmStunned", new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
 			int count = 0;
-			float yaw=l.getYaw();
-			float pitch=l.getPitch();
-			AbstractLocation l1=l.clone();
+			float yaw=l.getYaw(),pitch=l.getPitch();
+			double x=l.getX(),y=l.getY(),z=l.getZ();
 			@Override
 			public void run() {
 				if (t == null || t.isDead() || count >= dur) {
@@ -43,10 +44,8 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 					if (facing) {
 						yaw=t.getLocation().getYaw();
 						pitch=t.getLocation().getPitch();
-						l1.setYaw(yaw);
-						l1.setPitch(pitch);
 					}
-					t.teleport(l1);
+					NMSUtils.setLocation(t.getBukkitEntity(),x,y,z,yaw,pitch);
 				}
 				count++;
 			}

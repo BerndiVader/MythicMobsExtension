@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.217 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.218dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
+##### ** 04.10.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
 ##### ** 04.10.2017 *** tweaked castif mechanic.
 ##### ** 31.10.2017 *** added ispresent condition.
 ##### ** 30.10.2017 *** added extinguish mechanic.
@@ -975,6 +977,9 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- isvehicle{action=[boolean]}`
+To use as **TargetConditions**, checks if the caster is riding its target.
 
 ##### `- ispresent{action=[boolean]}`
 Checks if the the entity exists. Only makes sense as TargetCondtions though. Useful for triggers where its not always sure that there will be
