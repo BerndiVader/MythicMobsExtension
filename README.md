@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.215 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.216dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 31.10.2017 *** added ispresent condition.
 ##### ** 30.10.2017 *** added extinguish mechanic.
 ##### ** 29.10.2017 *** tweaked customtargeters.
 ##### ** 28.10.2017 *** added isburning condition.
@@ -225,7 +226,7 @@ extinguish the target if its on fire.
 
 ##### `- extinguish @self ~onDamaged`
 
-if the mob is damaged and in case the damage came from fire it extinguish the mob.
+if the mob is damaged and in case the mob is on fire it extinguish the mob.
 	
 
 
@@ -974,6 +975,19 @@ FleeButGotNothing:
 
 
 
+##### `- ispresent{action=[boolean]}`
+Checks if the the entity exists. Only makes sense as TargetCondtions though. Useful for triggers where its not always sure that there will be
+an entity as target. Like ~onTimer and such stuff.
+
+*Example*
+
+```yaml
+  TargetConditions:
+  - ispresent{action=true}
+  # true if the target is an entity and it exists.
+```
+
+
 ##### `- isburning{action=[boolean]}`
 Checks if the entity is burning or not.
 
@@ -989,15 +1003,15 @@ Check if amount players are in radius.
 *Example*
 
 ```yaml
-	Conditions:
-	- eir{types=ARROW,DIAMOND_SWORD;amount=1to10;radius=10}
-	# true if there are 1 to 10 dropped items of type arrow and diamond_sword around.
-	
-	- leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
-	# true if there are more than 5 entities of the type list around.
-	
-	- pir{amount=>0;radius=64}
-	# true if there is atleast 1 player in radius of 64 blocks.
+  Conditions:
+  - eir{types=ARROW,DIAMOND_SWORD;amount=1to10;radius=10}
+  # true if there are 1 to 10 dropped items of type arrow and diamond_sword around.
+  
+  - leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
+  # true if there are more than 5 entities of the type list around.
+  
+  - pir{amount=>0;radius=64}
+  # true if there is atleast 1 player in radius of 64 blocks.
 ```
 
 ##### `- playertime{time=[RANGEDVALUE];action=[boolean]}`
@@ -1218,8 +1232,7 @@ Returns the target of the targeted entity. In case of target is a player the cro
 Returns the target of the triggered entity. In case of target is a player the corsshair target.
 
 ##### `@eyedirection{length=[VALUE]`
-Returns the location length blocks away from the direction the caster is looking. `@eyelocation{l=20}` returns the location 20 blocks infront of the direction
-the caster is looking at.
+Returns the location length blocks away from the direction the caster is looking. `@eyedirection{l=20}` returns the location 20 blocks infront of the direction the caster is looking at.
 
 
 
