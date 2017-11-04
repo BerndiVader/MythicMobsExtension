@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.216dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.217 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 04.10.2017 *** tweaked castif mechanic.
 ##### ** 31.10.2017 *** added ispresent condition.
 ##### ** 30.10.2017 *** added extinguish mechanic.
 ##### ** 29.10.2017 *** tweaked customtargeters.
