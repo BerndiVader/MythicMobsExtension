@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.218dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.219dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 05.10.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
 ##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
 ##### ** 04.10.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
 ##### ** 04.10.2017 *** tweaked castif mechanic.
@@ -221,6 +222,15 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 ##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn`
 	 
 Almost all options like in mythicprojectile are useable.
+
+
+
+## playerspin mechanic:
+
+spin the player target around.
+
+##### `- playerspin{d=[duration_ticks];s=[spin_speed]} @any_player_targeter ~onDamaged`
+	
 
 
 ## extinguish mechanic:
