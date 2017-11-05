@@ -32,7 +32,7 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		target.setGravity(false);
 		new BukkitRunnable() {
-			int count = 0;
+			long count = 0;
 			float yaw=l.getYaw(),pitch=l.getPitch();
 			double x=l.getX(),y=l.getY(),z=l.getZ();
 			@Override

@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.219dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.22 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 05.10.2017 *** added playergoggleat mechanic & isgoggling and isspinning conditions. See playergoggle mechanic for details.
 ##### ** 05.10.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
 ##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
 ##### ** 04.10.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
@@ -225,9 +226,18 @@ Almost all options like in mythicprojectile are useable.
 
 
 
+## playergoggle or playergoggleat mechanic:
+
+Force the targeted player to stare at caster while still is full moveable for duration amount of ticks. Use the `isgoggling` condition 
+to determine if the player already goggles at something.
+
+##### `- playergoggleat{d=[duration_ticks]} @any_player_targeter ~onDamaged`
+	
+
+
 ## playerspin mechanic:
 
-spin the player target around.
+spin the player target around. Use the `isspinning` condition to determine if  the player is already spinning around.
 
 ##### `- playerspin{d=[duration_ticks];s=[spin_speed]} @any_player_targeter ~onDamaged`
 	
@@ -987,6 +997,12 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- isgoggling{action=[boolean]}`
+Checks if the player is goggling at something. See playergoggle mechanic.
+
+##### `- isspinning{action=[boolean]}`
+Checks if the player is spinning around. See playerspin mechanic.
 
 ##### `- isvehicle{action=[boolean]}`
 To use as **TargetConditions**, checks if the caster is riding its target.
