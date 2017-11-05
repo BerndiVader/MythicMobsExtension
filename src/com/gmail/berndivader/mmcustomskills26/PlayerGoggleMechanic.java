@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -17,6 +18,7 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
+	public static String str="mmGoggle";
 	private long dur;
 	private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
@@ -28,6 +30,7 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer()) return false;
+		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		final Player p=(Player)target.getBukkitEntity();
 		final AbstractEntity caster=data.getCaster().getEntity();
 		final long d=this.dur;
@@ -38,6 +41,7 @@ ITargetedEntitySkill {
 				if (p==null
 						||p.isDead()
 						||count>d) {
+					p.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
 					Vector v=CustomSkillStuff.lookAtVec(p.getEyeLocation(),

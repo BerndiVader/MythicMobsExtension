@@ -126,10 +126,16 @@ public class CustomSkillStuff implements Listener {
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		if (e.getPlayer().hasMetadata(mmStunSkill.str)) {
-			Player p=e.getPlayer();
+		Player p=e.getPlayer();
+		if (p.hasMetadata(mmStunSkill.str)) {
 			p.setGravity(true);
 			p.removeMetadata(mmStunSkill.str,Main.getPlugin());
+		}
+		if (p.hasMetadata(PlayerSpinMechanic.str)) {
+			p.removeMetadata(PlayerSpinMechanic.str,Main.getPlugin());
+		}
+		if (p.hasMetadata(PlayerGoggleMechanic.str)) {
+			p.removeMetadata(PlayerGoggleMechanic.str,Main.getPlugin());
 		}
 	}
 

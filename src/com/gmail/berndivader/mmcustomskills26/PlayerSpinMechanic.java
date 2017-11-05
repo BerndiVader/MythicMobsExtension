@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.volatilecode.VolatileHandler;
@@ -16,6 +17,7 @@ extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
+	public static String str="mmSpin";
 	private long d;
 	private float s;
 	final private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
@@ -29,6 +31,7 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer()) return false;
+		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		final Entity entity=target.getBukkitEntity();
 		final long d=this.d;
 		final float s=this.s;
@@ -37,6 +40,7 @@ ITargetedEntitySkill {
 			@Override
 			public void run() {
 				if (entity==null||entity.isDead()||c>d) {
+					entity.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
 					vh.playerConnectionSpin(entity,s);
