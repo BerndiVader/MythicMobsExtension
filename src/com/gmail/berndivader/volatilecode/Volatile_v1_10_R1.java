@@ -2,16 +2,20 @@ package com.gmail.berndivader.volatilecode;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
@@ -47,6 +51,8 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_10_R1.Vec3D;
+import net.minecraft.server.v1_10_R1.PacketPlayOutPosition;
+import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_10_R1.EntityItem;
 import net.minecraft.server.v1_10_R1.BlockPosition;
@@ -61,13 +67,45 @@ import net.minecraft.server.v1_10_R1.PathPoint;
 
 public class Volatile_v1_10_R1 
 implements VolatileHandler {
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
+			new EnumPlayerTeleportFlags[] { 
+					EnumPlayerTeleportFlags.X_ROT,
+					EnumPlayerTeleportFlags.Y_ROT,
+					}));	
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>ssSet=new HashSet<>(Arrays.asList(
+			new EnumPlayerTeleportFlags[] { 
+					EnumPlayerTeleportFlags.X_ROT,
+					EnumPlayerTeleportFlags.Y_ROT,
+					EnumPlayerTeleportFlags.X,
+					EnumPlayerTeleportFlags.Y,
+					EnumPlayerTeleportFlags.Z
+					}));	
 	
 	public Volatile_v1_10_R1() {
 	}
 
 	@Override
-	public void setMotion(Entity entity) {
-
+	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+		net.minecraft.server.v1_10_R1.Entity me = ((CraftEntity)entity).getHandle();
+        me.setLocation(x,y,z,yaw,pitch);
+        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f);
+        me.world.entityJoinedWorld(me, false);
+	}
+	
+	private void playerConnectionTeleport(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+		net.minecraft.server.v1_10_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
+		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>set=Collections.emptySet();
+		if (f) {
+			set=sSet;
+			yaw=0.0F;pitch=0.0F;
+		}
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+	}
+	
+	@Override
+	public void playerConnectionSpin(Entity entity,float s) {
+		net.minecraft.server.v1_10_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,s,0,ssSet,0));
 	}
 	
 	@Override

@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -121,6 +122,15 @@ public class CustomSkillStuff implements Listener {
 				|| !am.getType().getConfig().getBoolean("onDamageForOtherCause")) return;
 		ts = new TriggeredSkillAP(SkillTrigger.DAMAGED, am, null);
 		if (ts.getCancelled()) e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e) {
+		if (e.getPlayer().hasMetadata(mmStunSkill.str)) {
+			Player p=e.getPlayer();
+			p.setGravity(true);
+			p.removeMetadata(mmStunSkill.str,Main.getPlugin());
+		}
 	}
 
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {

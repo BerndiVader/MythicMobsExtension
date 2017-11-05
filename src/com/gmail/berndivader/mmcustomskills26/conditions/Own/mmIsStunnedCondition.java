@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26.conditions.Own;
 
+import com.gmail.berndivader.mmcustomskills26.mmStunSkill;
 import com.gmail.berndivader.mmcustomskills26.conditions.mmCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -14,7 +15,7 @@ public class mmIsStunnedCondition extends mmCustomCondition implements IEntityCo
 
 	@Override
 	public boolean check(AbstractEntity target) {
-		return target.getBukkitEntity().hasMetadata("mmStunned");
+		return target.getBukkitEntity().hasMetadata(mmStunSkill.str);
 	}
 
 }

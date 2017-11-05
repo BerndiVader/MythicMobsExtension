@@ -6,6 +6,8 @@ import java.util.*;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +23,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
@@ -35,12 +38,44 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public class Volatile_v1_12_R1 
 implements VolatileHandler {
-	
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
+			new EnumPlayerTeleportFlags[] { 
+					EnumPlayerTeleportFlags.X_ROT,
+					EnumPlayerTeleportFlags.Y_ROT,
+					}));	
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>ssSet=new HashSet<>(Arrays.asList(
+			new EnumPlayerTeleportFlags[] { 
+					EnumPlayerTeleportFlags.X_ROT,
+					EnumPlayerTeleportFlags.Y_ROT,
+					EnumPlayerTeleportFlags.X,
+					EnumPlayerTeleportFlags.Y,
+					EnumPlayerTeleportFlags.Z
+					}));	
 	public Volatile_v1_12_R1() {
 	}
 
 	@Override
-	public void setMotion(Entity entity) {
+	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+        me.setLocation(x,y,z,yaw,pitch);
+        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f);
+        me.world.entityJoinedWorld(me, false);
+	}
+	
+	private void playerConnectionTeleport(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
+		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>set=Collections.emptySet();
+		if (f) {
+			set=sSet;
+			yaw=0.0F;pitch=0.0F;
+		}
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+	}
+	
+	@Override
+	public void playerConnectionSpin(Entity entity,float s) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,s,0,ssSet,0));
 	}
 
 	@Override
@@ -58,22 +93,24 @@ implements VolatileHandler {
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
-		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
-		players.stream().forEach(ap-> {
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(packet);
-		});
+		}
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
-		players.stream().forEach(ap-> {
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
-		});
+		}
 	}
 
 	@Override
