@@ -51,6 +51,12 @@ implements VolatileHandler {
 					EnumPlayerTeleportFlags.Y,
 					EnumPlayerTeleportFlags.Z
 					}));	
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sssSet=new HashSet<>(Arrays.asList(
+			new EnumPlayerTeleportFlags[] { 
+					EnumPlayerTeleportFlags.X,
+					EnumPlayerTeleportFlags.Y,
+					EnumPlayerTeleportFlags.Z
+					}));	
 	public Volatile_v1_12_R1() {
 	}
 
@@ -70,6 +76,12 @@ implements VolatileHandler {
 			yaw=0.0F;pitch=0.0F;
 		}
         me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+	}
+	
+	@Override
+	public void playerConnectionLookAt(Entity entity,float yaw,float pitch) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,yaw,pitch,sssSet,0));
 	}
 	
 	@Override

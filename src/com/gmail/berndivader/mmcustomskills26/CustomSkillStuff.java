@@ -386,7 +386,6 @@ public class CustomSkillStuff implements Listener {
 		double zo=Math.sin(y)*hO;
 		return new Vector(xo,0d,zo);
 	}
-	
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();
@@ -406,6 +405,25 @@ public class CustomSkillStuff implements Listener {
 		}
 		yaw = -yaw * 180f / (float) Math.PI;
 		return yaw;
+	}
+	public static Vector lookAtVec(Location loc, Location lookat) {
+		loc=loc.clone();
+		lookat=lookat.clone();
+		float yaw=0.0F;
+		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
+		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
+		if (dx!=0) {
+			if(dx<0) {
+				yaw=(float)(1.5*Math.PI);
+			} else {
+				yaw=(float)(0.5*Math.PI);
+			}
+			yaw=yaw-(float)Math.atan(dz/dx);
+		} else if (dz<0) {
+			yaw=(float)Math.PI;
+		}
+		float pitch=(float)-Math.atan(dy/dxz);
+		return new Vector(-yaw*180f/(float)Math.PI,pitch*180f/(float)Math.PI,0);
 	}
 
 	public static Location moveTo(Location loc, Vector offset) {

@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.219dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.22 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 05.10.2017 *** added playergoggleat mechanic. See playergoggle mechanic for details.
 ##### ** 05.10.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
 ##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
 ##### ** 04.10.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
@@ -223,6 +224,14 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
+
+
+## playergoggle or playergoggleat mechanic:
+
+Force the targeted player to stare at caster while still is full moveable for duration amount of ticks.
+
+##### `- playergoggleat{d=[duration_ticks]} @any_player_targeter ~onDamaged`
+	
 
 
 ## playerspin mechanic:

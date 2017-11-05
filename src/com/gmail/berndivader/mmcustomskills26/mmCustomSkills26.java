@@ -225,7 +225,11 @@ public class mmCustomSkills26 implements Listener {
 			skill=new PlayerSpinMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		}
-		}
+		}case "playergoggleat":
+		case "playergoggle": {
+			skill=new PlayerGoggleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}}
 	}
 }
