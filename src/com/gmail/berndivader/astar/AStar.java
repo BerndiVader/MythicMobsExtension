@@ -1,28 +1,25 @@
 package com.gmail.berndivader.astar;
 
-/*
- * By @Adamki11s
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.material.Gate;
 
-import java.util.*;
-
 public class AStar {
 
-	private int sx, sy, sz, ex, ey, ez;
-	private World w;
-	private final boolean ignoreDamage;
-	private final boolean isPlayer;
-	private static PathfindAlgorithm algorithm;
-	private PathingResult result;
-	private Location start;
+	private final int sx, sy, sz, ex, ey, ez;
+	private final World w;
 
-	private HashMap<String, Tile> open = new HashMap<>();
-	private HashMap<String, Tile> closed = new HashMap<>();
+	private PathingResult result;
+
+	private HashMap<String, Tile> open = new HashMap<String, Tile>();
+	private HashMap<String, Tile> closed = new HashMap<String, Tile>();
 
 	private void addToOpenList(Tile t, boolean modify) {
 		if (open.containsKey(t.getUID())) {
@@ -40,20 +37,17 @@ public class AStar {
 		}
 	}
 
-	private int range;
-	private String endUID;
+	private final int range;
+	private final String endUID;
 
-	public AStar(Location start, Location end, int range, boolean ignoreDamage, boolean isPlayer, PathfindAlgorithm algorithm) {
-		this.ignoreDamage = ignoreDamage;
-		this.isPlayer = isPlayer;
-		AStar.algorithm = algorithm;
-		boolean s =  this.isLocationWalkable(start), e = this.isLocationWalkable(end);
+	public AStar(Location start, Location end, int range) throws InvalidPathException {
 
-		if (!isPlayer && (!s || !e)) {
-			System.err.println("[Pathfinding] Start and/or end locations are not walkable.");
-			return;
+		boolean s = true, e = true;
+
+		if (!(s = this.isLocationWalkable(start)) || !(e = this.isLocationWalkable(end))) {
+			throw new InvalidPathException(s, e);
 		}
-		this.start = start;
+
 		this.w = start.getWorld();
 		this.sx = start.getBlockX();
 		this.sy = start.getBlockY();
@@ -70,7 +64,9 @@ public class AStar {
 		this.open.put(t.getUID(), t);
 		this.processAdjacentTiles(t);
 
-		this.endUID = String.valueOf(ex - sx) + (ey - sy) + (ez - sz);
+		StringBuilder b = new StringBuilder();
+		b.append(ex - sx).append(ey - sy).append(ez - sz);
+		this.endUID = b.toString();
 	}
 
 	public Location getEndLocation() {
@@ -81,20 +77,18 @@ public class AStar {
 		return this.result;
 	}
 
-	private boolean checkOnce = false;
-
+	boolean checkOnce = false;
+	
 	private int abs(int i) {
 		return (i < 0 ? -i : i);
 	}
 
-	public List<Tile> iterate() {
-		if (w == null) {
-			return Collections.emptyList();
-		}
+	public ArrayList<Tile> iterate() {
+
 		if (!checkOnce) {
 			// invert the boolean flag
-			checkOnce = true;
-			if ((abs(sx - ex) > range) || (abs(sy - ey) > range) || (abs(sz - ez) > range)) {
+			checkOnce ^= true;
+			if((abs(sx - ex) > range) || (abs(sy - ey) > range) || (abs(sz - ez) > range)){
 				this.result = PathingResult.NO_PATH;
 				return null;//jump out
 			}
@@ -115,12 +109,11 @@ public class AStar {
 			return null;
 		} else {
 			// path found
-			LinkedList<Tile> routeTrace = new LinkedList<>();
+			LinkedList<Tile> routeTrace = new LinkedList<Tile>();
 			Tile parent;
 
 			routeTrace.add(current);
 
-			assert current != null;
 			while ((parent = current.getParent()) != null) {
 				routeTrace.add(parent);
 				current = parent;
@@ -128,7 +121,7 @@ public class AStar {
 
 			Collections.reverse(routeTrace);
 
-			return new ArrayList<>(routeTrace);
+			return new ArrayList<Tile>(routeTrace);
 		}
 	}
 
@@ -137,11 +130,13 @@ public class AStar {
 		if (open.size() == 0) {
 			this.result = PathingResult.NO_PATH;
 			return false;
-		} else if (closed.containsKey(this.endUID)) {
-			this.result = PathingResult.SUCCESS;
-			return false;
 		} else {
-			return true;
+			if (closed.containsKey(this.endUID)) {
+				this.result = PathingResult.SUCCESS;
+				return false;
+			} else {
+				return true;
+			}
 		}
 	}
 
@@ -167,7 +162,6 @@ public class AStar {
 
 		// drop from open list and add to closed
 
-		assert drop != null;
 		this.open.remove(drop.getUID());
 		this.addToClosedList(drop);
 
@@ -182,7 +176,7 @@ public class AStar {
 	private void processAdjacentTiles(Tile current) {
 
 		// set of possible walk to locations adjacent to current tile
-		HashSet<Tile> possible = new HashSet<>(26);
+		HashSet<Tile> possible = new HashSet<Tile>(26);
 
 		for (byte x = -1; x <= 1; x++) {
 			for (byte y = -1; y <= 1; y++) {
@@ -192,11 +186,7 @@ public class AStar {
 						continue;// don't check current square
 					}
 
-					Tile t = new Tile((short) (current.getX() + x),
-						(short) (current.getY() + y),
-						(short) (current.getZ() + z),
-						current
-					);
+					Tile t = new Tile((short) (current.getX() + x), (short) (current.getY() + y), (short) (current.getZ() + z), current);
 
 					if (!t.isInRange(this.range)) {
 						// if block is out of bounds continue
@@ -205,16 +195,9 @@ public class AStar {
 
 					if (x != 0 && z != 0 && (y == 0 || y == 1)) {
 						// check to stop jumping through diagonal blocks
-						Tile xOff = new Tile((short) (current.getX() + x),
-							(short) (current.getY() + y),
-							current.getZ(),
-							current
-						), zOff = new Tile(current.getX(),
-							(short) (current.getY() + y),
-							(short) (current.getZ() + z),
-							current
-						);
-						if (!isPlayer || !this.isTileWalkable(xOff) && !this.isTileWalkable(zOff)) {
+						Tile xOff = new Tile((short) (current.getX() + x), (short) (current.getY() + y), (short) (current.getZ()), current), zOff = new Tile((short) (current.getX()),
+								(short) (current.getY() + y), (short) (current.getZ() + z), current);
+						if (!this.isTileWalkable(xOff) && !this.isTileWalkable(zOff)) {
 							continue;
 						}
 					}
@@ -225,7 +208,7 @@ public class AStar {
 					}
 
 					// only process the tile if it can be walked on
-					if (!isPlayer || this.isTileWalkable(t)) {
+					if (this.isTileWalkable(t)) {
 						t.calculateBoth(sx, sy, sz, ex, ey, ez, true);
 						possible.add(t);
 					}
@@ -236,7 +219,7 @@ public class AStar {
 
 		for (Tile t : possible) {
 			// get the reference of the object in the array
-			Tile openRef;
+			Tile openRef = null;
 			if ((openRef = this.isOnOpenList(t)) == null) {
 				// not on open list, so add
 				this.addToOpenList(t, false);
@@ -249,6 +232,7 @@ public class AStar {
 					// force updates of F, G and H values.
 					openRef.calculateBoth(sx, sy, sz, ex, ey, ez, true);
 				}
+
 			}
 		}
 
@@ -261,7 +245,6 @@ public class AStar {
 		 */
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean isTileWalkable(Tile t) {
 		Location l = new Location(w, (sx + t.getX()), (sy + t.getY()), (sz + t.getZ()));
 		Block b = l.getBlock();
@@ -269,52 +252,66 @@ public class AStar {
 
 		// lava, fire, wheat and ladders cannot be walked on, and of course air
 		// 85, 107 and 113 stops npcs climbing fences and fence gates
-		if (i != 10 && i != 11 && i != 51 && i != 59 && i != 65 && i != 0 && i != 85 && i != 107 && i != 113
-			&& !canBlockBeWalkedThrough(i)) {
+		if (i != 10 && i != 11 && i != 51 && i != 59 && i != 65 && i != 0 && i != 85 && i != 107 && i != 113 && !canBlockBeWalkedThrough(i)) {
 			// make sure the blocks above are air
 
-			if (b.getRelative(0, 1, 0).getType() == Material.FENCE_GATE) {
+			if (b.getRelative(0, 1, 0).getTypeId() == 107) {
 				// fench gate check, if closed continue
 				Gate g = new Gate(b.getRelative(0, 1, 0).getData());
-				return (g.isOpen() && (b.getRelative(0, 2, 0).getType() == Material.AIR));
+				return (g.isOpen() ? (b.getRelative(0, 2, 0).getTypeId() == 0) : false);
 			}
-			return (canBlockBeWalkedThrough(b.getRelative(0, 1, 0).getTypeId())
-					&& b.getRelative(0, 2, 0).getType() == Material.AIR);
+			return (canBlockBeWalkedThrough(b.getRelative(0, 1, 0).getTypeId()) && b.getRelative(0, 2, 0).getTypeId() == 0);
 
 		} else {
 			return false;
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean isLocationWalkable(Location l) {
 		Block b = l.getBlock();
 		int i = b.getTypeId();
 
-		// make sure the blocks above are air or can be walked through
-		return i != 10 && i != 11 && i != 51 && i != 59 && i != 0 && (i != 213 && !ignoreDamage) && (i == 65 && (
-			isLocationWalkable(b.getRelative(0, -1, 0).getLocation())
-			|| b.getRelative(0, -1, 0).getType() == Material.LADDER)) && !canBlockBeWalkedThrough(i) && (
-				   canBlockBeWalkedThrough(b.getRelative(0, 1, 0).getTypeId())
-				   && b.getRelative(0, 2, 0).getType() == Material.AIR
-				   || b.getRelative(0, 2, 0).getType() == Material.LADDER);
+		if (i != 10 && i != 11 && i != 51 && i != 59 && i != 65 && i != 0 && !canBlockBeWalkedThrough(i)) {
+			// make sure the blocks above are air or can be walked through
+			return (canBlockBeWalkedThrough(b.getRelative(0, 1, 0).getTypeId()) && b.getRelative(0, 2, 0).getTypeId() == 0);
+		} else {
+			return false;
+		}
 	}
 
 	private boolean canBlockBeWalkedThrough(int id) {
-		return (id == 0 || id == 6 || id == 50 || id == 51 && ignoreDamage || id == 63 || id == 30 || id == 31
-				|| id == 32 || id == 37 || id == 38 || id == 39 || id == 40 || id == 55 || id == 65 || id == 66
-				|| id == 75 || id == 76 || id == 78);
+		return (id == 0 || id == 6 || id == 50 || id == 63 || id == 30 || id == 31 || id == 32 || id == 37 || id == 38 || id == 39 || id == 40 || id == 55 || id == 66 || id == 75
+				|| id == 76 || id == 78);
 	}
 
-	public static PathfindAlgorithm getAlgorithm() {
-		return algorithm;
+	@SuppressWarnings("serial")
+	public class InvalidPathException extends Exception {
+
+		private final boolean s, e;
+
+		public InvalidPathException(boolean s, boolean e) {
+			this.s = s;
+			this.e = e;
+		}
+
+		public String getErrorReason() {
+			StringBuilder sb = new StringBuilder();
+			if (!s) {
+				sb.append("Start Location was air. ");
+			}
+			if (!e) {
+				sb.append("End Location was air.");
+			}
+			return sb.toString();
+		}
+
+		public boolean isStartNotSolid() {
+			return (!s);
+		}
+
+		public boolean isEndNotSolid() {
+			return (!e);
+		}
 	}
 
-	public World getWorld() {
-		return this.w;
-	}
-
-	public Location getStart() {
-		return start;
-	}
 }

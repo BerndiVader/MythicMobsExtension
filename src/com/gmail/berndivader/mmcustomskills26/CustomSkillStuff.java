@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -19,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -49,7 +51,20 @@ public class CustomSkillStuff implements Listener {
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
+		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {
+			final Player p=e.getPlayer();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					p.getOpenInventory().close();
+				}
+			}.runTaskLater(MythicMobs.inst(), 1L);
+		}
+	}
+	
 	@EventHandler
 	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
 		if (e.getEntity().hasMetadata(Main.mpNameVar)) {

@@ -157,6 +157,14 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new IsSpinningCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "hasspawner":{
+			SkillCondition c=new HasMythicSpawnerCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}case "samespawner":{
+			SkillCondition c=new SameMythicSpawnerCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 		}
 		}
 	}

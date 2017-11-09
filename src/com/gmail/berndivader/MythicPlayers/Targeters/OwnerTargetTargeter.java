@@ -33,11 +33,11 @@ public class OwnerTargetTargeter extends IEntitySelector {
 			if (am.getOwner().isPresent()) {
 				Entity owner=NMSUtils.getEntity(am.getEntity().getBukkitEntity().getWorld(),am.getOwner().get());
 				if (owner!=null) {
+					AbstractEntity pt;
 					if (owner instanceof Creature) {
-						targets.add(BukkitAdapter.adapt(((Creature)owner).getTarget()));
+						if ((pt=BukkitAdapter.adapt(((Creature)owner).getTarget()))!=null)targets.add(pt);
 					} else if (owner instanceof Player) {
-						AbstractEntity pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)owner));
-						if (pt!=null) targets.add(pt);
+						if((pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)owner)))!=null)targets.add(pt);
 					} else if (owner.getLastDamageCause()!=null) {
 						targets.add(BukkitAdapter.adapt(owner.getLastDamageCause().getEntity()));
 					}

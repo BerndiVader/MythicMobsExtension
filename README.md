@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.22 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.222dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 08.10.2017 *** added hasspawner & samespawner conditions. See conditions for details.
 ##### ** 05.10.2017 *** added playergoggleat mechanic & isgoggling and isspinning conditions. See playergoggle mechanic for details.
 ##### ** 05.10.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
 ##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
@@ -997,6 +998,12 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- samespawner{action=[boolean]}`
+To use as **TargetConditions**, return true if caster & target have same mythicspawner.
+
+##### `- hasspawner{names=[arraylist]||[ANY]}`
+Checks if the mythicmobs mob comes from a mythicspawner. Use a List or ANY.
 
 ##### `- isgoggling{action=[boolean]}`
 Checks if the player is goggling at something. See playergoggle mechanic.

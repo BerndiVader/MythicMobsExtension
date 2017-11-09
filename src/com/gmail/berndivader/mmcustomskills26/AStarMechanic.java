@@ -1,13 +1,16 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.astar.AStar;
+import com.gmail.berndivader.astar.AStar.InvalidPathException;
 import com.gmail.berndivader.astar.PathfindAlgorithm;
-import com.gmail.berndivader.astar.PathingResult;
 import com.gmail.berndivader.astar.Tile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -23,26 +26,30 @@ public class AStarMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
+	private int range;
 
 	public AStarMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.range=mlc.getInteger("r",10);
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		Location start=data.getCaster().getEntity().getBukkitEntity().getLocation(),
-				 end=BukkitAdapter.adapt(target);
-		AStar path=new AStar(start, end, 10, true, true, PathfindAlgorithm.A_STAR);
-        List<Tile>route=path.iterate();
-        PathingResult result=path.getPathingResult();	
-        switch(result) {
-        case SUCCESS:
-        	this.changePathBlocksToDiamond(start,route);
-        	break;
-        case NO_PATH:
-        	System.err.println("No path found!");
-        	break;
-        }
+		Location start=data.getCaster().getEntity().getBukkitEntity().getLocation().subtract(0, 1, 0),
+				 end=BukkitAdapter.adapt(target).subtract(0,1,0);
+		AStar astar;
+		try {
+			astar = new AStar(start, end, this.range);
+	        List<Tile>route=astar.iterate();
+	        if (route==null) {
+	        	System.err.println("route=null");
+	        	return false;
+	        }
+	       	this.changePathBlocksToDiamond(start,route);
+		} catch (InvalidPathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -52,9 +59,15 @@ ITargetedLocationSkill {
 	}
 	
 	private void changePathBlocksToDiamond(Location start, List<Tile> tiles){
-	    for(Tile t:tiles){
-	        t.getLocation(start).getBlock().setType(Material.DIAMOND_BLOCK);
-	    }
+		List<Player>players=start.getWorld().getPlayers();
+		Iterator<Tile>it1=tiles.iterator();
+		while(it1.hasNext()) {
+			Tile t=it1.next();
+			for (Player p:players) {
+				p.sendBlockChange(new Location(p.getWorld(), (start.getBlockX() + t.getX()), (start.getBlockY() + t.getY()), (start.getBlockZ() + t.getZ())),
+						Material.DIAMOND_BLOCK, (byte) 0);			
+			}
+		}
 	}	
 
 }

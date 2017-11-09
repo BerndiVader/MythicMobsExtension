@@ -3,31 +3,40 @@ package com.gmail.berndivader.astar;
 import org.bukkit.Location;
 
 public class Tile {
-	private final short x,y,z;
-	private double g=-1,h=-1;
-	private Tile parent=null;
+
+	// as offset from starting point
+	private final short x, y, z;
+
+	private double g = -1, h = -1;
+
+	private Tile parent = null;
+
 	private final String uid;
 
-	public Tile(short x,short y,short z,Tile parent) {
-		this.x=x;
-		this.y=y;
-		this.z=z;
-		this.parent=parent;
-		uid=String.valueOf(x)+y+z;
-	}
+	public Tile(short x, short y, short z, Tile parent) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.parent = parent;
 
-	public boolean isInRange(int range) {
-		return ((range-Math.abs(x)>= 0)
-				&&(range-Math.abs(y)>=0)
-				&&(range-Math.abs(z)>=0));
+		StringBuilder b = new StringBuilder();
+		b.append(x);
+		b.append(y);
+		b.append(z);
+		uid = b.toString();
+
+	}
+	
+	public boolean isInRange(int range){
+		return ((range - abs(x) >= 0) && (range - abs(y) >= 0) && (range - abs(z) >= 0));
 	}
 
 	public void setParent(Tile parent) {
-		this.parent=parent;
+		this.parent = parent;
 	}
 
 	public Location getLocation(Location start) {
-		return new Location(start.getWorld(),start.getBlockX()+x,start.getBlockY()+y,start.getBlockZ()+z);
+		return new Location(start.getWorld(), start.getBlockX() + x, start.getBlockY() + y, start.getBlockZ() + z);
 	}
 
 	public Tile getParent() {
@@ -39,7 +48,7 @@ public class Tile {
 	}
 
 	public int getX(Location i) {
-		return (i.getBlockX()+x);
+		return (i.getBlockX() + x);
 	}
 
 	public short getY() {
@@ -47,7 +56,7 @@ public class Tile {
 	}
 
 	public int getY(Location i) {
-		return (i.getBlockY()+y);
+		return (i.getBlockY() + y);
 	}
 
 	public short getZ() {
@@ -55,7 +64,7 @@ public class Tile {
 	}
 
 	public int getZ(Location i) {
-		return (i.getBlockZ()+z);
+		return (i.getBlockZ() + z);
 	}
 
 	public String getUID() {
@@ -63,52 +72,54 @@ public class Tile {
 	}
 
 	public boolean equals(Tile t) {
-		return (t.getX()==x
-				&&t.getY()==y
-				&&t.getZ()==z);
+		return (t.getX() == x && t.getY() == y && t.getZ() == z);
 	}
 
-	public void calculateBoth(int sx,int sy,int sz,int ex,int ey,int ez,boolean update) {
-		this.calculateG(update);
-		this.calculateH(sx,sy,sz,ex,ey,ez,update);
+	public void calculateBoth(int sx, int sy, int sz, int ex, int ey, int ez, boolean update) {
+		this.calculateG(sx, sy, sz, update);
+		this.calculateH(sx, sy, sz, ex, ey, ez, update);
 	}
 
-	public void calculateH(int sx,int sy,int sz,int ex,int ey,int ez,boolean update) {
-		if ((!update&&h==-1)
-				||update) {
-			if (AStar.getAlgorithm()==PathfindAlgorithm.DIJKSTRA) {
-				this.h=0;
-			} else {
-				int hx=sx+x,hy=sy+y,hz=sz+z;
-				this.h=this.getEuclideanDistance(hx,hy,hz,ex,ey,ez)*(AStar.getAlgorithm()==PathfindAlgorithm.BEST_FIRST?1_000_000:1);
-			}
+	public void calculateH(int sx, int sy, int sz, int ex, int ey, int ez, boolean update) {
+		// only update if h hasn't been calculated or if forced
+		if ((!update && h == -1) || update) {
+			int hx = sx + x, hy = sy + y, hz = sz + z;
+			this.h = this.getEuclideanDistance(hx, hy, hz, ex, ey, ez);
 		}
 	}
 
-	public void calculateG(boolean update) {
-		if (update||g==-1) {
-			Tile currentParent,
-				currentTile=this;
-			int gCost=0;
-			while ((currentParent=currentTile.getParent())!=null) {
-				int dx=currentTile.getX()-currentParent.getX(),
-					dy=currentTile.getY()-currentParent.getY(),
-					dz=currentTile.getZ()-currentParent.getZ();
-				dx=Math.abs(dx);
-				dy=Math.abs(dy);
-				dz=Math.abs(dz);
+	// G = the movement cost to move from the starting point A to a given square
+	// on the grid, following the path generated to get there.
+	public void calculateG(int sx, int sy, int sz, boolean update) {
+
+		if ((!update && g == -1) || update) {
+
+			// only update if g hasn't been calculated or if forced
+			Tile currentParent = this.getParent(), currentTile = this;
+			int gCost = 0;
+			// follow path back to start
+			while ((currentParent = currentTile.getParent()) != null) {
+
+				int dx = currentTile.getX() - currentParent.getX(), dy = currentTile.getY() - currentParent.getY(), dz = currentTile.getZ() - currentParent.getZ();
+
+				dx = abs(dx);
+				dy = abs(dy);
+				dz = abs(dz);
+
 				if (dx == 1 && dy == 1 && dz == 1) {
-					gCost+= 1.7;
-				} else if ((dx==1||dz==1)
-						&&(dy==1||dy==0)) {
-					gCost+=1.4;
+					gCost += 1.7;
+				} else if (((dx == 1 || dz == 1) && dy == 1) || ((dx == 1 || dz == 1) && dy == 0)) {
+					gCost += 1.4;
 				} else {
-					gCost+=1.0;
+					gCost += 1.0;
 				}
-				currentTile=currentParent;
+
+				// move backwards a tile
+				currentTile = currentParent;
 			}
-			this.g=gCost;
+			this.g = gCost;
 		}
+
 	}
 
 	public double getG() {
@@ -120,12 +131,17 @@ public class Tile {
 	}
 
 	public double getF() {
-		return h+g;
+		// f = h + g
+		return (h + g);
 	}
 
-	private double getEuclideanDistance(int sx,int sy,int sz,int ex,int ey,int ez) {
-		double dx=sx-ex,dy=sy-ey,dz=sz-ez;
-		return Math.sqrt((dx*dx)+(dy*dy)+(dz*dz));
+	private double getEuclideanDistance(int sx, int sy, int sz, int ex, int ey, int ez) {
+		double dx = sx - ex, dy = sy - ey, dz = sz - ez;
+		return Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+	}
+
+	private int abs(int i) {
+		return (i < 0 ? -i : i);
 	}
 
 }
