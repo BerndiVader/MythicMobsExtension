@@ -22,7 +22,6 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
-import net.minecraft.server.v1_12_R1.Material;
 
 public class mmHasMetaTagCondition extends mmCustomCondition implements ILocationCondition, IEntityComparisonCondition {
 	protected MobManager mobmanager;
@@ -63,8 +62,6 @@ public class mmHasMetaTagCondition extends mmCustomCondition implements ILocatio
 	public boolean check(AbstractLocation location) {
 		Location l = BukkitAdapter.adapt(location);
 		Block block = l.getBlock();
-		if (block.getType().equals(Material.AIR))
-			return false;
 		for (Map.Entry<String, metaTagValue> e : metatags.entrySet()) {
 			String t = SkillString.parseMobVariables(e.getKey(), null, null, null);
 			String vs = getMetaValString(e.getValue(), null, null);

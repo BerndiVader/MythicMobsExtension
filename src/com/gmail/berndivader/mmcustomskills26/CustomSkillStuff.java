@@ -14,12 +14,14 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +53,7 @@ public class CustomSkillStuff implements Listener {
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
 		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {

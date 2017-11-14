@@ -13,7 +13,6 @@ public class mmWorldGuardFlag implements Listener {
 
 	public mmWorldGuardFlag() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
-		Bukkit.getLogger().info("registered WorldGuard conditions!");
 	}
 
 	@EventHandler

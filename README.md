@@ -1,11 +1,13 @@
 # CustomSkillMechanics v1.222dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-##### ** 08.10.2017 *** added hasspawner & samespawner conditions. See conditions for details.
-##### ** 05.10.2017 *** added playergoggleat mechanic & isgoggling and isspinning conditions. See playergoggle mechanic for details.
-##### ** 05.10.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
-##### ** 04.10.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
-##### ** 04.10.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
-##### ** 04.10.2017 *** tweaked castif mechanic.
+##### ** 14.11.2017 *** added disarm mechanic. See disarm mechanic for details.
+##### ** 11.11.2017 *** added material type air for metamechanics & conditions if used for locations.
+##### ** 08.11.2017 *** added hasspawner & samespawner conditions. See conditions for details.
+##### ** 05.11.2017 *** added playergoggleat mechanic & isgoggling and isspinning conditions. See playergoggle mechanic for details.
+##### ** 05.11.2017 *** tweaked stun skill & added playerspin mechanic. See playerspin mechanic for details.
+##### ** 04.11.2017 *** added isvehicle targetcondition. See isvehicle condition for details.
+##### ** 04.11.2017 *** tweaked stun skill. facing=true now works for players & passengers will not be ejected.
+##### ** 04.11.2017 *** tweaked castif mechanic.
 ##### ** 31.10.2017 *** added ispresent condition.
 ##### ** 30.10.2017 *** added extinguish mechanic.
 ##### ** 29.10.2017 *** tweaked customtargeters.
@@ -225,6 +227,15 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
+
+
+## disarm mechanic:
+
+Disarm the targeted player and store the equipped item in the first free slot in the players inventory. The mechanic is not executed if 
+the player has no space in its inventory.
+
+##### `- disarm @trigger ~onDamaged`
+	
 
 
 ## playergoggle or playergoggleat mechanic:
@@ -543,7 +554,7 @@ The tags "tag" and "value" can contain any mob variable. Example: `[- setmeta{me
 		
 `- setmeta{meta="tag=lastdamagedentity;value=<trigger.uuid>;type=STRING"} @self ~onAttack`
 			
-This will set the lastdamagedentity tag of the mob to the victims uuid. It is possible to set a metadata of a block by using a location targeter. All blocks but air are valid.
+This will set the lastdamagedentity tag of the mob to the victims uuid. It is possible to set a metadata of a block by using a location targeter. All blocks including air are valid.
 		
 ### delmeta mechanic:
 
