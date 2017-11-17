@@ -14,12 +14,13 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 
 	public static String str="mmStunned";
 	private Integer duration;
-	private Boolean f;
+	private Boolean f,g;
 
 	public mmStunSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.duration = mlc.getInteger(new String[] { "duration", "d" }, 120);
 		this.f = mlc.getBoolean(new String[] { "facing", "face", "f" }, false);
+		this.g=mlc.getBoolean(new String[] {"gravity","g"},false);
 		this.ASYNC_SAFE = false;
 	}
 
@@ -28,9 +29,9 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		final AbstractEntity t = target;
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
-		final boolean facing=this.f;
+		final boolean facing=this.f,gravity=this.g;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-		target.setGravity(false);
+		target.setGravity(gravity);
 		new BukkitRunnable() {
 			long count = 0;
 			float yaw=l.getYaw(),pitch=l.getPitch();
@@ -44,7 +45,7 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 					t.setGravity(true);
 					this.cancel();
 				} else {
-					t.setGravity(false);
+					t.setGravity(gravity);
 					if (facing) {
 						yaw=t.getLocation().getYaw();
 						pitch=t.getLocation().getPitch();

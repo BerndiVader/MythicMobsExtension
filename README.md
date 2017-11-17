@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.222dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.224dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 16.11.2017 *** added gravity option to stun mechanic. See stun mechanic for details.
 ##### ** 14.11.2017 *** added disarm mechanic. See disarm mechanic for details.
 ##### ** 11.11.2017 *** added material type air for metamechanics & conditions if used for locations.
 ##### ** 08.11.2017 *** added hasspawner & samespawner conditions. See conditions for details.
@@ -721,9 +722,9 @@ Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcast
 	
 Use this mechanic to stun the target. 
 	
-##### `- stun{duration=Ticks;facing=true/false} @target`
+##### `- stun{duration=Ticks;facing=true/false;gravity=true/false} @target`
 	
-Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. In addition there is the **isstunned condition**. Look at Conditions.
+Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions.
 	
 
 
