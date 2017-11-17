@@ -25,10 +25,12 @@ public class HealthbarHandler implements Listener {
 	protected static Logger logger=Main.logger;
 	protected static HealthbarClock clock;
 	public static ConcurrentHashMap<UUID,Healthbar> healthbars;
+	public static ConcurrentHashMap<UUID,SpeechBubble> speechbubbles;
 	
 	public HealthbarHandler(Plugin plugin) {
 		HealthbarHandler.plugin = plugin;
 		HealthbarHandler.healthbars = new ConcurrentHashMap<UUID,Healthbar>();
+		HealthbarHandler.speechbubbles = new ConcurrentHashMap<UUID,SpeechBubble>();
 		HealthbarHandler.clock = new HealthbarClock();
 		Main.pluginmanager.registerEvents(this, plugin);
 	}
@@ -40,6 +42,11 @@ public class HealthbarHandler implements Listener {
 	public void removeHealthbars() {
 		healthbars.forEach((uuid,healthbar)-> {
 			healthbar.remove();
+		});
+	}
+	public void removeSpeechBubbles() {
+		speechbubbles.forEach((uuid,bubbles)-> {
+			bubbles.remove();
 		});
 	}
 	
@@ -62,6 +69,14 @@ public class HealthbarHandler implements Listener {
 					healthbar.update();
 				}
 			});
+			HealthbarHandler.speechbubbles.forEach((uuid,bubble)->{
+				Entity e= bubble.entity;
+				if (e==null || e.isDead()) {
+					bubble.remove();
+				} else {
+					bubble.update();
+				}
+			});
 		}
 	}
 	
@@ -77,6 +92,11 @@ public class HealthbarHandler implements Listener {
 		}
 		case "changehealthbar": {
 			skill = new changeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
+		case "speechbubble": {
+			skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}

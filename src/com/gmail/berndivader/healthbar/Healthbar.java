@@ -12,7 +12,9 @@ import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 
-public class Healthbar extends CraftHologram {
+public class Healthbar
+extends
+CraftHologram {
 	protected LivingEntity entity;
 	protected UUID uuid;
 	protected double offset,sOffset,fOffset;

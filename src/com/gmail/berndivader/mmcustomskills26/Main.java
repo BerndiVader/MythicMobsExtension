@@ -144,6 +144,7 @@ public class Main extends JavaPlugin {
 			if (entity!=null) entity.remove();
 		});
 		Main.healthbarhandler.removeHealthbars();
+		Main.healthbarhandler.removeSpeechBubbles();
 		if (this.thiefhandler!=null) Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		this.thiefhandler = null;
