@@ -7,21 +7,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -615,6 +612,21 @@ public class CustomSkillStuff implements Listener {
 
 	public static long encodePosition(double d) {
 		return (long) (d * 4096D);
+	}
+	
+	public static String[] wrapStr(String s, int l) {
+		String r="";
+		String d="&&br&&";
+		int ldp=0;
+		for (String t:s.split(" ",-1)) {
+			if (r.length()-ldp+t.length()>l) {
+				r=r+d+t;
+				ldp=r.length()+1;
+			} else {
+				r+=(r.isEmpty()?"":" ")+t;
+			}
+		}
+		return r.split(d);
 	}
 
 }
