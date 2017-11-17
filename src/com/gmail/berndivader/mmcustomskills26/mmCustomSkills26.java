@@ -230,6 +230,11 @@ public class mmCustomSkills26 implements Listener {
 			skill=new PlayerGoggleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
-		}}
+		}case "disarm": {
+			skill=new DisarmPlayerMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
+		}
 	}
 }

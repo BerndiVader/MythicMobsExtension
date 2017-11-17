@@ -32,8 +32,8 @@ IEntitySelector {
 				if (target.isPlayer()) {
 					AbstractEntity pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)target.getBukkitEntity()));
 					if (pt!=null) targets.add(pt);
-				} else {
-					targets.add(target);
+				} else if (target.getTarget()!=null){
+					targets.add(target.getTarget());
 				}
 			}
 		}

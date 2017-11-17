@@ -91,11 +91,13 @@ public class Main extends JavaPlugin {
 				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new mmWorldGuardFlag();
+				logger.info("Worldguard support enabled!");
 			}
 			if (pluginmanager.isPluginEnabled("Factions")
 					&& pluginmanager.isPluginEnabled("MassiveCore")) {
 				fflags = new FactionsFlags();
 				new mmFactionsFlag();
+				logger.info("Faction support enabled!");
 			}
 			if (pluginmanager.getPlugin("RPGItems") != null) {
 				logger.info("RPGItems support enabled!");
@@ -104,6 +106,7 @@ public class Main extends JavaPlugin {
 			if (pluginmanager.isPluginEnabled("MobArena")) {
 				maHandler = new MobArenaHandler();
 				new mmMobArenaConditions();
+				logger.info("MobArena support enabled!");
 			}
 			if (pluginmanager.isPluginEnabled("HolographicDisplays")) {
 				Main.healthbarhandler = new HealthbarHandler(this);

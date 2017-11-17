@@ -64,7 +64,8 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
-		if (target.getType().equals(Material.AIR) || this.tag == null || this.tag.isEmpty())
+//		if (target.getType().equals(Material.AIR) || this.tag == null || this.tag.isEmpty())
+		if (this.tag == null || this.tag.isEmpty())
 			return false;
 		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), null, data.getTrigger());
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)

@@ -34,8 +34,7 @@ public class DeleteMetatagMechanic extends SetMetatagMechanic {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
-		if (target.getType().equals(Material.AIR) || this.tag == null || this.tag.isEmpty())
-			return false;
+		if (this.tag == null || this.tag.isEmpty()) return false;
 		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), null, data.getTrigger());
 		if (target.hasMetadata(parsedTag)) {
 			target.removeMetadata(parsedTag, Main.getPlugin());
@@ -43,5 +42,4 @@ public class DeleteMetatagMechanic extends SetMetatagMechanic {
 		}
 		return false;
 	}
-
 }

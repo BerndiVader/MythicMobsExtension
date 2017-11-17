@@ -13,6 +13,7 @@ public class mmWorldGuardStateFlagCondition extends SkillCondition implements IL
 
 	private WorldGuardFlags wgf = Main.wgf;
 	private String flagName;
+	private boolean debug;
 
 	public mmWorldGuardStateFlagCondition(String line, MythicLineConfig mlc) {
 		super(line);
@@ -22,10 +23,13 @@ public class mmWorldGuardStateFlagCondition extends SkillCondition implements IL
 			this.ACTION = ConditionAction.TRUE;
 		}
 		this.flagName = mlc.getString(new String[] { "flagname", "flag", "f" }, "mob-spawning");
+		this.debug=mlc.getBoolean("debug",false);
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return wgf.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
+		boolean b=wgf.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
+		if (this.debug) Main.logger.info("wgstateflag outcome: "+b);
+		return b;
 	}
 }

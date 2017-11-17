@@ -13,7 +13,6 @@ public class mmMobArenaConditions implements Listener {
 
 	public mmMobArenaConditions() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
-		Bukkit.getLogger().info("registered MobArena conditions!");
 	}
 
 	@EventHandler
