@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -91,21 +90,25 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_10_R1.Entity me = ((CraftEntity)entity).getHandle();
         me.setLocation(x,y,z,yaw,pitch);
-        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f);
+        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f,g);
         me.world.entityJoinedWorld(me, false);
 	}
 	
-	private void playerConnectionTeleport(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f) {
+	private void playerConnectionTeleport(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_10_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
-		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>set=Collections.emptySet();
+		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>set=new HashSet<>();
 		if (f) {
 			set=sSet;
 			yaw=0.0F;pitch=0.0F;
 		}
-        me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+		if (g) {
+			set.add(EnumPlayerTeleportFlags.Y);
+			y=0.0D;
+		}
+		me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
 	}
 	
 	@Override

@@ -31,7 +31,6 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		final int dur = this.duration;
 		final boolean facing=this.f,gravity=this.g;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-		target.setGravity(gravity);
 		new BukkitRunnable() {
 			long count = 0;
 			float yaw=l.getYaw(),pitch=l.getPitch();
@@ -42,15 +41,14 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 						||t.isDead()
 						||count>dur) {
 					t.getBukkitEntity().removeMetadata(str, Main.getPlugin());
-					t.setGravity(true);
 					this.cancel();
 				} else {
-					t.setGravity(gravity);
 					if (facing) {
 						yaw=t.getLocation().getYaw();
 						pitch=t.getLocation().getPitch();
 					}
-					Main.getPlugin().getVolatileHandler().forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing);
+					if (gravity) y=t.getLocation().getY();
+					Main.getPlugin().getVolatileHandler().forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing,gravity);
 				}
 				count++;
 			}
