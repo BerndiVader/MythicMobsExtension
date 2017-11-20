@@ -20,6 +20,7 @@ ITargetedEntitySkill {
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.ASYNC_SAFE=false;
 		this.text=mlc.getString(new String[] {"text","t"},"");
 		this.ll=mlc.getInteger(new String[] {"linelength","ll"},20);
 		this.offset=mlc.getFloat(new String[] {"offset","yo"},2.1f);
@@ -28,8 +29,11 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!data.getCaster().getEntity().isLiving()
-				||HealthbarHandler.speechbubbles.containsKey(data.getCaster().getEntity().getUniqueId())) return false;
+		if (!data.getCaster().getEntity().isLiving()) return false;
+		if (HealthbarHandler.speechbubbles.containsKey(data.getCaster().getEntity().getUniqueId())) {
+			SpeechBubble sb=HealthbarHandler.speechbubbles.get(data.getCaster().getEntity().getUniqueId());
+			sb.remove();
+		}
 		LivingEntity entity=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 		String txt=this.text;
 		if (txt.startsWith("\"")

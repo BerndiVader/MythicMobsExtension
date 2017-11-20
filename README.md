@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.226dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.11.2017 *** fixed async error in speechbubble mechanic & some minor fixes & added an example.
 ##### ** 20.11.2017 *** changed movement method for blockfloating to fix fallingblocks glitches. Thanks aDaxxas!
 ##### ** 17.11.2017 *** added speechbubble mechanic. See speechbubble mechanic for details. (requires HolographicDisplay plugin)
 ##### ** 16.11.2017 *** added gravity option to stun mechanic. See stun mechanic for details.
@@ -238,6 +239,18 @@ Use this mechanic to add something like a speechbubble to your mob. Use it like 
 
 
 ##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;time=300} @trigger ~onInteract`
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - equip{i=BlackbeardHead:4} @self ~onSpawn
+  - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
+  - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
+```
 	
 
 
