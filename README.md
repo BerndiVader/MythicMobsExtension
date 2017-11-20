@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.225 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.226dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.11.2017 *** changed movement method for blockfloating to fix fallingblocks glitches. Thanks aDaxxas!
 ##### ** 17.11.2017 *** added speechbubble mechanic. See speechbubble mechanic for details. (requires HolographicDisplay plugin)
 ##### ** 16.11.2017 *** added gravity option to stun mechanic. See stun mechanic for details.
 ##### ** 14.11.2017 *** added disarm mechanic. See disarm mechanic for details.

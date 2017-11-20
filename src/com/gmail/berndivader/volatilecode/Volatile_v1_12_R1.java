@@ -59,7 +59,7 @@ implements VolatileHandler {
 					}));	
 	public Volatile_v1_12_R1() {
 	}
-
+	
 	@Override
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
@@ -126,6 +126,21 @@ implements VolatileHandler {
 			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
+		}
+	}
+	
+	@Override
+	public void moveEntityPacket(Entity entity,Location cl,double x,double y,double z) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		double x1=cl.getX()-me.locX;
+		double y1=cl.getY()-me.locY;
+		double z1=cl.getZ()-me.locZ;
+		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(vp);
 		}
 	}
 

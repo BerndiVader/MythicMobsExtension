@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,10 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -70,7 +75,7 @@ public class CustomSkillStuff implements Listener {
 			e.setCancelled(true);
 		}
 	}
-
+	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
 		EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
@@ -474,9 +479,7 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static double round(double value, int places) {
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
+		return new BigDecimal(value).round(new MathContext(places, RoundingMode.HALF_UP)).doubleValue();
 	}
 
 	public static Vector calculateTrajectory(Vector from, Vector to, double heightGain, double gravity) {
