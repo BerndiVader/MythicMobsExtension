@@ -244,9 +244,9 @@ Force the entity to goggle at the targeted entity for duration amount of ticks. 
 
 ## setrotation mechanic:
 
-Rotates the entity yo degrees relative to its yaw. Doesnt work too well if the entity have ai.
+Rotates the entity yo degrees relative to its yaw, amount of duration times. Doesnt work too well if the entity have ai.
 
-##### `- setrotation{yo=10} @self ~onTimer:5`
+##### `- setrotation{dur=200;yo=10} @self ~onTimer:5`
 	
 
 
