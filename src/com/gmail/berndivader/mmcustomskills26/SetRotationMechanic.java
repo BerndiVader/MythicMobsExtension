@@ -33,9 +33,7 @@ ITargetedEntitySkill{
 			long c=0;
 			@Override
 			public void run() {
-				if (c>d
-						||target==null
-						||target.isDead()) {
+				if (c>d||target.isDead()) {
 					target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {

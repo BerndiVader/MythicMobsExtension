@@ -282,7 +282,7 @@ ITargetedLocationSkill {
     			z+=soV.getZ()+foV.getZ();
     			this.currentLocation.setX(x);
     			this.currentLocation.setZ(z);
-    			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
+    			this.item.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()));
     			NMSUtils.setLocation(this.item,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
             } else {
     			this.item.setVelocity(this.vEmpty);
