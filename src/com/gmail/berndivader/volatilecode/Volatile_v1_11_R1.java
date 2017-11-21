@@ -46,6 +46,8 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 import net.minecraft.server.v1_11_R1.Vec3D;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityVelocity;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_11_R1.EntityItem;
@@ -600,6 +602,22 @@ implements VolatileHandler {
 			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(vp);
+		}
+	}
+
+	@Override
+	public void rotateEntityPacket(Entity entity,float y, float p) {
+		net.minecraft.server.v1_11_R1.Entity me = ((CraftEntity)entity).getHandle();
+		byte ya=(byte)((int)(y*256.0F/360.0F));
+		byte pa=(byte)((int)(p*256.0F/360.0F));
+		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
+		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(el);
+			cp.getHandle().playerConnection.sendPacket(hr);
 		}
 	}
 }

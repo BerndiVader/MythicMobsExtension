@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.226dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.227dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.11.2017 *** added setrotation & entitygoggleat mechanic. See setrotation & entitygoggleat for example.
 ##### ** 20.11.2017 *** fixed async error in speechbubble mechanic & some minor fixes & added an example.
 ##### ** 20.11.2017 *** changed movement method for blockfloating to fix fallingblocks glitches. Thanks aDaxxas!
 ##### ** 17.11.2017 *** added speechbubble mechanic. See speechbubble mechanic for details. (requires HolographicDisplay plugin)
@@ -231,6 +232,22 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
+
+
+## entitygoggleat/entitygoggle mechanic:
+
+Force the entity to goggle at the targeted entity for duration amount of ticks. Doesnt work too well if the entity have ai.
+
+##### `- entitygoggleat{dur=300} @trigger ~onDamaged`
+	
+
+
+## setrotation mechanic:
+
+Rotates the entity yo degrees relative to its yaw. Doesnt work too well if the entity have ai.
+
+##### `- setrotation{yo=10} @self ~onTimer:5`
+	
 
 
 ## speechbubble mechanic (requires holographicdisplay):

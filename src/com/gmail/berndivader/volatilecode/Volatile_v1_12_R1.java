@@ -6,6 +6,8 @@ import java.util.*;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 
 import org.bukkit.Effect;
@@ -64,7 +66,9 @@ implements VolatileHandler {
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
         me.setLocation(x,y,z,yaw,pitch);
-        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f,g);
+        if (entity instanceof Player) {
+        	playerConnectionTeleport(entity,x,y,z,yaw,pitch,f,g);
+        }
         me.world.entityJoinedWorld(me, false);
 	}
 	
@@ -80,6 +84,22 @@ implements VolatileHandler {
 			y=0.0D;
 		}
         me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+	}
+	
+	@Override
+	public void rotateEntityPacket(Entity entity,float y, float p) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		byte ya=(byte)((int)(y*256.0F/360.0F));
+		byte pa=(byte)((int)(p*256.0F/360.0F));
+		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
+		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(el);
+			cp.getHandle().playerConnection.sendPacket(hr);
+		}
 	}
 	
 	@Override

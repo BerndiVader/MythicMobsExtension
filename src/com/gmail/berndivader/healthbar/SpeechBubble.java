@@ -48,7 +48,7 @@ CraftHologram {
 		this.counter=showCounter;
 		this.template = CustomSkillStuff.wrapStr(text,ll);
 		this.entity = entity;
-		this.offset = offset+this.template.length*0.25;
+		this.offset = offset;
 		for(String l:this.template) {
 			this.appendTextLine(l);
 		}
@@ -62,13 +62,14 @@ CraftHologram {
 		double x = l.getX();
 		double y = l.getY();
 		double z = l.getZ();
+		double o=this.offset+this.template.length*0.25;
 		if (this.useOffset) {
 			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
 			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
 			x+=soV.getX()+foV.getX();
 			z+=soV.getZ()+foV.getZ();
 		}
-		this.teleport(w, x, y+this.offset, z);
+		this.teleport(w,x,y+o,z);
 		this.counter--;
 		if (this.counter<0) this.remove();
 		return true;

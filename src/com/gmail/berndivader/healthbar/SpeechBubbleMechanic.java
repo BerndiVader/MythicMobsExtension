@@ -22,6 +22,10 @@ ITargetedEntitySkill {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.text=mlc.getString(new String[] {"text","t"},"");
+		if (text.startsWith("\"")
+			&&text.endsWith("\"")) {
+			this.text=text.substring(1,text.length()-1);
+		}
 		this.ll=mlc.getInteger(new String[] {"linelength","ll"},20);
 		this.offset=mlc.getFloat(new String[] {"offset","yo"},2.1f);
 		this.time=mlc.getInteger(new String[] {"time","ti"},20);
@@ -36,10 +40,6 @@ ITargetedEntitySkill {
 		}
 		LivingEntity entity=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 		String txt=this.text;
-		if (txt.startsWith("\"")
-				&&txt.endsWith("\"")) {
-			txt=txt.substring(1,txt.length()-1);
-		}
 		txt=SkillString.unparseMessageSpecialChars(txt);
 		txt=SkillString.parseMobVariables(txt, data.getCaster(), target, data.getTrigger());
 		new SpeechBubble(entity, this.offset, this.time, txt, 0, 0, false, this.ll);
