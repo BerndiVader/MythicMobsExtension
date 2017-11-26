@@ -70,7 +70,6 @@ public class mmGrenadeSkill extends SkillMechanic
 			Location sl = source.clone();
 			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl,
 					EntityType.PRIMED_TNT);
-			Main.entityCache.add(grenade);
 			if (grenade == null) return false;
 			grenade.setVelocity(v);
 			grenade.setYield(size);
@@ -81,6 +80,7 @@ public class mmGrenadeSkill extends SkillMechanic
 			grenade.setMetadata("noblkdmg", new FixedMetadataValue(this.plugin, this.breakBlocks));
 			grenade.setMetadata("undotnt", new FixedMetadataValue(this.plugin, this.undotnt));
 			grenade.setMetadata("ueffect", new FixedMetadataValue(this.plugin, this.ueffect));
+			Main.entityCache.add(grenade);
 		}
 		return true;
 	}

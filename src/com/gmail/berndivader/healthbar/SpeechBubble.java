@@ -19,7 +19,7 @@ CraftHologram {
 	protected double offset,sOffset,fOffset;
 	protected String[] template;
 	protected TextLine textline;
-	protected int counter;
+	protected int counter,maxlines;
 	protected boolean useOffset,iYaw;
 	
 	public SpeechBubble(LivingEntity entity, String text) {
@@ -29,10 +29,11 @@ CraftHologram {
 		this(entity,0d,-1,text,0d,0d,false,ll);
 	}
 	public SpeechBubble(LivingEntity entity, double offset,int showCounter, String text, double sOffset, double fOffset, boolean ignoreYaw,int ll) {
-		super(entity.getLocation().add(0, offset, 0));
+		super(entity.getLocation().add(0, entity.getEyeHeight(), 0));
 		this.fOffset=fOffset;
 		this.sOffset=sOffset;
 		this.iYaw=ignoreYaw;
+		this.maxlines=-1;
 		this.useOffset=fOffset!=0d||sOffset!=0d;
 		if (this.useOffset) {
 			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
@@ -58,11 +59,11 @@ CraftHologram {
 	public boolean update() {
 		if (this.isDeleted()) return false;
 		Location l = this.entity.getLocation();
-		World w = l.getWorld();
-		double x = l.getX();
-		double y = l.getY();
-		double z = l.getZ();
-		double o=this.offset+this.template.length*0.25;
+		World w=l.getWorld();
+		double x=l.getX();
+		double y=l.getY();
+		double z=l.getZ();
+		double o=(this.getLinesLength()*0.25)+this.offset;
 		if (this.useOffset) {
 			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
 			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);

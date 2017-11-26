@@ -9,15 +9,12 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -36,6 +33,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mmcustomskills26.conditions.Own.hasItemCondition.WhereType;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -45,6 +43,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -469,11 +468,11 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static AbstractLocation getCircleLoc(Location c, double rX, double rZ, double rY, double air) {
-		double x = c.getX() + rX * Math.cos(air);
-		double z = c.getZ() + rZ * Math.sin(air);
-		double y = c.getY() + rY * Math.cos(air);
-		Location loc = new Location(c.getWorld(), x, y, z);
-		Vector difference = c.toVector().clone().subtract(loc.toVector());
+		double x=c.getX()+rX*Math.cos(air);
+		double z=c.getZ()+rZ*Math.sin(air);
+		double y=c.getY()+rY*Math.cos(air);
+		Location loc=new Location(c.getWorld(),x,y,z);
+		Vector difference=c.toVector().clone().subtract(loc.toVector());
 		loc.setDirection(difference);
 		return BukkitAdapter.adapt(loc);
 	}
@@ -631,5 +630,23 @@ public class CustomSkillStuff implements Listener {
 		}
 		return r.split(d);
 	}
+	
+	public enum WhereType {
+		HAND,
+		OFFHAND,
+		ARMOR,
+		INVENTORY,
+		ANY;
+
+		public static WhereType get(String s) {
+	        if (s==null) return null;
+	        try {
+	            return WhereType.valueOf(s.toUpperCase());
+	        }
+	        catch (Exception ex) {
+                return WhereType.ANY;
+            }
+	    }
+	}	
 
 }

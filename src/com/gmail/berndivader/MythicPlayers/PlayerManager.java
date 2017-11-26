@@ -43,6 +43,13 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 
 public class PlayerManager implements Listener {
+	public static String meta_MYTHICPLAYER = "MythicPlayer";
+	public static String meta_NOACTIVEMOB = "NOACTIVEMOB";
+	public static String meta_FACTION="Faction";
+	public static String meta_READYREASON="READYREASON";
+	public static String meta_ITEMCHANGE="ITEMCHANGE";
+	public static String signal_QUIT="QUIT";
+	public static String signal_DEATH = "DEATH";
 	private MythicPlayers mythicplayers;
 	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
@@ -84,18 +91,18 @@ public class PlayerManager implements Listener {
 	public void addMythicPlayerToFaction(MythicMob mm, ActivePlayer ap) {
 		if (mm.hasFaction()) {
 			ap.setFaction(mm.getFaction());
-			ap.getLivingEntity().setMetadata("Faction",
+			ap.getLivingEntity().setMetadata(meta_FACTION,
 					new FixedMetadataValue(MythicPlayers.mythicmobs, mm.getFaction()));
 		}
 	}
 
 	public void makeNormalPlayer(ActivePlayer ap) {
 		Entity e = ap.getEntity().getBukkitEntity();
-		ap.signalMob(ap.getEntity(), "NOACTIVEMOB");
+		ap.signalMob(ap.getEntity(), meta_NOACTIVEMOB);
 		this.removeAllEffectsFromPlayer(ap.getEntity());
 		this.removeActivePlayer(ap);
-		e.removeMetadata("MythicPlayer", mythicplayers.plugin());
-		e.removeMetadata("Faction", mythicplayers.plugin());
+		e.removeMetadata(meta_MYTHICPLAYER, mythicplayers.plugin());
+		e.removeMetadata(meta_FACTION, mythicplayers.plugin());
 	}
 
 	public void removeActivePlayer(ActivePlayer ap) {
@@ -108,9 +115,9 @@ public class PlayerManager implements Listener {
 	}
 
 	public boolean attachActivePlayer(LivingEntity l, boolean dotrigger) {
-		MythicMob mm = mobmanager.getMythicMob(l.getMetadata("MythicPlayer").get(0).asString());
+		MythicMob mm = mobmanager.getMythicMob(l.getMetadata(meta_MYTHICPLAYER).get(0).asString());
 		if (mm == null) {
-			l.removeMetadata("MythicPlayer", mythicplayers.plugin());
+			l.removeMetadata(meta_MYTHICPLAYER, mythicplayers.plugin());
 			return false;
 		}
 		;
@@ -127,7 +134,7 @@ public class PlayerManager implements Listener {
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
 		new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
-		l.setMetadata("MythicPlayer", new FixedMetadataValue(mythicplayers.plugin(), mm.getInternalName()));
+		l.setMetadata(meta_MYTHICPLAYER, new FixedMetadataValue(mythicplayers.plugin(), mm.getInternalName()));
 		return true;
 	}
 
@@ -136,14 +143,14 @@ public class PlayerManager implements Listener {
 		if (!this.isActivePlayer(e.getEntity().getUniqueId()))
 			return;
 		ActivePlayer ap = this.getActivePlayer(e.getEntity().getUniqueId()).get();
-		ap.signalMob(ap.getEntity(), "DEATH");
+		ap.signalMob(ap.getEntity(), signal_DEATH);
 		this.removeAllEffectsFromPlayer(ap.getEntity());
 		this.removeActivePlayer(ap);
 	}
 
 	@EventHandler
 	public void onMythicPlayerRespawn(PlayerRespawnEvent e) {
-		if (e.getPlayer().hasMetadata("MythicPlayer")) {
+		if (e.getPlayer().hasMetadata(meta_MYTHICPLAYER)) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -155,7 +162,7 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerJoin(PlayerJoinEvent e) {
-		if (e.getPlayer().hasMetadata("MythicPlayer"))
+		if (e.getPlayer().hasMetadata(meta_MYTHICPLAYER))
 			this.attachActivePlayer(e.getPlayer(), true);
 	}
 
@@ -164,7 +171,7 @@ public class PlayerManager implements Listener {
 		if (this.isActivePlayer(e.getPlayer().getUniqueId())) {
 			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 			this.removeAllEffectsFromPlayer(ap.getEntity());
-			ap.signalMob(ap.getEntity(), "QUIT");
+			ap.signalMob(ap.getEntity(), signal_QUIT);
 			this.removeActivePlayer(ap);
 			TaskManager.get().runAsyncLater(new QueuedMobCleanup(ap), 0);
 		}
@@ -172,20 +179,19 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerDamage(EntityDamageEvent e) {
-		if (e.isCancelled()
-				||mobmanager==null
-				||mobmanager.isActiveMob(e.getEntity().getUniqueId())) return;
-		Entity victim=e.getEntity();
+		if (e.isCancelled() || mobmanager == null || mobmanager.isActiveMob(e.getEntity().getUniqueId()))
+			return;
+		Entity victim = e.getEntity();
 		DamageCause cause = e.getCause();
 		victim.setMetadata("LDC", new FixedMetadataValue(mythicplayers.plugin(), cause.toString()));
-		if (!this.isActivePlayer(victim.getUniqueId()))	return;
-		if (!cause.equals(DamageCause.ENTITY_ATTACK) 
-				&& !cause.equals(DamageCause.ENTITY_EXPLOSION)
-				&& !cause.equals(DamageCause.CUSTOM) 
-				&& !cause.equals(DamageCause.PROJECTILE)) {
+		if (!this.isActivePlayer(victim.getUniqueId()))
+			return;
+		if (!cause.equals(DamageCause.ENTITY_ATTACK) && !cause.equals(DamageCause.ENTITY_EXPLOSION)
+				&& !cause.equals(DamageCause.CUSTOM) && !cause.equals(DamageCause.PROJECTILE)) {
 			ActivePlayer ap = this.getActivePlayer(victim.getUniqueId()).get();
-			AbstractEntity trigger=null;
-			if (e instanceof EntityDamageByEntityEvent) trigger=BukkitAdapter.adapt(((EntityDamageByEntityEvent)e).getDamager());
+			AbstractEntity trigger = null;
+			if (e instanceof EntityDamageByEntityEvent)
+				trigger = BukkitAdapter.adapt(((EntityDamageByEntityEvent) e).getDamager());
 			new TriggeredSkillAP(SkillTrigger.DAMAGED, ap, trigger);
 		}
 	}
@@ -204,10 +210,14 @@ public class PlayerManager implements Listener {
 			return;
 		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 		TriggeredSkillAP ts = null;
+		System.err.println(e.getAction());
 		if (e.getHand().equals(EquipmentSlot.HAND)) {
+			System.err.println("pass1");
 			if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+				System.err.println("pass2");
 				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
 			} else if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				System.err.println("pass3");
 				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null,
 						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
 			}
@@ -242,7 +252,7 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerWorldChanged(PlayerChangedWorldEvent e) {
-		if (e.getPlayer().hasMetadata("MythicPlayer")) {
+		if (e.getPlayer().hasMetadata(meta_MYTHICPLAYER)) {
 			new BukkitRunnable() {
 				private Player p = e.getPlayer();
 
@@ -256,12 +266,12 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerChangeSlot(PlayerItemHeldEvent e) {
-		if (e.isCancelled() || !e.getPlayer().hasMetadata("MythicPlayer"))
+		if (e.isCancelled() || !e.getPlayer().hasMetadata(meta_MYTHICPLAYER))
 			return;
 		Optional<ActivePlayer> maybeActivePlayer = this.getActivePlayer(e.getPlayer().getUniqueId());
 		if (maybeActivePlayer.isPresent()) {
 			ActivePlayer ap = maybeActivePlayer.get();
-			e.getPlayer().setMetadata("READYREASON", new FixedMetadataValue(mythicplayers.plugin(), "ITEMCHANGE"));
+			e.getPlayer().setMetadata(meta_READYREASON, new FixedMetadataValue(mythicplayers.plugin(), meta_ITEMCHANGE));
 			new TriggeredSkillAP(SkillTrigger.READY, ap, ap.getEntity());
 		}
 	}

@@ -239,6 +239,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new DisarmPlayerMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "setmobhealth": {
+			skill=new SetHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}
