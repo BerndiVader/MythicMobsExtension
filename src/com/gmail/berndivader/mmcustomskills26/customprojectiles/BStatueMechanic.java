@@ -238,7 +238,7 @@ ITargetedLocationSkill {
             	return;
             }
             this.oldLocation=this.currentLocation.clone();
-            if (!this.islocationtarget) this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
+            if (!this.islocationtarget) this.currentLocation=this.owner.getLocation().clone().add(0d,this.yOffset,0d);
             if (this.dur>BStatueMechanic.this.tickInterval
             		&&this.inRange != null) {
                 HitBox hitBox = new HitBox(this.currentLocation,BStatueMechanic.this.hitRadius,BStatueMechanic.this.verticalHitRadius);
@@ -282,8 +282,8 @@ ITargetedLocationSkill {
             	z+=soV.getZ()+foV.getZ();
             	this.currentLocation.setX(x);
             	this.currentLocation.setZ(z);
-            	this.block.setVelocity(this.currentLocation.toVector().subtract(this.oldLocation.toVector()).multiply(1));
             	NMSUtils.setLocation(this.block,this.oldLocation.getX(),this.oldLocation.getY(),this.oldLocation.getZ(),this.oldLocation.getYaw(), this.oldLocation.getPitch());
+                vh.moveEntityPacket(this.block,this.currentLocation.clone(),this.oldLocation.getX(), this.oldLocation.getY(), this.oldLocation.getZ());
             } else {
     			this.block.setVelocity(new Vector());
     			NMSUtils.setLocation(this.block,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());

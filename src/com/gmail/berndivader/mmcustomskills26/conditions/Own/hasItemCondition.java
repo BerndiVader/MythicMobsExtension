@@ -24,8 +24,9 @@ public class hasItemCondition extends mmCustomCondition
 implements
 IEntityCondition {
 
-	private enum WhereType {
+	public enum WhereType {
 		HAND,
+		OFFHAND,
 		ARMOR,
 		INVENTORY,
 		ANY;
@@ -41,7 +42,7 @@ IEntityCondition {
 	    }
 	}	
 	
-	private class ItemHolding {
+	public class ItemHolding {
 		Material material;
 		String lore;
 		RangedDouble amount;
@@ -136,6 +137,8 @@ IEntityCondition {
 				bool=false;
 				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
 					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) bool=true;
+				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.OFFHAND)) {
+					if (checkContent(new ItemStack[]{target.getEquipment().getItemInOffHand()},entry)) bool=true;
 				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
 					if (checkContent(target.getEquipment().getArmorContents(),entry)) bool=true;
 				} else if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {

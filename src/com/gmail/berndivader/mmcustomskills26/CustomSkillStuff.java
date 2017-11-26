@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -31,6 +33,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mmcustomskills26.conditions.Own.hasItemCondition.WhereType;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -40,6 +43,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -70,7 +74,7 @@ public class CustomSkillStuff implements Listener {
 			e.setCancelled(true);
 		}
 	}
-
+	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
 		EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
@@ -464,19 +468,17 @@ public class CustomSkillStuff implements Listener {
 	}
 
 	public static AbstractLocation getCircleLoc(Location c, double rX, double rZ, double rY, double air) {
-		double x = c.getX() + rX * Math.cos(air);
-		double z = c.getZ() + rZ * Math.sin(air);
-		double y = c.getY() + rY * Math.cos(air);
-		Location loc = new Location(c.getWorld(), x, y, z);
-		Vector difference = c.toVector().clone().subtract(loc.toVector());
+		double x=c.getX()+rX*Math.cos(air);
+		double z=c.getZ()+rZ*Math.sin(air);
+		double y=c.getY()+rY*Math.cos(air);
+		Location loc=new Location(c.getWorld(),x,y,z);
+		Vector difference=c.toVector().clone().subtract(loc.toVector());
 		loc.setDirection(difference);
 		return BukkitAdapter.adapt(loc);
 	}
 
 	public static double round(double value, int places) {
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
+		return new BigDecimal(value).round(new MathContext(places, RoundingMode.HALF_UP)).doubleValue();
 	}
 
 	public static Vector calculateTrajectory(Vector from, Vector to, double heightGain, double gravity) {
@@ -628,5 +630,23 @@ public class CustomSkillStuff implements Listener {
 		}
 		return r.split(d);
 	}
+	
+	public enum WhereType {
+		HAND,
+		OFFHAND,
+		ARMOR,
+		INVENTORY,
+		ANY;
+
+		public static WhereType get(String s) {
+	        if (s==null) return null;
+	        try {
+	            return WhereType.valueOf(s.toUpperCase());
+	        }
+	        catch (Exception ex) {
+                return WhereType.ANY;
+            }
+	    }
+	}	
 
 }

@@ -6,6 +6,7 @@ import java.util.*;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 
 import org.bukkit.Effect;
@@ -59,12 +60,14 @@ implements VolatileHandler {
 					}));	
 	public Volatile_v1_12_R1() {
 	}
-
+	
 	@Override
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
         me.setLocation(x,y,z,yaw,pitch);
-        if (entity instanceof Player) playerConnectionTeleport(entity,x,y,z,yaw,pitch,f,g);
+        if (entity instanceof Player) {
+        	playerConnectionTeleport(entity,x,y,z,yaw,pitch,f,g);
+        }
         me.world.entityJoinedWorld(me, false);
 	}
 	
@@ -80,6 +83,22 @@ implements VolatileHandler {
 			y=0.0D;
 		}
         me.playerConnection.sendPacket(new PacketPlayOutPosition(x,y,z,yaw,pitch,set,0));
+	}
+	
+	@Override
+	public void rotateEntityPacket(Entity entity,float y, float p) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		byte ya=(byte)((int)(y*256.0F/360.0F));
+		byte pa=(byte)((int)(p*256.0F/360.0F));
+		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
+		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(el);
+			cp.getHandle().playerConnection.sendPacket(hr);
+		}
 	}
 	
 	@Override
@@ -109,7 +128,7 @@ implements VolatileHandler {
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
-		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
 		while(it.hasNext()) {
 			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
@@ -121,11 +140,26 @@ implements VolatileHandler {
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256).iterator();
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
 		while(it.hasNext()) {
 			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
+		}
+	}
+	
+	@Override
+	public void moveEntityPacket(Entity entity,Location cl,double x,double y,double z) {
+		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
+		double x1=cl.getX()-me.locX;
+		double y1=cl.getY()-me.locY;
+		double z1=cl.getZ()-me.locZ;
+		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(vp);
 		}
 	}
 

@@ -230,8 +230,17 @@ public class mmCustomSkills26 implements Listener {
 			skill=new PlayerGoggleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "entitygoggle":
+		case "entitygoggleat": {
+			skill=new EntityGoogleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}case "disarm": {
 			skill=new DisarmPlayerMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "setmobhealth": {
+			skill=new SetHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}

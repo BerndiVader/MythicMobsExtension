@@ -29,6 +29,7 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 

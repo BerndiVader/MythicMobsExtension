@@ -1,5 +1,11 @@
-# CustomSkillMechanics v1.225 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.229 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 26.11.2017 *** added setmobhealth mechanic. See setmobhealth mechanic for details.
+##### ** 25.11.2017 *** some minor changed for speechbubbles.
+##### ** 21.11.2017 *** tweaked disarm to work for all LivingEntities & added disarm duration. See disarm for details.
+##### ** 20.11.2017 *** added setrotation & entitygoggleat mechanic. See setrotation & entitygoggleat for example.
+##### ** 20.11.2017 *** fixed async error in speechbubble mechanic & some minor fixes & added an example.
+##### ** 20.11.2017 *** changed movement method for blockfloating to fix fallingblocks glitches. Thanks aDaxxas!
 ##### ** 17.11.2017 *** added speechbubble mechanic. See speechbubble mechanic for details. (requires HolographicDisplay plugin)
 ##### ** 16.11.2017 *** added gravity option to stun mechanic. See stun mechanic for details.
 ##### ** 14.11.2017 *** added disarm mechanic. See disarm mechanic for details.
@@ -231,21 +237,69 @@ Almost all options like in mythicprojectile are useable.
 
 
 
+## setmobhealth mechanic:
+
+Set the mythicmobs mob health and maxhealth to a new amount. Use random amount. Ignore or allow level health modifier. Use set add or multiply
+the amount.
+
+##### `- setmobhealth{health=2to5;ignoremodifier=true;set=+} ~onInteract`
+
+add a random value between 2 and 5 to the maxhealth.
+
+##### `- setmobhealth{health=10to20;ignoremodifier=true;set=} ~onInteract`
+
+set the maxhealth to random value between 10 and 20.
+
+##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=*} ~onInteract`
+
+multiply the maxhealth with a random value between 0.5 and 1.
+
+	
+
+
+## entitygoggleat/entitygoggle mechanic:
+
+Force the entity to goggle at the targeted entity for duration amount of ticks. Doesnt work too well if the entity have ai.
+
+##### `- entitygoggleat{dur=300} @trigger ~onDamaged`
+	
+
+
+## setrotation mechanic:
+
+Rotates the entity yo degrees relative to its yaw, amount of duration times. Doesnt work too well if the entity have ai.
+
+##### `- setrotation{dur=200;yo=10} @self ~onTimer:5`
+	
+
+
 ## speechbubble mechanic (requires holographicdisplay):
 
 Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
 
 
 ##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;time=300} @trigger ~onInteract`
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - equip{i=BlackbeardHead:4} @self ~onSpawn
+  - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
+  - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
+```
 	
 
 
 ## disarm mechanic:
 
 Disarm the targeted player and store the equipped item in the first free slot in the players inventory. The mechanic is not executed if 
-the player has no space in its inventory.
+the player has no space in its inventory. If used on a none player the entity is disarmed for duration amount of ticks instead of stored in inventory.
 
-##### `- disarm @trigger ~onDamaged`
+##### `- disarm{duration=200} @trigger ~onDamaged`
 	
 
 

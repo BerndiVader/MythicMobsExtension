@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,6 +53,9 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_10_R1.Vec3D;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntityVelocity;
 import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_10_R1.EntityItem;
 import net.minecraft.server.v1_10_R1.BlockPosition;
@@ -140,7 +144,7 @@ implements VolatileHandler {
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_10_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),256);
+		Collection<AbstractPlayer> players=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192);
 		players.stream().forEach(ap-> {
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
 			cp.getHandle().playerConnection.sendPacket(tp);
@@ -583,6 +587,37 @@ implements VolatileHandler {
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void moveEntityPacket(Entity entity,Location cl,double x,double y,double z) {
+		net.minecraft.server.v1_10_R1.Entity me = ((CraftEntity)entity).getHandle();
+		double x1=cl.getX()-me.locX;
+		double y1=cl.getY()-me.locY;
+		double z1=cl.getZ()-me.locZ;
+		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(vp);
+		}
+	}
+
+	@Override
+	public void rotateEntityPacket(Entity entity,float y, float p) {
+		net.minecraft.server.v1_10_R1.Entity me = ((CraftEntity)entity).getHandle();
+		byte ya=(byte)((int)(y*256.0F/360.0F));
+		byte pa=(byte)((int)(p*256.0F/360.0F));
+		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
+		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
+		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+		while(it.hasNext()) {
+			AbstractPlayer ap=it.next();
+			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+			cp.getHandle().playerConnection.sendPacket(el);
+			cp.getHandle().playerConnection.sendPacket(hr);
+		}
 	}
 
 }
