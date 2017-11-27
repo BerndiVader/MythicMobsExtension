@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.229 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.229dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 27.11.2017 *** added playcredits & forcespectate mechanics. (Experimental)
+##### ** 26.11.2017 *** fixed setrotation not working properly on 1.12.2
 ##### ** 26.11.2017 *** added setmobhealth mechanic. See setmobhealth mechanic for details.
 ##### ** 25.11.2017 *** some minor changed for speechbubbles.
 ##### ** 21.11.2017 *** tweaked disarm to work for all LivingEntities & added disarm duration. See disarm for details.

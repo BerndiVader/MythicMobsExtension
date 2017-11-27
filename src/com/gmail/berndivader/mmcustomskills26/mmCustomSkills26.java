@@ -243,6 +243,14 @@ public class mmCustomSkills26 implements Listener {
 			skill=new SetHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "playcredits": {
+			skill=new PlayCreditsMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "forcespectate": {
+			skill=new ForceSpectateMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}

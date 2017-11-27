@@ -620,4 +620,17 @@ implements VolatileHandler {
 			cp.getHandle().playerConnection.sendPacket(hr);
 		}
 	}
+
+	@Override
+	public void forceSpectate(Player player, Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playEndScreenForPlayer(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -30,17 +30,20 @@ ITargetedEntitySkill{
 		final long d=this.d;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
     	new BukkitRunnable() {
+            float yaw=target.getBukkitEntity().getLocation().getYaw();
+            float pitch=target.getBukkitEntity().getLocation().getPitch();
 			long c=0;
 			@Override
 			public void run() {
 				if (c>d||target.isDead()) {
-					target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+			        if (!target.isDead()) {
+						target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+			        }
 					this.cancel();
 				} else {
-			        float yaw=target.getBukkitEntity().getLocation().getYaw();
-			        float pitch=target.getBukkitEntity().getLocation().getPitch();
+					if (yaw>359) yaw=0;
 			        yaw+=yo;
-			        NMSUtils.setYawPitch(target.getBukkitEntity(), yaw, pitch);
+		        	NMSUtils.setYawPitch(target.getBukkitEntity(), yaw, pitch);;
 			        Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
 		        c++;

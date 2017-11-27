@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -33,7 +32,6 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import com.gmail.berndivader.mmcustomskills26.conditions.Own.hasItemCondition.WhereType;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -43,7 +41,6 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 

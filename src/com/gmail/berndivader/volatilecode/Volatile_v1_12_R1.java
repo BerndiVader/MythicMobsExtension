@@ -62,6 +62,18 @@ implements VolatileHandler {
 	}
 	
 	@Override
+    public void forceSpectate(Player player, Entity entity) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
+    }
+    
+	@Override
+    public void playEndScreenForPlayer(Player player) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 1F));
+	}
+	
+	@Override
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
         me.setLocation(x,y,z,yaw,pitch);
@@ -96,8 +108,8 @@ implements VolatileHandler {
 		while(it.hasNext()) {
 			AbstractPlayer ap=it.next();
 			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			cp.getHandle().playerConnection.sendPacket(el);
 			cp.getHandle().playerConnection.sendPacket(hr);
+			cp.getHandle().playerConnection.sendPacket(el);
 		}
 	}
 	
