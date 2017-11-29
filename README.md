@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.229dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.230dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 28.11.2017 *** added jumping, running, crouching & sleeping conditions. See conditions for details.
 ##### ** 27.11.2017 *** added playcredits & forcespectate mechanics. (Experimental)
 ##### ** 26.11.2017 *** fixed setrotation not working properly on 1.12.2
 ##### ** 26.11.2017 *** added setmobhealth mechanic. See setmobhealth mechanic for details.
@@ -1076,6 +1077,18 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- jumping{action=[boolean]}`
+To use as **TargetCondiitons or Conditions**, return true if the entity is jumping.
+
+##### `- crouching{action=[boolean]}`
+To use as **TargetCondiitons or Conditions**, return true if the entity is crouching.
+
+##### `- sleeping{action=[boolean]}`
+To use as **TargetCondiitons or Conditions**, return true if the entity is sleeping.
+
+##### `- running{action=[boolean]}`
+To use as **TargetCondiitons or Conditions**, return true if the entity is running.
 
 ##### `- samespawner{action=[boolean]}`
 To use as **TargetConditions**, return true if caster & target have same mythicspawner.

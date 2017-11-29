@@ -46,6 +46,8 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 import net.minecraft.server.v1_11_R1.Vec3D;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_11_R1.PacketPlayOutCamera;
+import net.minecraft.server.v1_11_R1.PacketPlayOutGameStateChange;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityVelocity;
@@ -623,14 +625,38 @@ implements VolatileHandler {
 
 	@Override
 	public void forceSpectate(Player player, Entity entity) {
-		// TODO Auto-generated method stub
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
 		
 	}
 
 	@Override
 	public void playEndScreenForPlayer(Player player) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 1F));
 	}
 
+	@Override
+	public boolean playerIsSleeping(Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean playerIsRunning(Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean playerIsCrouching(Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean playerIsJumping(Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

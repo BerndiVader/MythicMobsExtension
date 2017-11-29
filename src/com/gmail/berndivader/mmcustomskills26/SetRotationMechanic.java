@@ -26,6 +26,7 @@ ITargetedEntitySkill{
 
     @Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		if (target.isPlayer()||target.getBukkitEntity().hasMetadata(str)) return false;
     	final float yo=this.yawOff;
 		final long d=this.d;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));

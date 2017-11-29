@@ -652,4 +652,25 @@ implements VolatileHandler {
 	        }
 	    }
 	}
+	
+	@Override
+	public boolean playerIsSleeping(Player p) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSleeping()||me.isDeeplySleeping();
+	}
+	@Override
+	public boolean playerIsRunning(Player p) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSprinting();
+	}
+	@Override
+	public boolean playerIsCrouching(Player p) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSneaking();
+	}
+	@Override
+	public boolean playerIsJumping(Player p) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
+	}
 }

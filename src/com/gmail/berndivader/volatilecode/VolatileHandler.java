@@ -22,4 +22,8 @@ public interface VolatileHandler {
 	void rotateEntityPacket(Entity entity, float y, float p);
 	void forceSpectate(Player player, Entity entity);
 	void playEndScreenForPlayer(Player player);
+	boolean playerIsSleeping(Player p);
+	boolean playerIsRunning(Player p);
+	boolean playerIsCrouching(Player p);
+	boolean playerIsJumping(Player p);
 }

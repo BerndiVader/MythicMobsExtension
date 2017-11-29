@@ -251,6 +251,10 @@ public class mmCustomSkills26 implements Listener {
 			skill=new ForceSpectateMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "dropcombat": {
+			skill=new DropCombatMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}
 		}
 	}
