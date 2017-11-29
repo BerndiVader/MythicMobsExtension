@@ -24,12 +24,13 @@ ITargetedEntitySkill {
 
 	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.dur=(long)mlc.getInteger(new String[] {"duration","d"},120);
+		this.dur=(long)mlc.getInteger(new String[] {"duration","dur"},120);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
-		if (data.getCaster().getEntity().isPlayer()) return false;
+		if (data.getCaster().getEntity().isPlayer()
+				||data.getCaster().getEntity().getBukkitEntity().hasMetadata(str)) return false;
 		final AbstractEntity caster=data.getCaster().getEntity();
 		final AbstractEntity target=t;
 		caster.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));

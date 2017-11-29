@@ -5,6 +5,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public interface VolatileHandler {
 
@@ -19,4 +20,10 @@ public interface VolatileHandler {
 	void playerConnectionLookAt(Entity entity, float yaw, float pitch);
 	void moveEntityPacket(Entity entity,Location ol, double x, double y, double z);
 	void rotateEntityPacket(Entity entity, float y, float p);
+	void forceSpectate(Player player, Entity entity);
+	void playEndScreenForPlayer(Player player);
+	boolean playerIsSleeping(Player p);
+	boolean playerIsRunning(Player p);
+	boolean playerIsCrouching(Player p);
+	boolean playerIsJumping(Player p);
 }

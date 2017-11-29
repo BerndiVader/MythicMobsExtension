@@ -29,7 +29,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()) return false;
+		if (!target.isPlayer()||target.getBukkitEntity().hasMetadata(str)) return false;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		final Player p=(Player)target.getBukkitEntity();
 		final AbstractEntity caster=data.getCaster().getEntity();

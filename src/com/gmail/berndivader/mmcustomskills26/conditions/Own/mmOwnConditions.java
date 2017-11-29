@@ -165,6 +165,13 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new SameMythicSpawnerCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "crouching": 
+			case "running":
+			case "sleeping":
+			case "jumping":{
+				SkillCondition c=new PlayerBooleanConditions(e.getConfig().getLine(),e.getConfig());
+				e.register(c);
+				break;
 		}
 		}
 	}
