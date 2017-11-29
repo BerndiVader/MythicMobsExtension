@@ -1,4 +1,4 @@
-# CustomSkillMechanics v1.230dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.230 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ##### ** 28.11.2017 *** added jumping, running, crouching & sleeping conditions. See conditions for details.
 ##### ** 27.11.2017 *** added playcredits & forcespectate mechanics. (Experimental)
@@ -242,14 +242,14 @@ Almost all options like in mythicprojectile are useable.
 
 ## setmobhealth mechanic:
 
-Set the mythicmobs mob health and maxhealth to a new amount. Use random amount. Ignore or allow level health modifier. Use set add or multiply
+Set the mythicmobs mob health and maxhealth to a new amount. Random amount allowed. Ignore or allow level health modifier. Use set add or multiply
 the amount.
 
 ##### `- setmobhealth{health=2to5;ignoremodifier=true;set=+} ~onInteract`
 
 add a random value between 2 and 5 to the maxhealth.
 
-##### `- setmobhealth{health=10to20;ignoremodifier=true;set=} ~onInteract`
+##### `- setmobhealth{health=10to20;ignoremodifier=true} ~onInteract`
 
 set the maxhealth to random value between 10 and 20.
 

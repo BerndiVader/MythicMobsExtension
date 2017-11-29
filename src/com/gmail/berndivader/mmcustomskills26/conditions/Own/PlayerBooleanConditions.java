@@ -17,7 +17,7 @@ IEntityCondition {
 	private char tt;
 
 	public PlayerBooleanConditions(String line, MythicLineConfig mlc) {
-		super(line, mlc);
+		super(line,mlc);
 		this.tt=line.toUpperCase().charAt(0);
 	}
 
