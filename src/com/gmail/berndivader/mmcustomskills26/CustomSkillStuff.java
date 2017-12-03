@@ -628,6 +628,11 @@ public class CustomSkillStuff implements Listener {
 		return r.split(d);
 	}
 	
+    public static float normalise(float v,float s,float e) {
+        float w=e-s,o=v-s;
+        return (float)((o-(Math.floor(o/w)*w))+s);
+    }
+	
 	public enum WhereType {
 		HAND,
 		OFFHAND,

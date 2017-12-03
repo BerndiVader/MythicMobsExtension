@@ -21,7 +21,6 @@ public class mmCustomSummonSkill extends SkillMechanic
 	private MythicEntity me;
 	private String tag;
 	private String amount;
-	@SuppressWarnings("unused")
 	private Integer noise;
 	private Integer yNoise;
 	private Boolean yUpOnly;
@@ -137,10 +136,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
-/**
- 						TODO: incompatible between ~4.2&&4.3
  						ams.setParent(am);
- */
 						ams.setFaction(am.getFaction());
 						if (this.copyThreatTable) {
 							try {

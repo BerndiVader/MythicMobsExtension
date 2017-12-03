@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.astar.AStar;
 import com.gmail.berndivader.astar.AStar.InvalidPathException;
-import com.gmail.berndivader.astar.PathfindAlgorithm;
 import com.gmail.berndivader.astar.Tile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;

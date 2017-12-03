@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -64,7 +63,6 @@ public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocati
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
-//		if (target.getType().equals(Material.AIR) || this.tag == null || this.tag.isEmpty())
 		if (this.tag == null || this.tag.isEmpty())
 			return false;
 		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), null, data.getTrigger());

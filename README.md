@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.231dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 03.12.2017 *** added modifyarrows on entity body. Change the amount of arrows targets body. See mechanics for details.
 ##### ** 02.12.2017 *** added fakedeath mechanic. See mechanics for details.
 ##### ** 02.12.2017 *** added arrowcount condition. See conditions for details.
 ##### ** 02.12.2017 *** added playloading and closeinventory mechanics. See mechanics for details.
@@ -241,6 +242,25 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
+
+
+## modifyarrows mechanic:
+
+Modify the amount of arrows on the targets body. Use "ADD, SUB, CLEAR" for mode and integer value for amount.
+
+##### `- modifyarrows{mode=clear;amount=0} @self ~onInteract`
+
+Removes all arrows  from the targeted body.
+
+##### `- modifyarrows{mode=add;amount=4} @self ~onInteract`
+
+Adds 4 arrows to the arrows on targeted entity's body.
+
+##### `- modifyarrows{mode=sub;amount=4} @self ~onInteract`
+
+Subtract 4 arrows from the total amount of arrows on targeted entity's body.
+
+	
 
 
 ## playloading/playcredits mechanic:
