@@ -254,7 +254,7 @@ playloading:
   - closeinventory{delay=61}
 ```
 
-This force all players in radius 10 to see the loading screen for 60 ticks. Use closeinventory to return the player into normal view.
+This force all targeted players to see the loading screen for 60 ticks. Use closeinventory to return the player into normal view.
 
 ```yaml
 playblackscreen:
@@ -263,7 +263,7 @@ playblackscreen:
   - closeinventory{delay=61}
 ```
 
-This force all players in radius 10 to see a black screen for 60 ticks. Use closeinventory to return the player into normal view.
+This force all targeted players to see a black screen for 60 ticks. Use closeinventory to return the player into normal view.
 	
 
 
@@ -1325,7 +1325,7 @@ Use this condition to check if the target is attackable by the caster. Only avai
 
 ##### `- infront{view=[angle_value];action=[boolean]}`
 ##### `- behind{view=[angle_value];action=[boolean]}`
-Use this condition to check if the target is behind the caster or infront of the caster. Use view to define an angular, where 90 is frontal facing and left/right side is 0. A view of 45 will make it have a view field of 45° in facing direction or behind. Use 0 or 1 to check is its infront or behind no matter what angle.
+Use this condition to check if the target is behind the caster or infront of the caster. Use view to define an angular, where 90 is frontal facing and left/right side is 0. A view of 45 will make it have a view field of 45Â° in facing direction or behind. Use 0 or 1 to check is its infront or behind no matter what angle.
 
 ##### `- inmobarena`
 Check if the location is in a MobArena arena. Requires MobArena plugin to work.
