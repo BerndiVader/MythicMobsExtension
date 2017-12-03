@@ -62,16 +62,66 @@ implements VolatileHandler {
 	}
 	
 	@Override
+	public int arrowsOnEntity(Entity entity) {
+		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+		return me.getArrowCount();
+	}
+	
+	@Override
+	public void removeArrowsFromEntity(Entity entity, int a,char c) {
+		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+		switch(c) {
+		case 'A':
+			a+=me.getArrowCount();
+			break;
+		case 'S':
+			a=me.getArrowCount()-a;
+			if(a<0)a=0;
+			break;
+		case 'C':
+			a=0;
+			break;
+		}
+		me.setArrowCount(a);
+	}
+	
+	@Override
     public void forceSpectate(Player player, Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
         me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
     }
     
 	@Override
-    public void playEndScreenForPlayer(Player player) {
+    public void playEndScreenForPlayer(Player player, float f) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 1F));
+        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4,f));
 	}
+	
+	@Override
+	public void fakeEntityDeath(Entity entity,long d) {
+		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+        me.world.broadcastEntityEffect(me,(byte)3);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				PacketPlayOutEntityDestroy pd=new PacketPlayOutEntityDestroy(me.getId());
+				PacketPlayOutSpawnEntityLiving ps=new PacketPlayOutSpawnEntityLiving(me);
+				Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+				while(it.hasNext()) {
+					AbstractPlayer ap=it.next();
+					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+					cp.getHandle().playerConnection.sendPacket(pd);
+					cp.getHandle().playerConnection.sendPacket(ps);
+				}
+			}
+		}.runTaskLater(Main.getPlugin(),d);
+	}
+	
+	@Override
+    public void forceCancelEndScreenPlayer(Player player) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutCloseWindow(0));
+   }
 	
 	@Override
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
@@ -673,4 +723,5 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
 	}
+
 }

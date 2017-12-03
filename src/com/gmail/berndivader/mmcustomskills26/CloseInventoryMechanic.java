@@ -8,22 +8,23 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class PlayCreditsMechanic 
-extends 
+public class CloseInventoryMechanic
+extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	public PlayCreditsMechanic(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-	}
 
+	public CloseInventoryMechanic(String skill, MythicLineConfig mlc) {
+		super(skill, mlc);
+		this.ASYNC_SAFE=false;
+	}
+	
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Main.getPlugin().getVolatileHandler().playEndScreenForPlayer((Player)target.getBukkitEntity(),1);
+			Main.getPlugin().getVolatileHandler().forceCancelEndScreenPlayer((Player)target.getBukkitEntity());
 			return true;
 		}
 		return false;
 	}
-	
 }

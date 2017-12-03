@@ -1,5 +1,8 @@
-# CustomSkillMechanics v1.230 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.231dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 02.12.2017 *** added fakedeath mechanic. See mechanics for details.
+##### ** 02.12.2017 *** added arrowcount condition. See conditions for details.
+##### ** 02.12.2017 *** added playloading and closeinventory mechanics. See mechanics for details.
 ##### ** 28.11.2017 *** added jumping, running, crouching & sleeping conditions. See conditions for details.
 ##### ** 27.11.2017 *** added playcredits & forcespectate mechanics. (Experimental)
 ##### ** 26.11.2017 *** fixed setrotation not working properly on 1.12.2
@@ -238,6 +241,59 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
+
+
+## playloading/playcredits mechanic:
+
+Force the player to see the loading screen or the end screen. With a repeat skill its possible to make a blackscreen for the player.
+
+```yaml
+playloading:
+  Skills:
+  - playloading{repeat=60;repeatInterval=1}
+  - closeinventory{delay=61}
+```
+
+This force all players in radius 10 to see the loading screen for 60 ticks. Use closeinventory to return the player into normal view.
+
+```yaml
+playblackscreen:
+  Skills:
+  - playcredits{repeat=60;repeatInterval=1}
+  - closeinventory{delay=61}
+```
+
+This force all players in radius 10 to see a black screen for 60 ticks. Use closeinventory to return the player into normal view.
+	
+
+
+## closeinventory mechanic:
+
+Force the player to close the current open inventory.
+
+##### `- closeinventory @trigger ~onInteract`
+	
+
+
+## fakedeath mechanic:
+
+Force a fake death sequence of the castermob.
+
+##### `- fakedeath{duration=50} ~onDamaged`
+
+This play the fake death sequence for the mob. After 50 ticks the mob appear again. This can be used to do some real wiered stuff:
+
+```yaml
+fakedeath:
+  Skills:
+  - fakedeath{duration=500}
+  - delay 14
+  - heal{oh=true}
+  - setrotation{yo=2;dur=500} @self
+```
+
+This skill for example, will stop the death sequence when the mob is horizontal position for 500 ticks.....
+	
 
 
 ## setmobhealth mechanic:

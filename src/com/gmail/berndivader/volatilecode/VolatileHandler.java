@@ -21,9 +21,13 @@ public interface VolatileHandler {
 	void moveEntityPacket(Entity entity,Location ol, double x, double y, double z);
 	void rotateEntityPacket(Entity entity, float y, float p);
 	void forceSpectate(Player player, Entity entity);
-	void playEndScreenForPlayer(Player player);
+	void playEndScreenForPlayer(Player player,float f);
 	boolean playerIsSleeping(Player p);
 	boolean playerIsRunning(Player p);
 	boolean playerIsCrouching(Player p);
 	boolean playerIsJumping(Player p);
+	void forceCancelEndScreenPlayer(Player player);
+	void fakeEntityDeath(Entity entity,long d);
+	int arrowsOnEntity(Entity entity);
+	void removeArrowsFromEntity(Entity entity, int a, char c);
 }

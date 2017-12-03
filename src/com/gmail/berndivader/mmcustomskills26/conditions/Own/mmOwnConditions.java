@@ -167,12 +167,16 @@ public class mmOwnConditions implements Listener {
 			break;
 		}case "crouching": 
 			case "running":
+			case "disguised":
 			case "sleeping":
 			case "jumping":{
 				SkillCondition c=new PlayerBooleanConditions(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
-		}
-		}
+		}case "arrowcount":{
+			SkillCondition c=new ArrowOnEntityCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}}
 	}
 }

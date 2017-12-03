@@ -23,15 +23,17 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		switch(this.tt) {
-		case 'C':
-			return entity.isPlayer()&&Main.getPlugin().getVolatileHandler().playerIsCrouching((Player)entity.getBukkitEntity());
-		case 'R':
-			return entity.isPlayer()&&Main.getPlugin().getVolatileHandler().playerIsRunning((Player)entity.getBukkitEntity());
-		case 'S':
-			return entity.isPlayer()&&Main.getPlugin().getVolatileHandler().playerIsSleeping((Player)entity.getBukkitEntity());
-		case 'J':
-			return entity.isPlayer()&&Main.getPlugin().getVolatileHandler().playerIsJumping((Player)entity.getBukkitEntity());
+		if (entity.isPlayer()) {
+			switch(this.tt) {
+			case 'C':
+				return Main.getPlugin().getVolatileHandler().playerIsCrouching((Player)entity.getBukkitEntity());
+			case 'R':
+				return Main.getPlugin().getVolatileHandler().playerIsRunning((Player)entity.getBukkitEntity());
+			case 'S':
+				return Main.getPlugin().getVolatileHandler().playerIsSleeping((Player)entity.getBukkitEntity());
+			case 'J':
+				return Main.getPlugin().getVolatileHandler().playerIsJumping((Player)entity.getBukkitEntity());
+			}
 		}
 		return false;
 	}
