@@ -90,6 +90,17 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
         me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
     }
+	
+    public void forceEntitySitting(Entity entity) {
+		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+		net.minecraft.server.v1_12_R1.EntityArrow a=new EntityArrow(me.getWorld()) {
+			@Override
+			protected ItemStack j() {
+				return null;
+			}
+		};
+		
+    }
     
 	@Override
     public void playEndScreenForPlayer(Player player, float f) {
