@@ -41,8 +41,8 @@ ITargetedEntitySkill{
 			        }
 					this.cancel();
 				} else {
-			        yaw=normalise(yaw+yo,0,360);
-			        pitch=normalise(pitch+po,0,360);
+			        yaw=CustomSkillStuff.normalise(yaw+yo,0,360);
+			        pitch=CustomSkillStuff.normalise(pitch+po,0,360);
 			        Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
 		        c++;
@@ -51,8 +51,4 @@ ITargetedEntitySkill{
         return true;
     }
     
-    private float normalise(float v,float s,float e) {
-      float w=e-s,o=v-s;
-      return (float)((o-(Math.floor(o/w)*w))+s);
-    }    
 }

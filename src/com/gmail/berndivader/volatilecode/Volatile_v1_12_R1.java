@@ -20,6 +20,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSnowman;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -61,6 +62,13 @@ implements VolatileHandler {
 	public Volatile_v1_12_R1() {
 	}
 	
+
+	@Override
+	public void removeSnowmanHead(Entity entity) {
+		net.minecraft.server.v1_12_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
+		me.setHasPumpkin(false);
+	}
+	
 	@Override
 	public int arrowsOnEntity(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
@@ -89,6 +97,17 @@ implements VolatileHandler {
     public void forceSpectate(Player player, Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
         me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
+    }
+	
+    public void forceEntitySitting(Entity entity) {
+		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+		net.minecraft.server.v1_12_R1.EntityArrow a=new EntityArrow(me.getWorld()) {
+			@Override
+			protected ItemStack j() {
+				return null;
+			}
+		};
+		
     }
     
 	@Override

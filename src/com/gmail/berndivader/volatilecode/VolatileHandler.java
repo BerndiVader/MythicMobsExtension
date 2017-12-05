@@ -30,4 +30,5 @@ public interface VolatileHandler {
 	void fakeEntityDeath(Entity entity,long d);
 	int arrowsOnEntity(Entity entity);
 	void removeArrowsFromEntity(Entity entity, int a, char c);
+	void removeSnowmanHead(Entity entity);
 }

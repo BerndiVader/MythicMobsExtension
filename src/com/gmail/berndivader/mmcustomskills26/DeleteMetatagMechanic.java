@@ -9,7 +9,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
-import net.minecraft.server.v1_12_R1.Material;
 
 public class DeleteMetatagMechanic extends SetMetatagMechanic {
 

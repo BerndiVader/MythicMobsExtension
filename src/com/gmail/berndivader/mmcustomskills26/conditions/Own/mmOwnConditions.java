@@ -51,7 +51,8 @@ public class mmOwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
-		case "hasmeta": {
+		case "hasmeta":
+		case "hasmetasimple": {
 			SkillCondition c = new mmHasMetaTagCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;

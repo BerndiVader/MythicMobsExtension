@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +51,17 @@ public class CustomSkillStuff implements Listener {
 
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	public void onProjectileLaunch(ProjectileLaunchEvent e) {
+		if (e.isCancelled()||!(e.getEntity().getShooter() instanceof Entity)) return;
+		final Entity s=(Entity)e.getEntity().getShooter();
+		final ActiveMob am=this.mobmanager.getMythicMobInstance(s);
+		if (am!=null) {
+			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+			e.setCancelled(ts.getCancelled());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -627,6 +639,11 @@ public class CustomSkillStuff implements Listener {
 		}
 		return r.split(d);
 	}
+	
+    public static float normalise(float v,float s,float e) {
+        float w=e-s,o=v-s;
+        return (float)((o-(Math.floor(o/w)*w))+s);
+    }
 	
 	public enum WhereType {
 		HAND,
