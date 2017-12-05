@@ -683,4 +683,10 @@ implements VolatileHandler {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void removeSnowmanHead(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
 }

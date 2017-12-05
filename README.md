@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.231dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.232dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 04.12.2017 *** added hasmetasimple condition. Simplyfied hasmeta. See hasmeta condition.
+##### ** 03.12.2017 *** fixed bug where conditions action only work with uppercase entries.
 ##### ** 03.12.2017 *** added modifyarrows on entity body. Change the amount of arrows targets body. See mechanics for details.
 ##### ** 02.12.2017 *** added fakedeath mechanic. See mechanics for details.
 ##### ** 02.12.2017 *** added arrowcount condition. See conditions for details.
@@ -710,8 +712,11 @@ This remove the lastdamagedentity tag if the mob stop fighting.
 		
 ### hasmeta condition:
 
-With this condition you can check any parsed meta. In its main purpose its a compare condition. Mean its a TargetConditions because it needs 2 entities. But by setting the cs tag (compareself) in the condition, you can choose if the target or the caster metas are checked. Its also possible to use a list of tags. All mob variables that are useable at the moment the skill is executed can be used.
-##### `- hasmeta{meta="tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING";cs=true/false;action=true/false}`
+With this condition you can check any parsed meta. In its main purpose its a compare condition. Mean its a TargetConditions because it needs 2 entities. But by setting the cs tag (compareself) in the condition, you can choose if the target or the caster metas are checked. Its also possible to use a list of tags. All mob variables that are useable at the moment the skill is executed can be used. Use hasmetasimple if you only need ot check a single entry.
+
+##### `- hasmeta{meta="tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING";cs=true/false;action=true/false/cast/castinstead}`
+
+##### `- hasmetasimple{tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING;cs=true/false;action=true/false/cast/castinstead}`
 
 Example: `- hasmeta{meta="tag=lastdamagedentity;value=<target.uuid>;type=STRING";cs=true;action=true}`
 			

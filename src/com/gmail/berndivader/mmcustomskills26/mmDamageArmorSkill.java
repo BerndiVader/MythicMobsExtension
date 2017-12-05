@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Snowman;
 import org.bukkit.inventory.ItemStack;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -48,6 +50,9 @@ public class mmDamageArmorSkill extends SkillMechanic implements ITargetedEntity
 		int ver = this.mythicmobs.getMinecraftVersion();
 		if (target == null || !target.isLiving() || target.isDead()) {
 			return false;
+		}
+		if (target.getBukkitEntity().getType().equals(EntityType.SNOWMAN)) {
+			Main.getPlugin().getVolatileHandler().removeSnowmanHead(target.getBukkitEntity());
 		}
 		ActiveMob am = null;
 		SkillCaster caster = data.getCaster();

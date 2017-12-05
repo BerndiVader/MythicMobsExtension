@@ -32,26 +32,37 @@ public class mmHasMetaTagCondition extends mmCustomCondition implements ILocatio
 		super(line, mlc);
 		this.mobmanager = Main.getPlugin().getMobManager();
 		this.compareToSelf = mlc.getBoolean(new String[] { "compareself", "cs" }, false);
-		String ms = mlc.getString(new String[] { "metalist", "list", "l" });
-		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
-		ms = SkillString.parseMessageSpecialChars(ms);
-		String metaStrings[] = ms.split("\\|\\|");
-		for (String metaString : metaStrings) {
-			String parse[] = metaString.split(";");
-			String t = null, v = null, vt = null;
-			for (String p : parse) {
-				if (p.startsWith("tag=")) {
-					t = p.substring(4);
-					continue;
-				} else if (p.startsWith("value=")) {
-					v = p.substring(6);
-					continue;
-				} else if (p.startsWith("type=")) {
-					vt = p.substring(5);
-					continue;
+		if (!line.toLowerCase().startsWith("hasmetasimple")) {
+			String ms = mlc.getString(new String[] { "metalist", "list", "l" });
+			if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
+			ms = SkillString.parseMessageSpecialChars(ms);
+			String metaStrings[] = ms.split("\\|\\|");
+			for (String metaString : metaStrings) {
+				String parse[] = metaString.split(";");
+				String t = null, v = null, vt = null;
+				for (String p : parse) {
+					if (p.startsWith("tag=")) {
+						t = p.substring(4);
+						continue;
+					} else if (p.startsWith("value=")) {
+						v = p.substring(6);
+						continue;
+					} else if (p.startsWith("type=")) {
+						vt = p.substring(5);
+						continue;
+					}
+				}
+				if (t != null) {
+					metaTagValue mtv = new metaTagValue(v, vt);
+					this.metatags.put(t, mtv);
 				}
 			}
-			if (t != null) {
+		} else {
+			String t,v,vt;
+			t=SkillString.parseMessageSpecialChars(mlc.getString("tag"));
+			v=SkillString.parseMessageSpecialChars(mlc.getString("value"));
+			vt=SkillString.parseMessageSpecialChars(mlc.getString("type"));
+			if (t!=null) {
 				metaTagValue mtv = new metaTagValue(v, vt);
 				this.metatags.put(t, mtv);
 			}

@@ -20,6 +20,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSnowman;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -59,6 +60,13 @@ implements VolatileHandler {
 					EnumPlayerTeleportFlags.Z
 					}));	
 	public Volatile_v1_12_R1() {
+	}
+	
+
+	@Override
+	public void removeSnowmanHead(Entity entity) {
+		net.minecraft.server.v1_12_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
+		me.setHasPumpkin(false);
 	}
 	
 	@Override

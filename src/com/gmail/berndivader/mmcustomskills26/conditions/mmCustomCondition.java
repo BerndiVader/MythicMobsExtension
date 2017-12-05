@@ -12,15 +12,15 @@ public class mmCustomCondition extends SkillCondition {
 		String a=mlc.getString("action","");
 		for(int a1=0;a1<ConditionAction.values().length;a1++){
 			String aa=ConditionAction.values()[a1].toString();
-			if (aa.equals("CAST")&&a.startsWith("CASTINSTEAD")) continue;
-			if (a.startsWith(aa)) {
+			if (aa.toUpperCase().equals("CAST")&&a.toUpperCase().startsWith("CASTINSTEAD")) continue;
+			if (a.toUpperCase().startsWith(aa)) {
 				action=aa;
 				actionVar=a.substring(action.length(),a.length());
 				break;
 			}
 		}
 		try {
-			this.ACTION = ConditionAction.valueOf(action);
+			this.ACTION = ConditionAction.valueOf(action.toUpperCase());
 			this.actionVar=actionVar;
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;

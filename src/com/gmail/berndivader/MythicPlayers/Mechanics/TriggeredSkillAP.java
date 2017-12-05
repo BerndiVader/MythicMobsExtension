@@ -25,7 +25,7 @@ public class TriggeredSkillAP implements IParentSkill {
 			this.data.setIsAsync(true);
 		}
 		if (this.data.getTrigger() != null) {
-			if (am instanceof ActiveMob) {
+			if (am instanceof ActiveMob&&trigger.isLiving()) {
 				am.setLastAggroCause(this.data.getTrigger());
 			}
 			this.data.setEntityTarget(trigger);
