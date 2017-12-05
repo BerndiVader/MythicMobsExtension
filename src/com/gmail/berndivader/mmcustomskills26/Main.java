@@ -52,6 +52,7 @@ public class Main extends JavaPlugin {
 	private MobArenaHandler maHandler;
 	private VolatileHandler volatilehandler;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
+	public static boolean disguisepresent;
 
 	public void onEnable() {
 		plugin = this;
@@ -112,6 +113,7 @@ public class Main extends JavaPlugin {
 				Main.healthbarhandler = new HealthbarHandler(this);
 				logger.info("HolographicDisplays support enabled!");
 			}
+			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise")?true:false;
 			cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			logger.info("CachedOwner support enabled!");
 			

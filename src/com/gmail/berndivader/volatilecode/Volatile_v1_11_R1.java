@@ -631,9 +631,9 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public void playEndScreenForPlayer(Player player) {
+	public void playEndScreenForPlayer(Player player,float f) {
 		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 1F));
+        me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4,f));
 	}
 
 	@Override
@@ -658,5 +658,29 @@ implements VolatileHandler {
 	public boolean playerIsJumping(Player p) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void forceCancelEndScreenPlayer(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void fakeEntityDeath(Entity entity, long d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int arrowsOnEntity(Entity entity) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void removeArrowsFromEntity(Entity entity, int a, char c) {
+		// TODO Auto-generated method stub
+		
 	}
 }

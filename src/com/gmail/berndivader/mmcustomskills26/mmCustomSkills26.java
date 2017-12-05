@@ -247,6 +247,18 @@ public class mmCustomSkills26 implements Listener {
 			skill=new PlayCreditsMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
+		}case "playloading": {
+			skill=new PlayLoadingMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "fakedeath": {
+			skill=new FakePlayerDeathMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}case "closeinventory": {
+			skill=new CloseInventoryMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
 		}case "forcespectate": {
 			skill=new ForceSpectateMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
