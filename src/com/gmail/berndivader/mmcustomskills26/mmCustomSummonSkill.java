@@ -1,5 +1,8 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LeashHitch;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -19,21 +22,10 @@ public class mmCustomSummonSkill extends SkillMechanic
 	protected MobManager mobmanager = this.mythicmobs.getMobManager();
 	private MythicMob mm;
 	private MythicEntity me;
-	private String tag;
-	private String amount;
-	private Integer noise;
-	private Integer yNoise;
-	private Boolean yUpOnly;
-	private Boolean onSurface;
-	private Boolean inheritThreatTable;
-	private Boolean copyThreatTable;
-	private Boolean useEyeDirection;
-	private Boolean setowner;
-	private Boolean invisible;
-	private Double addx;
-	private Double addy;
-	private Double addz;
-	private Double inFrontBlocks;
+	private String tag,amount;
+	private Integer noise,yNoise;
+	private Boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
+	private Double addx,addy,addz,inFrontBlocks;
 
 	public mmCustomSummonSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -55,6 +47,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 		this.useEyeDirection = mlc.getBoolean(new String[] { "useeyedirection", "eyedirection", "ued" }, false);
 		this.inFrontBlocks = mlc.getDouble(new String[] { "infrontblocks", "infront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
+		this.leashtocaster=mlc.getBoolean(new String[] {"leashtocaster","leash","lc"},false);
 		this.mm = this.mobmanager.getMythicMob(strType);
 		if (this.mm == null) this.me = MythicEntity.getMythicEntity(strType);
 	}
@@ -89,6 +82,10 @@ public class mmCustomSummonSkill extends SkillMechanic
 							||ams.getEntity()==null
 							||ams.getEntity().isDead())
 						continue;
+					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
+						Creature c=(Creature)ams.getEntity().getBukkitEntity();
+						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
+					}
 					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
@@ -101,10 +98,7 @@ public class mmCustomSummonSkill extends SkillMechanic
 					}
 					if (data.getCaster() instanceof ActiveMob) {
 						ActiveMob am = (ActiveMob) data.getCaster();
-/**
-  						TODO: incompatible between ~4.2&&4.3
  						ams.setParent(am);
- */
 						ams.setFaction(am.getFaction());
 						if (this.copyThreatTable) {
 							try {
