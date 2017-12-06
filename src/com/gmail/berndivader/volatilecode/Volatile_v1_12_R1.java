@@ -63,6 +63,9 @@ implements VolatileHandler {
 	}
 	
 
+	
+	
+	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Snowman;
 import org.bukkit.inventory.ItemStack;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;

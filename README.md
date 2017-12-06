@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.232dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.233 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 05.12.2017 *** added dropinventory mechanic. See dropinventory mechanic.
+##### ** 04.12.2017 *** added leashtocaster option for customsummon mechanic.
 ##### ** 04.12.2017 *** added hasmetasimple condition. Simplyfied hasmeta. See hasmeta condition.
 ##### ** 03.12.2017 *** fixed bug where conditions action only work with uppercase entries.
 ##### ** 03.12.2017 *** added modifyarrows on entity body. Change the amount of arrows targets body. See mechanics for details.
@@ -286,6 +288,28 @@ playblackscreen:
 ```
 
 This force all targeted players to see a black screen for 60 ticks. Use closeinventory to return the player into normal view.
+	
+
+
+## dropinventory mechanic:
+
+Force the target to drop an item from its storagte/equipment to the ground.
+
+##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER]} @trigger ~onInteract`
+
+Where in `item=""` all the item information is stored. `pickupdelay` = amount of ticks the item cannot be picked up again. `pieces` how many 
+pieces out of the inventory, regardless of itemstacks, are dropped.
+
+Examples:
+
+```yaml
+drop2pieces:
+  Skills:
+  - dropinventory{item="material=DIRT,amount=1,where=HAND";pieces=2} @trigger ~onInteract
+```
+
+Will drop 2 dirt regardless the item is in an stack or there are just two single dirtstacks in the inventory.
+ 
 	
 
 
@@ -878,7 +902,8 @@ Where `duration=d=`how many ticks the target will be stunned and `facing=true/fa
 
 ## CustomSummonSkill:
 
-Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option.
+Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option. Use leashtocaster(leash/lc) to leash the summoned mob
+to the caster.
 	
 ##### `- customsummon{a=2to20;type=mobname} @self`
 	

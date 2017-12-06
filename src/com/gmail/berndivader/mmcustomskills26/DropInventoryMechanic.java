@@ -1,10 +1,18 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -79,12 +87,12 @@ ITargetedEntitySkill {
 		}
 	}
 	
-	private long dt;
 	private ItemHolding holding;
+	private int pd,p;
 	
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.dt=mlc.getLong(new String[] {"dt","duration"},180);
+		this.ASYNC_SAFE=false;
 		String tmp=mlc.getString(new String[] {"item"},null);
 		this.holding=new ItemHolding();
 		if (tmp==null) {
@@ -93,6 +101,7 @@ ITargetedEntitySkill {
 			this.holding.setLore("ANY");
 			this.holding.setAmount(1);
 		} else {
+			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);
 			tmp=SkillString.parseMessageSpecialChars(tmp);
 			String[] p=tmp.split(",");
 			for(int a=0;a<p.length;a++) {
@@ -112,37 +121,86 @@ ITargetedEntitySkill {
 				}
 			}
 		}
+		this.pd=mlc.getInteger(new String[] {"pickupdelay","pd"},20);
+		this.p=mlc.getInteger(new String[] {"pieces","amount","a","p"},1);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()) {
-			if (target.isLiving()) {
-				LivingEntity e=(LivingEntity)target.getBukkitEntity();
-				if (!e.getEquipment().getItemInMainHand().getData().getItemType().equals(Material.AIR)) {
-					ItemStack is=e.getEquipment().getItemInMainHand().clone();
-					e.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							if (e!=null&&!e.isDead()) e.getEquipment().setItemInMainHand(is.clone());
-						}
-					}.runTaskLater(Main.getPlugin(), dt);
+		if (target.isLiving()) {
+			final boolean isPlayer=target.isPlayer();
+			final LivingEntity e=(LivingEntity)target.getBukkitEntity();
+			final Location l=target.getBukkitEntity().getLocation();
+			for(int a=0;a<this.p;a++) {
+				List<ItemStack> iis=new ArrayList<ItemStack>();
+				ItemHolding entry=this.holding;
+				if (entry.where.equals(WhereType.ANY)) {
+					if (isPlayer) {
+						iis.addAll(Arrays.asList(((Player)e).getInventory().getContents()));
+					} else {
+						iis.addAll(Arrays.asList(e.getEquipment().getArmorContents()));
+						iis.add(e.getEquipment().getItemInMainHand());
+						iis.add(e.getEquipment().getItemInOffHand());
+					}
+				} else {
+					if (isPlayer&&entry.where.equals(WhereType.INVENTORY)) {
+						iis.addAll(Arrays.asList(((Player)e).getInventory().getStorageContents()));
+						iis.remove(((Player)e).getEquipment().getItemInMainHand());
+					} else if (entry.where.equals(WhereType.HAND)) {
+						iis.add(e.getEquipment().getItemInMainHand());
+					} else if (entry.where.equals(WhereType.OFFHAND)) {
+						iis.add(e.getEquipment().getItemInOffHand());
+					} else if (entry.where.equals(WhereType.ARMOR)) {
+						iis.addAll(Arrays.asList(e.getEquipment().getArmorContents()));
+					}
 				}
-			} else {
-				return false;
-			}
-		} else {
-			Player p=(Player)target.getBukkitEntity();
-			int es=p.getInventory().firstEmpty();
-			if (!p.getEquipment().getItemInMainHand().getData().getItemType().equals(Material.AIR)
-					&&es>-1) {
-				ItemStack is=p.getEquipment().getItemInMainHand().clone();
-				p.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
-				p.getInventory().setItem(es, is.clone());
+				checkContentAndDrop(iis,entry,l,this.pd);
 			}
 		}
 		return true;
 	}
+	
+	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
+		Collections.shuffle(i);
+		for(ListIterator<ItemStack>it=i.listIterator();it.hasNext();) {
+			ItemStack is = it.next();
+			if (is==null||is.getType().equals(Material.AIR)) continue;
+			int a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
+			if (entry.isMaterialAny()||entry.material.equals(is.getType())) {
+				if (entry.lore.equals("ANY")) {
+					ItemStack ti=is.clone();
+					ti.setAmount(a);
+					Item di=l.getWorld().dropItem(l,ti);
+					di.setPickupDelay(pd);
+					if (is.getAmount()<=entry.amount) {
+						is.setAmount(0);
+						is.setType(Material.AIR);
+					} else {
+						is.setAmount(is.getAmount()-a);
+					}
+					return true;
+				}
+				if (is.hasItemMeta()&&is.getItemMeta().hasLore()) {
+					for(Iterator<String>it1=is.getItemMeta().getLore().iterator();it1.hasNext();) {
+						String ll=it1.next();
+						if (ll.contains(entry.lore)) {
+							ItemStack ti=is.clone();
+							ti.setAmount(a);
+							Item di=l.getWorld().dropItem(l,ti);
+							di.setPickupDelay(pd);
+							if (is.getAmount()<=entry.amount) {
+								is.setAmount(0);
+								is.setType(Material.AIR);
+							} else {
+								is.setAmount(is.getAmount()-a);
+							}
+							return true;
+						}
+					}
+				}
 
+			}
+		}
+		return false;
+	}
 }

@@ -30,7 +30,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 public class ItemProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {

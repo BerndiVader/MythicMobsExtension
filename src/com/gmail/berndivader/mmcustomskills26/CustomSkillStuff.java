@@ -644,23 +644,4 @@ public class CustomSkillStuff implements Listener {
         float w=e-s,o=v-s;
         return (float)((o-(Math.floor(o/w)*w))+s);
     }
-	
-	public enum WhereType {
-		HAND,
-		OFFHAND,
-		ARMOR,
-		INVENTORY,
-		ANY;
-
-		public static WhereType get(String s) {
-	        if (s==null) return null;
-	        try {
-	            return WhereType.valueOf(s.toUpperCase());
-	        }
-	        catch (Exception ex) {
-                return WhereType.ANY;
-            }
-	    }
-	}	
-
 }
