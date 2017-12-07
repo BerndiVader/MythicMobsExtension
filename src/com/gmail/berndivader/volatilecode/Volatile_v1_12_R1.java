@@ -22,27 +22,21 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSnowman;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 
 public class Volatile_v1_12_R1 
 implements VolatileHandler {
@@ -67,10 +61,6 @@ implements VolatileHandler {
 					}));	
 	public Volatile_v1_12_R1() {
 	}
-	
-
-	
-	
 	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
@@ -470,6 +460,7 @@ implements VolatileHandler {
 	    @Override
 	    public void d() {
 	        super.d();
+	        IRangedEntity aa;
 	        if (this.a instanceof IRangedEntity) ((IRangedEntity)this.a).p(false);
 	        this.f = 0;
 	        this.d1 = -1;

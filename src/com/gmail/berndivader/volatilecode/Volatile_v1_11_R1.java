@@ -41,11 +41,16 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.Vec3D;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_11_R1.IRangedEntity;
+import net.minecraft.server.v1_11_R1.PacketPlayOutCloseWindow;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_11_R1.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_11_R1.PacketPlayOutCamera;
 import net.minecraft.server.v1_11_R1.PacketPlayOutGameStateChange;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityHeadRotation;
@@ -54,6 +59,9 @@ import net.minecraft.server.v1_11_R1.PacketPlayOutEntityVelocity;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_11_R1.EntityItem;
 import net.minecraft.server.v1_11_R1.BlockPosition;
+import net.minecraft.server.v1_11_R1.DataWatcher;
+import net.minecraft.server.v1_11_R1.DataWatcherObject;
+import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_11_R1.EntityHuman;
 import net.minecraft.server.v1_11_R1.IBlockData;
 import net.minecraft.server.v1_11_R1.Navigation;
@@ -212,6 +220,12 @@ implements VolatileHandler {
 	        	}
 	        	break;
 	        }
+	        case "shootattack": {
+	        	if (e instanceof EntityInsentient) {
+	            	goals.a(i,new PathFinderGoalShoot((EntityInsentient)e,1.0,20,60,15.0f));
+	        	}
+	        	break;
+	        }
 	        case "followentity": {
 	        	UUID uuid=null;
 	        	if (e instanceof EntityCreature) {
@@ -277,6 +291,120 @@ implements VolatileHandler {
 		protected double a(EntityLiving entity) {
 		    return (double)(this.b.width * this.range * this.b.width * this.range + entity.width);
 		}
+	}
+	
+	public class PathFinderGoalShoot extends PathfinderGoal {
+	    private final EntityInsentient a;
+	    private final double b;
+	    private int c,h1;
+	    private final float d,i1;
+	    private int d1 = -1;
+	    private int f;
+	    private boolean g;
+	    private boolean h;
+	    private int i = -1;
+
+	    public PathFinderGoalShoot(EntityInsentient t, double d2, int n,int n1, float f2) {
+	        this.a=t;
+	        this.b=d2;
+	        this.c=n;
+	        this.h1=n1;
+	        this.d = f2 * f2;
+	        this.i1=f2;
+	        this.a(3);
+	    }
+
+	    public void b(int n) {
+	        this.c = n;
+	    }
+
+	    @Override
+	    public boolean a() {
+	        if (this.a.getGoalTarget() == null) {
+	            return false;
+	        }
+	        return true;
+	    }
+
+	    @Override
+	    public boolean b() {
+	        return (this.a() || !this.a.getNavigation().n());
+	    }
+
+	    @Override
+	    public void c() {
+	        super.c();
+	    }
+
+	    @Override
+	    public void d() {
+	        super.d();
+	        this.f = 0;
+	        this.d1 = -1;
+	        this.a.cF();
+	    }
+
+	    @Override
+	    public void e() {
+	        boolean bl;
+	        EntityLiving entityLiving = this.a.getGoalTarget();
+	        if (entityLiving == null) {
+	            return;
+	        }
+	        double d2 = this.a.d(entityLiving.locX, entityLiving.getBoundingBox().b, entityLiving.locZ);
+	        boolean bl2 = this.a.getEntitySenses().a(entityLiving);
+	        boolean bl3 = bl = this.f > 0;
+	        if (bl2 != bl) {
+	            this.f = 0;
+	        }
+	        this.f = bl2 ? ++this.f : --this.f;
+	        if (d2 > (double)this.d || this.f < 20) {
+	            this.a.getNavigation().a(entityLiving, this.b);
+	            this.i = -1;
+	        } else {
+	            this.a.getNavigation().o();
+	            ++this.i;
+	        }
+	        if (this.i >= 20) {
+	            if ((double)this.a.getRandom().nextFloat() < 0.3) {
+	                boolean bl4 = this.g = !this.g;
+	            }
+	            if ((double)this.a.getRandom().nextFloat() < 0.3) {
+	                this.h = !this.h;
+	            }
+	            this.i = 0;
+	        }
+	        if (this.i > -1) {
+	            if (d2 > (double)(this.d * 0.75f)) {
+	                this.h = false;
+	            } else if (d2 < (double)(this.d * 0.25f)) {
+	                this.h = true;
+	            }
+	            this.a.getControllerMove().a(this.h ? -0.5f : 0.5f, this.g ? 0.5f : -0.5f);
+	            this.a.a(entityLiving, 30.0f, 30.0f);
+	        } else {
+	            this.a.getControllerLook().a(entityLiving, 30.0f, 30.0f);
+	        }
+	        
+	        if (--this.d1 == 0) {
+	            float f2;
+	            if (!bl2) {
+	                return;
+	            }
+	            float f3 = f2 = MathHelper.sqrt(d2) / this.i1;
+	            f3 = MathHelper.a(f3, 0.1f, 1.0f);
+	            if (this.a instanceof IRangedEntity) {
+		            ((IRangedEntity)this.a).a(entityLiving, f3);
+	            } else {
+	            	ActiveMob am=Main.mythicmobs.getMobManager().getMythicMobInstance(this.a.getBukkitEntity());
+	            	if (am!=null) am.signalMob(BukkitAdapter.adapt(entityLiving.getBukkitEntity()),"AISHOOT");
+	            }
+	            this.d1 = MathHelper.d(f2 * (float)(this.h1 - this.c) + (float)this.c);
+	        } else if (this.d1 < 0) {
+	            float f4 = MathHelper.sqrt(d2) / this.i1;
+	            this.d1 = MathHelper.d(f4 * (float)(this.h1 - this.c) + (float)this.c);
+	        }
+	    }
 	}
 	
 	public class PathfinderGoalReturnHome extends PathfinderGoal {
@@ -638,55 +766,83 @@ implements VolatileHandler {
 
 	@Override
 	public boolean playerIsSleeping(Player p) {
-		// TODO Auto-generated method stub
-		return false;
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSleeping()||me.isDeeplySleeping();
 	}
 
 	@Override
 	public boolean playerIsRunning(Player p) {
-		// TODO Auto-generated method stub
-		return false;
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSprinting();
 	}
 
 	@Override
 	public boolean playerIsCrouching(Player p) {
-		// TODO Auto-generated method stub
-		return false;
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return me.isSneaking();
 	}
 
 	@Override
 	public boolean playerIsJumping(Player p) {
-		// TODO Auto-generated method stub
-		return false;
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
 	}
 
 	@Override
 	public void forceCancelEndScreenPlayer(Player player) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutCloseWindow(0));
 	}
 
 	@Override
 	public void fakeEntityDeath(Entity entity, long d) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
+        me.world.broadcastEntityEffect(me,(byte)3);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				PacketPlayOutEntityDestroy pd=new PacketPlayOutEntityDestroy(me.getId());
+				PacketPlayOutSpawnEntityLiving ps=new PacketPlayOutSpawnEntityLiving(me);
+				Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
+				while(it.hasNext()) {
+					AbstractPlayer ap=it.next();
+					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+					cp.getHandle().playerConnection.sendPacket(pd);
+					cp.getHandle().playerConnection.sendPacket(ps);
+				}
+			}
+		}.runTaskLater(Main.getPlugin(),d);
 	}
 
 	@Override
 	public int arrowsOnEntity(Entity entity) {
-		// TODO Auto-generated method stub
-		return 0;
+		net.minecraft.server.v1_11_R1.EntityLiving me=((CraftLivingEntity)entity).getHandle();
+	    DataWatcherObject<Integer>br=DataWatcher.a(EntityLiving.class,DataWatcherRegistry.b);
+	    return me.getDataWatcher().get(br);
 	}
 
 	@Override
-	public void removeArrowsFromEntity(Entity entity, int a, char c) {
-		// TODO Auto-generated method stub
-		
+	public void removeArrowsFromEntity(Entity entity,int a,char c) {
+		net.minecraft.server.v1_11_R1.EntityLiving me=((CraftLivingEntity)entity).getHandle();
+	    DataWatcherObject<Integer>br=DataWatcher.a(EntityLiving.class,DataWatcherRegistry.b);
+		switch(c) {
+		case 'A':
+			a+=arrowsOnEntity(entity);
+			break;
+		case 'S':
+			a=arrowsOnEntity(entity)-a;
+			if(a<0)a=0;
+			break;
+		case 'C':
+			a=0;
+			break;
+		}
+		me.getDataWatcher().set(br,a);
 	}
 
 	@Override
 	public void removeSnowmanHead(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
+		me.setHasPumpkin(false);
 	}
 }

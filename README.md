@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.234dev for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.234 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 07.12.2017 *** updated all sensitive code to work with 1.10.2 - 1.12.2 servers
 ##### ** 06.12.2017 *** added shootattack pathfindergoal. See pathfinders for details.
 ##### ** 05.12.2017 *** added dropinventory mechanic. See dropinventory mechanic.
 ##### ** 04.12.2017 *** added leashtocaster option for customsummon mechanic.
