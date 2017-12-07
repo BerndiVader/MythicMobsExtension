@@ -46,8 +46,8 @@ import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
 public class CustomSkillStuff implements Listener {
-	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
-	protected MobManager mobmanager = this.mythicmobs.getMobManager();
+	protected static MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
+	protected static MobManager mobmanager = mythicmobs.getMobManager();
 
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -57,7 +57,7 @@ public class CustomSkillStuff implements Listener {
 	public void onProjectileLaunch(ProjectileLaunchEvent e) {
 		if (e.isCancelled()||!(e.getEntity().getShooter() instanceof Entity)) return;
 		final Entity s=(Entity)e.getEntity().getShooter();
-		final ActiveMob am=this.mobmanager.getMythicMobInstance(s);
+		final ActiveMob am=mobmanager.getMythicMobInstance(s);
 		if (am!=null) {
 			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
 			e.setCancelled(ts.getCancelled());
@@ -90,8 +90,8 @@ public class CustomSkillStuff implements Listener {
 		if (entityDamageEvent != null && !entityDamageEvent.isCancelled()
 				&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
-			if (damager != null && this.mobmanager.isActiveMob(damager.getUniqueId())) {
-				new TriggeredSkillAP(SkillTrigger.KILL, this.mobmanager.getMythicMobInstance(damager),
+			if (damager != null && mobmanager.isActiveMob(damager.getUniqueId())) {
+				new TriggeredSkillAP(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),
 						BukkitAdapter.adapt(e.getEntity()));
 			}
 		}
@@ -644,4 +644,11 @@ public class CustomSkillStuff implements Listener {
         float w=e-s,o=v-s;
         return (float)((o-(Math.floor(o/w)*w))+s);
     }
+
+	public static void triggerShoot(Entity caster, Entity trigger) {
+		final ActiveMob am=mobmanager.getMythicMobInstance(caster);
+		if (am!=null) {
+			new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+		}
+	}
 }

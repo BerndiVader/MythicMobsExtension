@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.233 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.234 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 07.12.2017 *** updated all sensitive code to work with 1.10.2 - 1.12.2 servers
+##### ** 06.12.2017 *** added shootattack pathfindergoal. See pathfinders for details.
 ##### ** 05.12.2017 *** added dropinventory mechanic. See dropinventory mechanic.
 ##### ** 04.12.2017 *** added leashtocaster option for customsummon mechanic.
 ##### ** 04.12.2017 *** added hasmetasimple condition. Simplyfied hasmeta. See hasmeta condition.
@@ -537,6 +539,33 @@ Some examples:
 		
 ### Pathfindergoals:
 
+*shootattack:*
+
+##### `advaipathfinder{goal="[goalpriority_value] shootattack"}`
++ Syntax in advaipathfinder: `- advaipathfinder{goal="1 shootattack"}`
++ Set goal 1 to PathfindergoalShootAttack. Will make ANY creature entity able to range attack. Sends the signal AISHOOT to customize the projecitle
+
+Example:
+
+```yaml
+VillagerHood:
+  Type: villager
+  Display: "Villager Hood"
+  AITargetSelectors:
+  - 0 clear
+  - 1 players
+  Skills:   
+  - skill{s=SpawnEvent} @self ~onSpawn
+  - shoot{type=ARROW;velocity=2;damage=1} @trigger ~onSignal:AISHOOT
+
+SpawnEvent:
+  Skills:
+  - advaipathfinder{goal="clear"}
+  - advaipathfinder{goal="0 shootattack"}
+  - advaipathfinder{goal="1 movetowardstarget"}
+  - advaipathfinder{goal="2 randomstroll"}
+```
+		
 *runfromsun:*
 
 ##### `advaipathfinder{goal="[goalpriority_value] runfromsun [speed_value]"}`
