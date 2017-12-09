@@ -166,6 +166,11 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new SameMythicSpawnerCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "onsolidblock":
+			case "insolidblock":{
+			SkillCondition c=new SolidBlockConditions(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 		}case "crouching": 
 			case "running":
 			case "disguised":

@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.234a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 09.12.2017 *** added onsolidblock & insolidblock conditions.
 ##### ** 09.12.2017 *** fixed server shutdown NPE for healthbars if they not enabled.
 ##### ** 07.12.2017 *** updated all sensitive code to work with 1.10.2 - 1.12.2 servers
 ##### ** 06.12.2017 *** added shootattack pathfindergoal. See pathfinders for details.
@@ -1217,6 +1218,12 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- onsolidblock{action=[boolean]}`
+To use as **Conditions**, return true if the location is *ON* a solidblock.
+
+##### `- insolidblock{action=[boolean]}`
+To use as **Conditions**, return true if the location is *INSIDE* a solidblock.
 
 ##### `- jumping{action=[boolean]}`
 To use as **TargetCondiitons or Conditions**, return true if the entity is jumping.
