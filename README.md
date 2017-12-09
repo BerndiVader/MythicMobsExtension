@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.234a for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.234c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 09.12.2017 *** added sameworld targetcondition.
 ##### ** 09.12.2017 *** added onsolidblock & insolidblock conditions.
 ##### ** 09.12.2017 *** fixed server shutdown NPE for healthbars if they not enabled.
 ##### ** 07.12.2017 *** updated all sensitive code to work with 1.10.2 - 1.12.2 servers
@@ -1219,6 +1220,9 @@ FleeButGotNothing:
 
 
 
+##### `- sameworld{action=[boolean]}`
+To use as **TargetConditions**, return true if caster & target location in same world.
+
 ##### `- onsolidblock{action=[boolean]}`
 To use as **Conditions**, return true if the location is *ON* a solidblock.
 
@@ -1226,16 +1230,16 @@ To use as **Conditions**, return true if the location is *ON* a solidblock.
 To use as **Conditions**, return true if the location is *INSIDE* a solidblock.
 
 ##### `- jumping{action=[boolean]}`
-To use as **TargetCondiitons or Conditions**, return true if the entity is jumping.
+To use as **TaretConditions or Conditions**, return true if the entity is jumping.
 
 ##### `- crouching{action=[boolean]}`
-To use as **TargetCondiitons or Conditions**, return true if the entity is crouching.
+To use as **TaretConditions or Conditions**, return true if the entity is crouching.
 
 ##### `- sleeping{action=[boolean]}`
-To use as **TargetCondiitons or Conditions**, return true if the entity is sleeping.
+To use as **TaretConditions or Conditions**, return true if the entity is sleeping.
 
 ##### `- running{action=[boolean]}`
-To use as **TargetCondiitons or Conditions**, return true if the entity is running.
+To use as **TaretConditions or Conditions**, return true if the entity is running.
 
 ##### `- samespawner{action=[boolean]}`
 To use as **TargetConditions**, return true if caster & target have same mythicspawner.
