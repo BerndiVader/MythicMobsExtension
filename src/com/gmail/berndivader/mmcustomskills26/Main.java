@@ -142,11 +142,14 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		Main.entityCache.stream().forEach(entity->{
-			if (entity!=null) entity.remove();
-		});
-		Main.healthbarhandler.removeHealthbars();
-		Main.healthbarhandler.removeSpeechBubbles();
+		for(Iterator<Entity>a=entityCache.iterator();a.hasNext();) {
+			Entity e=a.next();
+			if (e!=null) e.remove();
+		}
+		if (healthbarhandler!=null) {
+			Main.healthbarhandler.removeHealthbars();
+			Main.healthbarhandler.removeSpeechBubbles();
+		}
 		if (this.thiefhandler!=null) Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		this.thiefhandler = null;
