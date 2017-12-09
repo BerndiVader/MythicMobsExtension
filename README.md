@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.234 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.234a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 09.12.2017 *** fixed server shutdown NPE for healthbars if they not enabled.
 ##### ** 07.12.2017 *** updated all sensitive code to work with 1.10.2 - 1.12.2 servers
 ##### ** 06.12.2017 *** added shootattack pathfindergoal. See pathfinders for details.
 ##### ** 05.12.2017 *** added dropinventory mechanic. See dropinventory mechanic.
@@ -308,10 +309,14 @@ Examples:
 drop2pieces:
   Skills:
   - dropinventory{item="material=DIRT,amount=1,where=HAND";pieces=2} @trigger ~onInteract
+  
+dropAll:
+  Skills:
+  - dropinventory{item="material=ANY,amount=64,where=ANY";pieces=41} @trigger ~onDamaged
 ```
 
-Will drop 2 dirt regardless the item is in an stack or there are just two single dirtstacks in the inventory.
- 
+First example drop 2 dirt regardless the item is in an stack or there are just two single dirtstacks in the inventory. The second example
+drop the inventory entirely because of where & material = any, amount is atleast a stack and pieces = 41 (max slots of a player) 
 	
 
 
