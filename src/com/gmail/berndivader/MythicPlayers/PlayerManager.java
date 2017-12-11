@@ -34,6 +34,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mmcustomskills26.Main;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -120,7 +122,6 @@ public class PlayerManager implements Listener {
 			l.removeMetadata(meta_MYTHICPLAYER, mythicplayers.plugin());
 			return false;
 		}
-		;
 		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
@@ -210,14 +211,16 @@ public class PlayerManager implements Listener {
 			return;
 		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 		TriggeredSkillAP ts = null;
-		System.err.println(e.getAction());
 		if (e.getHand().equals(EquipmentSlot.HAND)) {
-			System.err.println("pass1");
 			if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-				System.err.println("pass2");
-				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
+				ts = new TriggeredSkillAP(SkillTrigger.RIGHTCLICK, ap, null, null, true);
 			} else if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				System.err.println("pass3");
+				ts = new TriggeredSkillAP(SkillTrigger.RIGHTCLICK, ap, null,
+						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
+			}
+			if (e.getAction().equals(Action.LEFT_CLICK_AIR)) {
+				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
+			} else if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null,
 						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
 			}
@@ -237,7 +240,7 @@ public class PlayerManager implements Listener {
 			this.removeActivePlayer(ap);
 		}
 	}
-
+	
 	@EventHandler
 	public void onMythicPlayerWorldChangeAtTeleport(PlayerTeleportEvent e) {
 		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId())
@@ -249,21 +252,46 @@ public class PlayerManager implements Listener {
 			this.removeActivePlayer(ap);
 		}
 	}
-
+	
 	@EventHandler
 	public void onMythicPlayerWorldChanged(PlayerChangedWorldEvent e) {
 		if (e.getPlayer().hasMetadata(meta_MYTHICPLAYER)) {
+			final Player p=e.getPlayer();
 			new BukkitRunnable() {
-				private Player p = e.getPlayer();
-
 				@Override
 				public void run() {
-					PlayerManager.this.attachActivePlayer(this.p, false);
+					PlayerManager.this.attachActivePlayer(p, true);
 				}
 			}.runTaskLater(mythicplayers.plugin(), 50L);
 		}
 	}
 
+	@EventHandler
+	public void onMythicPlayerTeleportChunkNotLoaded(PlayerTeleportEvent e) {
+		if (!e.isCancelled()&&e.getPlayer().hasMetadata(meta_MYTHICPLAYER)&&e.getFrom().getWorld().equals(e.getTo().getWorld())) {
+			final Player p=e.getPlayer();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					if (p.isDead()) {
+						Main.getPlugin().getVolatileHandler().setDeath(p,false);
+						Optional<ActivePlayer> maybeActivePlayer = getActivePlayer(p.getUniqueId());
+						if (maybeActivePlayer.isPresent()) {
+							ActivePlayer ap = maybeActivePlayer.get();
+							removeActivePlayer(ap);
+							new BukkitRunnable() {
+								@Override
+								public void run() {
+									PlayerManager.this.attachActivePlayer(p, true);
+								}
+							}.runTaskLater(Main.getPlugin(),20L);
+						}
+					}
+				}
+			}.runTaskLater(Main.getPlugin(),50L);
+		}
+	}
+	
 	@EventHandler
 	public void onMythicPlayerChangeSlot(PlayerItemHeldEvent e) {
 		if (e.isCancelled() || !e.getPlayer().hasMetadata(meta_MYTHICPLAYER))

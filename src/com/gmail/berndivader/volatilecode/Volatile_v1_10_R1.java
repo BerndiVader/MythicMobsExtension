@@ -855,4 +855,10 @@ implements VolatileHandler {
         me.getDataWatcher().set(a,Byte.valueOf((byte)(me.getDataWatcher().get(a).byteValue()&-17)));
 	}
 
+	@Override
+	public void setDeath(Player p, boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

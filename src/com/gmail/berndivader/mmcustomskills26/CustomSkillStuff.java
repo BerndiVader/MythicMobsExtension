@@ -572,7 +572,7 @@ public class CustomSkillStuff implements Listener {
     }
     
     public static boolean isNumeric(String s) {
-    	return s.matches("[0-9]*");
+    	return s!=null?s.matches("[0-9]*"):false;
     }
 
 	public static UUID isUUID(String data) {

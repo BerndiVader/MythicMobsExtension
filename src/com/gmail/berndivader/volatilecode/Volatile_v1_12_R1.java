@@ -40,6 +40,10 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public class Volatile_v1_12_R1 
 implements VolatileHandler {
+	
+	private static String signal_AISHOOT="AISHOOT";
+	private static String signal_AIHIT="AIHIT";
+	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
@@ -106,7 +110,6 @@ implements VolatileHandler {
 				return null;
 			}
 		};
-		
     }
     
 	@Override
@@ -286,26 +289,51 @@ implements VolatileHandler {
 	        case "rangedmelee": {
 	            if (e instanceof EntityCreature) {
 	            	float range = 2.0f;
-	            	if (CustomSkillStuff.isNumeric(data)) {
+	            	if (data!=null) {
 	            		range = Float.parseFloat(data);
 	            	}
-	            	goals.a(i, (PathfinderGoal)new PathfinderGoalMeleeRangeAttack((EntityCreature)e, 1.0, true, range));
+	            	goals.a(i, (PathfinderGoal)new PathfinderGoalMeleeRangeAttack((EntityCreature)e,1.0,true,range));
+	            }
+	        	break;
+	        }
+	        case "attack": {
+	            if (e instanceof EntityCreature) {
+	        		double s=1.0d;
+	        		float r=2.0f;
+	            	if (data!=null) s=Double.parseDouble(data);
+	            	if (data1!=null) r=Float.parseFloat(data1);
+	            	goals.a(i, (PathfinderGoal)new PathfinderGoalAttack((EntityCreature)e,s,true,r));
 	            }
 	        	break;
 	        }
 	        case "runfromsun": {
 	        	if (e instanceof EntityCreature) {
-	        		double speed = 1.0d;
-	            	if (CustomSkillStuff.isNumeric(data)) {
-	            		speed = Double.parseDouble(data);
-	            	}
-	            	goals.a(i, (PathfinderGoal)new PathfinderGoalFleeSun((EntityCreature)e, speed));
+	        		double s=1.0d;
+	            	if (data!=null) s=Double.parseDouble(data);
+	            	goals.a(i, (PathfinderGoal)new PathfinderGoalFleeSun((EntityCreature)e,s));
 	        	}
 	        	break;
 	        }
 	        case "shootattack": {
 	        	if (e instanceof EntityInsentient) {
-	            	goals.a(i,new PathFinderGoalShoot((EntityInsentient)e,1.0,20,60,15.0f));
+	        		double d1=1.0d;
+	        		int i1=20,i2=60;
+	        		float f1=15.0f;
+	        		if (data!=null) {
+		        		String[]p=data.split(",");
+		        		for (int a=0;a<p.length;a++) {
+	        				if (a==0) {
+	        					d1=Double.parseDouble(p[a]);
+	        				} else if (a==1) {
+	        					i1=Integer.parseInt(p[a]);
+	        				} else if (a==2) {
+	        					i2=Integer.parseInt(p[a]);
+	        				} else if (a==3) {
+	        					f1=Float.parseFloat(p[a]);
+	        				}
+		        		}
+	        		}
+	            	goals.a(i,new PathFinderGoalShoot((EntityInsentient)e,d1,i1,i2,f1));
 	        	}
 	        	break;
 	        }
@@ -317,18 +345,13 @@ implements VolatileHandler {
 	        		float zR=10.0F;
 	        		String[]p=data.split(",");
 	        		for (int a=0;a<p.length;a++) {
-	        			if (CustomSkillStuff.isNumeric(p[a])) {
-	        				if (a==0) {
-	        					speed=Double.parseDouble(p[a]);
-	        				} else if (a==1) {
-	        					aR=Float.parseFloat(p[a]);
-	        				} else if (a==2) {
-	        					zR=Float.parseFloat(p[a]);
-	        				}
-	        			}
-	        		}
-	        		if (CustomSkillStuff.isNumeric(data)) {
-	        			speed = Double.parseDouble(data);
+        				if (a==0) {
+        					speed=Double.parseDouble(p[a]);
+        				} else if (a==1) {
+        					aR=Float.parseFloat(p[a]);
+        				} else if (a==2) {
+        					zR=Float.parseFloat(p[a]);
+        				}
 	        		}
 	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
@@ -361,7 +384,7 @@ implements VolatileHandler {
 	        		double mR=10.0D;
 	        		double tR=512.0D;
 	        		boolean iT=false;
-	            	if (CustomSkillStuff.isNumeric(data)) {
+	            	if (data!=null) {
 	            		speed = Double.parseDouble(data);
 	            	}
 	            	if (data1!=null) {
@@ -398,6 +421,33 @@ implements VolatileHandler {
 			e1.printStackTrace();
 		}
 	}
+	
+	public class PathfinderGoalAttack
+	extends PathfinderGoalMeleeAttack {
+		protected float r;
+		
+	    public PathfinderGoalAttack(EntityCreature e,double d,boolean b,float r) {
+			super(e,d,b);
+			this.r=r;
+		}
+	    
+	    @Override
+	    protected void a(EntityLiving entityLiving,double d2) {
+	        double d3 = this.a(entityLiving);
+	        if (d2 <= d3 && this.c <= 0) {
+	            this.c = 20;
+	            this.b.a(EnumHand.MAIN_HAND);
+	            this.b.B(entityLiving);
+            	ActiveMob am=Main.mythicmobs.getMobManager().getMythicMobInstance(this.b.getBukkitEntity());
+            	if (am!=null) am.signalMob(BukkitAdapter.adapt(entityLiving.getBukkitEntity()),signal_AIHIT);
+	        }
+	    }
+	    
+		@Override
+		protected double a(EntityLiving e) {
+		    return (double)(this.b.width*this.r*this.b.width*this.r+e.width);
+		}
+	}	
 	
 	public class PathfinderGoalMeleeRangeAttack extends PathfinderGoalMeleeAttack {
 		protected float range;
@@ -460,7 +510,6 @@ implements VolatileHandler {
 	    @Override
 	    public void d() {
 	        super.d();
-	        IRangedEntity aa;
 	        if (this.a instanceof IRangedEntity) ((IRangedEntity)this.a).p(false);
 	        this.f = 0;
 	        this.d1 = -1;
@@ -476,7 +525,7 @@ implements VolatileHandler {
 	        }
 	        double d2 = this.a.d(entityLiving.locX, entityLiving.getBoundingBox().b, entityLiving.locZ);
 	        boolean bl2 = this.a.getEntitySenses().a(entityLiving);
-	        boolean bl3 = bl = this.f > 0;
+	        bl = this.f > 0;
 	        if (bl2 != bl) {
 	            this.f = 0;
 	        }
@@ -490,7 +539,7 @@ implements VolatileHandler {
 	        }
 	        if (this.i >= 20) {
 	            if ((double)this.a.getRandom().nextFloat() < 0.3) {
-	                boolean bl4 = this.g = !this.g;
+	                this.g = !this.g;
 	            }
 	            if ((double)this.a.getRandom().nextFloat() < 0.3) {
 	                this.h = !this.h;
@@ -520,7 +569,7 @@ implements VolatileHandler {
 		            ((IRangedEntity)this.a).a(entityLiving, f3);
 	            } else {
 	            	ActiveMob am=Main.mythicmobs.getMobManager().getMythicMobInstance(this.a.getBukkitEntity());
-	            	if (am!=null) am.signalMob(BukkitAdapter.adapt(entityLiving.getBukkitEntity()),"AISHOOT");
+	            	if (am!=null) am.signalMob(BukkitAdapter.adapt(entityLiving.getBukkitEntity()),signal_AISHOOT);
 	            }
 	            this.d1 = MathHelper.d(f2 * (float)(this.h1 - this.c) + (float)this.c);
 	        } else if (this.d1 < 0) {
@@ -863,6 +912,12 @@ implements VolatileHandler {
 	public boolean playerIsJumping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
+	}
+	
+	@Override
+	public void setDeath(Player p, boolean b) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		me.dead=b;
 	}
 
 }

@@ -1,5 +1,7 @@
 # CustomSkillMechanics v1.234c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 11.12.2017 *** added some options to shootattack pathfindergoal.
+##### ** 11.12.2017 *** added attack pathfindergoal. Meanwhile 1.12 only. See pathfinders for details.
 ##### ** 09.12.2017 *** added sameworld targetcondition.
 ##### ** 09.12.2017 *** added onsolidblock & insolidblock conditions.
 ##### ** 09.12.2017 *** fixed server shutdown NPE for healthbars if they not enabled.
@@ -546,9 +548,18 @@ Some examples:
 		
 ### Pathfindergoals:
 
+*attack:*
+	
+##### `advaipathfinder{goal="[goalpriority_value] attack [move_speed] [attack_range]"}`
+	
++ Syntax in advaipathfinder: `- advaipathfinder{goal="1 attack 1.5 3"}`
++ Above example make the mob attack its target at a speed of 1.5 and a melee range of 3 blocks.
++ Make the mob attack its targets. **The goal sends the signal AIHIT** whenever it do an attack. Catch the signal in the mob skills to make highly customized attacks!
++ MORE ADVANCED OPTIONS IN PROGRESS!
+
 *shootattack:*
 
-##### `advaipathfinder{goal="[goalpriority_value] shootattack"}`
+##### `advaipathfinder{goal="[goalpriority_value] shootattack [follow_speed],[range1],[attack_speed],[distance]"}`
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 shootattack"}`
 + Set goal 1 to PathfindergoalShootAttack. Will make ANY creature entity able to range attack. Sends the signal AISHOOT to customize the projecitle
 

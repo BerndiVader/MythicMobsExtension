@@ -234,18 +234,13 @@ implements VolatileHandler {
 	        		float zR=10.0F;
 	        		String[]p=data.split(",");
 	        		for (int a=0;a<p.length;a++) {
-	        			if (CustomSkillStuff.isNumeric(p[a])) {
-	        				if (a==0) {
-	        					speed=Double.parseDouble(p[a]);
-	        				} else if (a==1) {
-	        					aR=Float.parseFloat(p[a]);
-	        				} else if (a==2) {
-	        					zR=Float.parseFloat(p[a]);
-	        				}
-	        			}
-	        		}
-	        		if (CustomSkillStuff.isNumeric(data)) {
-	        			speed = Double.parseDouble(data);
+        				if (a==0) {
+        					speed=Double.parseDouble(p[a]);
+        				} else if (a==1) {
+        					aR=Float.parseFloat(p[a]);
+        				} else if (a==2) {
+        					zR=Float.parseFloat(p[a]);
+        				}
 	        		}
 	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
@@ -844,5 +839,11 @@ implements VolatileHandler {
 	public void removeSnowmanHead(Entity entity) {
 		net.minecraft.server.v1_11_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
 		me.setHasPumpkin(false);
+	}
+
+	@Override
+	public void setDeath(Player p, boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 }
