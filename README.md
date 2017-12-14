@@ -1,6 +1,7 @@
 # CustomSkillMechanics v1.234e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ##### ** 14.12.2017 *** added custom variable parse to parsedstance.
+##### ** 13.12.2017 *** fixed some MythicPlayer related stuff.
 ##### ** 11.12.2017 *** added some options to shootattack pathfindergoal.
 ##### ** 11.12.2017 *** added attack pathfindergoal. Meanwhile 1.12 only. See pathfinders for details.
 ##### ** 09.12.2017 *** added sameworld targetcondition.
