@@ -18,7 +18,7 @@ ILocationComparisonCondition {
 
 	@Override
 	public boolean check(AbstractLocation c, AbstractLocation t) {
-		return c.getWorld()==null||t.getWorld()==null?false:c.getWorld().equals(t.getWorld())?true:false;
+		return c.getWorld()==null||t.getWorld()==null?false:c.getWorld()==t.getWorld()?true:false;
 	}
 
 }

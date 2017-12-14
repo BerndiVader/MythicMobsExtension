@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.234c for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.234e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 14.12.2017 *** added custom variable parse to parsedstance.
 ##### ** 11.12.2017 *** added some options to shootattack pathfindergoal.
 ##### ** 11.12.2017 *** added attack pathfindergoal. Meanwhile 1.12 only. See pathfinders for details.
 ##### ** 09.12.2017 *** added sameworld targetcondition.
@@ -527,8 +528,6 @@ Creates a healthbar for the spawned mob with an y-offset of 2.5. And adds so(sid
 	
 The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health. If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
-
-
 ## advaipathfinder mechanic:
 
 Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal parsed for variables. Its a NoTargetMechanic and therefor always be used at caster.
@@ -544,7 +543,6 @@ Some examples:
 - advaipathfinder{goal="4 goto <target.l.x>,<target.l.y>,<target.l.z>"}
 - advaipathfinder{goal="1 randomstroll"}
 ```
-		
 		
 ### Pathfindergoals:
 
@@ -620,16 +618,23 @@ SpawnEvent:
 + In addition there are two signals send:
 + *GOAL_STARTRETURNHOME* - Send to mob if the entity start to travel home.
 + *GOAL_ENDRETURNHOME* - Send to mob if the entity is arrived at home.
-		
 
-
-## parsedStance mechanic:
+## parsedstance mechanic:
 
 ##### `- parsedstance{s="<trigger.uuid>"} @self`
+##### `- pstance{s="<target.l.dx>,<target.l.dy>,<target.l.dz>,<target.l.w>"} @targetlocation`
 
 Set a the stance of an activemob filled parsed variables, like <mob.uuid> <target.uuid> and so on. In addition see parsedstance condition to compare parsed stances.
 
+*special variables*
++ <target.l.*> are parsed within pstance with the block position of the location if there is a location targeter
++ <target.l.dx dy dz> to get the coordinates as double not the block position.
++ <target.meta.*> where * is the name of the metatag. If used with a location targeter the block metatags are used.
++ <mob.meta.*> where * is the name of the metaag. Ex: `<mob.meta.<trigger.uuid>` reteruns the value stored in casters triggers uuid tag if 
+there is one.
+
 ## CastIf mechanic:
+
 Use this mechanic to compare conditions and targetconditions inside of skills and execute a skill if meet or another if not meet.
 	
 ##### `- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;meettargeter="@[any_targeter]";else=elseSkill;elsetargeter="@[any_targeter]"} @trigger ~onDamaged`

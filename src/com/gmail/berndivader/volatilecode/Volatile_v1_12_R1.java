@@ -66,6 +66,38 @@ implements VolatileHandler {
 	public Volatile_v1_12_R1() {
 	}
 	
+	@SuppressWarnings("rawtypes")
+	private void sendPlayerPacketsAsync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				while(it.hasNext()) {
+					AbstractPlayer ap=it.next();
+					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+					for(Packet p:pk) {
+						cp.getHandle().playerConnection.sendPacket(p);
+					}
+				}
+			}
+		}.runTaskAsynchronously(Main.getPlugin());
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void sendPlayerPacketsSync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				while(it.hasNext()) {
+					AbstractPlayer ap=it.next();
+					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
+					for(Packet p:pk) {
+						cp.getHandle().playerConnection.sendPacket(p);
+					}
+				}
+			}
+		}.runTask(Main.getPlugin());
+	}
+	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
@@ -122,20 +154,15 @@ implements VolatileHandler {
 	public void fakeEntityDeath(Entity entity,long d) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
         me.world.broadcastEntityEffect(me,(byte)3);
+		PacketPlayOutEntityDestroy pd=new PacketPlayOutEntityDestroy(me.getId());
+		PacketPlayOutSpawnEntityLiving ps=new PacketPlayOutSpawnEntityLiving(me);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				PacketPlayOutEntityDestroy pd=new PacketPlayOutEntityDestroy(me.getId());
-				PacketPlayOutSpawnEntityLiving ps=new PacketPlayOutSpawnEntityLiving(me);
-				Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-				while(it.hasNext()) {
-					AbstractPlayer ap=it.next();
-					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-					cp.getHandle().playerConnection.sendPacket(pd);
-					cp.getHandle().playerConnection.sendPacket(ps);
-				}
+				sendPlayerPacketsAsync(Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator()
+						,Arrays.asList(new Packet[]{pd,ps}));
 			}
-		}.runTaskLater(Main.getPlugin(),d);
+		}.runTaskLaterAsynchronously(Main.getPlugin(),d);
 	}
 	
 	@Override
@@ -176,12 +203,7 @@ implements VolatileHandler {
 		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
 		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
 		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		while(it.hasNext()) {
-			AbstractPlayer ap=it.next();
-			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			cp.getHandle().playerConnection.sendPacket(hr);
-			cp.getHandle().playerConnection.sendPacket(el);
-		}
+		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{el,hr}));
 	}
 	
 	@Override
@@ -212,11 +234,7 @@ implements VolatileHandler {
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
 		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		while(it.hasNext()) {
-			AbstractPlayer ap=it.next();
-			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			cp.getHandle().playerConnection.sendPacket(packet);
-		}
+		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{packet}));
 	}
 
 	@Override
@@ -224,11 +242,7 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		while(it.hasNext()) {
-			AbstractPlayer ap=it.next();
-			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			cp.getHandle().playerConnection.sendPacket(tp);
-		}
+		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{tp}));
 	}
 	
 	@Override
@@ -239,11 +253,7 @@ implements VolatileHandler {
 		double z1=cl.getZ()-me.locZ;
 		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
 		Iterator<AbstractPlayer> it=Main.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		while(it.hasNext()) {
-			AbstractPlayer ap=it.next();
-			CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-			cp.getHandle().playerConnection.sendPacket(vp);
-		}
+		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{vp}));
 	}
 
 	@Override
