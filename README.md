@@ -1,5 +1,12 @@
-# CustomSkillMechanics v1.234c for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
+##### ** 15.12.2017 *** added triggerdirection, targetdirection & ownerdirection targeter. See targeters for details.
+##### ** 14.12.2017 *** added ownsitemsimple variant condition. See ownsitem condition.
+##### ** 14.12.2017 *** added custom variable parse to parsedstance.
+##### ** 13.12.2017 *** fixed some MythicPlayer related stuff.
+##### ** 11.12.2017 *** added some options to shootattack pathfindergoal.
+##### ** 11.12.2017 *** added attack pathfindergoal. Meanwhile 1.12 only. See pathfinders for details.
 ##### ** 09.12.2017 *** added sameworld targetcondition.
 ##### ** 09.12.2017 *** added onsolidblock & insolidblock conditions.
 ##### ** 09.12.2017 *** fixed server shutdown NPE for healthbars if they not enabled.
@@ -525,8 +532,6 @@ Creates a healthbar for the spawned mob with an y-offset of 2.5. And adds so(sid
 	
 The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health. If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
-
-
 ## advaipathfinder mechanic:
 
 Use this mechanic to add custom pathfinder goals or any other mythicmobs pathfindergoal parsed for variables. Its a NoTargetMechanic and therefor always be used at caster.
@@ -543,12 +548,20 @@ Some examples:
 - advaipathfinder{goal="1 randomstroll"}
 ```
 		
-		
 ### Pathfindergoals:
+
+*attack:*
+	
+##### `advaipathfinder{goal="[goalpriority_value] attack [move_speed] [attack_range]"}`
+	
++ Syntax in advaipathfinder: `- advaipathfinder{goal="1 attack 1.5 3"}`
++ Above example make the mob attack its target at a speed of 1.5 and a melee range of 3 blocks.
++ Make the mob attack its targets. **The goal sends the signal AIHIT** whenever it do an attack. Catch the signal in the mob skills to make highly customized attacks!
++ MORE ADVANCED OPTIONS IN PROGRESS!
 
 *shootattack:*
 
-##### `advaipathfinder{goal="[goalpriority_value] shootattack"}`
+##### `advaipathfinder{goal="[goalpriority_value] shootattack [follow_speed],[range1],[attack_speed],[distance]"}`
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 shootattack"}`
 + Set goal 1 to PathfindergoalShootAttack. Will make ANY creature entity able to range attack. Sends the signal AISHOOT to customize the projecitle
 
@@ -609,16 +622,23 @@ SpawnEvent:
 + In addition there are two signals send:
 + *GOAL_STARTRETURNHOME* - Send to mob if the entity start to travel home.
 + *GOAL_ENDRETURNHOME* - Send to mob if the entity is arrived at home.
-		
 
-
-## parsedStance mechanic:
+## parsedstance mechanic:
 
 ##### `- parsedstance{s="<trigger.uuid>"} @self`
+##### `- pstance{s="<target.l.dx>,<target.l.dy>,<target.l.dz>,<target.l.w>"} @targetlocation`
 
 Set a the stance of an activemob filled parsed variables, like <mob.uuid> <target.uuid> and so on. In addition see parsedstance condition to compare parsed stances.
 
+*special variables*
++ <target.l.*> are parsed within pstance with the block position of the location if there is a location targeter
++ <target.l.dx dy dz> to get the coordinates as double not the block position.
++ <target.meta.*> where * is the name of the metatag. If used with a location targeter the block metatags are used.
++ <mob.meta.*> where * is the name of the metaag. Ex: `<mob.meta.<trigger.uuid>` reteruns the value stored in casters triggers uuid tag if 
+there is one.
+
 ## CastIf mechanic:
+
 Use this mechanic to compare conditions and targetconditions inside of skills and execute a skill if meet or another if not meet.
 	
 ##### `- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;meettargeter="@[any_targeter]";else=elseSkill;elsetargeter="@[any_targeter]"} @trigger ~onDamaged`
@@ -1220,6 +1240,9 @@ FleeButGotNothing:
 
 
 
+##### `- testfor{vc="[valid testfor stuff]";action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, return true if caster or target match the testfor. See https://www.digminecraft.com/game_commands/testfor_command.php **PLEASE NOT THE "" for vc option!**
+
 ##### `- sameworld{action=[boolean]}`
 To use as **TargetConditions**, return true if caster & target location in same world.
 
@@ -1387,8 +1410,11 @@ mobfile:
 ```
 
 ##### `- ownsitem/iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}`
+##### `- ownsitemsimple{where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT];action=[BOOLEAN]}`
 Works as target or entitycondition. A single value or a boolean expression argument can be given (see below for some examples).
 This condition works on all living entities, where the INVENTORY where type only works for players.
+
+**NOTE:** The ownsitemsimple variant is used to only add 1 item to compare. There is no list and no "" but also no boolean expression.
 
 ```yaml
 ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"
@@ -1514,6 +1540,15 @@ Returns the target of the triggered entity. In case of target is a player the co
 
 ##### `@eyedirection{length=[VALUE]`
 Returns the location length blocks away from the direction the caster is looking. `@eyedirection{l=20}` returns the location 20 blocks infront of the direction the caster is looking at.
+
+##### `@triggerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the trigger is looking. `@triggerdirection{l=20}` returns the location 20 blocks infront of the direction the trigger is looking at.
+
+##### `@targetdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the target is looking. `@targetdirection{l=20}` returns the location 20 blocks infront of the direction the target is looking at.
+
+##### `@ownerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the owner is looking. `@ownerdirection{l=20}` returns the location 20 blocks infront of the direction the owner is looking at.
 
 
 

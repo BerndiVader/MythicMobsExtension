@@ -45,6 +45,12 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.Vec3D;
+import net.minecraft.server.v1_11_R1.CommandException;
+import net.minecraft.server.v1_11_R1.CommandTestFor;
+import net.minecraft.server.v1_11_R1.GameProfileSerializer;
+import net.minecraft.server.v1_11_R1.MojangsonParseException;
+import net.minecraft.server.v1_11_R1.MojangsonParser;
+import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_11_R1.IRangedEntity;
@@ -234,18 +240,13 @@ implements VolatileHandler {
 	        		float zR=10.0F;
 	        		String[]p=data.split(",");
 	        		for (int a=0;a<p.length;a++) {
-	        			if (CustomSkillStuff.isNumeric(p[a])) {
-	        				if (a==0) {
-	        					speed=Double.parseDouble(p[a]);
-	        				} else if (a==1) {
-	        					aR=Float.parseFloat(p[a]);
-	        				} else if (a==2) {
-	        					zR=Float.parseFloat(p[a]);
-	        				}
-	        			}
-	        		}
-	        		if (CustomSkillStuff.isNumeric(data)) {
-	        			speed = Double.parseDouble(data);
+        				if (a==0) {
+        					speed=Double.parseDouble(p[a]);
+        				} else if (a==1) {
+        					aR=Float.parseFloat(p[a]);
+        				} else if (a==2) {
+        					zR=Float.parseFloat(p[a]);
+        				}
 	        		}
 	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
@@ -844,5 +845,47 @@ implements VolatileHandler {
 	public void removeSnowmanHead(Entity entity) {
 		net.minecraft.server.v1_11_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
 		me.setHasPumpkin(false);
+	}
+
+	@Override
+	public void setDeath(Player p, boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean testForCondition(Entity e, String command) {
+		boolean b=true;
+		TestFor t=new TestFor();
+		try {
+			b=t.execute(e, new String[] {"dummy",command});
+		} catch (CommandException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return b;
+	}
+	
+	public class TestFor extends CommandTestFor {
+
+		public TestFor() {
+		}
+		
+	    public boolean execute(Entity e,String[] arrstring) throws CommandException {
+	        net.minecraft.server.v1_11_R1.Entity entity=((CraftEntity)e).getHandle();
+	        NBTTagCompound nBTTagCompound;
+	        NBTTagCompound nBTTagCompound2=null;
+            try {
+                nBTTagCompound2=MojangsonParser.parse(CommandTestFor.a(arrstring,1));
+            }
+            catch (MojangsonParseException mojangsonParseException) {
+            	return false;
+            }
+	        if (nBTTagCompound2!=null&&!GameProfileSerializer
+	        		.a(nBTTagCompound2,nBTTagCompound=CommandTestFor.a(entity),true)) {
+	            return false;
+	        }
+	        return true;
+	    }
 	}
 }

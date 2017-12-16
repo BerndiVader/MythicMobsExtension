@@ -33,6 +33,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -41,6 +42,7 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
@@ -439,7 +441,7 @@ public class CustomSkillStuff implements Listener {
 		yaw = -yaw * 180f / (float) Math.PI;
 		return yaw;
 	}
-	public static Vector lookAtVec(Location loc, Location lookat) {
+	public static Vec2D lookAtVec(Location loc, Location lookat) {
 		loc=loc.clone();
 		lookat=lookat.clone();
 		float yaw=0.0F;
@@ -456,7 +458,7 @@ public class CustomSkillStuff implements Listener {
 			yaw=(float)Math.PI;
 		}
 		float pitch=(float)-Math.atan(dy/dxz);
-		return new Vector(-yaw*180f/(float)Math.PI,pitch*180f/(float)Math.PI,0);
+		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
 	}
 
 	public static Location moveTo(Location loc, Vector offset) {
@@ -572,7 +574,7 @@ public class CustomSkillStuff implements Listener {
     }
     
     public static boolean isNumeric(String s) {
-    	return s.matches("[0-9]*");
+    	return s!=null?s.matches("[0-9]*"):false;
     }
 
 	public static UUID isUUID(String data) {
@@ -650,5 +652,48 @@ public class CustomSkillStuff implements Listener {
 		if (am!=null) {
 			new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
 		}
+	}
+	
+	public static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
+		AbstractLocation l1=l!=null?l:t!=null?t.getLocation():null;
+		if (l1!=null&&s.contains("<target.l")) {
+			s=s.replaceAll("<target.l.w>",l1.getWorld().getName());
+			s=s.replaceAll("<target.l.x>",Double.toString(l1.getBlockX()));
+			s=s.replaceAll("<target.l.y>",Double.toString(l1.getBlockY()));
+			s=s.replaceAll("<target.l.z>",Double.toString(l1.getBlockZ()));
+			if (s.contains("<target.l.d")) {
+				s=s.replaceAll("<target.l.dx>",Double.toString(l1.getX()));
+				s=s.replaceAll("<target.l.dy>",Double.toString(l1.getY()));
+				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
+			}
+		}
+		if (s.contains(".meta.")) {
+			s=parseMetaVar(s,c,t,l);
+		}
+		return s;
+	}
+	
+	private static String parseMetaVar(String s,AbstractEntity a1,AbstractEntity a2,AbstractLocation a3) {
+		Entity e1=a1!=null?a1.getBukkitEntity():null;
+		Entity e2=a2!=null?a2.getBukkitEntity():null;
+		Location l1=a3!=null?BukkitAdapter.adapt(a3):null;
+		if (s.contains("<target.meta")) {
+			String[]p=s.split("<target.meta.");
+			if (p.length>1) {
+				String s1=p[1].split(">")[0];
+				if (l1!=null&&l1.getWorld().getBlockAt(l1).hasMetadata(s1)) return s.replace("<target.meta."+s1+">"
+						,l1.getWorld().getBlockAt(l1).getMetadata(s1).get(0).asString());
+				if (e2!=null&&e2.hasMetadata(s1)) {
+					return s.replaceAll("<target.meta."+s1+">",e2.getMetadata(s1).get(0).asString());
+				}
+			}
+		} else if (s.contains("<mob.meta")) {
+			String[]p=s.split("<mob.meta.");
+			if (p.length>1) {
+				String s1=p[1].split(">")[0];
+				if (e1!=null&&e1.hasMetadata(s1)) return s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
+			}
+		}
+		return s;
 	}
 }

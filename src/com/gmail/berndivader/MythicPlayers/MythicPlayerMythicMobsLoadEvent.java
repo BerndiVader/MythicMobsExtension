@@ -10,6 +10,7 @@ import com.gmail.berndivader.MythicPlayers.Targeters.EyeDirectionTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.LastDamagerTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.OwnerTargetTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.TargetsTargetTargeter;
+import com.gmail.berndivader.MythicPlayers.Targeters.TriggerDirectionTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.TriggerTargetTargeter;
 import com.gmail.berndivader.MythicPlayers.Targeters.mmCrosshairTargeter;
 
@@ -68,6 +69,10 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 			break;
 		}case "eyedirection": {
 			SkillTargeter targeter=new EyeDirectionTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}case "triggerdirection": {
+			SkillTargeter targeter=new TriggerDirectionTargeter(e.getConfig());
 			e.register(targeter);
 			break;
 		}

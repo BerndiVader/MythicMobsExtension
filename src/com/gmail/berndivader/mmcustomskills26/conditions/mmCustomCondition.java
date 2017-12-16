@@ -5,13 +5,15 @@ import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 
 public class mmCustomCondition extends SkillCondition {
+	private boolean dba;
 
 	public mmCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		String action="TRUE",actionVar="0";
 		String a=mlc.getString("action","");
-		for(int a1=0;a1<ConditionAction.values().length;a1++){
-			String aa=ConditionAction.values()[a1].toString();
+		dba=mlc.getBoolean("debug",false);
+		for(int i=0;i<ConditionAction.values().length;i++){
+			String aa=ConditionAction.values()[i].toString();
 			if (aa.toUpperCase().equals("CAST")&&a.toUpperCase().startsWith("CASTINSTEAD")) continue;
 			if (a.toUpperCase().startsWith(aa)) {
 				action=aa;
@@ -25,6 +27,7 @@ public class mmCustomCondition extends SkillCondition {
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
+		if (dba) System.err.println(this.ACTION.toString()+":"+this.actionVar);
 	}
 
 }

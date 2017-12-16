@@ -2,8 +2,9 @@ package com.gmail.berndivader.mmcustomskills26;
 
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.utils.Vec2D;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -20,10 +21,12 @@ implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
 	private long dur;
+	private boolean b;
 	private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
 	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		b(skill.toLowerCase().startsWith("entitylookin"));
 		this.dur=(long)mlc.getInteger(new String[] {"duration","dur"},120);
 	}
 
@@ -35,26 +38,36 @@ ITargetedEntitySkill {
 		final AbstractEntity target=t;
 		caster.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		final long d=this.dur;
+		final boolean b1=this.b;
 		new BukkitRunnable() {
-			long count=0;
+			long l=0;
+			Vec2D v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());
 			@Override
 			public void run() {
 				if (caster==null
 						||target==null
-						||count>d
+						||l>d
 						||caster.isDead()
 						||target.isDead()) {
 					caster.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
-					Vector v=CustomSkillStuff.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
-							target.getBukkitEntity().getLocation().add(0,target.getEyeHeight(), 0));
-					EntityGoogleMechanic.this.vh.rotateEntityPacket(caster.getBukkitEntity(),(float)v.getX(),(float)v.getY());
+					if (!b1) {
+						v2=CustomSkillStuff.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
+								target.getBukkitEntity().getLocation().add(0,target.getEyeHeight(), 0));
+					} else {
+						v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());
+					}
+					EntityGoogleMechanic.this.vh.rotateEntityPacket(caster.getBukkitEntity(),(float)v2.getX(),(float)v2.getY());
 				}
-				count++;
+				l++;
 			}
 		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L,1L);
 		return true;
+	}
+	
+	private void b(boolean b) {
+		this.b=b;
 	}
 
 }
