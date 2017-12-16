@@ -95,7 +95,8 @@ public class mmOwnConditions implements Listener {
 			break;
 		}
 		case "iteminhand":
-			case "ownsitem": {
+		case "ownsitem": 
+		case "ownsitemsimple": {
 			SkillCondition c = new hasItemCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;
@@ -103,8 +104,9 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c = new DirectionalDamageCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-		}case "lookatme":
-			case "looksatme": {
+		}
+		case "lookatme":
+		case "looksatme": {
 			SkillCondition c = new LookingAtMeCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
@@ -129,12 +131,13 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new PlayerTimeCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-		}case "entitiesinradius":
-			case "eir":
-			case "leir":
-			case "livingentitiesinradius":
-			case "pir":
-			case "playersinradius":{
+		}
+		case "entitiesinradius":
+		case "eir":
+		case "leir":
+		case "livingentitiesinradius":
+		case "pir":
+		case "playersinradius":{
 			SkillCondition c=new EntitiesInRadiusCondition(e.getConfig().getLine(), e.getConfig());
 			e.register(c);
 			break;
@@ -170,16 +173,21 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new SameWorldCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "testfor":{
+			SkillCondition c=new TestForCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 		}case "onsolidblock":
 			case "insolidblock":{
 			SkillCondition c=new SolidBlockConditions(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-		}case "crouching": 
-			case "running":
-			case "disguised":
-			case "sleeping":
-			case "jumping":{
+		}
+		case "crouching": 
+		case "running":
+		case "disguised":
+		case "sleeping":
+		case "jumping":{
 				SkillCondition c=new PlayerBooleanConditions(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;

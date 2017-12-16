@@ -15,7 +15,6 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 public class TriggerTargetTargeter
 extends
 IEntitySelector {
-
 	public TriggerTargetTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}

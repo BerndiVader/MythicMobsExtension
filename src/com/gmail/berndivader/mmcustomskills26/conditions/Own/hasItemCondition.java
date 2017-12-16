@@ -86,12 +86,23 @@ IEntityCondition {
 	}
 
 	private String conditionLine;
+	private boolean is;
 	private LinkedHashSet<ItemHolding> holdinglist;
 
 	public hasItemCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
+		this.is=line.toLowerCase().startsWith("ownsitemsimple");
 		this.holdinglist=new LinkedHashSet<>();
-		final String tmp=mlc.getString(new String[]{"list","l"},null);
+		String tmp=null;
+		if (!is) {
+			tmp=mlc.getString(new String[]{"list","l"},null);
+		} else {
+			tmp="\"where="+mlc.getString("where","");
+			tmp+=";material="+mlc.getString("material","");
+			tmp+=";amount="+mlc.getString("amount","");
+			tmp+=";lore="+mlc.getString("lore","")+"\"";
+			tmp=SkillString.unparseMessageSpecialChars(tmp);
+		}
 		this.conditionLine=SkillString.parseMessageSpecialChars(tmp);
 		if (tmp!=null) {
 			String[]list=tmp.split("&&|\\|\\|");

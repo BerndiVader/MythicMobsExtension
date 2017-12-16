@@ -33,6 +33,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -440,7 +441,7 @@ public class CustomSkillStuff implements Listener {
 		yaw = -yaw * 180f / (float) Math.PI;
 		return yaw;
 	}
-	public static Vector lookAtVec(Location loc, Location lookat) {
+	public static Vec2D lookAtVec(Location loc, Location lookat) {
 		loc=loc.clone();
 		lookat=lookat.clone();
 		float yaw=0.0F;
@@ -457,7 +458,7 @@ public class CustomSkillStuff implements Listener {
 			yaw=(float)Math.PI;
 		}
 		float pitch=(float)-Math.atan(dy/dxz);
-		return new Vector(-yaw*180f/(float)Math.PI,pitch*180f/(float)Math.PI,0);
+		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
 	}
 
 	public static Location moveTo(Location loc, Vector offset) {

@@ -904,6 +904,35 @@ implements VolatileHandler {
 	}
 	
 	@Override
+	public boolean testForCondition(Entity e, String command) throws CommandException {
+		TestFor t=new TestFor();
+		return t.execute(e, new String[] {"dummy",command});
+	}
+	
+	public class TestFor extends CommandTestFor {
+
+		public TestFor() {
+		}
+		
+	    public boolean execute(Entity e,String[] arrstring) throws CommandException {
+	        net.minecraft.server.v1_12_R1.Entity entity=((CraftEntity)e).getHandle();
+	        NBTTagCompound nBTTagCompound;
+	        NBTTagCompound nBTTagCompound2=null;
+            try {
+                nBTTagCompound2=MojangsonParser.parse(CommandTestFor.a(arrstring,1));
+            }
+            catch (MojangsonParseException mojangsonParseException) {
+            	return false;
+            }
+	        if (nBTTagCompound2!=null&&!GameProfileSerializer
+	        		.a(nBTTagCompound2,nBTTagCompound=CommandTestFor.a(entity),true)) {
+	            return false;
+	        }
+	        return true;
+	    }
+	}
+	
+	@Override
 	public boolean playerIsSleeping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		return me.isSleeping()||me.isDeeplySleeping();

@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.volatilecode.Volatile_v1_11_R1.TestFor;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -53,8 +54,14 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_10_R1.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_10_R1.Vec3D;
+import net.minecraft.server.v1_12_R1.CommandException;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_10_R1.CommandTestFor;
+import net.minecraft.server.v1_10_R1.GameProfileSerializer;
+import net.minecraft.server.v1_10_R1.MojangsonParseException;
+import net.minecraft.server.v1_10_R1.MojangsonParser;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
 import net.minecraft.server.v1_10_R1.IRangedEntity;
 import net.minecraft.server.v1_10_R1.DataWatcher;
 import net.minecraft.server.v1_10_R1.DataWatcherObject;
@@ -861,4 +868,39 @@ implements VolatileHandler {
 		
 	}
 
+	@Override
+	public boolean testForCondition(Entity e, String command) {
+		boolean b=true;
+		TestFor t=new TestFor();
+		try {
+			b=t.execute(e, new String[] {"dummy",command});
+		} catch (CommandException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return b;
+	}
+	
+	public class TestFor extends CommandTestFor {
+
+		public TestFor() {
+		}
+		
+	    public boolean execute(Entity e,String[] arrstring) throws CommandException {
+	        net.minecraft.server.v1_10_R1.Entity entity=((CraftEntity)e).getHandle();
+	        NBTTagCompound nBTTagCompound;
+	        NBTTagCompound nBTTagCompound2=null;
+            try {
+                nBTTagCompound2=MojangsonParser.parse(CommandTestFor.a(arrstring,1));
+            }
+            catch (MojangsonParseException mojangsonParseException) {
+            	return false;
+            }
+	        if (nBTTagCompound2!=null&&!GameProfileSerializer
+	        		.a(nBTTagCompound2,nBTTagCompound=CommandTestFor.a(entity),true)) {
+	            return false;
+	        }
+	        return true;
+	    }
+	}
 }

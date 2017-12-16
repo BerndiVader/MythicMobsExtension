@@ -7,6 +7,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import net.minecraft.server.v1_12_R1.CommandException;
+
 public interface VolatileHandler {
 
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
@@ -32,4 +34,5 @@ public interface VolatileHandler {
 	void removeArrowsFromEntity(Entity entity, int a, char c);
 	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
+	boolean testForCondition(Entity e, String command) throws CommandException;
 }

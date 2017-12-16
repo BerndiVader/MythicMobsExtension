@@ -3,8 +3,8 @@ package com.gmail.berndivader.mmcustomskills26;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.utils.Vec2D;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -44,7 +44,7 @@ ITargetedEntitySkill {
 					p.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
-					Vector v=CustomSkillStuff.lookAtVec(p.getEyeLocation(),
+					Vec2D v=CustomSkillStuff.lookAtVec(p.getEyeLocation(),
 							caster.getBukkitEntity().getLocation().add(0,caster.getEyeHeight(), 0));
 					PlayerGoggleMechanic.this.vh.playerConnectionLookAt(p,(float)v.getX(),(float)v.getY());
 				}

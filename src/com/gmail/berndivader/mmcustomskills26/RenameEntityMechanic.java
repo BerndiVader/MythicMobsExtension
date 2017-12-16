@@ -12,7 +12,7 @@ public class RenameEntityMechanic extends SkillMechanic
     private boolean v;
     public RenameEntityMechanic(String line, MythicLineConfig mlc) {
         super(line,mlc);
-        this.name=mlc.getString(new String[]{"name","n"});
+        this.name=mlc.getString(new String[]{"name","n"},"");
         this.v=mlc.getBoolean("visible",false);
     }
 

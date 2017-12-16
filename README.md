@@ -1,5 +1,8 @@
-# CustomSkillMechanics v1.234e for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
+##### ** 15.12.2017 *** added triggerdirection, targetdirection & ownerdirection targeter. See targeters for details.
+##### ** 14.12.2017 *** added ownsitemsimple variant condition. See ownsitem condition.
 ##### ** 14.12.2017 *** added custom variable parse to parsedstance.
 ##### ** 13.12.2017 *** fixed some MythicPlayer related stuff.
 ##### ** 11.12.2017 *** added some options to shootattack pathfindergoal.
@@ -1237,6 +1240,9 @@ FleeButGotNothing:
 
 
 
+##### `- testfor{vc="[valid testfor stuff]";action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, return true if caster or target match the testfor. See https://www.digminecraft.com/game_commands/testfor_command.php **PLEASE NOT THE "" for vc option!**
+
 ##### `- sameworld{action=[boolean]}`
 To use as **TargetConditions**, return true if caster & target location in same world.
 
@@ -1404,8 +1410,11 @@ mobfile:
 ```
 
 ##### `- ownsitem/iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}`
+##### `- ownsitemsimple{where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT];action=[BOOLEAN]}`
 Works as target or entitycondition. A single value or a boolean expression argument can be given (see below for some examples).
 This condition works on all living entities, where the INVENTORY where type only works for players.
+
+**NOTE:** The ownsitemsimple variant is used to only add 1 item to compare. There is no list and no "" but also no boolean expression.
 
 ```yaml
 ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"
@@ -1531,6 +1540,15 @@ Returns the target of the triggered entity. In case of target is a player the co
 
 ##### `@eyedirection{length=[VALUE]`
 Returns the location length blocks away from the direction the caster is looking. `@eyedirection{l=20}` returns the location 20 blocks infront of the direction the caster is looking at.
+
+##### `@triggerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the trigger is looking. `@triggerdirection{l=20}` returns the location 20 blocks infront of the direction the trigger is looking at.
+
+##### `@targetdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the target is looking. `@targetdirection{l=20}` returns the location 20 blocks infront of the direction the target is looking at.
+
+##### `@ownerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the owner is looking. `@ownerdirection{l=20}` returns the location 20 blocks infront of the direction the owner is looking at.
 
 
 
