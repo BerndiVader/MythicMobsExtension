@@ -29,7 +29,6 @@ IEntityCondition {
 		boolean b=true;
 		try {
 			b=Main.getPlugin().getVolatileHandler().testForCondition(e.getBukkitEntity(),this.c);
-			System.err.println(b);
 		} catch (CommandException e1) {
 			e1.printStackTrace();
 		}
