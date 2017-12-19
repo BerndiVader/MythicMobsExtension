@@ -278,6 +278,16 @@ public class mmCustomSkills26 implements Listener {
 			e.register(skill);
 			break;
 		}
+		case "setitemcooldown": {
+			skill=new SetItemCooldown(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
+		case "playerzoom": {
+			skill=new ZoomPlayerMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
 		}
 	}
 }

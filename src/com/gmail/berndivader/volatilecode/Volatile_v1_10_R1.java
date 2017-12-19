@@ -25,7 +25,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
-import com.gmail.berndivader.volatilecode.Volatile_v1_11_R1.TestFor;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -869,7 +868,7 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public boolean testForCondition(Entity e, String command) {
+	public boolean testForCondition(Entity e, String command, char m) {
 		boolean b=true;
 		TestFor t=new TestFor();
 		try {
@@ -903,4 +902,22 @@ implements VolatileHandler {
 	        return true;
 	    }
 	}
+	@Override
+	public float getItemCoolDown(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean setItemCooldown(Player p,int j) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setFieldOfViewPacketSend(Player player, float f1) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

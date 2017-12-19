@@ -15,6 +15,7 @@ mmCustomCondition
 implements
 IEntityCondition {
 	private String c;
+	private char m=0;
 
 	public TestForCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -28,7 +29,7 @@ IEntityCondition {
 	public boolean check(AbstractEntity e) {
 		boolean b=true;
 		try {
-			b=Main.getPlugin().getVolatileHandler().testForCondition(e.getBukkitEntity(),this.c);
+			b=Main.getPlugin().getVolatileHandler().testForCondition(e.getBukkitEntity(),this.c,m);
 		} catch (CommandException e1) {
 			e1.printStackTrace();
 		}

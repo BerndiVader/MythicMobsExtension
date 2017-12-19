@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.235 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 18.12.2017 *** added playerzoom, setitemcooldown & oncooldown condition.
 ##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
 ##### ** 15.12.2017 *** added triggerdirection, targetdirection & ownerdirection targeter. See targeters for details.
 ##### ** 14.12.2017 *** added ownsitemsimple variant condition. See ownsitem condition.
@@ -257,6 +258,37 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 ##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn`
 	 
 Almost all options like in mythicprojectile are useable.
+
+
+
+## playerzoom mechanic:
+
+Zoom the player's view. Where v is a value of 0 (no zoom) to 1.0f full avail zoom.
+Ex:
+
+```yaml
+zoom:
+  Skills:
+  - playerzoom{v=1.0f}
+  - playerzoom{delay=180;v=0.0f}
+```
+First set the zoom to 1 after 180 ticks set the zoom back to 0.
+
+
+
+##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
+
+Set the item used for the attack to a cooldown of 120 ticks.
+
+
+
+## setitemcooldown mechanic:
+
+Set the cooldown of the selected item. Only avail for player targets.
+
+##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
+
+Set the item used for the attack to a cooldown of 120 ticks.
 
 
 
@@ -1239,6 +1271,10 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- oncooldown{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks if the selected item is on cooldown. value=0 if not.
+Ex: `- oncooldown{v=1to10};action=CASTINSTEAD lowcooldownskill}`
 
 ##### `- testfor{vc="[valid testfor stuff]";action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, return true if caster or target match the testfor. See https://www.digminecraft.com/game_commands/testfor_command.php **PLEASE NOT THE "" for vc option!**
