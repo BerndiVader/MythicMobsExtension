@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -14,23 +15,26 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 
 	public static String str="mmStunned";
 	private Integer duration;
-	private Boolean f,g;
+	private Boolean f,g,ai;
 
 	public mmStunSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.duration = mlc.getInteger(new String[] { "duration", "d" }, 120);
 		this.f = mlc.getBoolean(new String[] { "facing", "face", "f" }, false);
-		this.g=mlc.getBoolean(new String[] {"gravity","g"},false);
+		this.g=mlc.getBoolean(new String[] {"gravity","g"},true);
+		ai(mlc.getBoolean("stopai",false));
 		this.ASYNC_SAFE = false;
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		if (target.getBukkitEntity().hasMetadata(str)) return false;
 		final AbstractEntity t = target;
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
-		final boolean facing=this.f,gravity=this.g;
+		final boolean facing=this.f,gravity=this.g,ai=this.ai;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
+		final boolean aai=t.isLiving()?((LivingEntity)t.getBukkitEntity()).hasAI():false;
 		new BukkitRunnable() {
 			long count = 0;
 			float yaw=l.getYaw(),pitch=l.getPitch();
@@ -40,9 +44,15 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 				if (t==null
 						||t.isDead()
 						||count>dur) {
-					t.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+					if (t!=null&&!t.isDead()) {
+						t.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+						if (t.isLiving()) ((LivingEntity)t.getBukkitEntity()).setAI(aai);
+					}
 					this.cancel();
 				} else {
+					if (t.isLiving()&&ai&&((LivingEntity)t.getBukkitEntity()).hasAI()) {
+						if (t.getBukkitEntity().isOnGround()) ((LivingEntity)t.getBukkitEntity()).setAI(false);
+					}
 					if (facing) {
 						yaw=t.getLocation().getYaw();
 						pitch=t.getLocation().getPitch();
@@ -55,5 +65,10 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 		}.runTaskTimer(Main.getPlugin(), 1L,1L);
 		return true;
 	}
+	
+	private void ai(boolean bl1) {
+		this.ai=bl1;
+	}
+
 
 }

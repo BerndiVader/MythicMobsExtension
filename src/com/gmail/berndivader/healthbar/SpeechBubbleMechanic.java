@@ -17,6 +17,7 @@ ITargetedEntitySkill {
 	private String text;
 	private int ll,time;
 	private float offset;
+	private double hOffset,vOffset;
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -29,6 +30,8 @@ ITargetedEntitySkill {
 		this.ll=mlc.getInteger(new String[] {"linelength","ll"},20);
 		this.offset=mlc.getFloat(new String[] {"offset","yo"},2.1f);
 		this.time=mlc.getInteger(new String[] {"time","ti"},20);
+		this.hOffset=mlc.getDouble("so",0d);
+		this.vOffset=mlc.getDouble("fo",0d);
 	}
 
 	@Override
@@ -42,7 +45,7 @@ ITargetedEntitySkill {
 		String txt=this.text;
 		txt=SkillString.unparseMessageSpecialChars(txt);
 		txt=SkillString.parseMobVariables(txt, data.getCaster(), target, data.getTrigger());
-		new SpeechBubble(entity, this.offset, this.time, txt, 0, 0, false, this.ll);
+		new SpeechBubble(entity, this.offset, this.time, txt, this.hOffset, this.vOffset, false, this.ll);
 		return true;
 	}
 

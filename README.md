@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.12.2017 *** added stopai true/false to stun mechanic. See stun mechanic for details.
 ##### ** 20.12.2017 *** added getbowtension condition. See bowtension condition for details.
 ##### ** 19.12.2017 *** added a condition to get the damage indicator percentage. See getindicator condition. 
 ##### ** 18.12.2017 *** added playerzoom, setitemcooldown & oncooldown condition.
@@ -984,9 +985,9 @@ Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcast
 	
 Use this mechanic to stun the target. 
 	
-##### `- stun{duration=Ticks;facing=true/false;gravity=true/false} @target`
+##### `- stun{duration=Ticks;facing=true/false;gravity=true/false;stopai=true/false} @target`
 	
-Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions.
+Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions. If stopai is used. The ai of the mob will be disabled while playing the stun and reapplied afterwards.
 	
 
 
