@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.12.2017 *** added vertical & horizontal offset to speechbubbles.
 ##### ** 20.12.2017 *** added stopai true/false to stun mechanic. See stun mechanic for details.
 ##### ** 20.12.2017 *** added getbowtension condition. See bowtension condition for details.
 ##### ** 19.12.2017 *** added a condition to get the damage indicator percentage. See getindicator condition. 
@@ -432,6 +433,7 @@ Rotates the entity yo degrees relative to its yaw, amount of duration times. Doe
 ## speechbubble mechanic (requires holographicdisplay):
 
 Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
+`vo`and `ho`for vertical and horizontal offset relative to casters direction, where vertical negative is behind and horizontal negative is right side.
 
 
 ##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;time=300} @trigger ~onInteract`
