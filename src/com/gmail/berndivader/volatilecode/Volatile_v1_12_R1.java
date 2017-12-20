@@ -1011,11 +1011,26 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		me.dead=b;
 	}
-
+	
+	public float getBowTension(Player p) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        NBTTagCompound nbt1=null;
+        nbt1=TFa(eh);
+        NBTBase nb1=nbt1.get("SelectedItem");
+        System.err.println(nb1.toString());
+        return 0;
+	}
+	
+	
+	@Override
+	public float getIndicatorPercentage(Player p) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        return eh.n(0.0f);
+	}
+	
 	@Override
 	public float getItemCoolDown(Player p) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-//        System.err.println(eh.O);
         return eh.getCooldownTracker().a(eh.inventory.getItemInHand().getItem(),0.0f);
 	}
 

@@ -920,4 +920,10 @@ implements VolatileHandler {
 		
 	}
 
+	@Override
+	public float getIndicatorPercentage(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

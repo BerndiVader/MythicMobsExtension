@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.235a for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235b for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 19.12.2017 *** added a condition to get the damage indicator percentage. See getindicator condition. 
 ##### ** 18.12.2017 *** added playerzoom, setitemcooldown & oncooldown condition.
 ##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
 ##### ** 15.12.2017 *** added triggerdirection, targetdirection & ownerdirection targeter. See targeters for details.
@@ -1271,6 +1272,11 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks the status of the crosshair damageindicator.
+Range is 0.0f to 1.0f. Default value is <1.1
+Ex: `- getindicator{value=<0.51}}` condition is true if the indicator is not at more than 50%.
 
 ##### `- oncooldown{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks if the selected item is on cooldown. value=0 if not.

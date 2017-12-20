@@ -181,6 +181,10 @@ public class mmOwnConditions implements Listener {
 			SkillCondition c=new OnCooldownCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
+		}case "getindicator":{
+			SkillCondition c=new GetDamageIndicator(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
 		}case "onsolidblock":
 			case "insolidblock":{
 			SkillCondition c=new SolidBlockConditions(e.getConfig().getLine(),e.getConfig());
