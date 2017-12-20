@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -43,6 +44,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 public class PlayerManager implements Listener {
 	public static String meta_MYTHICPLAYER = "MythicPlayer";
@@ -52,6 +54,7 @@ public class PlayerManager implements Listener {
 	public static String meta_ITEMCHANGE="ITEMCHANGE";
 	public static String signal_QUIT="QUIT";
 	public static String signal_DEATH = "DEATH";
+	public static String meta_BOWTICKSTART="mmibowtick";
 	private MythicPlayers mythicplayers;
 	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
@@ -207,6 +210,10 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
+		Player p=e.getPlayer();
+		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),MinecraftServer.currentTick));
+		}
 		if (!this.isActivePlayer(e.getPlayer().getUniqueId()))
 			return;
 		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();

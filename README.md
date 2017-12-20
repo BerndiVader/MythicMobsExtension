@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.235b for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 20.12.2017 *** added getbowtension condition. See bowtension condition for details.
 ##### ** 19.12.2017 *** added a condition to get the damage indicator percentage. See getindicator condition. 
 ##### ** 18.12.2017 *** added playerzoom, setitemcooldown & oncooldown condition.
 ##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
@@ -1272,6 +1273,11 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Get the players bow tension.
+Possible range is -1 for nothing at all, or 0.0 to 1.0. Where 1 is full strength. If unsure add `debug=true` and check the values in console.
+Ex: `- getbowtension{range=>0.9};debug=true}` condition is true if the tension of the bow is more than 90% of its full strength.
 
 ##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks the status of the crosshair damageindicator.

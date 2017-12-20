@@ -33,6 +33,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
@@ -1013,12 +1014,16 @@ implements VolatileHandler {
 	}
 	
 	public float getBowTension(Player p) {
+		int i1=MinecraftServer.currentTick,i2=-1;
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        NBTTagCompound nbt1=null;
-        nbt1=TFa(eh);
-        NBTBase nb1=nbt1.get("SelectedItem");
-        System.err.println(nb1.toString());
-        return 0;
+        if (eh.isHandRaised()&&p.hasMetadata(PlayerManager.meta_BOWTICKSTART)) {
+        	i2=p.getMetadata(PlayerManager.meta_BOWTICKSTART).get(0).asInt();
+        }
+        if (i2==-1) return (float)i2;
+        int i3=i1-i2;
+        float f1=(float)i3/20.0f;
+        if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
+        return f1;
 	}
 	
 	

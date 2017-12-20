@@ -39,4 +39,5 @@ public interface VolatileHandler {
 	public boolean setItemCooldown(Player p,int j);
 	void setFieldOfViewPacketSend(Player player, float f1);
 	float getIndicatorPercentage(Player p);
+	float getBowTension(Player p);
 }

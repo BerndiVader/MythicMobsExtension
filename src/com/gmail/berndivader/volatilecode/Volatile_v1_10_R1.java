@@ -926,4 +926,10 @@ implements VolatileHandler {
 		return 0;
 	}
 
+	@Override
+	public float getBowTension(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
