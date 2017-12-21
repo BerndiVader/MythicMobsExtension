@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.Vec3D;
@@ -53,6 +54,7 @@ import net.minecraft.server.v1_11_R1.MojangsonParser;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_11_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_11_R1.IRangedEntity;
 import net.minecraft.server.v1_11_R1.PacketPlayOutCloseWindow;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityDestroy;
@@ -849,8 +851,8 @@ implements VolatileHandler {
 
 	@Override
 	public void setDeath(Player p, boolean b) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		me.dead=b;
 	}
 
 	@Override
@@ -902,21 +904,16 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public void setFieldOfViewPacketSend(Player player, float f1) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setFieldOfViewPacketSend(Player player, float f1) {
+		net.minecraft.server.v1_11_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
+		net.minecraft.server.v1_11_R1.PlayerAbilities arg=new net.minecraft.server.v1_11_R1.PlayerAbilities();
+		arg.walkSpeed=f1;
+		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg));
+    }
 
 	@Override
 	public float getIndicatorPercentage(Player p) {
-		// TODO Auto-generated method stub
-		return 0;
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        return eh.o(0.0f);
 	}
-
-	@Override
-	public float getBowTension(Player p) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

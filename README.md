@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 21.12.2017 *** added lastbowtension condition. See bowtension condition for details.
 ##### ** 20.12.2017 *** added vertical & horizontal offset to speechbubbles.
 ##### ** 20.12.2017 *** added stopai true/false to stun mechanic. See stun mechanic for details.
 ##### ** 20.12.2017 *** added getbowtension condition. See bowtension condition for details.
@@ -1278,8 +1279,12 @@ FleeButGotNothing:
 
 
 ##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+##### `- lastbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Get the players bow tension.
 Possible range is -1 for nothing at all, or 0.0 to 1.0. Where 1 is full strength. If unsure add `debug=true` and check the values in console.
+
+While `getbowtension`check the strength while the bow is drawn, `lastbowtension` get the last strength of the entity's bowtension if there was any. To add skills ot the entity while draw the bow use getbowtension, if the entity shoot the bow use lastbowtension to get the strength the arrow is fired.
+
 Ex: `- getbowtension{range=>0.9};debug=true}` condition is true if the tension of the bow is more than 90% of its full strength.
 
 ##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`

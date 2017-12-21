@@ -35,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -55,6 +56,7 @@ public class PlayerManager implements Listener {
 	public static String signal_QUIT="QUIT";
 	public static String signal_DEATH = "DEATH";
 	public static String meta_BOWTICKSTART="mmibowtick";
+	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
 	private MythicPlayers mythicplayers;
 	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
@@ -210,9 +212,20 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
-		Player p=e.getPlayer();
+		final Player p=e.getPlayer();
 		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
 			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),MinecraftServer.currentTick));
+			new BukkitRunnable() {
+				float f1;
+				@Override
+				public void run() {
+					if ((f1=CustomSkillStuff.getBowTension(p))>-1) {
+						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(mythicplayers.plugin(),f1));
+					} else {
+						this.cancel();
+					}
+				}
+			}.runTaskTimer(Main.getPlugin(),1l,1l);
 		}
 		if (!this.isActivePlayer(e.getPlayer().getUniqueId()))
 			return;

@@ -191,6 +191,7 @@ public class mmOwnConditions implements Listener {
 		}
 		case "getbowtension":
 		case "bowtension":
+		case "lastbowtension":
 		case "tension":{
 			SkillCondition c=new GetBowtensionCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);

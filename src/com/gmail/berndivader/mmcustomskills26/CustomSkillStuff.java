@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -32,7 +33,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -50,11 +53,12 @@ import think.rpgitems.item.RPGItem;
 public class CustomSkillStuff implements Listener {
 	protected static MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected static MobManager mobmanager = mythicmobs.getMobManager();
+	protected static NMSUtils nmsutils=Main.getPlugin().getNMSUtils();
 
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler
 	public void onProjectileLaunch(ProjectileLaunchEvent e) {
 		if (e.isCancelled()||!(e.getEntity().getShooter() instanceof Entity)) return;
@@ -696,4 +700,17 @@ public class CustomSkillStuff implements Listener {
 		}
 		return s;
 	}
+	
+	public static float getBowTension(Player p) {
+		int i1=nmsutils.getCurrentTick(Bukkit.getServer()),i2=-1;
+        if (((HumanEntity)p).isHandRaised()&&p.hasMetadata(PlayerManager.meta_BOWTICKSTART)) {
+        	i2=p.getMetadata(PlayerManager.meta_BOWTICKSTART).get(0).asInt();
+        }
+        if (i2==-1) return (float)i2;
+        int i3=i1-i2;
+        float f1=(float)i3/20.0f;
+        if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
+        return f1;
+	}
+	
 }

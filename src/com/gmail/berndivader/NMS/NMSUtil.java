@@ -287,6 +287,7 @@ public class NMSUtil {
     protected static Field class_EntityArrow_lifeField = null;
     protected static Field class_EntityArrow_damageField;
     protected static Field class_CraftWorld_environmentField;
+    protected static Field class_MinecraftServer_currentTickField;
     protected static Field class_MemorySection_mapField;
     protected static Field class_NBTTagByte_dataField;
     protected static Field class_NBTTagDouble_dataField;
@@ -432,6 +433,9 @@ public class NMSUtil {
             class_PacketPlayOutAnimation_Constructor = class_PacketPlayOutAnimation.getConstructor(class_Entity, Integer.TYPE);
             class_PacketPlayOutBlockBreakAnimation_Constructor = class_PacketPlayOutBlockBreakAnimation.getConstructor(Integer.TYPE, class_BlockPosition, Integer.TYPE);
 
+            class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
+            class_MinecraftServer_currentTickField.setAccessible(true);
+            
             class_CraftWorld_environmentField = class_CraftWorld.getDeclaredField("environment");
             class_CraftWorld_environmentField.setAccessible(true);
             class_Entity_invulnerableField = class_Entity.getDeclaredField("invulnerable");

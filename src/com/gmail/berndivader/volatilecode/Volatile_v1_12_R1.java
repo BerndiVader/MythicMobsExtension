@@ -33,7 +33,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
@@ -102,8 +101,8 @@ implements VolatileHandler {
 	
 	@Override
     public void setFieldOfViewPacketSend(Player player, float f1) {
-		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
-		net.minecraft.server.v1_12_R1.PlayerAbilities arg = new net.minecraft.server.v1_12_R1.PlayerAbilities();
+		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
+		net.minecraft.server.v1_12_R1.PlayerAbilities arg=new net.minecraft.server.v1_12_R1.PlayerAbilities();
 		arg.walkSpeed=f1;
 		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg));
     }
@@ -1012,20 +1011,6 @@ implements VolatileHandler {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		me.dead=b;
 	}
-	
-	public float getBowTension(Player p) {
-		int i1=MinecraftServer.currentTick,i2=-1;
-        EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        if (eh.isHandRaised()&&p.hasMetadata(PlayerManager.meta_BOWTICKSTART)) {
-        	i2=p.getMetadata(PlayerManager.meta_BOWTICKSTART).get(0).asInt();
-        }
-        if (i2==-1) return (float)i2;
-        int i3=i1-i2;
-        float f1=(float)i3/20.0f;
-        if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
-        return f1;
-	}
-	
 	
 	@Override
 	public float getIndicatorPercentage(Player p) {
