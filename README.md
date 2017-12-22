@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.235d for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 22.12.2017 *** added modifybubble & removebubble mechanic. See speechbubble mechanics for details.
+##### ** 22.12.2017 *** added id option to speechbubble mechanic.
 ##### ** 22.12.2107 *** added anim=true/false to speechbubbles.
 ##### ** 21.12.2017 *** added lastbowtension condition. See bowtension condition for details.
 ##### ** 20.12.2017 *** added side & forward offset to speechbubbles.
@@ -435,7 +437,7 @@ Rotates the entity yo degrees relative to its yaw, amount of duration times. Doe
 ## speechbubble mechanic (requires holographicdisplay):
 
 Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
-`so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side.
+`so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side. `anim`true or false if the text should be animated at popup. (option) `id` is the id of the entity's speechbubble if you want to use modifybubble or removebubble mechanic.
 
 
 ##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;so=sideoffset;fo=forwardoffset;time=300} @trigger ~onInteract`
@@ -451,6 +453,14 @@ BubbleMonkey:
   - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
   - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
 ```
+
+## modifybubble mechanic:
+
+Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset}`
+
+## removebubble mechanic:
+
+Removes an existing bubble from the caster: `removebubble{id=existing_id}`
 	
 
 

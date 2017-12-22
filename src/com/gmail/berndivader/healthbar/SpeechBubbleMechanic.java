@@ -17,7 +17,7 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text;
+	private String text,id;
 	private int ll,time;
 	private float offset;
 	private double so,fo;
@@ -27,6 +27,7 @@ ITargetedEntitySkill {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.text=mlc.getString(new String[] {"text","t"},"");
+		this.id=mlc.getString("id","bubble");
 		if (text.startsWith("\"")
 			&&text.endsWith("\"")) {
 			this.text=text.substring(1,text.length()-1);
@@ -42,8 +43,8 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!data.getCaster().getEntity().isLiving()) return false;
-		if (HealthbarHandler.speechbubbles.containsKey(data.getCaster().getEntity().getUniqueId())) {
-			SpeechBubble sb=HealthbarHandler.speechbubbles.get(data.getCaster().getEntity().getUniqueId());
+		if (HealthbarHandler.speechbubbles.containsKey(data.getCaster().getEntity().getUniqueId().toString()+this.id)) {
+			SpeechBubble sb=HealthbarHandler.speechbubbles.get(data.getCaster().getEntity().getUniqueId().toString()+this.id);
 			sb.remove();
 		}
 		LivingEntity entity=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
@@ -61,7 +62,7 @@ ITargetedEntitySkill {
 		} else {
 			l1.add(0,entity.getEyeHeight(),0);
 		}
-		new SpeechBubble(entity,l1,this.offset,this.time,a1,this.so,this.fo,b1,this.ll);
+		new SpeechBubble(entity,this.id,l1,this.offset,this.time,a1,this.so,this.fo,b1,this.ll);
 		return true;
 	}
 

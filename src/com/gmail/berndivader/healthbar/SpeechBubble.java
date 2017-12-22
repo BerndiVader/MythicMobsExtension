@@ -21,15 +21,17 @@ CraftHologram {
 	protected TextLine textline;
 	protected int counter,maxlines;
 	protected boolean useOffset;
+	protected String id;
 	
 	public SpeechBubble(LivingEntity entity, String[] text) {
-		this(entity,entity.getLocation(),0d,-1,text,0d,0d,false,30);
+		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,30);
 	}
 	public SpeechBubble(LivingEntity entity,String[] text,int ll) {
-		this(entity,entity.getLocation(),0d,-1,text,0d,0d,false,ll);
+		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,ll);
 	}
-	public SpeechBubble(LivingEntity entity,Location l1,double offset,int showCounter, String[] text, double sOffset, double fOffset, boolean b1,int ll) {
+	public SpeechBubble(LivingEntity entity,String s1,Location l1,double offset,int showCounter, String[] text, double sOffset, double fOffset, boolean b1,int ll) {
 		super(l1);
+		this.id=s1;
 		this.fOffset=fOffset;
 		this.sOffset=sOffset;
 		this.maxlines=-1;
@@ -41,7 +43,7 @@ CraftHologram {
 			this.getLocation().add(foV);
 		}
 		this.uuid=entity.getUniqueId();
-		HealthbarHandler.speechbubbles.put(this.uuid, this);
+		HealthbarHandler.speechbubbles.put(this.uuid.toString()+this.id,this);
 		this.counter=showCounter<1?60:showCounter*20;
 		this.getVisibilityManager().setVisibleByDefault(true);
 		this.counter=showCounter;
@@ -75,7 +77,7 @@ CraftHologram {
 	}
 	
 	public void remove() {
-		HealthbarHandler.speechbubbles.remove(this.uuid);
+		HealthbarHandler.speechbubbles.remove(this.uuid.toString()+this.id);
 		this.delete();
 	}
 	
