@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.235c for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235d for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 22.12.2107 *** added anim=true/false to speechbubbles.
 ##### ** 21.12.2017 *** added lastbowtension condition. See bowtension condition for details.
 ##### ** 20.12.2017 *** added side & forward offset to speechbubbles.
 ##### ** 20.12.2017 *** added stopai true/false to stun mechanic. See stun mechanic for details.
