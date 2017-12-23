@@ -3,8 +3,10 @@ package com.gmail.berndivader.healthbar;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
@@ -19,7 +21,7 @@ CraftHologram {
 	protected double offset,sOffset,fOffset;
 	protected String[] template;
 	protected TextLine textline;
-	protected int counter,maxlines;
+	protected int counter,maxlines,il1=0;
 	protected boolean useOffset;
 	protected String id;
 	
@@ -50,9 +52,7 @@ CraftHologram {
 		this.template=text;
 		this.entity=entity;
 		this.offset=offset;
-		for(String l:this.template) {
-			this.appendTextLine(l);
-		}
+		lines();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ CraftHologram {
 		double dx=l.getX();
 		double dy=l.getY();
 		double dz=l.getZ();
-		double do1=(this.getLinesLength()*0.25)+this.offset;
+		double do1=(this.getLinesLength()*0.25)+(il1*0.5)+this.offset;
 		if (this.useOffset) {
 			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset,false);
 			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
@@ -81,4 +81,22 @@ CraftHologram {
 		this.delete();
 	}
 	
+	public void lines() {
+		for(String l:this.template) {
+			if (l.contains("<additem.")) {
+				String a1,a3;
+				a1="<additem."+(a3=l.split("<additem.")[1].split(">")[0])+">";
+				String[]a2=(l.replace(a1,"<split>")).split("<split>");
+				this.appendTextLine(a2[0]);
+				Material m1;
+				if ((m1=Material.getMaterial(a3.toUpperCase()))!=null) {
+					this.appendItemLine(new ItemStack(m1));
+					il1++;
+				}
+				this.appendTextLine(a2[1]);
+			} else {
+				this.appendTextLine(l);
+			}
+		}
+	}
 }

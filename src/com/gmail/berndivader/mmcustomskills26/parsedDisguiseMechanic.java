@@ -24,7 +24,6 @@ ITargetedEntitySkill {
         if (CompatibilityManager.LibsDisguises != null) {
             String d=SkillString.unparseMessageSpecialChars(this.disguise);
             d=SkillString.parseMobVariables(d,data.getCaster(),target,data.getTrigger());
-            Main.logger.info(d);
             CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
             return true;
         }

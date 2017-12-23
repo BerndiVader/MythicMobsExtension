@@ -44,11 +44,10 @@ ITargetedEntitySkill {
 				String s1=this.text;
 				s1=SkillString.unparseMessageSpecialChars(s1);
 				s1=SkillString.parseMobVariables(s1,data.getCaster(),target,data.getTrigger());
-				String[]a1=CustomSkillStuff.wrapStr(s1,ll);
 				sb.clearLines();
-				for(String l:a1) {
-					sb.appendTextLine(l);
-				}
+				sb.il1=0;
+				sb.template=CustomSkillStuff.wrapStr(s1,ll);
+				sb.lines();
 			}
 			if (this.offset!=-999) sb.offset=this.offset;
 			if (this.so!=-999) {
