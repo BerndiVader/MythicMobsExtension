@@ -16,10 +16,10 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text,id;
+	private String text,id,s1;
 	private float offset;
 	private double so,fo;
-	private int ll;
+	private int ll,i1;
 
 	public ModifySpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -36,6 +36,8 @@ ITargetedEntitySkill {
 		this.offset=mlc.getFloat(new String[] {"offset","yo"},-999);
 		this.so=mlc.getDouble("so",-999);
 		this.fo=mlc.getDouble("fo",-999);
+		this.i1=mlc.getInteger("timer",-999);
+		this.s1=mlc.getString("usecounter","").toLowerCase();
 	}
 
 	@Override
@@ -54,8 +56,6 @@ ITargetedEntitySkill {
 						li1.add(a4[i1]);
 					}
 				}
-				sb.clearLines();
-				sb.il1=0;
 				sb.template=li1.toArray(new String[li1.size()]);
 				sb.lines();
 			}
@@ -68,9 +68,25 @@ ITargetedEntitySkill {
 				sb.fOffset=this.fo;
 				sb.useOffset=true;
 			}
+			if (this.i1!=-999) sb.counter=this.i1;
+			i(sb);
 			return true;
 		}
 		return false;
 	}
+	
+	private void i(SpeechBubble sb) {
+		switch(this.s1) {
+		case "true": {
+			sb.uc1=true;
+			break;
+		}
+		case "false": {
+			sb.uc1=false;
+			break;
+		}
+		}
+	}
+
 
 }

@@ -1,5 +1,7 @@
 # CustomSkillMechanics v1.235e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 23.12.2017 *** added usecounter boolean option to speechbubble & modifybubble mechanic. Added timer option to modifybubble to change the timer.
+##### ** 23.12.2017 *** added <nl> placeholder to text option in speechbubble mechanic to force a linebreak.
 ##### ** 22.12.2017 *** added <additem.[material_name]> placeholder to add an itemline for speechbubble mechanics. See speechbubble for details.
 ##### ** 22.12.2017 *** added modifybubble & removebubble mechanic. See speechbubble mechanics for details.
 ##### ** 22.12.2017 *** added id option to speechbubble mechanic.
@@ -439,7 +441,7 @@ Rotates the entity yo degrees relative to its yaw, amount of duration times. Doe
 
 Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
 `so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side. `anim`true or false if the text should be animated at popup. (option) `id` is the id of the entity's speechbubble if you want to use modifybubble or removebubble mechanic.
-Use `<additem.ITEM_NAME>`inside the `text`option to add an itemline to the bubble. Use any valid bukkit item material name. 
+Use `<additem.ITEM_NAME>`inside the `text`option to add an itemline to the bubble. Use any valid bukkit item material name. Use <nl> placeholder inside `text`option to force a new line. Use `usecounter`true/false to enable counter for the bubble.
 
 
 ##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;so=sideoffset;fo=forwardoffset;time=300} @trigger ~onInteract`
@@ -458,7 +460,7 @@ BubbleMonkey:
 
 ## modifybubble mechanic:
 
-Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset}`
+Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset;usecounter=true/false;timer=ticks}`
 
 ## removebubble mechanic:
 

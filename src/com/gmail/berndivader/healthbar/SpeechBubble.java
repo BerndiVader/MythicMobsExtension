@@ -21,19 +21,20 @@ CraftHologram {
 	protected double offset,sOffset,fOffset;
 	protected String[] template;
 	protected TextLine textline;
-	protected int counter,maxlines,il1=0;
-	protected boolean useOffset;
+	protected int counter,maxlines,il1=0,ll;
+	protected boolean useOffset,uc1;
 	protected String id;
 	
 	public SpeechBubble(LivingEntity entity, String[] text) {
-		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,30);
+		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,30,true);
 	}
 	public SpeechBubble(LivingEntity entity,String[] text,int ll) {
-		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,ll);
+		this(entity,"bubble",entity.getLocation(),0d,-1,text,0d,0d,false,ll,true);
 	}
-	public SpeechBubble(LivingEntity entity,String s1,Location l1,double offset,int showCounter, String[] text, double sOffset, double fOffset, boolean b1,int ll) {
+	public SpeechBubble(LivingEntity entity,String s1,Location l1,double offset,int showCounter, String[] text, double sOffset, double fOffset, boolean b1,int ll,boolean b2) {
 		super(l1);
 		this.id=s1;
+		this.ll=ll;
 		this.fOffset=fOffset;
 		this.sOffset=sOffset;
 		this.maxlines=-1;
@@ -44,14 +45,15 @@ CraftHologram {
 			this.getLocation().add(soV);
 			this.getLocation().add(foV);
 		}
+		this.uc1=b2;
 		this.uuid=entity.getUniqueId();
 		HealthbarHandler.speechbubbles.put(this.uuid.toString()+this.id,this);
 		this.counter=showCounter<1?60:showCounter*20;
 		this.getVisibilityManager().setVisibleByDefault(true);
 		this.counter=showCounter;
-		this.template=text;
 		this.entity=entity;
 		this.offset=offset;
+		this.template=text;
 		lines();
 	}
 
@@ -71,8 +73,10 @@ CraftHologram {
 			dz+=soV.getZ()+foV.getZ();
 		}
 		this.teleport(w,dx,dy+do1,dz);
-		this.counter--;
-		if (this.counter<0) this.remove();
+		if (uc1) {
+			this.counter--;
+			if (this.counter<0) this.remove();
+		}
 		return true;
 	}
 	
@@ -82,6 +86,8 @@ CraftHologram {
 	}
 	
 	public void lines() {
+		this.clearLines();
+		this.il1=0;
 		for(String l:this.template) {
 			if (l.contains("<additem.")) {
 				String a1,a3;

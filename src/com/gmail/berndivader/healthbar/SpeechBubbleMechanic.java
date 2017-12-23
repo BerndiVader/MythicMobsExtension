@@ -23,7 +23,7 @@ ITargetedEntitySkill {
 	private int ll,time;
 	private float offset;
 	private double so,fo;
-	private boolean b1;
+	private boolean b1,b2;
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -40,6 +40,7 @@ ITargetedEntitySkill {
 		this.so=mlc.getDouble("so",0d);
 		this.fo=mlc.getDouble("fo",0d);
 		this.b1=mlc.getBoolean("anim",true);  
+		this.b2=mlc.getBoolean("usecounter",true);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ ITargetedEntitySkill {
 		} else {
 			l1.add(0,entity.getEyeHeight(),0);
 		}
-		new SpeechBubble(entity,this.id,l1,this.offset,this.time,a1,this.so,this.fo,b1,this.ll);
+		new SpeechBubble(entity,this.id,l1,this.offset,this.time,a1,this.so,this.fo,b1,this.ll,this.b2);
 		return true;
 	}
 
