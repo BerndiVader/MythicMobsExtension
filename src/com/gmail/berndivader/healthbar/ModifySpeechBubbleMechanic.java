@@ -1,5 +1,7 @@
 package com.gmail.berndivader.healthbar;
 
+import java.util.ArrayList;
+
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -44,9 +46,17 @@ ITargetedEntitySkill {
 				String s1=this.text;
 				s1=SkillString.unparseMessageSpecialChars(s1);
 				s1=SkillString.parseMobVariables(s1,data.getCaster(),target,data.getTrigger());
+				ArrayList<String>li1=new ArrayList<String>();
+				String[]a2=s1.split("<nl>");
+				for(int i=0;i<a2.length;i++) {
+					String[]a4=CustomSkillStuff.wrapStr(a2[i],ll);
+					for (int i1=0;i1<a4.length;i1++) {
+						li1.add(a4[i1]);
+					}
+				}
 				sb.clearLines();
 				sb.il1=0;
-				sb.template=CustomSkillStuff.wrapStr(s1,ll);
+				sb.template=li1.toArray(new String[li1.size()]);
 				sb.lines();
 			}
 			if (this.offset!=-999) sb.offset=this.offset;

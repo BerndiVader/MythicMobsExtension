@@ -1,5 +1,7 @@
 package com.gmail.berndivader.healthbar;
 
+import java.util.ArrayList;
+
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
@@ -52,7 +54,15 @@ ITargetedEntitySkill {
 		txt=SkillString.unparseMessageSpecialChars(txt);
 		txt=SkillString.parseMobVariables(txt, data.getCaster(), target, data.getTrigger());
 		Location l1=entity.getLocation().clone();
-		String[]a1=CustomSkillStuff.wrapStr(txt,ll);
+		ArrayList<String>li1=new ArrayList<String>();
+		String[]a2=txt.split("<nl>");
+		for(int i=0;i<a2.length;i++) {
+			String[]a4=CustomSkillStuff.wrapStr(a2[i],ll);
+			for (int i1=0;i1<a4.length;i1++) {
+				li1.add(a4[i1]);
+			}
+		}
+		String[]a1=li1.toArray(new String[li1.size()]);
 		if (!b1) {
 			if (this.so!=0d||this.fo!=0d) {
 				l1.add(CustomSkillStuff.getSideOffsetVector(l1.getYaw(),this.so,false));
