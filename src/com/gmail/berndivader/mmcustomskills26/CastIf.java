@@ -97,15 +97,15 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		Optional<Skill> mSkill=Optional.empty();
 		Optional<Skill> eSkill=Optional.empty();
 		if (this.RTskill) {
+			AbstractEntity at=null;
+			AbstractLocation al=null;
+			if (sdata.getEntityTargets()!=null&&sdata.getEntityTargets().size()>0) at=sdata.getEntityTargets().iterator().next();
+			if (sdata.getLocationTargets()!=null&&sdata.getLocationTargets().size()>0) al=sdata.getLocationTargets().iterator().next();
 			if (this.meetAction!=null) {
-				String s1=CustomSkillStuff.parseMobVariables(this.meetAction,sdata,sdata.getCaster().getEntity(),sdata.getEntityTargets().iterator().next(),
-						sdata.getLocationTargets().iterator().next());
-				mSkill=this.skillmanager.getSkill(s1);
+				mSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.meetAction),sdata,sdata.getCaster().getEntity(),at,al));
 			}
 			if (this.elseAction!=null) {
-				String s2=CustomSkillStuff.parseMobVariables(this.elseAction,sdata,sdata.getCaster().getEntity(),sdata.getEntityTargets().iterator().next(),
-						sdata.getLocationTargets().iterator().next());
-				eSkill=this.skillmanager.getSkill(s2);
+				eSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.elseAction),sdata,sdata.getCaster().getEntity(),at,al));
 			}
 		} else {
 			mSkill=this.meetSkill;

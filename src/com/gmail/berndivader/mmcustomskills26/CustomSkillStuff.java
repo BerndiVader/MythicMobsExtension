@@ -661,7 +661,7 @@ public class CustomSkillStuff implements Listener {
 	
 	public static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
 		AbstractLocation l1=l!=null?l:t!=null?t.getLocation():null;
-		SkillString.parseMobVariables(s,m.getCaster(),t,m.getTrigger());
+		s=SkillString.parseMobVariables(s,m.getCaster(),t,m.getTrigger());
 		if (l1!=null&&s.contains("<target.l")) {
 			s=s.replaceAll("<target.l.w>",l1.getWorld().getName());
 			s=s.replaceAll("<target.l.x>",Double.toString(l1.getBlockX()));

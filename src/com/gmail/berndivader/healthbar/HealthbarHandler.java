@@ -110,6 +110,11 @@ public class HealthbarHandler implements Listener {
 			e.register(skill);
 			break;
 		}
+		case "linebubble": {
+			skill = new LineSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			e.register(skill);
+			break;
+		}
 	    }
 	}
 	

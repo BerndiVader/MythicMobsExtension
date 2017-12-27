@@ -28,7 +28,7 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (target.getBukkitEntity().hasMetadata(str)) return false;
+		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final AbstractEntity t = target;
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
@@ -43,7 +43,8 @@ public class mmStunSkill extends SkillMechanic implements ITargetedEntitySkill {
 			public void run() {
 				if (t==null
 						||t.isDead()
-						||count>dur) {
+						||count>dur
+						||!t.getBukkitEntity().hasMetadata(str)) {
 					if (t!=null&&!t.isDead()) {
 						t.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 						if (t.isLiving()) ((LivingEntity)t.getBukkitEntity()).setAI(aai);
