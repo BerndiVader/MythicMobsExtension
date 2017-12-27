@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 27.12.2017 *** added option rtskill to castif mechanic. See castif mechanic for details.
 ##### ** 23.12.2017 *** added usecounter boolean option to speechbubble & modifybubble mechanic. Added timer option to modifybubble to change the timer.
 ##### ** 23.12.2017 *** added <nl> placeholder to text option in speechbubble mechanic to force a linebreak.
 ##### ** 22.12.2017 *** added <additem.[material_name]> placeholder to add an itemline for speechbubble mechanics. See speechbubble for details.
@@ -700,7 +701,8 @@ Use this mechanic to compare conditions and targetconditions inside of skills an
 + `meet=` (Optional) The skill to be executed if the conditions are meet.
 + `else=` (Optional) The skill to be executed if the conditions not meet.
 + `meettargeter / elsetargeter=` (Optional) Renew the meet / else skills targeter if present. Surrounded with ""!! The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
-			
++ `rtskill`(Optional) set this to true and use variables inside the metaskillname. Example:
+
 Now possible, to use && || expressions. Example:
 `- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;elese=elseMetaSkill} @trigger ~onDamaged`
 This parse the c condtions lets say the mob is outside onground but player not within 10: (true&&true)||false condition will meet. Same work for the targetcondtion too.
