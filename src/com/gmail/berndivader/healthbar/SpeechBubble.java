@@ -93,13 +93,13 @@ CraftHologram {
 				String a1,a3;
 				a1="<additem."+(a3=l.split("<additem.")[1].split(">")[0])+">";
 				String[]a2=(l.replace(a1,"<split>")).split("<split>");
-				this.appendTextLine(a2[0]);
+				if (a2.length>0) this.appendTextLine(a2[0]);
 				Material m1;
 				if ((m1=Material.getMaterial(a3.toUpperCase()))!=null) {
 					this.appendItemLine(new ItemStack(m1));
 					il1++;
 				}
-				this.appendTextLine(a2[1]);
+				if (a2.length>1) this.appendTextLine(a2[1]);
 			} else {
 				this.appendTextLine(l);
 			}

@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235f for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 27.12.2017 *** speechbubbles are now able to have item lines only.
 ##### ** 27.12.2017 *** fixed castif rtskill.
 ##### ** 27.12.2017 *** updated stun, goggle and spin mechanics can now be overwritten.
 ##### ** 27.12.2017 *** added option rtskill to castif mechanic. See castif mechanic for details.
