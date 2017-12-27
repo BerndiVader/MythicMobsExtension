@@ -1,7 +1,5 @@
 package com.gmail.berndivader.healthbar;
 
-import java.util.Arrays;
-
 import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -58,7 +56,6 @@ ITargetedEntitySkill {
 					sb.template=arr;
 					arr=null;arr1=null;arr2=null;
 				} else {
-					bb:
 					for(int i=0;i<sb.template.length;i++) {
 						if (!sb.template[i].contains(s1)) continue;
 						if (this.cmp.equals("replace")) {
@@ -66,14 +63,14 @@ ITargetedEntitySkill {
 							continue;
 						}
 						if (this.cmp.equals("remove")) {
-							String[]arr=sb.template;
-							String[]arr1=new String[arr.length-1];
-						    System.arraycopy(arr,0,arr1,0,i);
-						    System.err.println(Arrays.toString(arr));
+							String[]arr1=sb.template;
+							String[]arr=new String[arr1.length-1];
+							if (i>=0&&arr.length>0) {
+				                System.arraycopy(arr1,0,arr,0,i);
+				                System.arraycopy(arr1,i+1,arr,i,arr.length-i);								
+							}
 						    sb.template=arr;
-						    arr=null;
-						    arr1=null;
-						    break bb;
+						    i=-1;
 						}
 					}
 				}
