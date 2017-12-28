@@ -287,7 +287,7 @@ public class CustomSkillStuff implements Listener {
 		BlockIterator bi;
 		List<Entity> ne = player.getNearbyEntities(range, range, range);
 		List<LivingEntity> entities = new ArrayList<>();
-		for (Entity en : ne) {
+		for (Entity en:ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Main.noTargetVar)) {
 				entities.add((LivingEntity) en);
 			}

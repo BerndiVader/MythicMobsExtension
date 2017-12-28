@@ -1,5 +1,7 @@
-# CustomSkillMechanics v1.235f for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235g for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 28.12.2017 *** added linebubble mechanic. Goto speechbubble mechanics for details.
+##### ** 28.12.2017 *** tweaked steal skill.
 ##### ** 27.12.2017 *** speechbubbles are now able to have item lines only.
 ##### ** 27.12.2017 *** fixed castif rtskill.
 ##### ** 27.12.2017 *** updated stun, goggle and spin mechanics can now be overwritten.
@@ -469,6 +471,29 @@ Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=e
 ## removebubble mechanic:
 
 Removes an existing bubble from the caster: `removebubble{id=existing_id}`
+
+## linebubble mechanic:
+
+Modify a line of a bubble: `linebubble{id=existing_id;mode=append/replace/remove;oldline="oldlinetext";newline="newlinetext"}`
+If bubble with id have a line that contains `oldline` that line will be removed, replaced with newline, or if used append a newline will be added.
+Example:
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - speechbubble{id=effects;usecounter=false} @self ~onSpawn
+# creating a bubble instance at spawn.
+
+BubbleSkill:
+  Skills:
+#  - linebubble{id=effects;mode=append;newline="<additem.dirt>"}
+#  - linebubble{id=effects;mode=remove;oldline="<additem.dirt>"}
+#  - linebubble[id=effects;mode=replace;oldline="<additem.dirt>";newline="<additem.stone>"}
+```
 	
 
 

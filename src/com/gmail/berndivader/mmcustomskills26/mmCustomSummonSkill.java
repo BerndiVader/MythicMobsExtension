@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mmcustomskills26;
 
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.LeashHitch;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;

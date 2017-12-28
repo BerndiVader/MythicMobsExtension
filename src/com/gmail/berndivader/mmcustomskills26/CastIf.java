@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -205,11 +204,9 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		for (int a = 0; a < conditionList.size(); a++) {
 			SkillCondition sc;
 			String s = conditionList.get(a);
-			if (s.startsWith(" "))
-				s = s.substring(1);
-			if ((sc = SkillCondition.getCondition(s)) instanceof InvalidCondition)
-				continue;
-			conditions.put(a, sc);
+			if (s.startsWith(" ")) s=s.substring(1);
+			if ((sc=SkillCondition.getCondition(s)) instanceof InvalidCondition) continue;
+			conditions.put(a,sc);
 		}
 		return conditions;
 	}
@@ -219,19 +216,19 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 			ms = ms.substring(1, ms.length() - 1);
 			ms = SkillString.parseMessageSpecialChars(ms);
 			if (istarget) {
-				this.tConditionLine = ms;
+				this.tConditionLine=ms;
 			} else {
-				this.cConditionLine = ms;
+				this.cConditionLine=ms;
 			}
 			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
 			String[] parse = ms.split("\\&\\&|\\|\\|");
-			if (parse.length > 0) {
-				for (int a = 0; a < Arrays.asList(parse).size(); a++) {
-					String p = Arrays.asList(parse).get(a);
+			if (parse.length>0) {
+				for (int i=0;i<parse.length;i++) {
+					String p=parse[i];
 					if (istarget) {
-						this.tConditionLines.put(a, p);
+						this.tConditionLines.put(i,p);
 					} else {
-						this.cConditionLines.put(a, p);
+						this.cConditionLines.put(i,p);
 					}
 				}
 			}
