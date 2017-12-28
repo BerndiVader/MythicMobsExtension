@@ -1383,4 +1383,15 @@ public class NMSUtils extends NMSUtil {
 		return false;
 	}
 	
+	public int getCurrentTick(Server s1) {
+		int i1=0;
+		Object o1;
+		try {
+			if ((o1=getHandle(s1))!=null) i1=class_MinecraftServer_currentTickField.getInt(o1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return i1;
+	}
+	
 }

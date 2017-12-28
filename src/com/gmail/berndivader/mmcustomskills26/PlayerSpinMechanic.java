@@ -30,16 +30,17 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()||target.getBukkitEntity().hasMetadata(str)) return false;
-		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
+		if (!target.isPlayer()) return false;
+		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final Entity entity=target.getBukkitEntity();
 		final long d=this.d;
 		final float s=this.s;
+		entity.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
 			long c=0;
 			@Override
 			public void run() {
-				if (entity==null||entity.isDead()||c>d) {
+				if (entity==null||entity.isDead()||c>d||!entity.hasMetadata(str)) {
 					entity.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {

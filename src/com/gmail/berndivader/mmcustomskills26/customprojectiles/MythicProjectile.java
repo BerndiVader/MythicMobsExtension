@@ -15,7 +15,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +38,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectilemythic", "pmythic" }, "MINECART");
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
-
 	}
 
 	@Override
@@ -126,20 +124,18 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					this.startLocation.setY(this.startLocation.getY() + MythicProjectile.this.startYOffset);
 				}
 				if (MythicProjectile.this.startForwardOffset != 0.0f) {
-					this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone()
-							.multiply(MythicProjectile.this.startForwardOffset));
+					this.startLocation.add(BukkitAdapter.adapt(
+							CustomSkillStuff.getFrontBackOffsetVector(BukkitAdapter.adapt(
+									this.startLocation).getDirection(),MythicProjectile.this.startForwardOffset)));
 				}
 				if (MythicProjectile.this.startSideOffset != 0.0f) {
-					this.startLocation.setPitch(0.0f);
-					this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0,
-							MythicProjectile.this.startSideOffset);
+					this.startLocation.add(BukkitAdapter.adapt(
+							CustomSkillStuff.getSideOffsetVector(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false)));
+					
 				}
 			}
-			this.startLocation.clone();
 			this.currentLocation = this.startLocation.clone();
-			if (this.currentLocation == null) {
-				return;
-			}
+			if (this.currentLocation == null) return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -155,9 +151,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 							+ MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityHorizNoise;
 				}
 				this.currentVelocity.rotate(MythicProjectile.this.projectileVelocityHorizOffset + noise);
-			}
-			if (MythicProjectile.this.startSideOffset != 0.0f) {
-				// empty if block
 			}
 			if (MythicProjectile.this.projectileVelocityVertOffset != 0.0f
 					|| MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
@@ -182,7 +175,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 			if (MythicProjectile.this.projectileGravity > 0.0f) {
 				this.currentVelocity.setY(this.currentVelocity.getY() - this.gravity);
 			}
-
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {

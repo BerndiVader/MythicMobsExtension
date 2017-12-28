@@ -1,5 +1,23 @@
-# CustomSkillMechanics v1.235 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235g for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 28.12.2017 *** added linebubble mechanic. Goto speechbubble mechanics for details.
+##### ** 28.12.2017 *** tweaked steal skill.
+##### ** 27.12.2017 *** speechbubbles are now able to have item lines only.
+##### ** 27.12.2017 *** fixed castif rtskill.
+##### ** 27.12.2017 *** updated stun, goggle and spin mechanics can now be overwritten.
+##### ** 27.12.2017 *** added option rtskill to castif mechanic. See castif mechanic for details.
+##### ** 23.12.2017 *** added usecounter boolean option to speechbubble & modifybubble mechanic. Added timer option to modifybubble to change the timer.
+##### ** 23.12.2017 *** added <nl> placeholder to text option in speechbubble mechanic to force a linebreak.
+##### ** 22.12.2017 *** added <additem.[material_name]> placeholder to add an itemline for speechbubble mechanics. See speechbubble for details.
+##### ** 22.12.2017 *** added modifybubble & removebubble mechanic. See speechbubble mechanics for details.
+##### ** 22.12.2017 *** added id option to speechbubble mechanic.
+##### ** 22.12.2107 *** added anim=true/false to speechbubbles.
+##### ** 21.12.2017 *** added lastbowtension condition. See bowtension condition for details.
+##### ** 20.12.2017 *** added side & forward offset to speechbubbles.
+##### ** 20.12.2017 *** added stopai true/false to stun mechanic. See stun mechanic for details.
+##### ** 20.12.2017 *** added getbowtension condition. See bowtension condition for details.
+##### ** 19.12.2017 *** added a condition to get the damage indicator percentage. See getindicator condition. 
+##### ** 18.12.2017 *** added playerzoom, setitemcooldown & oncooldown condition.
 ##### ** 15.12.2017 *** added testfor condition. See testfor condition for details.
 ##### ** 15.12.2017 *** added triggerdirection, targetdirection & ownerdirection targeter. See targeters for details.
 ##### ** 14.12.2017 *** added ownsitemsimple variant condition. See ownsitem condition.
@@ -260,6 +278,37 @@ Almost all options like in mythicprojectile are useable.
 
 
 
+## playerzoom mechanic:
+
+Zoom the player's view. Where v is a value of 0 (no zoom) to 1.0f full avail zoom.
+Ex:
+
+```yaml
+zoom:
+  Skills:
+  - playerzoom{v=1.0f}
+  - playerzoom{delay=180;v=0.0f}
+```
+First set the zoom to 1 after 180 ticks set the zoom back to 0.
+
+
+
+##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
+
+Set the item used for the attack to a cooldown of 120 ticks.
+
+
+
+## setitemcooldown mechanic:
+
+Set the cooldown of the selected item. Only avail for player targets.
+
+##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
+
+Set the item used for the attack to a cooldown of 120 ticks.
+
+
+
 ## modifyarrows mechanic:
 
 Modify the amount of arrows on the targets body. Use "ADD, SUB, CLEAR" for mode and integer value for amount.
@@ -397,9 +446,11 @@ Rotates the entity yo degrees relative to its yaw, amount of duration times. Doe
 ## speechbubble mechanic (requires holographicdisplay):
 
 Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
+`so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side. `anim`true or false if the text should be animated at popup. (option) `id` is the id of the entity's speechbubble if you want to use modifybubble or removebubble mechanic.
+Use `<additem.ITEM_NAME>`inside the `text`option to add an itemline to the bubble. Use any valid bukkit item material name. Use <nl> placeholder inside `text`option to force a new line. Use `usecounter`true/false to enable counter for the bubble.
 
 
-##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;time=300} @trigger ~onInteract`
+##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;so=sideoffset;fo=forwardoffset;time=300} @trigger ~onInteract`
 
 ```yaml
 BubbleMonkey:
@@ -411,6 +462,37 @@ BubbleMonkey:
   - equip{i=BlackbeardHead:4} @self ~onSpawn
   - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
   - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
+```
+
+## modifybubble mechanic:
+
+Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset;usecounter=true/false;timer=ticks}`
+
+## removebubble mechanic:
+
+Removes an existing bubble from the caster: `removebubble{id=existing_id}`
+
+## linebubble mechanic:
+
+Modify a line of a bubble: `linebubble{id=existing_id;mode=append/replace/remove;oldline="oldlinetext";newline="newlinetext"}`
+If bubble with id have a line that contains `oldline` that line will be removed, replaced with newline, or if used append a newline will be added.
+Example:
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - speechbubble{id=effects;usecounter=false} @self ~onSpawn
+# creating a bubble instance at spawn.
+
+BubbleSkill:
+  Skills:
+#  - linebubble{id=effects;mode=append;newline="<additem.dirt>"}
+#  - linebubble{id=effects;mode=remove;oldline="<additem.dirt>"}
+#  - linebubble[id=effects;mode=replace;oldline="<additem.dirt>";newline="<additem.stone>"}
 ```
 	
 
@@ -647,7 +729,8 @@ Use this mechanic to compare conditions and targetconditions inside of skills an
 + `meet=` (Optional) The skill to be executed if the conditions are meet.
 + `else=` (Optional) The skill to be executed if the conditions not meet.
 + `meettargeter / elsetargeter=` (Optional) Renew the meet / else skills targeter if present. Surrounded with ""!! The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
-			
++ `rtskill`(Optional) set this to true and use variables inside the metaskillname. Example:
+
 Now possible, to use && || expressions. Example:
 `- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;elese=elseMetaSkill} @trigger ~onDamaged`
 This parse the c condtions lets say the mob is outside onground but player not within 10: (true&&true)||false condition will meet. Same work for the targetcondtion too.
@@ -950,9 +1033,9 @@ Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcast
 	
 Use this mechanic to stun the target. 
 	
-##### `- stun{duration=Ticks;facing=true/false;gravity=true/false} @target`
+##### `- stun{duration=Ticks;facing=true/false;gravity=true/false;stopai=true/false} @target`
 	
-Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions.
+Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions. If stopai is used. The ai of the mob will be disabled while playing the stun and reapplied afterwards.
 	
 
 
@@ -1239,6 +1322,24 @@ FleeButGotNothing:
 # Conditions
 
 
+
+##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+##### `- lastbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Get the players bow tension.
+Possible range is -1 for nothing at all, or 0.0 to 1.0. Where 1 is full strength. If unsure add `debug=true` and check the values in console.
+
+While `getbowtension`check the strength while the bow is drawn, `lastbowtension` get the last strength of the entity's bowtension if there was any. To add skills ot the entity while draw the bow use getbowtension, if the entity shoot the bow use lastbowtension to get the strength the arrow is fired.
+
+Ex: `- getbowtension{range=>0.9};debug=true}` condition is true if the tension of the bow is more than 90% of its full strength.
+
+##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks the status of the crosshair damageindicator.
+Range is 0.0f to 1.0f. Default value is <1.1
+Ex: `- getindicator{value=<0.51}}` condition is true if the indicator is not at more than 50%.
+
+##### `- oncooldown{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks if the selected item is on cooldown. value=0 if not.
+Ex: `- oncooldown{v=1to10};action=CASTINSTEAD lowcooldownskill}`
 
 ##### `- testfor{vc="[valid testfor stuff]";action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, return true if caster or target match the testfor. See https://www.digminecraft.com/game_commands/testfor_command.php **PLEASE NOT THE "" for vc option!**

@@ -47,8 +47,7 @@ INoTargetSkill {
 	private boolean castCast(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am = mobmanager.getMythicMobInstance(data.getCaster().getEntity());
-			String s=SkillString.parseMobVariables(this.stance,data.getCaster(),e1,data.getTrigger());
-			s=CustomSkillStuff.parseMobVariables(s,data,data.getCaster().getEntity(),e1,l1);
+			String s=CustomSkillStuff.parseMobVariables(this.stance,data,data.getCaster().getEntity(),e1,l1);
 			am.setStance(s);
 			return true;
 		}

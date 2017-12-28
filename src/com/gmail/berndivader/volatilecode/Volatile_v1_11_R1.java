@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.Vec3D;
@@ -53,6 +54,7 @@ import net.minecraft.server.v1_11_R1.MojangsonParser;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_11_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_11_R1.IRangedEntity;
 import net.minecraft.server.v1_11_R1.PacketPlayOutCloseWindow;
 import net.minecraft.server.v1_11_R1.PacketPlayOutEntityDestroy;
@@ -849,12 +851,12 @@ implements VolatileHandler {
 
 	@Override
 	public void setDeath(Player p, boolean b) {
-		// TODO Auto-generated method stub
-		
+		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
+		me.dead=b;
 	}
 
 	@Override
-	public boolean testForCondition(Entity e, String command) {
+	public boolean testForCondition(Entity e, String command, char m) {
 		boolean b=true;
 		TestFor t=new TestFor();
 		try {
@@ -887,5 +889,31 @@ implements VolatileHandler {
 	        }
 	        return true;
 	    }
+	}
+
+	@Override
+	public float getItemCoolDown(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean setItemCooldown(Player p,int j) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+    public void setFieldOfViewPacketSend(Player player, float f1) {
+		net.minecraft.server.v1_11_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
+		net.minecraft.server.v1_11_R1.PlayerAbilities arg=new net.minecraft.server.v1_11_R1.PlayerAbilities();
+		arg.walkSpeed=f1;
+		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg));
+    }
+
+	@Override
+	public float getIndicatorPercentage(Player p) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        return eh.o(0.0f);
 	}
 }

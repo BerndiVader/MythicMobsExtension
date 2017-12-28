@@ -3,7 +3,6 @@ package com.gmail.berndivader.mmcustomskills26;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.utils.Vec2D;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
@@ -32,8 +31,8 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
-		if (data.getCaster().getEntity().isPlayer()
-				||data.getCaster().getEntity().getBukkitEntity().hasMetadata(str)) return false;
+		if (data.getCaster().getEntity().isPlayer()) return false;
+		if (data.getCaster().getEntity().getBukkitEntity().hasMetadata(str)) data.getCaster().getEntity().getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final AbstractEntity caster=data.getCaster().getEntity();
 		final AbstractEntity target=t;
 		caster.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
@@ -48,7 +47,8 @@ ITargetedEntitySkill {
 						||target==null
 						||l>d
 						||caster.isDead()
-						||target.isDead()) {
+						||target.isDead()
+						||!caster.getBukkitEntity().hasMetadata(str)) {
 					caster.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {

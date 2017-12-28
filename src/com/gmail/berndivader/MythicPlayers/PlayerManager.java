@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -34,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
 import com.gmail.berndivader.mmcustomskills26.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -43,6 +45,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 public class PlayerManager implements Listener {
 	public static String meta_MYTHICPLAYER = "MythicPlayer";
@@ -52,6 +55,8 @@ public class PlayerManager implements Listener {
 	public static String meta_ITEMCHANGE="ITEMCHANGE";
 	public static String signal_QUIT="QUIT";
 	public static String signal_DEATH = "DEATH";
+	public static String meta_BOWTICKSTART="mmibowtick";
+	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
 	private MythicPlayers mythicplayers;
 	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
@@ -207,6 +212,21 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
+		final Player p=e.getPlayer();
+		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),MinecraftServer.currentTick));
+			new BukkitRunnable() {
+				float f1;
+				@Override
+				public void run() {
+					if ((f1=CustomSkillStuff.getBowTension(p))>-1) {
+						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(mythicplayers.plugin(),f1));
+					} else {
+						this.cancel();
+					}
+				}
+			}.runTaskTimer(Main.getPlugin(),1l,1l);
+		}
 		if (!this.isActivePlayer(e.getPlayer().getUniqueId()))
 			return;
 		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();

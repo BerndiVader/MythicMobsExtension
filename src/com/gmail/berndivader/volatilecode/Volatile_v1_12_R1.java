@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -97,6 +98,14 @@ implements VolatileHandler {
 			}
 		}.runTask(Main.getPlugin());
 	}
+	
+	@Override
+    public void setFieldOfViewPacketSend(Player player, float f1) {
+		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
+		net.minecraft.server.v1_12_R1.PlayerAbilities arg=new net.minecraft.server.v1_12_R1.PlayerAbilities();
+		arg.walkSpeed=f1;
+		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg));
+    }
 	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
@@ -903,34 +912,78 @@ implements VolatileHandler {
 	    }
 	}
 	
-	@Override
-	public boolean testForCondition(Entity e, String command) throws CommandException {
-		TestFor t=new TestFor();
-		return t.execute(e, new String[] {"dummy",command});
+	public boolean setEntityData(Entity e, String ns) {
+		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();
+		
+		return true;
 	}
 	
-	public class TestFor extends CommandTestFor {
-
-		public TestFor() {
-		}
-		
-	    public boolean execute(Entity e,String[] arrstring) throws CommandException {
-	        net.minecraft.server.v1_12_R1.Entity entity=((CraftEntity)e).getHandle();
-	        NBTTagCompound nBTTagCompound;
-	        NBTTagCompound nBTTagCompound2=null;
-            try {
-                nBTTagCompound2=MojangsonParser.parse(CommandTestFor.a(arrstring,1));
-            }
-            catch (MojangsonParseException mojangsonParseException) {
-            	return false;
-            }
-	        if (nBTTagCompound2!=null&&!GameProfileSerializer
-	        		.a(nBTTagCompound2,nBTTagCompound=CommandTestFor.a(entity),true)) {
-	            return false;
-	        }
-	        return true;
-	    }
+	@Override
+	public boolean testForCondition(Entity e, String ns,char m) {
+		return testFor(e,ns,m);
 	}
+	
+	private boolean testFor(Entity e,String c,char m) {
+		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();
+		NBTTagCompound nbt1=null,nbt2=null;
+		try {
+			nbt2=MojangsonParser.parse(c);
+		}
+		catch (MojangsonParseException ex) {
+			System.err.println(ex.getLocalizedMessage());
+			return false;
+		}
+		nbt1=TFa(me);
+//		System.err.println(nbt1.toString());
+		if (nbt2!=null&&!GPa(nbt2,nbt1,true)) {
+			return false;
+		}
+        return true;
+	}
+
+	private NBTTagCompound TFa(net.minecraft.server.v1_12_R1.Entity e) {
+		ItemStack is;
+		NBTTagCompound nbt=e.save(new NBTTagCompound());
+		if (e instanceof EntityHuman&&!(is=((EntityHuman)e).inventory.getItemInHand()).isEmpty()) {
+			nbt.set("SelectedItem",is.save(new NBTTagCompound()));
+		}
+		return nbt;
+	}
+	
+    private boolean GPa(NBTBase b1, NBTBase b2,boolean lc) {
+        if (b1==b2||b1==null) return true;
+        if (b2==null||!b1.getClass().equals(b2.getClass())) return false;
+        if (b1 instanceof NBTTagCompound) {
+            NBTTagCompound nbt1=(NBTTagCompound)b1;
+            NBTTagCompound nbt2=(NBTTagCompound)b2;
+            for (String s:nbt1.c()) {
+                NBTBase b3=nbt1.get(s);
+                if (GPa(b3,nbt2.get(s),false)) {
+                	continue;
+                }
+                return false;
+            }
+            return true;
+        }
+        if (b1 instanceof NBTTagList) {
+            NBTTagList nbtl1=(NBTTagList)b1;
+            NBTTagList nbtl2=(NBTTagList)b2;
+            if (nbtl1.isEmpty()) return nbtl2.isEmpty();
+            for (int j=0;j<nbtl1.size();j++) {
+                NBTBase b4=nbtl1.i(j);
+                boolean bl2 = false;
+                for (int k=0;k<nbtl2.size();k++) {
+                    if (!GPa(b4,nbtl2.i(k),false)) continue;
+                    bl2=true;
+                    break;
+                }
+                if(bl2) continue;
+                return false;
+            }
+            return true;
+        }
+        return b1.equals(b2);
+    }
 	
 	@Override
 	public boolean playerIsSleeping(Player p) {
@@ -957,6 +1010,29 @@ implements VolatileHandler {
 	public void setDeath(Player p, boolean b) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
 		me.dead=b;
+	}
+	
+	@Override
+	public float getIndicatorPercentage(Player p) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        return eh.n(0.0f);
+	}
+	
+	@Override
+	public float getItemCoolDown(Player p) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        return eh.getCooldownTracker().a(eh.inventory.getItemInHand().getItem(),0.0f);
+	}
+
+	@Override
+	public boolean setItemCooldown(Player p,int j) {
+        EntityHuman eh=((CraftHumanEntity)p).getHandle();
+        net.minecraft.server.v1_12_R1.Item i=eh.inventory.getItemInHand().getItem();
+        if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
+        	eh.getCooldownTracker().cooldowns.remove(i);
+        };
+       	eh.getCooldownTracker().a(i,j);
+		return true;
 	}
 
 }

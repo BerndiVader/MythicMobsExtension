@@ -34,5 +34,9 @@ public interface VolatileHandler {
 	void removeArrowsFromEntity(Entity entity, int a, char c);
 	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
-	boolean testForCondition(Entity e, String command) throws CommandException;
+	boolean testForCondition(Entity e,String ns,char m) throws CommandException;
+	float getItemCoolDown(Player p);
+	public boolean setItemCooldown(Player p,int j);
+	void setFieldOfViewPacketSend(Player player, float f1);
+	float getIndicatorPercentage(Player p);
 }

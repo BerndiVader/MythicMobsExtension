@@ -88,7 +88,7 @@ public class CustomProjectile extends SkillMechanic implements ITargetedEntitySk
 		this.onStartSkillName = mlc.getString(new String[] { "onstartskill", "onstart", "os" });
 		String type = mlc.getString("type", "NORMAL");
 		this.type = ProjectileType.valueOf(type.toUpperCase());
-		this.tickInterval = mlc.getInteger(new String[] { "interval", "int", "i" }, 4);
+		this.tickInterval = mlc.getInteger(new String[] { "interval", "int", "i" }, 1);
 		this.ticksPerSecond = 20.0f / this.tickInterval;
 		this.range = mlc.getFloat("maxrange", 40.0f);
 		this.range = mlc.getFloat("mr", this.range);

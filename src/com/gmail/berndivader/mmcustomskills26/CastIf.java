@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mmcustomskills26;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -37,7 +36,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	protected String elseAction;
 	protected String cConditionLine;
 	protected String tConditionLine;
-	protected boolean breakOnMeet,breakOnElse;
+	protected boolean breakOnMeet,breakOnElse,RTskill;
 	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
 	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
 	protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
@@ -54,6 +53,7 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		this.breakOnMeet=mlc.getBoolean(new String[] {"breakonmeet","breakmeet"},false);
 		this.breakOnElse=mlc.getBoolean(new String[] {"breakonelse","breakelse"},false);
+		this.RTskill=mlc.getBoolean(new String [] {"realtime","rtskill","rt"},false);
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
@@ -62,11 +62,13 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.elseAction = mlc.getString(new String[] { "else", "e" });
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
 		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
-		if (this.meetAction != null) {
-			this.meetSkill = this.skillmanager.getSkill(this.meetAction);
-		}
-		if (this.elseAction != null) {
-			this.elseSkill = this.skillmanager.getSkill(this.elseAction);
+		if (!this.RTskill) {
+			if (this.meetAction != null) {
+				this.meetSkill = this.skillmanager.getSkill(this.meetAction);
+			}
+			if (this.elseAction != null) {
+				this.elseSkill = this.skillmanager.getSkill(this.elseAction);
+			}
 		}
 		if (this.cConditionLines != null && !this.cConditionLines.isEmpty()) {
 			this.casterConditions = this.getConditions(this.cConditionLines);
@@ -91,17 +93,34 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	@Override
 	public boolean cast(SkillMetadata data) {
 		SkillMetadata sdata=data.deepClone();
+		Optional<Skill> mSkill=Optional.empty();
+		Optional<Skill> eSkill=Optional.empty();
+		if (this.RTskill) {
+			AbstractEntity at=null;
+			AbstractLocation al=null;
+			if (sdata.getEntityTargets()!=null&&sdata.getEntityTargets().size()>0) at=sdata.getEntityTargets().iterator().next();
+			if (sdata.getLocationTargets()!=null&&sdata.getLocationTargets().size()>0) al=sdata.getLocationTargets().iterator().next();
+			if (this.meetAction!=null) {
+				mSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.meetAction),sdata,sdata.getCaster().getEntity(),at,al));
+			}
+			if (this.elseAction!=null) {
+				eSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.elseAction),sdata,sdata.getCaster().getEntity(),at,al));
+			}
+		} else {
+			mSkill=this.meetSkill;
+			eSkill=this.elseSkill;
+		}
 		if (this.handleConditions(sdata)) {
-			if (this.meetSkill.isPresent() && this.meetSkill.get().isUsable(sdata)) {
-				if (this.meetTargeter.isPresent()) renewTargets(this.meetTargeter.get(),sdata);
-				this.meetSkill.get().execute(sdata);
+			if (mSkill.isPresent()&&mSkill.get().isUsable(sdata)) {
+				if(this.meetTargeter.isPresent())renewTargets(this.meetTargeter.get(),sdata);
+				mSkill.get().execute(sdata);
 			}
 			if (this.breakOnMeet) {
 			}
 		} else {
-			if (this.elseSkill.isPresent() && this.elseSkill.get().isUsable(sdata)) {
-				if (this.elseTargeter.isPresent()) renewTargets(this.elseTargeter.get(),sdata);
-				this.elseSkill.get().execute(sdata);
+			if (eSkill.isPresent()&&eSkill.get().isUsable(sdata)) {
+				if(this.elseTargeter.isPresent())renewTargets(this.elseTargeter.get(),sdata);
+				eSkill.get().execute(sdata);
 			}
 			if (this.breakOnElse) {
 			}
@@ -185,11 +204,9 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		for (int a = 0; a < conditionList.size(); a++) {
 			SkillCondition sc;
 			String s = conditionList.get(a);
-			if (s.startsWith(" "))
-				s = s.substring(1);
-			if ((sc = SkillCondition.getCondition(s)) instanceof InvalidCondition)
-				continue;
-			conditions.put(a, sc);
+			if (s.startsWith(" ")) s=s.substring(1);
+			if ((sc=SkillCondition.getCondition(s)) instanceof InvalidCondition) continue;
+			conditions.put(a,sc);
 		}
 		return conditions;
 	}
@@ -199,19 +216,19 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 			ms = ms.substring(1, ms.length() - 1);
 			ms = SkillString.parseMessageSpecialChars(ms);
 			if (istarget) {
-				this.tConditionLine = ms;
+				this.tConditionLine=ms;
 			} else {
-				this.cConditionLine = ms;
+				this.cConditionLine=ms;
 			}
 			ms = ms.replaceAll("\\(", "").replaceAll("\\)", "");
 			String[] parse = ms.split("\\&\\&|\\|\\|");
-			if (parse.length > 0) {
-				for (int a = 0; a < Arrays.asList(parse).size(); a++) {
-					String p = Arrays.asList(parse).get(a);
+			if (parse.length>0) {
+				for (int i=0;i<parse.length;i++) {
+					String p=parse[i];
 					if (istarget) {
-						this.tConditionLines.put(a, p);
+						this.tConditionLines.put(i,p);
 					} else {
-						this.cConditionLines.put(a, p);
+						this.cConditionLines.put(i,p);
 					}
 				}
 			}
