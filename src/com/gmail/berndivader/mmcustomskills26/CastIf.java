@@ -36,7 +36,9 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 	protected String elseAction;
 	protected String cConditionLine;
 	protected String tConditionLine;
-	protected boolean breakOnMeet,breakOnElse,RTskill;
+	protected boolean breakOnMeet;
+	protected boolean breakOnElse;
+	protected boolean RTskill;
 	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
 	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
 	protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
@@ -51,9 +53,9 @@ public class CastIf extends SkillMechanic implements INoTargetSkill, ITargetedEn
 		this.ASYNC_SAFE = false;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
-		this.breakOnMeet=mlc.getBoolean(new String[] {"breakonmeet","breakmeet"},false);
-		this.breakOnElse=mlc.getBoolean(new String[] {"breakonelse","breakelse"},false);
-		this.RTskill=mlc.getBoolean(new String [] {"realtime","rtskill","rt"},false);
+		this.breakOnMeet = mlc.getBoolean(new String[] { "breakonmeet", "breakmeet" }, false);
+		this.breakOnElse = mlc.getBoolean(new String[] { "breakonelse", "breakelse" }, false);
+		this.RTskill = mlc.getBoolean(new String [] { "realtime", "rtskill", "rt"}, false);
 		String ms = mlc.getString(new String[] { "conditions", "c" });
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
