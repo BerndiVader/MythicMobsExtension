@@ -16,8 +16,12 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmCustomParticleLineEffect extends CustomParticleEffect
 		implements ITargetedEntitySkill, ITargetedLocationSkill {
-	protected float distanceBetween, yStartOffset, vDestOffset, hDestOffset;
-	protected boolean fromOrigin, ignoreYaw;
+	protected float distanceBetween;
+	protected float yStartOffset;
+	protected float vDestOffset;
+	protected float hDestOffset;
+	protected boolean fromOrigin;
+	protected boolean ignoreYaw;
 
 	public mmCustomParticleLineEffect(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
