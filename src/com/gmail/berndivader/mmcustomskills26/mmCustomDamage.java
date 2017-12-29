@@ -10,7 +10,14 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkill {
 
-	private boolean pk, pi, ia, iabs, ip, p, pcur, debug;
+	private boolean pk;
+	private boolean pi;
+	private boolean ia;
+	private boolean iabs;
+	private boolean ip;
+	private boolean p;
+	private boolean pcur;
+	private boolean debug;
 	private DamageCause cause=DamageCause.CUSTOM;
 	private String amount;
 
@@ -20,9 +27,7 @@ public class mmCustomDamage extends SkillMechanic implements ITargetedEntitySkil
 		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
  		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
-		if (this.amount.startsWith("-")) {
-			this.amount = "1";
-		}
+		if (this.amount.startsWith("-")) { this.amount = "1"; }
 		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
 		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
