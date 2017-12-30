@@ -934,7 +934,6 @@ implements VolatileHandler {
 			return false;
 		}
 		nbt1=TFa(me);
-//		System.err.println(nbt1.toString());
 		if (nbt2!=null&&!GPa(nbt2,nbt1,true)) {
 			return false;
 		}

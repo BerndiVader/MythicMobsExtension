@@ -147,12 +147,17 @@ IEntityCondition {
 			for(ItemHolding entry:hasItemCondition.this.holdinglist) {
 				bool=false;
 				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
-					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) bool=true;
-				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.OFFHAND)) {
+					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) {
+						bool=true;
+					}
+				}
+				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.OFFHAND)) {
 					if (checkContent(new ItemStack[]{target.getEquipment().getItemInOffHand()},entry)) bool=true;
-				} else if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
+				}
+				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.ARMOR)) {
 					if (checkContent(target.getEquipment().getArmorContents(),entry)) bool=true;
-				} else if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
+				} 
+				if (isPlayer&&(entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.INVENTORY))) {
 					if (checkContent(((Player)target).getInventory().getContents(),entry)) bool=true;
 				}
 				c=c.replaceFirst("\\$"+Integer.toString(a),Boolean.toString(bool));
@@ -169,7 +174,7 @@ IEntityCondition {
 		}
 		return false;
 	}
-
+	
 	private static boolean checkContent(ItemStack[]i, ItemHolding entry) {
 		for (int a=0;a<i.length;a++) {
 			ItemStack is = i[a];
