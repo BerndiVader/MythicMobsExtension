@@ -16,6 +16,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
@@ -26,7 +27,9 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.potion.PotionEffect;
@@ -65,6 +68,25 @@ implements VolatileHandler {
 					EnumPlayerTeleportFlags.Z
 					}));	
 	public Volatile_v1_12_R1() {
+		registerCustomParrot("mythic_parrot",105,MythicEntityParrot_1_12_R1.class);
+	}
+	
+	@Override
+	public Parrot spawnCustomParrot(Location l1, boolean b1) {
+		net.minecraft.server.v1_12_R1.World world=((CraftWorld)l1.getWorld()).getHandle();		
+		final MythicEntityParrot_1_12_R1 mep=new MythicEntityParrot_1_12_R1(world);
+		mep.cd(b1);
+		mep.setLocation(l1.getX(),l1.getY(),l1.getZ(),l1.getYaw(),l1.getPitch());
+        world.addEntity(mep,SpawnReason.CUSTOM);
+        return (Parrot)mep.getBukkitEntity();
+	}
+	
+	public static void registerCustomParrot(String s1,int i1,Class<? extends net.minecraft.server.v1_12_R1.Entity>c1) {
+		MinecraftKey k=new MinecraftKey(s1);
+		EntityTypes.b.a(i1,k,c1);
+		if (!EntityTypes.d.contains(k)) {
+			EntityTypes.d.add(k);
+		}
 	}
 	
 	@SuppressWarnings("rawtypes")

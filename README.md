@@ -1,5 +1,6 @@
-# CustomSkillMechanics v1.235h for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# CustomSkillMechanics v1.235i for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 30.12.2017 *** fixed parrot cookie issue. Added Options.CookieDie: false/true or use cancelevent ondamaged. See Parrotfix.
 ##### ** 29.12.2017 *** fixed minor bug in ownsitem condition.
 ##### ** 28.12.2017 *** added linebubble mechanic. Goto speechbubble mechanics for details.
 ##### ** 28.12.2017 *** tweaked steal skill.

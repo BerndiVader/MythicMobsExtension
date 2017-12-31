@@ -15,6 +15,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
@@ -930,4 +931,9 @@ implements VolatileHandler {
         return eh.o(0.0f);
 	}
 
+	@Override
+	public Parrot spawnCustomParrot(Location l1, boolean b1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

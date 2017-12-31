@@ -42,8 +42,10 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
@@ -58,6 +60,23 @@ public class CustomSkillStuff implements Listener {
 
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	public void onMythicMobsSpawnEvent(MythicMobSpawnEvent e) {
+		if (e.isCancelled()) return;
+		if (e.getEntity() instanceof Parrot) {
+			e.getEntity().remove();
+			MythicMob mm=e.getMobType();
+			LivingEntity p=Main.getPlugin().getVolatileHandler().spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",false));
+	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
+	        MythicMobs.inst().getMobManager();
+	        ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,MobManager.getMythicMobLevel(mm, BukkitAdapter.adapt(p)));
+	        MythicMobs.inst().getMobManager().registerActiveMob(am);
+	        mm.applyMobOptions(am,am.getLevel());
+	        mm.applyMobVolatileOptions(am);
+	        new TriggeredSkillAP(SkillTrigger.SPAWN,am,null);
+		}
 	}
 
 	@EventHandler
