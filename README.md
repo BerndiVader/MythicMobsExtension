@@ -1,5 +1,6 @@
 # CustomSkillMechanics v1.235i for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 31.12.2017 *** fixed mythic_parrot level not set properly if parrot comes from mythicmobs spawner.
 ##### ** 30.12.2017 *** fixed parrot cookie issue. Added Options.CookieDie: false/true or use cancelevent ondamaged. See Parrotfix.
 ##### ** 29.12.2017 *** fixed minor bug in ownsitem condition.
 ##### ** 28.12.2017 *** added linebubble mechanic. Goto speechbubble mechanics for details.
@@ -176,6 +177,15 @@
 ##### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 ##### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 ##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+
+
+
+# Custom Entities:
+
+## Mythic Parrot:
+
+Bukkit's entity type name: "mythic_parrot" `/summon mythic_parrot` 
+Custom parrot class for better handling of the cookie thing.
 
 
 

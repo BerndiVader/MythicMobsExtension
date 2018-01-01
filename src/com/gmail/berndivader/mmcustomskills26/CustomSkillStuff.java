@@ -66,13 +66,13 @@ public class CustomSkillStuff implements Listener {
 	public void onMythicMobsSpawnEvent(MythicMobSpawnEvent e) {
 		if (e.isCancelled()) return;
 		if (e.getEntity() instanceof Parrot) {
+			e.setCancelled();
 			e.getEntity().remove();
 			MythicMob mm=e.getMobType();
-			LivingEntity p=Main.getPlugin().getVolatileHandler().spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",false));
+			LivingEntity p=Main.getPlugin().getVolatileHandler().spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
 	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
-	        MythicMobs.inst().getMobManager();
-	        ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,MobManager.getMythicMobLevel(mm, BukkitAdapter.adapt(p)));
-	        MythicMobs.inst().getMobManager().registerActiveMob(am);
+	        ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
+	        mythicmobs.getMobManager().registerActiveMob(am);
 	        mm.applyMobOptions(am,am.getLevel());
 	        mm.applyMobVolatileOptions(am);
 	        new TriggeredSkillAP(SkillTrigger.SPAWN,am,null);

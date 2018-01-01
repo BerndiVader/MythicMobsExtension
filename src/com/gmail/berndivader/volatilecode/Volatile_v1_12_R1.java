@@ -71,6 +71,12 @@ implements VolatileHandler {
 		registerCustomParrot("mythic_parrot",105,MythicEntityParrot_1_12_R1.class);
 	}
 	
+	private static void registerCustomParrot(String s1,int i1,Class<? extends net.minecraft.server.v1_12_R1.Entity>c1) {
+		MinecraftKey k=new MinecraftKey(s1);
+		EntityTypes.b.a(i1,k,c1);
+		if (!EntityTypes.d.contains(k)) EntityTypes.d.add(k);
+	}
+	
 	@Override
 	public Parrot spawnCustomParrot(Location l1, boolean b1) {
 		net.minecraft.server.v1_12_R1.World world=((CraftWorld)l1.getWorld()).getHandle();		
@@ -79,14 +85,6 @@ implements VolatileHandler {
 		mep.setLocation(l1.getX(),l1.getY(),l1.getZ(),l1.getYaw(),l1.getPitch());
         world.addEntity(mep,SpawnReason.CUSTOM);
         return (Parrot)mep.getBukkitEntity();
-	}
-	
-	public static void registerCustomParrot(String s1,int i1,Class<? extends net.minecraft.server.v1_12_R1.Entity>c1) {
-		MinecraftKey k=new MinecraftKey(s1);
-		EntityTypes.b.a(i1,k,c1);
-		if (!EntityTypes.d.contains(k)) {
-			EntityTypes.d.add(k);
-		}
 	}
 	
 	@SuppressWarnings("rawtypes")

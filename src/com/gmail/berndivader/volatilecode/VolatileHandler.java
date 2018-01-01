@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import net.minecraft.server.v1_12_R1.CommandException;
 
 public interface VolatileHandler {
-
+	
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
     public void teleportEntityPacket(Entity entity);
