@@ -1,6 +1,6 @@
 package com.gmail.berndivader.healthbar;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

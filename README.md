@@ -1,5 +1,11 @@
-# CustomSkillMechanics v1.235g for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.
+##### ** 02.12.2017 *** tweaked several conditions & mechanics.
+##### ** 02.12.2017 *** added range option to isburning condition. See isburning condition.
+##### ** 31.12.2017 *** fixed mythic_parrot level not set properly if parrot comes from mythicmobs spawner.
+##### ** 30.12.2017 *** fixed parrot cookie issue. Added Options.CookieDie: false/true or use cancelevent ondamaged. See Parrotfix.
+##### ** 29.12.2017 *** fixed minor bug in ownsitem condition.
 ##### ** 28.12.2017 *** added linebubble mechanic. Goto speechbubble mechanics for details.
 ##### ** 28.12.2017 *** tweaked steal skill.
 ##### ** 27.12.2017 *** speechbubbles are now able to have item lines only.
@@ -174,6 +180,15 @@
 ##### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 ##### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 ##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+
+
+
+# Custom Entities:
+
+## Mythic Parrot:
+
+Bukkit's entity type name: "mythic_parrot" `/summon mythic_parrot` 
+Custom parrot class for better handling of the cookie thing.
 
 
 
@@ -729,10 +744,15 @@ Use this mechanic to compare conditions and targetconditions inside of skills an
 + `meet=` (Optional) The skill to be executed if the conditions are meet.
 + `else=` (Optional) The skill to be executed if the conditions not meet.
 + `meettargeter / elsetargeter=` (Optional) Renew the meet / else skills targeter if present. Surrounded with ""!! The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
-+ `rtskill`(Optional) set this to true and use variables inside the metaskillname. Example:
++ `rtskill`(Optional) set this to true and use variables inside the metaskillname. Example: 
+
+```yaml
+- castif{c="ispresent";meet=EffectSkill<mob.score.effect>} @trigger onDamaged
+```
+Good to use in a loop.
 
 Now possible, to use && || expressions. Example:
-`- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;elese=elseMetaSkill} @trigger ~onDamaged`
+`- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;else=elseMetaSkill} @trigger ~onDamaged`
 This parse the c condtions lets say the mob is outside onground but player not within 10: (true&&true)||false condition will meet. Same work for the targetcondtion too.
 			
 #### NOTE THE "" for the conditions and targetconditions!!
@@ -1393,8 +1413,8 @@ an entity as target. Like ~onTimer and such stuff.
 ```
 
 
-##### `- isburning{action=[boolean]}`
-Checks if the entity is burning or not.
+##### `- isburning{range=[ranged_value];action=[boolean]}`
+By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
 
 ##### `- eir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.

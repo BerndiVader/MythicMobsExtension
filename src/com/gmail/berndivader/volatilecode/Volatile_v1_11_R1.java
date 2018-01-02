@@ -15,6 +15,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
@@ -23,8 +24,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
-import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -915,5 +916,11 @@ implements VolatileHandler {
 	public float getIndicatorPercentage(Player p) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
         return eh.o(0.0f);
+	}
+
+	@Override
+	public Parrot spawnCustomParrot(Location l1, boolean b1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

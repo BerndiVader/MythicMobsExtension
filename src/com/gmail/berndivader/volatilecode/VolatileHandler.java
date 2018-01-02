@@ -5,12 +5,13 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 
 import net.minecraft.server.v1_12_R1.CommandException;
 
 public interface VolatileHandler {
-
+	
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
     public void teleportEntityPacket(Entity entity);
@@ -39,4 +40,5 @@ public interface VolatileHandler {
 	public boolean setItemCooldown(Player p,int j);
 	void setFieldOfViewPacketSend(Player player, float f1);
 	float getIndicatorPercentage(Player p);
+	Parrot spawnCustomParrot(Location l1,boolean b1);
 }

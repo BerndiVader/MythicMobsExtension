@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
