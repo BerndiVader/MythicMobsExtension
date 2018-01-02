@@ -35,8 +35,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
-import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;

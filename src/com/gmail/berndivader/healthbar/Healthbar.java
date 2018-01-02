@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 

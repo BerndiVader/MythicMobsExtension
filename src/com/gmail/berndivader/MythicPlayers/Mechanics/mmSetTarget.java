@@ -3,7 +3,7 @@ package com.gmail.berndivader.MythicPlayers.Mechanics;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

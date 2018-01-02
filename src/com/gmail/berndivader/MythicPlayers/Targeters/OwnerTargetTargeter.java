@@ -7,8 +7,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
-import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;

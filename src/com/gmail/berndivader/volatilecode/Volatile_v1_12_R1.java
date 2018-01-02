@@ -37,8 +37,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.mmcustomskills26.CustomSkillStuff;
-import com.gmail.berndivader.mmcustomskills26.Main;
+import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 

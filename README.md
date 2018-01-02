@@ -1,5 +1,8 @@
-# CustomSkillMechanics v1.235i for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.
+##### ** 02.12.2017 *** tweaked several conditions & mechanics.
+##### ** 02.12.2017 *** added range option to isburning condition. See isburning condition.
 ##### ** 31.12.2017 *** fixed mythic_parrot level not set properly if parrot comes from mythicmobs spawner.
 ##### ** 30.12.2017 *** fixed parrot cookie issue. Added Options.CookieDie: false/true or use cancelevent ondamaged. See Parrotfix.
 ##### ** 29.12.2017 *** fixed minor bug in ownsitem condition.
@@ -1410,8 +1413,8 @@ an entity as target. Like ~onTimer and such stuff.
 ```
 
 
-##### `- isburning{action=[boolean]}`
-Checks if the entity is burning or not.
+##### `- isburning{range=[ranged_value];action=[boolean]}`
+By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
 
 ##### `- eir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
