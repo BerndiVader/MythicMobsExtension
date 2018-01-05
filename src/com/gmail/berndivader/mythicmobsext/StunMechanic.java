@@ -19,15 +19,17 @@ ITargetedEntitySkill {
 
 	public static String str="mmStunned";
 	private Integer duration;
-	private Boolean f,g,ai;
+	private Boolean f;
+	private Boolean g;
+	private Boolean ai;
 
 	public StunMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.duration=mlc.getInteger(new String[] { "duration", "d" },120);
 		this.f=mlc.getBoolean(new String[] { "facing", "face", "f" },false);
-		this.g=mlc.getBoolean(new String[] {"gravity","g"},true);
-		ai(mlc.getBoolean("stopai",false));
+		this.g=mlc.getBoolean(new String[] {"gravity","g"},false);
+		this.ai=mlc.getBoolean(new String[] {"stopai","ai"},false);
 	}
 
 	@Override
