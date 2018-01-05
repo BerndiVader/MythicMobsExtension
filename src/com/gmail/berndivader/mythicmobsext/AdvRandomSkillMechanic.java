@@ -22,12 +22,12 @@ IMetaSkill {
 	
 	public AdvRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-        this.target_creative = true;
+        	this.target_creative = true;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		this.entrylist = new LinkedHashMap<>();
 		
-		String parse[] = mlc.getString(new String[]{"skills","s"}).split(",");
+		String parse[] = mlc.getString(new String[] { "skills", "s" }).split(",");
 
 		if (parse.length>0) {
 			for (int a=0;a<parse.length;a++) {
