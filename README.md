@@ -3,7 +3,7 @@
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
-Click [here](https://github.com/BerndiVader/MythicMobsExtension/blob/master/README.md#custom-entities) to see stuff that is not yet in the wiki.
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
 ##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.
