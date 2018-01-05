@@ -18,13 +18,13 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected String tag;
 	protected MetaTagValue mtv;
-	protected boolean useCaster;
+	protected Boolean useCaster;
 
 	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.useCaster=mlc.getBoolean(new String[]{"usecaster","uc"},false);
-		String ms = mlc.getString(new String[] { "meta", "m" }, "");
+		this.useCaster=mlc.getBoolean(new String[] { "usecaster", "uc" },false);
+		String ms = mlc.getString(new String[] { "meta", "m" },"");
 		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String parse[] = ms.split(";");
