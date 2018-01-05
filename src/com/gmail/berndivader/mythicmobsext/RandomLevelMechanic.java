@@ -16,8 +16,8 @@ SkillMechanic
 implements 
 ITargetedEntitySkill {
 	private MobManager mobmanager;
-	private int min;
-	private int max;
+	private Integer min;
+	private Integer max;
 
 	public RandomLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
