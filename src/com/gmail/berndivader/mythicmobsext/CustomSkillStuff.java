@@ -66,15 +66,6 @@ public class CustomSkillStuff implements Listener {
 	}
 	
 	@EventHandler
-	public void onMythicItemsDropEvent(MythicMobsExtItemDropEvent e) {
-		System.err.println(e.getMob().getType().getDisplayName());
-		System.err.println(e.getTrigger().getCustomName());
-		for(ItemStack is:e.getDrops()) {
-			System.err.println(is.getType().toString());
-		}
-	}
-	
-	@EventHandler
 	public void onMythicMobsSpawnEvent(MythicMobSpawnEvent e) {
 		if (e.isCancelled()) return;
 		if (e.getEntity() instanceof Parrot) {
