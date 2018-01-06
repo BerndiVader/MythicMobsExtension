@@ -35,7 +35,8 @@ ITargetedLocationSkill {
 	private String itemtype;
 	private String dropname;
 	private Integer amount;
-	private Boolean stackable,shuffle;
+	private Boolean stackable;
+	private Boolean shuffle;
 
 	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -44,7 +45,7 @@ ITargetedLocationSkill {
 		this.dropname=mlc.getString(new String[] { "dropname", "customname", "name", "n" },null);
 		this.amount=mlc.getInteger(new String[] { "amount", "a" }, 1);
 		this.stackable=mlc.getBoolean(new String[] { "stackable", "sa" },true);
-		this.shuffle=mlc.getBoolean("shuffle",false);
+		this.shuffle=mlc.getBoolean(new String[] { "shuffle", "s" },false);
 	}
 	
 	@Override
