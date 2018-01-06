@@ -36,28 +36,28 @@ INoTargetSkill,
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 
-	protected MythicMobs mythicmobs;
-	protected SkillManager skillmanager;
-	protected String meetAction;
-	protected String elseAction;
-	protected String cConditionLine;
-	protected String tConditionLine;
-	protected boolean breakOnMeet;
-	protected boolean breakOnElse;
-	protected boolean RTskill;
-	protected HashMap<Integer, String> tConditionLines = new HashMap<>();
-	protected HashMap<Integer, String> cConditionLines = new HashMap<>();
-	protected HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
-	protected HashMap<Integer, SkillCondition> casterConditions = new HashMap<>();
-	protected Optional<Skill> meetSkill = Optional.empty();
-	protected Optional<Skill> elseSkill = Optional.empty();
-	protected Optional<String> meetTargeter = Optional.empty();
-	protected Optional<String> elseTargeter = Optional.empty();
+	private MythicMobs mythicmobs;
+	private SkillManager skillmanager;
+	private String meetAction;
+	private String elseAction;
+	private String cConditionLine;
+	private String tConditionLine;
+	private boolean breakOnMeet;
+	private boolean breakOnElse;
+	private boolean RTskill;
+	private HashMap<Integer, String> tConditionLines = new HashMap<>();
+	private HashMap<Integer, String> cConditionLines = new HashMap<>();
+	private HashMap<Integer, SkillCondition> targetConditions = new HashMap<>();
+	private HashMap<Integer, SkillCondition> casterConditions = new HashMap<>();
+	private Optional<Skill> meetSkill = Optional.empty();
+	private Optional<Skill> elseSkill = Optional.empty();
+	private Optional<String> meetTargeter = Optional.empty();
+	private Optional<String> elseTargeter = Optional.empty();
 
 	public CastIf(String skill, MythicLineConfig mlc) {
-		super(skill, mlc);
-		this.ASYNC_SAFE = false;
-		this.mythicmobs = Main.getPlugin().getMythicMobs();
+		super(skill,mlc);
+		this.ASYNC_SAFE=false;
+		this.mythicmobs=Main.getPlugin().getMythicMobs();
 		this.skillmanager = this.mythicmobs.getSkillManager();
 		this.breakOnMeet = mlc.getBoolean(new String[] { "breakonmeet", "breakmeet" }, false);
 		this.breakOnElse = mlc.getBoolean(new String[] { "breakonelse", "breakelse" }, false);
@@ -71,19 +71,11 @@ ITargetedLocationSkill {
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
 		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
 		if (!this.RTskill) {
-			if (this.meetAction != null) {
-				this.meetSkill = this.skillmanager.getSkill(this.meetAction);
-			}
-			if (this.elseAction != null) {
-				this.elseSkill = this.skillmanager.getSkill(this.elseAction);
-			}
+			if (this.meetAction!=null) this.meetSkill = this.skillmanager.getSkill(this.meetAction);
+			if (this.elseAction!=null) this.elseSkill = this.skillmanager.getSkill(this.elseAction);
 		}
-		if (this.cConditionLines != null && !this.cConditionLines.isEmpty()) {
-			this.casterConditions = this.getConditions(this.cConditionLines);
-		}
-		if (this.tConditionLines != null && !this.tConditionLines.isEmpty()) {
-			this.targetConditions = this.getConditions(this.tConditionLines);
-		}
+		if (this.cConditionLines!=null && !this.cConditionLines.isEmpty()) this.casterConditions = this.getConditions(this.cConditionLines);
+		if (this.tConditionLines != null && !this.tConditionLines.isEmpty()) this.targetConditions = this.getConditions(this.tConditionLines);
 		if (this.meetTargeter.isPresent()) {
 			String mt = this.meetTargeter.get();
 			mt=mt.substring(1, mt.length()-1);

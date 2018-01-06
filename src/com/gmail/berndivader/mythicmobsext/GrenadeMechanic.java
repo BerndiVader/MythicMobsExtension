@@ -24,32 +24,32 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 	private Plugin plugin = Main.getPlugin();
-	private int size;
-	private int amount;
-	private int fuse;
-	private int utime;
-	private double hGain;
-	private double gravity;
-	private boolean fire;
-	private boolean breakBlocks;
-	private boolean ueffect;
-	private boolean undotnt;
-	private boolean ued;
+	private Integer size;
+	private Integer amount;
+	private Integer fuse;
+	private Integer utime;
+	private Double hGain;
+	private Double gravity;
+	private Boolean fire;
+	private Boolean breakBlocks;
+	private Boolean ueffect;
+	private Boolean undotnt;
+	private Boolean ued;
 
 	public GrenadeMechanic(String h, MythicLineConfig mlc) {
 		super(h, mlc);
-		ASYNC_SAFE=false;
+		ASYNC_SAFE = false;
 		this.size=mlc.getInteger(new String[] { "size", "s" }, 2);
 		this.amount=mlc.getInteger(new String[] { "amount", "a" }, 1);
 		this.fuse=mlc.getInteger(new String[] { "fuse", "f" }, 80);
-		this.fire=mlc.getBoolean(new String[] { "fire", "burn" }, false);
+		this.fire=mlc.getBoolean(new String[] { "fire", "burn", "bf" }, false);
 		this.utime=mlc.getInteger(new String[] { "undotime", "utime", "ut" }, 60);
 		this.ueffect=mlc.getBoolean(new String[] { "effect", "undoeffect", "ueffect", "ue" }, true);
 		this.breakBlocks=mlc.getBoolean(new String[] { "break", "breakblocks", "b" }, false);
 		this.undotnt=mlc.getBoolean(new String[] { "undotnt", "undo", "u" }, true);
-		this.ued=mlc.getBoolean(new String[]{"useeyedirection","ued"},false);
-		this.hGain=mlc.getDouble(new String[]{"heighgain","g"},3.0D);
-		this.gravity=mlc.getDouble(new String[]{"gravity"},0.0975);
+		this.ued=mlc.getBoolean(new String[] { "useeyedirection", "ued" }, false);
+		this.hGain=mlc.getDouble(new String[] { "heightgain", "hg" }, 3.0D);
+		this.gravity=mlc.getDouble(new String[] { "gravity", "g" }, 0.0975);
 	}
 
 	@Override

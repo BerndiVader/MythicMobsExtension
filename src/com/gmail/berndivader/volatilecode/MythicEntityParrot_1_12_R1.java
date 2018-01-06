@@ -30,8 +30,8 @@ extends EntityParrot {
 
 	public MythicEntityParrot_1_12_R1(World world) {
 		super(world);
-        this.setSize(0.5f, 0.9f);
-        this.moveController = new ControllerMoveFlying(this);
+        this.setSize(0.5f,0.9f);
+        this.moveController=new ControllerMoveFlying(this);
 	}
 	
 	private boolean cd() {

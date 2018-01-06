@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.236 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,10 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 06.12.2017 *** fixed latest issue in lastdamagecause.
+##### ** 06.12.2017 *** added cancellable to MythicMobsExtItemDropEvent.
+##### ** 05.12.2017 *** added shuffle option for dropmythicitem mechanic & MythicMobsExtItemDropEvent is called whenever this mechanic is used.
+##### ** 04.12.2017 *** fixed issue with playerzoom.
 ##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.
 ##### ** 02.12.2017 *** tweaked several conditions & mechanics.
 ##### ** 02.12.2017 *** added range option to isburning condition. See isburning condition.
@@ -858,6 +862,473 @@ IP-bounce-effect:
   - customparticles{p=explosion;amount=5;hs=0;vs=0.0;speed=0;yoffset=0.5;foffset=0} @origin
 ```
 
+
+## MetaMechanics & Conditions:
+
+### setmeta mechchanic:
+Set parsed(!) metadata for the target. You can use all variables that are avaible while the skill is executed.
+
+##### `- setmeta{meta="tag=tagname;value=tagvalue;type=BOOLEAN/NUMERIC/STRING";usecaster=BOOLEAN}`
+			
+The tags "tag" and "value" can contain any mob variable. Example: `[- setmeta{meta=<target.uuid>} @self]` add the uuid of the target as metatag to the mob. You can also use values and types, but this is more for further purpose. Still you can go form them too. If usecaster is set to true the metatag is always set for the caster of the skill. No matter what targeter is used.
+		
+`- setmeta{meta="tag=lastdamagedentity;value=<trigger.uuid>;type=STRING"} @self ~onAttack`
+			
+This will set the lastdamagedentity tag of the mob to the victims uuid. It is possible to set a metadata of a block by using a location targeter. All blocks including air are valid.
+		
+### delmeta mechanic:
+
+Delete a metatag from the targeted entity. Be aware, if you remove tags that are not added by yourself, might break something else!
+		
+##### `- delmeta{meta="tag=lastdamagedentity"} @self ~onCombatDrop`
+			
+This remove the lastdamagedentity tag if the mob stop fighting.
+		
+### hasmeta condition:
+
+With this condition you can check any parsed meta. In its main purpose its a compare condition. Mean its a TargetConditions because it needs 2 entities. But by setting the cs tag (compareself) in the condition, you can choose if the target or the caster metas are checked. Its also possible to use a list of tags. All mob variables that are useable at the moment the skill is executed can be used. Use hasmetasimple if you only need ot check a single entry.
+
+##### `- hasmeta{meta="tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING";cs=true/false;action=true/false/cast/castinstead}`
+
+##### `- hasmetasimple{tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING;cs=true/false;action=true/false/cast/castinstead}`
+
+Example: `- hasmeta{meta="tag=lastdamagedentity;value=<target.uuid>;type=STRING";cs=true;action=true}`
+			
+This will check the caster entity if it has the tag "lastdamagedentity" and if it contains the uuid of the target. If cs=false it would check the target entity. The following condition use a list. ATM it will meet the condition if only 1 of the tags match. This will be changed in the future.
+		
+Example: `- hasmeta{meta="tag=<target.uuid>||tag=<trigger.uuid>";cs=true;action=true}`
+			
+Checks if the caster mob have the tag target uuid or trigger.uuid.
+			
+The following example shows how to make it, that every entity can hit the villager only once. After that the entity have to interact with the villager do get removed and can hit him again one time:
+
+```yaml
+Mob yaml:
+
+MetaMonkey:
+  Health: 1000
+  Type: villager
+  Display: "Meta Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - skill{s=cancelDamageIfMeta;sync=true} @trigger ~onDamaged
+  - skill{s=setMetaTag} @trigger ~onDamaged
+  - skill{s=delMetaTag} @trigger ~onInteract
+
+  
+Skill yaml:
+
+delMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";action=true;cs=true}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i remove you from my black list!"} @world
+  - delmeta{meta="tag=<trigger.uuid>"} @self
+  
+setMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=false}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i will remember you!"} @world
+  - setmeta{meta="tag=<trigger.uuid>"} @self
+  
+cancelDamageIfMeta:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=true}
+  Skills:
+  - cancelevent
+```
+
+
+
+
+## customteleport skill:
+Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors.
+
+Options:
++ `destination=` MythicMobs targeter or vanilla targeter. Use "" that the targeter can be parsed.
++ `noise=n=` number, random point around the target
++ `teleportdelay=tdelay=td=` number, delay in ticks between teleportation (if more than 1)
++ `infrontof=front=f=` true/false, teleport in front of target (if target is a entity)
++ `returntostart=return=r=` true/false, if the source entity should return to its start position
++ `betweenlastentitysignal=bls=` signalname to be send to caster mob between the teleportations, where the trigger is the last entity (if target was an entity)
++ `betweennextentitysignal=bns=` signalname to be send to caster mob 
++ `ignoreowner=io=` true/false, if the owner of the caster mob should be ignored.
++ `maxtargets=mt=` number, the maximium number of targets.
++ `targetinsight=insight=is=` true/false, only the targets insight of the current position are used.
+				
+```yaml
+Example Mob:
+
+Monkey:
+  Health: 300
+  Type: zombie
+  Display: "Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - customsummon{t=ChainDummy;setowner=true} @selflocation ~onDamaged
+  
+ChainDummy:
+  Type: armor_stand
+  Options:
+    Invisible: true
+    Invincible: true
+  Skills:
+  - customteleport{destination="@EIR{r=40}";teleportdelay=10;front=false;fs=ende;bns=bns;bls=bls;r=false;io=true;is=true} @self ~onSpawn
+  - skill{s=chain} @trigger ~onSignal:bns
+  - remove @self ~onSignal:ende
+  
+#  NOTICE THE "" FOR THE DESTINATION!
+
+Example Skill:
+
+chain:
+  Skills:
+  - lightning
+  - customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-0.5;distanceBetween=0.5;tyo=1.25}
+  
+  
+Or use some variables in the destination targeter:
+
+	- customteleport{destination="@Location{c=<mob.l.x>,<mob.l.y>,<mob.l.z>}"} @eir{r=40} ~onDamaged
+  
+```
+	
+	
+## dropmythicitem skill:
+	
+Drop a mythicitem or a mythicdroptable.
+
+Options:
++ `mythicitem=item=itemtype=type=t=i=` Internal name of the mythic item or the mythic droptable.
++ `amount=a=` the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
++ `shuffle=true/false` if true the droptable itemlist will be shuffled by random.
+	
+`- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack`
+	
+This drop one MythicItem at all players in radius of 20 if the mob targets a entity. Additional, whenever this mechanic is called there is a
+`MythicMobsExtItemDropEvent`called with the mythicmobs the trigger and the drop as an arraylist.
+
+
+
+## customparticleline skill (for MythicMobs 4.1.0 or higher):
+
+The same like the original but added vDestOffset & hDestOffset to adjust the targetlocation.
+Use vDestOffset to adjust the height and use hDestOffset to adjust the x/z position. Use idoy true/false(default) = ignoredestoffsetyaw to ignore the yaw of the targetlocation. With this its possible to target a specific part of the entity.
+	
+`- customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-1.0;idoy=true;distanceBetween=0.5;tyo=1.25} @pir{r=10} ~onTimer:5`
+
+
+
+## setthreattarget & clearthreattarget skill:
+
+Use setthreattarget to clear the activemobs threattable and add {a=double} targeter to the threat. Default amount is 65536.
+	
+##### `- setthreattarget{a=11111} @p`
+	
+To clear the threattable and trigger the dropCombat Event use:
+	
+##### `- clearthreattarget @self`
+
+
+
+## SwapSkill:
+
+Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcasteryaw=kcy false/true to keep the original direction or not.
+	
+##### `- swap{kty=true;kcy=false} @target`
+
+
+
+## StunSkill:
+	
+Use this mechanic to stun the target. 
+	
+##### `- stun{duration=Ticks;facing=true/false;gravity=true/false;stopai=true/false} @target`
+	
+Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions. If stopai is used. The ai of the mob will be disabled while playing the stun and reapplied afterwards.
+	
+
+
+## CustomSummonSkill:
+
+Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option. Use leashtocaster(leash/lc) to leash the summoned mob
+to the caster.
+	
+##### `- customsummon{a=2to20;type=mobname} @self`
+	
+Summon 2 to 20 mobs of type mobname.
+	
+##### `- customsummon{type=WITHER_SKELETON;amount=5;radius=4;ax=5;ay=1;az=2} @self`
+	
+This example do not check for a safeplace it will spawn the mob no matter if its in block or such. If you want to use safeplace add noise. Example:
+	
+##### `- customsummon{type=WITHER_SKELETON;amount=5;radius=4;noise=1;ax=5;ay=1;az=2} @self`
+	
+This example shows how to spawn mobs relative to the direction of the targeted mob:
+	
+##### `- customsummon{t=mobname;ued=true;ifb=1} @self`
+	
+`ued=useEyeDirection=EyeDirection;ifb=inFrontBlocks=inFront`
+	
+Use setowner (true/false) to set the owner to the mob which casted the custumsummon skill.
+	
+##### `- customsummon{t=mobname;setowner=true} @selflocation`
+	
+This summon the mob mobname and set its owner to the mob which casted the skill.
+	
+Use `tag` option to add a parsed string to the scoreboard of the summoned mob. Variables are allowed and are parsed.
+	
+##### `- customsummon{t=mobname;tag=<target.uuid>} @self`
+	
+This summon the mob mobname and add the uuid of the target to the summoned mobs scoreboard.
+	
+Use `invisible=inv` option to summon the mob invisible.
+
+
+
+## OxygenSkill:
+
+Use this mechanic to add oxygen to the LivingEntity.
+	
+##### `- oxygen{a=20} @self`
+	
+`a = amount =` the amount of oxygen that will be added. A player has a usual max air amount of 300. A amount of 20 gives about 1 bubble air.
+	
+	
+	
+## FeedSkill:
+
+Add specific amount of food to the players foodlevel.
+	
+##### `- feed{a=1} @PIR{r=20}`
+	
+`a = amount =` the food amount. The amount of 1 add 1/2 foodlevel.
+
+
+
+## RemovePotionSkill or CureSkill:
+
+Use this mechanic to remove all or a specific potion from the targeted entity. Use removepotion or cure.
+
+##### `- cure{t=ALL} @self`
+##### `- cure{t=INVISIBILITY} @PIR{r=30}`
+	
+##### `- removepotion{t=ALL} @self`
+##### `- removepotion{t=INVISIBILITY} @PIR{r=30}`
+	
+`t = type = p = potion =`ALL by default. Use "ALL" to remove all effects or use a single effect or a list like: `p=INVISIBILITY,SPEED,HEAL`
+
+	
+
+## CustomDamageSkill:
+
+Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www.mythicmobs.net/index.php?threads/skill-damage-bypassed-armour.3373/ this thread for details of the issue.
+	
+##### `- customdamage{a=1to2;ia=false;pk=false;pi=false;iabs=false}`
++ `a = amount =` 1 by default. The amount of damage applied. 1 = 1/2 heart. Ranged amount possbile: 1to2
++ `ia = i = ignorearmor =` false by default. If the armor of the target should be ignored or not.
++ `pk = pkb = preventknockback =` false by default. If knockback should be applied or not.
++ `pi = preventimmunity =` false by default. If immunity should be used or not.
++ `ignoreabs = iabs =` false by default. If absorbation should be ignored or not.
++ `percentage=p=` false by default. If true it uses the amount as percent.
++ `pcur=pc=` false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
+	
+
+	
+
+## EquipSkullSkill:
+
+This is a fix for custom player heads for 1.8.8 as it appeard to not work with mm versions greater than 2.5.1
+
+##### `- equipskull{skull=mythicitemname}` 
++ `skull=s=`  a valid MythicMobsItem to equip on head.
+		
+Example:
+
+```yaml
+mob yml:
+
+Monkey:
+  Type: zombie
+  Display: 'a MythicMobs Monkey'
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - equipskull{skull=Pirate} @self ~onSpawn 1
+  
+item yml:
+
+Pirate:
+  Id: 397
+  Data: 3
+  Options:
+    SkinTexture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVmMDEyOTdlMmUxYWNkMDQ4ODJhMGM0NGU0OGYxZjE1Y2JiYTI1ODJmOTFiMDgxYzkyOTIwZmVkOGYzMjIwIn19fQ====
+```
+
+## unEquipSkill:
+
+##### `- unequip{armor=<all>||<list>||<single>;signal=<string>}`
++ `armor=` all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
++ `signal=` name of the signal which will be send to the target if set.
+
+		
+## DamageArmorSkill:
+
+##### `- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}`
++ `armor=` all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
++ `damage=` armor damage amount as integer or as ranged value for ranged value use "to".
++ `signal=` name of the signal which should be send to mob if an armor part is broken. dont set it if you dont want a signal to be send.
+				
+Example:
+
+```yaml
+dmgpig:
+  Type: pig
+  Display: 'DontHitMe'
+  Health: 500
+  Damage: 1
+  Faction: neutral
+  Despawn: true
+  AIGoalSelectors:
+  - 0 clear
+  - 1 randomstroll
+  - 2 float
+  Skills:
+  # this will damage the whole armor and handitem & offhanditem with damage value of 20
+  - damagearmor{armor=all;damage=20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will damage only the chest with a random value between 1 to 20
+  - damagearmor{armor=chest;damage=1to20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will repear hand,offhand,helmet items with a random value between 20 to 40
+  - damagearmor{armor=hand,offhand,helmet;damage=-20to-40;signal=armorbroken} @trigger ~onDamaged >0 1
+  - message{msg="Oh dear! A part of your armor is gone!"} @trigger ~onSignal:armorbroken
+```
+
+
+## GrenadeSkill:
+
+##### `- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true;ued=boolean}`
++ `size=` radius of the explosion
++ `amount=` how many grenades the mob throw at once
++ `fuse=` how long the fuse tick
++ `fire=` should there be fire too? true / false
++ `breakblocks=` damage the blocks? true / false
++ `utime=` how many ticks until restore the blocks
++ `ueffect=` should there be a restore effect? true / false
++ `undotnt=` should the blocks be restored at all? true / false
++ `ued=` if true the grenade is thrown in eye direction. if false the grenade is thrown in target direction
+
+Example:
+
+```yaml
+grenadezombie:
+  Type: zombie
+  Health: 20
+  Skills:
+  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200
+  - grenade{size=2;amount=1;fuse=60;fire=false;breakblocks=false;utime=40;ueffect=false;undotnt=false} @pir{r=20} ~onTimer:60
+```
+
+
+## SetRandomLevelSkill:
+
+##### `- setrandomlevel{min=1;max=10;self=true}`
++ `min=` lowest level
++ `max=` highest level
++ `self=` true = targetself / false = target any other targeted mob
+		
+Example:
+
+```yaml
+RndLvlMob:
+  Type: zombie
+  Skills:
+  - setrandomlevel{min=1;max=10;self=true} @self ~onSpawn 1
+```
+
+
+## StealSkill:
+##### `- steal{items=ITEM:AMOUNT,ITEM:AMOUNT,.....;failsignal=steal_fail;oksignal=steal_ok}`
++ `items=` Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player.
++ `failsignal=` name of the signal that should be send to the mob if the stealing failed. default signal = steal_fail
++ `oksignal=` name of the signal that should be send to the mob if the stealing was good. default signal = steal_ok
+		
+##### `- DropStolenItems`
+Use this skill and the mob drop all its stolen items. Good idea to use it on death. Or all the items are gone with the mob to herobrine.
+		
+**There is a buildin cancel damage condition if the mob should make no damage while try to steal. It can be activated if the stance of the mob is "gostealing" So if the mob have the gostealing stance set, it will do no damage to its target.** 
+
+Thief example:
+
+mob yml:
+
+```yaml
+thief:
+  Type: villager
+  Display: 'Thief'
+  Health: 20
+  Damage: 0
+  Modules:
+    ThreatTable: true
+  Options:
+    AlwaysShowName: false
+    Despawn: true
+  AIGoalSelectors:
+    - 0 clear
+    - 1 meleeattack
+    - 2 avoidskeletons
+    - 3 avoidzombies
+    - 4 randomstroll
+    - 5 float
+  AITargetSelectors:
+    - 0 clear
+    - 1 players
+  Skills:
+    - setstance{stance=gostealing} @self ~onSpawn 1
+    - skill{s=FleeGotSomeStuff;sync=true} ~onSignal:steal_ok 1
+    - skill{s=FleeButGotNothing;sync=true} ~onSignal:steal_fail 1
+    - skill{s=Steal} ~onTimer:60 >0 1
+    - DropStolenItems ~onDeath 1
+```
+skillfile:
+
+```yaml
+Steal:
+  Cooldown: 1
+  TargetConditions:
+  - distance{d=<3} true
+  - lineofsight true
+  Conditions:
+  - stance{s=gostealing} true
+  Skills:
+  - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @NearestPlayer 0.75
+  
+FleeGotSomeStuff:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=fleeplayers}
+    - effect:smoke @self
+    - potion{type=SPEED;duration=200;level=1} @self
+    - delay 400
+    - effect:smoke @self
+    - remove @self
+  
+FleeButGotNothing:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=randomstroll}
+    - delay 400
+    - effect:smoke @self
+    - remove @self
+```
 
 
 # Conditions

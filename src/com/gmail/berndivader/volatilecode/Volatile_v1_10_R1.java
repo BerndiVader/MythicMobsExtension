@@ -936,4 +936,10 @@ implements VolatileHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Object getNBTValueOf(Entity e1, String s1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
