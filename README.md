@@ -1,5 +1,7 @@
-# MythicMobsExtension v1.236 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 05.12.2017 *** added shuffle option for dropmythicitem mechanic & MythicMobsExtItemDropEvent is called whenever this mechanic is used.
+##### ** 04.12.2017 *** fixed issue with playerzoom.
 ##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.
 ##### ** 02.12.2017 *** tweaked several conditions & mechanics.
 ##### ** 02.12.2017 *** added range option to isburning condition. See isburning condition.
@@ -1013,10 +1015,12 @@ Drop a mythicitem or a mythicdroptable.
 Options:
 + `mythicitem=item=itemtype=type=t=i=` Internal name of the mythic item or the mythic droptable.
 + `amount=a=` the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
++ `shuffle=true/false` if true the droptable itemlist will be shuffled by random.
 	
 `- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack`
 	
-This drop one MythicItem at all players in radius of 20 if the mob targets a entity.
+This drop one MythicItem at all players in radius of 20 if the mob targets a entity. Additional, whenever this mechanic is called there is a
+`MythicMobsExtItemDropEvent`called with the mythicmobs the trigger and the drop as an arraylist.
 
 
 

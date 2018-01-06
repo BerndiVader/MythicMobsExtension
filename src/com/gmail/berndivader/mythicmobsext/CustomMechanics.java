@@ -9,9 +9,9 @@ import com.gmail.berndivader.mythicmobsext.customprojectiles.*;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
-public class mmCustomSkills26 implements Listener {
+public class CustomMechanics implements Listener {
 
-	public mmCustomSkills26(Plugin plugin) {
+	public CustomMechanics(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -161,7 +161,7 @@ public class mmCustomSkills26 implements Listener {
 			e.register(skill);
 			break;
 		}case "parseddisguise": {
-			skill=new parsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
+			skill=new ParsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(skill);
 			break;
 		}case "setrotation": {

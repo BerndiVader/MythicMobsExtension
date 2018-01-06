@@ -9,11 +9,11 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-public class parsedDisguiseMechanic extends SkillMechanic
+public class ParsedDisguiseMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {
     private String disguise;
-    public parsedDisguiseMechanic(String skill, MythicLineConfig mlc) {
+    public ParsedDisguiseMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.disguise=mlc.getString(new String[]{"disguise","d"},"Notch");
         this.ASYNC_SAFE=false;

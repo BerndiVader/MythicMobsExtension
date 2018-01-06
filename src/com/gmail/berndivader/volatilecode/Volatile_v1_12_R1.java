@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,6 +48,7 @@ implements VolatileHandler {
 	
 	private static String signal_AISHOOT="AISHOOT";
 	private static String signal_AIHIT="AIHIT";
+	private static String meta_WALKSPEED="MMEXTWALKSPEED";
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
@@ -122,9 +124,9 @@ implements VolatileHandler {
 	@Override
     public void setFieldOfViewPacketSend(Player player, float f1) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
-		net.minecraft.server.v1_12_R1.PlayerAbilities arg=new net.minecraft.server.v1_12_R1.PlayerAbilities();
-		arg.walkSpeed=f1;
-		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg));
+		PlayerAbilities arg1=(PlayerAbilities)CustomSkillStuff.cloneObject(me.abilities);
+		arg1.walkSpeed=f1;
+		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
     }
 	
 	@Override
@@ -943,6 +945,29 @@ implements VolatileHandler {
 		return testFor(e,ns,m);
 	}
 	
+	@Override
+	public Object getNBTValueOf(Entity e1, String s1) {
+		return getNBTValue(e1,s1);
+	}
+	
+	private Object getNBTValue(Entity e1, String s1) {
+		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
+		NBTTagCompound nbt1=null;
+		Object o1=null;
+		if ((nbt1=TFa(me))!=null) {
+			if (nbt1.hasKey(s1)) {
+				byte bb=nbt1.getTypeId();
+				switch(bb) {
+				case 0:
+					
+				}
+			} else {
+				return null;
+			}
+		}
+		return o1;
+	}
+ 	
 	private boolean testFor(Entity e,String c,char m) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();
 		NBTTagCompound nbt1=null,nbt2=null;

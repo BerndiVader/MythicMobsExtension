@@ -81,7 +81,7 @@ public class Main extends JavaPlugin {
 			this.thiefhandler = new ThiefHandler();
 			logger.info("registered ThiefHandlers!");
 			new CustomSkillStuff(this);
-			new mmCustomSkills26(this);
+			new CustomMechanics(this);
 			logger.info("Found MythicMobs, registered CustomSkills.");
 			Main.mythicplayers = new MythicPlayers(this);
 			logger.info("registered MythicPlayers!");

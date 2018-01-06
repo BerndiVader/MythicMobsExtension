@@ -214,6 +214,12 @@ public class OwnConditions implements Listener {
 			SkillCondition c=new ArrowOnEntityCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);
 			break;
-		}}
+		}
+		case "cmpnbt":{
+			SkillCondition c=new CompareNBTCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
+		}
 	}
 }
