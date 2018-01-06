@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -52,6 +53,7 @@ ITargetedLocationSkill {
 		if (this.itemtype==null||am==null) return false;
 		ArrayList<ItemStack> drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,null);
 		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,(LivingEntity)data.getTrigger().getBukkitEntity(),drops);
+        Bukkit.getServer().getPluginManager().callEvent(e);
 		drops=e.getDrops();
 		dropItems(drops,BukkitAdapter.adapt(ltarget));
 		return true;
@@ -63,6 +65,8 @@ ITargetedLocationSkill {
 		if (this.itemtype==null||am==null) return false;
 		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,etarget);
 		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,(LivingEntity)data.getTrigger().getBukkitEntity(),drops);
+        Bukkit.getServer().getPluginManager().callEvent(e);
+		if (e.isCancelled()) return false;
 		drops=e.getDrops();
 		dropItems(drops,BukkitAdapter.adapt(etarget.getLocation()));
 		return true;

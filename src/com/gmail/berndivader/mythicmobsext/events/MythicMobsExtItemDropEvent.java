@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
@@ -13,16 +14,20 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 
 public class MythicMobsExtItemDropEvent 
 extends
-Event {
+Event 
+implements
+Cancellable {
     private static final HandlerList handlers=new HandlerList();
     private final ActiveMob am;
     private final LivingEntity trigger;
     private ArrayList<ItemStack>stack;
+    private boolean cancelled;
     
     public MythicMobsExtItemDropEvent(ActiveMob am,LivingEntity trigger,ArrayList<ItemStack>stack) {
     	this.am=am;
     	this.trigger=trigger;
     	this.stack=stack;
+    	this.cancelled=false;
 	}
     
     public ActiveMob getMob() {
@@ -60,4 +65,14 @@ Event {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
+	@Override
+	public boolean isCancelled() {
+		return this.cancelled;
+	}
+
+	@Override
+	public void setCancelled(boolean bl1) {
+		this.cancelled=bl1;
+	}
 }

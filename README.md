@@ -1,5 +1,6 @@
 # MythicMobsExtension v1.236a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+##### ** 06.12.2017 *** added cancellable to MythicMobsExtItemDropEvent.
 ##### ** 05.12.2017 *** added shuffle option for dropmythicitem mechanic & MythicMobsExtItemDropEvent is called whenever this mechanic is used.
 ##### ** 04.12.2017 *** fixed issue with playerzoom.
 ##### ** 02.12.2017 *** changed name of project into MythicMobsExtension.

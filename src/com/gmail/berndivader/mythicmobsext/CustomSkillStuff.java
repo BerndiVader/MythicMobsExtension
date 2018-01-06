@@ -38,6 +38,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.events.MythicMobsExtItemDropEvent;
 import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -62,6 +63,15 @@ public class CustomSkillStuff implements Listener {
 	
 	public CustomSkillStuff(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	public void onMythicItemsDropEvent(MythicMobsExtItemDropEvent e) {
+		System.err.println(e.getMob().getType().getDisplayName());
+		System.err.println(e.getTrigger().getCustomName());
+		for(ItemStack is:e.getDrops()) {
+			System.err.println(is.getType().toString());
+		}
 	}
 	
 	@EventHandler
