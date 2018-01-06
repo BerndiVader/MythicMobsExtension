@@ -1,5 +1,11 @@
 # MythicMobsExtension v1.236a for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+### Wiki:
+https://github.com/BerndiVader/MythicMobsExtension/wiki
+
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
+
+### Changelog:
 ##### ** 06.12.2017 *** fixed latest issue in lastdamagecause.
 ##### ** 06.12.2017 *** added cancellable to MythicMobsExtItemDropEvent.
 ##### ** 05.12.2017 *** added shuffle option for dropmythicitem mechanic & MythicMobsExtItemDropEvent is called whenever this mechanic is used.
@@ -707,7 +713,8 @@ SpawnEvent:
 + Set goal 1 to PathfinderFollowEntity with speed 2 to the trigger of the skill, start following if entity outside [follow_rad_start] radius and follow until entity is within [follow_rad_min].
 		
 *breakblocks:*
-	
+
+
 ##### `advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array] [blockbreakchance_value]"}`
 	
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}`
@@ -715,7 +722,8 @@ SpawnEvent:
 + The entity have a chance of 50% to break the block. Possible chances 0-100;
 
 *returnhome:*
-	
+
+
 ##### `advaipathfinder{goal="[goalpriority_value] returnhome [speed_value] [x],[y],[z],[travel_radius],[tp_radius],[boolean_ignoretarget]"}`
 	
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 returnhome 2 <mob.l.x>,<mob.l.y>,<mob.l.z>,200,1024,false"}`
@@ -723,6 +731,7 @@ SpawnEvent:
 + In addition there are two signals send:
 + *GOAL_STARTRETURNHOME* - Send to mob if the entity start to travel home.
 + *GOAL_ENDRETURNHOME* - Send to mob if the entity is arrived at home.
+
 
 ## parsedstance mechanic:
 
@@ -738,28 +747,6 @@ Set a the stance of an activemob filled parsed variables, like <mob.uuid> <targe
 + <mob.meta.*> where * is the name of the metaag. Ex: `<mob.meta.<trigger.uuid>` reteruns the value stored in casters triggers uuid tag if 
 there is one.
 
-## CastIf mechanic:
-
-Use this mechanic to compare conditions and targetconditions inside of skills and execute a skill if meet or another if not meet.
-	
-##### `- castif{c="onground true && outside true && playerwithin{d=10} true";tc="onblock grass true && outside true";meet=meetSkill;meettargeter="@[any_targeter]";else=elseSkill;elsetargeter="@[any_targeter]"} @trigger ~onDamaged`
-+ `conditions=c=` (Optional) The conditions to compare with the caster. Can be an arraylist split by &&
-+ `targetconditions=tc=` (Optional) The conditions to compare with the targeted entity. Can be an arraylist split by &&
-+ `meet=` (Optional) The skill to be executed if the conditions are meet.
-+ `else=` (Optional) The skill to be executed if the conditions not meet.
-+ `meettargeter / elsetargeter=` (Optional) Renew the meet / else skills targeter if present. Surrounded with ""!! The meet and else skills inherit the skilldatas like targeter, caster, targets from the parent skill.
-+ `rtskill`(Optional) set this to true and use variables inside the metaskillname. Example: 
-
-```yaml
-- castif{c="ispresent";meet=EffectSkill<mob.score.effect>} @trigger onDamaged
-```
-Good to use in a loop.
-
-Now possible, to use && || expressions. Example:
-`- castif{c="onground true && outside true || playerwithin{d=10} true";tc="onblock grass true && ouside true";meet=meetMetaSkill;else=elseMetaSkill} @trigger ~onDamaged`
-This parse the c condtions lets say the mob is outside onground but player not within 10: (true&&true)||false condition will meet. Same work for the targetcondtion too.
-			
-#### NOTE THE "" for the conditions and targetconditions!!
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
 
@@ -1344,9 +1331,7 @@ FleeButGotNothing:
 ```
 
 
-
 # Conditions
-
 
 
 ##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
@@ -1566,83 +1551,6 @@ Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EA
 
 ##### `- parsedstance{s="<target.uuid>";cs=true;action=true}`
 If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
-
-##### `- attackable{cause=[DAMAGECAUSE];action=[boolean]}`
-##### `- damageable{cause=[DAMAGECAUSE];action=[boolean]}`
-Use this condition to check if the target is attackable by the caster. Only avail as TargetConditions / CompareConditions
-
-##### `- infront{view=[angle_value];action=[boolean]}`
-##### `- behind{view=[angle_value];action=[boolean]}`
-Use this condition to check if the target is behind the caster or infront of the caster. Use view to define an angular, where 90 is frontal facing and left/right side is 0. A view of 45 will make it have a view field of 45° in facing direction or behind. Use 0 or 1 to check is its infront or behind no matter what angle.
-
-##### `- inmobarena`
-Check if the location is in a MobArena arena. Requires MobArena plugin to work.
-
-##### `- biomefix{biome=[PLAINS,DESSERT];action=[boolean]}`
-Check if the target is in a certain biome.
-+ `biome=b=` A list with valid biome names.
-+ `action=a=` true / false
-
-##### `- isstunned{action=false}`
-Check if the target is stunned (true) or not (false) The example will match if the target isnt stunned. Please notice that this can be used at the caster, or as TargetConditions. If used as TargetConditions the targeter for the metaskill is important.
-
-##### `- lastdamagecause{cause=ENTITY_ATTACK,PROJECTILE,FIRE;damager=PLAYER,ZOMBIE,SKELETON;action=TRUE}`
-Check what caused the last damage to the MythicMob mob. cause and damager can be a single value or a List
-+ `cause=c=` The cause of the last damage. Valid is "ANY" or Bukkit's DamageCause https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-+ `damager=attacker=` The EntityType of the attacker. Valid is "ANY" or Bukkit's EntityTypes https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
-
-##### `- mobsinradius{mobtypes=mythicmobs1,mythicmobs2,mythicentity1,mythicentity2;a=5to10;r=20;action=TRUE}`
-Use this condition to check how many mobs are in radius.
-+ `mobtypes=types=mobs=mob=t=m=` The mythicmobs or mythicentities to check. Or use ALL for any mythicmobs mob.
-+ `amount=a=` ranged value to match. example: a=<20 or a=>10 or a=5 or a=5to10 for range
-+ `radius=r=` radius to check
-+ `action=` true/false
-
-##### `- wgstateflag{flag=mob-spawning;action=false}`
-##### `- wgstateflag{flag=pvp;action=true}`
-##### `- wgstateflag{flag=creeper-explosion;action=false}`
-This condition can be used on every allow/deny flag. If region has no flag set, it inherits the flag of the parent region.
-
-##### `- wgdenyspawnflag{types=zombie,skeleton;action=true}`
-This condition can be used to check if the region denys the spawning of some entitytypes. If region has no flag set, it inherits the flag of the parent region.
-
-##### `- factionsflag{flag=monsters;action=true}`
-This condition can be used to check if the faction has a specific flag set to true or false. Here is a list of all flagnames: animals, monsters, peaceful, endergrief, explosions, firespread, friendlyfire, infpower, offlineexplosions, open, permanent, powergain, powerloss, pvp, zombiegrief
-
-##### `- hastarget{action=true}`
-This condition meets if the mob has a target (true) or no target (false).
-
-##### `- vdistance{d=2to3;action=true}`
-This condition checks for the vertical distance between target and mob. Use ">" for greater "<" smaller or "to" for range.
-
-*Example:* 
-
-```yaml
-Mobfile:
-
-Monkey:
-  Type: zombie
-  Display: "&cMythicMobs Monkey"
-  Damage: 1
-  Health: 10
-  Armor: 1
-  DamageModifiers:
-  - FALL 0.25
-  Skills:
-  - skill{s=jumpToTarget} @target ~onTimer:50 1
-  
-Skillfile:
-
-jumpToTarget:
-  Conditions:
-  - hastarget{a=true}
-  TargetConditions:
-  - distance{d=<4} true
-  - hdistance{d=2to3;a=true}
-  Skills:
-  - leap{velocity=120} @target
-```
-
 
 
 # Targeters
