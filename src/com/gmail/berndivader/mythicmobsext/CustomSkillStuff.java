@@ -38,7 +38,6 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.events.MythicMobsExtItemDropEvent;
 import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;

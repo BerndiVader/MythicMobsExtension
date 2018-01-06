@@ -26,10 +26,11 @@ IEntityCondition {
 		boolean match=false;
 		String damager=null,cause=null;
 		Entity entity=ae.getBukkitEntity();
-		if (entity.hasMetadata("LastDamager")) damager=entity.getMetadata("LastDamager").get(0).asString();
-		if (entity.hasMetadata("LastDamageCause")) cause=entity.getMetadata("LastDamageCause").get(0).asString();
-		if (damager!=null&&!(attackers.length==1&&attackers[0].equals("ANY"))) {
+		if (entity.hasMetadata("LastDamager")) damager=entity.getMetadata("LastDamager").get(0).asString().toUpperCase();
+		if (entity.hasMetadata("LastDamageCause")) cause=entity.getMetadata("LastDamageCause").get(0).asString().toUpperCase();
+		if (damager!=null&&!attackers[0].equals("ANY")) {
 			for(String s1:attackers) {
+				System.err.println(s1);
 				if(s1.equals(damager)) {
 					match=true;
 					break;
@@ -38,7 +39,8 @@ IEntityCondition {
 		} else {
 			match=true;
 		}
-		if (match&&cause!=null&&!(causes.length==1&&causes[0].equals("ANY"))) {
+		if (match&&(cause!=null&&!causes[0].equals("ANY"))) {
+			match=false;
 			for(String s1:causes) {
 				if (s1.equals(cause)) {
 					match=true;
