@@ -20,7 +20,7 @@ IMetaSkill {
 	protected SkillManager skillmanager;
 	protected LinkedHashMap<Integer,SkillEntry> entrylist;
 	
-	public AdvRandomSkillMechanic(String skill, MythicLineConfig mlc) {
+	public CustomRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
         	this.target_creative = true;
 		this.mythicmobs = Main.getPlugin().getMythicMobs();
