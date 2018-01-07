@@ -32,14 +32,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
@@ -81,7 +80,7 @@ implements VolatileHandler {
 	
 	@Override
 	public Parrot spawnCustomParrot(Location l1, boolean b1) {
-		net.minecraft.server.v1_12_R1.World world=((CraftWorld)l1.getWorld()).getHandle();		
+		net.minecraft.server.v1_12_R1.World world=((CraftWorld)l1.getWorld()).getHandle();
 		final MythicEntityParrot_1_12_R1 mep=new MythicEntityParrot_1_12_R1(world);
 		mep.cd(b1);
 		mep.setLocation(l1.getX(),l1.getY(),l1.getZ(),l1.getYaw(),l1.getPitch());
@@ -124,7 +123,7 @@ implements VolatileHandler {
 	@Override
     public void setFieldOfViewPacketSend(Player player, float f1) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
-		PlayerAbilities arg1=(PlayerAbilities)CustomSkillStuff.cloneObject(me.abilities);
+		PlayerAbilities arg1=(PlayerAbilities)Utils.cloneObject(me.abilities);
 		arg1.walkSpeed=f1;
 		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
     }
@@ -394,7 +393,7 @@ implements VolatileHandler {
         					zR=Float.parseFloat(p[a]);
         				}
 	        		}
-	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
+	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
 						Entity ee = NMSUtil.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
@@ -411,7 +410,7 @@ implements VolatileHandler {
 	        	if (e instanceof EntityCreature) {
 	        		int chance=50;
 	        		if (data1!=null 
-	        				&& CustomSkillStuff.isNumeric(data1)) chance=Integer.parseInt(data1);
+	        				&& Utils.isNumeric(data1)) chance=Integer.parseInt(data1);
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
@@ -431,7 +430,7 @@ implements VolatileHandler {
 	            	if (data1!=null) {
 		        		String[]p=data1.split(",");
 		        		for (int a=0;a<p.length;a++) {
-		        			if (CustomSkillStuff.isNumeric(p[a])) {
+		        			if (Utils.isNumeric(p[a])) {
 		        				if (a==0) {
 		        					x=Double.parseDouble(p[a]);
 		        				} else if (a==1) {
@@ -1047,7 +1046,7 @@ implements VolatileHandler {
 	@Override
 	public boolean playerIsJumping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
-		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
+		return !me.onGround&&Utils.round(me.motY,5)!=-0.00784;
 	}
 	
 	@Override
@@ -1078,5 +1077,4 @@ implements VolatileHandler {
        	eh.getCooldownTracker().a(i,j);
 		return true;
 	}
-
 }

@@ -215,6 +215,11 @@ public class OwnConditions implements Listener {
 			e.register(c);
 			break;
 		}
+		case "movespeed":{
+			SkillCondition c=new MovementSpeedCondition(e.getConfig().getLine(),e.getConfig());
+			e.register(c);
+			break;
+		}
 		case "cmpnbt":{
 			SkillCondition c=new CompareNBTCondition(e.getConfig().getLine(),e.getConfig());
 			e.register(c);

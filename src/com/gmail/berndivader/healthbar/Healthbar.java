@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 
@@ -36,8 +36,8 @@ CraftHologram {
 		this.iYaw=ignoreYaw;
 		this.useOffset=fOffset!=0d||sOffset!=0d;
 		if (this.useOffset) {
-			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
-			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
+			Vector soV=Utils.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
+			Vector foV=Utils.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
 			this.getLocation().add(soV);
 			this.getLocation().add(foV);
 		}
@@ -83,8 +83,8 @@ CraftHologram {
 			}
 		}
 		if (this.useOffset) {
-			Vector soV=CustomSkillStuff.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
-			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
+			Vector soV=Utils.getSideOffsetVector(entity.getLocation().getYaw(), this.sOffset, this.iYaw);
+			Vector foV=Utils.getFrontBackOffsetVector(entity.getLocation().getDirection(),this.fOffset);
 			x+=soV.getX()+foV.getX();
 			z+=soV.getZ()+foV.getZ();
 		}
@@ -94,7 +94,7 @@ CraftHologram {
 	
 	public double getHealth() {
 		double d = 0;
-		d = CustomSkillStuff.round(this.entity.getHealth(), 0);
+		d = Utils.round(this.entity.getHealth(), 0);
 		return d;
 	}
 	

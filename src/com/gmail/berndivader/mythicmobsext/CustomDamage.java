@@ -2,6 +2,8 @@ package com.gmail.berndivader.mythicmobsext;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -52,13 +54,13 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
 			return false;
-		double dmg = CustomSkillStuff.randomRangeDouble(this.amount);
+		double dmg = Utils.randomRangeDouble(this.amount);
 		if (this.p) {
 			dmg = this.pcur ? t.getHealth() * dmg : t.getMaxHealth() * dmg;
 		}
 		if (!this.ip)
 			dmg = dmg * data.getPower();
-		CustomSkillStuff.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug, this.cause);
+		Utils.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug, this.cause);
 		return true;
 	}
 }

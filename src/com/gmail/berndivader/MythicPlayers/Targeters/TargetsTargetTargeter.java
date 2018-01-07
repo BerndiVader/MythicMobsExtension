@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -30,7 +30,7 @@ IEntitySelector {
 			AbstractEntity target=it.next();
 			if (target!=null) {
 				if (target.isPlayer()) {
-					AbstractEntity pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)target.getBukkitEntity()));
+					AbstractEntity pt=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)target.getBukkitEntity()));
 					if (pt!=null) targets.add(pt);
 				} else if (target.getTarget()!=null){
 					targets.add(target.getTarget());

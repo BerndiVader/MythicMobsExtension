@@ -3,6 +3,8 @@ package com.gmail.berndivader.mythicmobsext;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -42,8 +44,8 @@ ITargetedEntitySkill{
 			        }
 					this.cancel();
 				} else {
-			        yaw=CustomSkillStuff.normalise(yaw+yo,0,360);
-			        pitch=CustomSkillStuff.normalise(pitch+po,0,360);
+			        yaw=Utils.normalise(yaw+yo,0,360);
+			        pitch=Utils.normalise(pitch+po,0,360);
 			        Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
 		        c++;

@@ -1,6 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.conditions.own;
 
-import com.gmail.berndivader.utils.Utils;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.LivingEntity;
+
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -8,24 +10,25 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class Healthcondition 
+public class MovementSpeedCondition
 extends
 AbstractCustomCondition
 implements
 IEntityCondition {
-	protected RangedDouble pc;
+	private RangedDouble r1;
 
-	public Healthcondition(String line, MythicLineConfig mlc) {
+	public MovementSpeedCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.pc=new RangedDouble(mlc.getString(new String[]{"percentage","p"},"1to100"),false);
+		r1=new RangedDouble(mlc.getString("range",">0"));
 	}
 
 	@Override
-	public boolean check(AbstractEntity entity) {
-		double maxHealth=entity.getMaxHealth();
-		double health=entity.getHealth();
-		double percent=(health*100)/maxHealth;
-		return this.pc.equals(Utils.round(percent,0));
+	public boolean check(AbstractEntity e) {
+		if (e.isLiving()) {
+			LivingEntity le1=(LivingEntity)e.getBukkitEntity();
+			return r1.equals((double)le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+		}
+		return false;
 	}
 
 }

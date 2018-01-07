@@ -28,7 +28,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.NMS.NMSUtils;
 
 public class MythicProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -125,12 +125,12 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 				}
 				if (MythicProjectile.this.startForwardOffset != 0.0f) {
 					this.startLocation.add(BukkitAdapter.adapt(
-							CustomSkillStuff.getFrontBackOffsetVector(BukkitAdapter.adapt(
+							Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(
 									this.startLocation).getDirection(),MythicProjectile.this.startForwardOffset)));
 				}
 				if (MythicProjectile.this.startSideOffset != 0.0f) {
 					this.startLocation.add(BukkitAdapter.adapt(
-							CustomSkillStuff.getSideOffsetVector(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false)));
+							Utils.getSideOffsetVector(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false)));
 					
 				}
 			}
@@ -178,7 +178,7 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {
-				yaw = CustomSkillStuff.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+				yaw = Utils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
 				this.pLocation.setYaw(yaw);
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));

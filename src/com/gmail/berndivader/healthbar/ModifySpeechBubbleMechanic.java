@@ -2,7 +2,7 @@ package com.gmail.berndivader.healthbar;
 
 import java.util.ArrayList;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -51,7 +51,7 @@ ITargetedEntitySkill {
 				ArrayList<String>li1=new ArrayList<String>();
 				String[]a2=s1.split("<nl>");
 				for(int i=0;i<a2.length;i++) {
-					String[]a4=CustomSkillStuff.wrapStr(a2[i],ll);
+					String[]a4=Utils.wrapStr(a2[i],ll);
 					for (int i1=0;i1<a4.length;i1++) {
 						li1.add(a4[i1]);
 					}

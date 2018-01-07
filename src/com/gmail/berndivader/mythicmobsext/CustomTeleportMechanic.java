@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -167,7 +168,7 @@ ITargetedLocationSkill {
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
 						if (this.fo!=0.0D) {
 							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
-			    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
 			    			ll.add(foV);
 			    			target=BukkitAdapter.adapt(ll);
 						}
@@ -191,7 +192,7 @@ ITargetedLocationSkill {
 							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
 						if (this.fo!=0.0D) {
 							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
-			    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
 			    			ll.add(foV);
 			    			target=BukkitAdapter.adapt(ll);
 						}

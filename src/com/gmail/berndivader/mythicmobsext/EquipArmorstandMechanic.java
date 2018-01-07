@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
@@ -27,7 +29,7 @@ INoTargetSkill {
 		} catch (Exception e) {
 			this.material=Material.DIRT;
 		}
-		if (parse.length==2&&CustomSkillStuff.isNumeric(parse[1])) this.slot=Integer.parseInt(parse[1]);
+		if (parse.length==2&&Utils.isNumeric(parse[1])) this.slot=Integer.parseInt(parse[1]);
 	}
 
 	@Override

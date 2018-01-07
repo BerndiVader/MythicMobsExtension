@@ -72,7 +72,7 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "customrandomskill": {
-				skill = new AdvRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				skill = new CustomRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "customsummon": {
@@ -269,6 +269,10 @@ public class CustomMechanics implements Listener {
 				break;
 			} case "swap": {
 				skill = new SwapMechanic(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
+			} case "randomspeed": {
+				skill = new RandomSpeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "unequip": {

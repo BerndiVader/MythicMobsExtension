@@ -24,8 +24,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -212,7 +212,7 @@ implements VolatileHandler {
 	        case "rangedmelee": {
 	            if (e instanceof EntityCreature) {
 	            	float range = 2.0f;
-	            	if (CustomSkillStuff.isNumeric(data)) {
+	            	if (Utils.isNumeric(data)) {
 	            		range = Float.parseFloat(data);
 	            	}
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalMeleeRangeAttack((EntityCreature)e, 1.0, true, range));
@@ -222,7 +222,7 @@ implements VolatileHandler {
 	        case "runfromsun": {
 	        	if (e instanceof EntityCreature) {
 	        		double speed = 1.0d;
-	            	if (CustomSkillStuff.isNumeric(data)) {
+	            	if (Utils.isNumeric(data)) {
 	            		speed = Double.parseDouble(data);
 	            	}
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalFleeSun((EntityCreature)e, speed));
@@ -251,7 +251,7 @@ implements VolatileHandler {
         					zR=Float.parseFloat(p[a]);
         				}
 	        		}
-	        		if (data1!=null && (uuid = CustomSkillStuff.isUUID(data1))!=null) {
+	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
 						Entity ee = NMSUtil.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
@@ -268,7 +268,7 @@ implements VolatileHandler {
 	        	if (e instanceof EntityCreature) {
 	        		int chance=50;
 	        		if (data1!=null 
-	        				&& CustomSkillStuff.isNumeric(data1)) chance=Integer.parseInt(data1);
+	        				&& Utils.isNumeric(data1)) chance=Integer.parseInt(data1);
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
@@ -789,7 +789,7 @@ implements VolatileHandler {
 	@Override
 	public boolean playerIsJumping(Player p) {
 		net.minecraft.server.v1_11_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
-		return !me.onGround&&CustomSkillStuff.round(me.motY,5)!=-0.00784;
+		return !me.onGround&&Utils.round(me.motY,5)!=-0.00784;
 	}
 
 	@Override

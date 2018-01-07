@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.utils.Vec2D;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
@@ -45,7 +46,7 @@ ITargetedEntitySkill {
 					p.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
-					Vec2D v=CustomSkillStuff.lookAtVec(p.getEyeLocation(),
+					Vec2D v=Utils.lookAtVec(p.getEyeLocation(),
 							caster.getBukkitEntity().getLocation().add(0,caster.getEyeHeight(), 0));
 					PlayerGoggleMechanic.this.vh.playerConnectionLookAt(p,(float)v.getX(),(float)v.getY());
 				}

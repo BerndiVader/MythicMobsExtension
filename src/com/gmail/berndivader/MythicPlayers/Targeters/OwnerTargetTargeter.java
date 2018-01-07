@@ -7,8 +7,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -37,7 +37,7 @@ public class OwnerTargetTargeter extends IEntitySelector {
 					if (owner instanceof Creature) {
 						if ((pt=BukkitAdapter.adapt(((Creature)owner).getTarget()))!=null)targets.add(pt);
 					} else if (owner instanceof Player) {
-						if((pt=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)owner)))!=null)targets.add(pt);
+						if((pt=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)owner)))!=null)targets.add(pt);
 					} else if (owner.getLastDamageCause()!=null) {
 						targets.add(BukkitAdapter.adapt(owner.getLastDamageCause().getEntity()));
 					}

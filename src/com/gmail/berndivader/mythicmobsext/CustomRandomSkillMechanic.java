@@ -13,7 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class AdvRandomSkillMechanic extends SkillMechanic 
+public class CustomRandomSkillMechanic extends SkillMechanic 
 implements
 IMetaSkill {
 	protected MythicMobs mythicmobs;
@@ -64,7 +64,7 @@ IMetaSkill {
 		protected Optional<Skill> skill = Optional.empty();
 		
 		public SkillEntry(int priority, double chance, String skill) {
-			this.skill = AdvRandomSkillMechanic.this.skillmanager.getSkill(skill);
+			this.skill = CustomRandomSkillMechanic.this.skillmanager.getSkill(skill);
 			this.chance = chance;
 			this.priority = priority;
 		}

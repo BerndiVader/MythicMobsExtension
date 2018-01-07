@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -173,8 +173,8 @@ ITargetedLocationSkill {
             }
     		this.useOffset=IStatueMechanic.this.fOffset!=0d||IStatueMechanic.this.sOffset!=0d;
     		if (this.useOffset) {
-    			Vector soV=CustomSkillStuff.getSideOffsetVector(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
+    			Vector soV=Utils.getSideOffsetVector(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
@@ -276,8 +276,8 @@ ITargetedLocationSkill {
             if (!this.islocationtarget) {
         		double x = this.currentLocation.getX();
         		double z = this.currentLocation.getZ();
-    			Vector soV=CustomSkillStuff.getSideOffsetVector(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=CustomSkillStuff.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
+    			Vector soV=Utils.getSideOffsetVector(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=Utils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
     			x+=soV.getX()+foV.getX();
     			z+=soV.getZ()+foV.getZ();
     			this.currentLocation.setX(x);
