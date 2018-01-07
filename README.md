@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.236d for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 07.12.2017 *** fixed NPE in dropmythicitem if trigger is not present.
 ##### ** 07.12.2017 *** added randomspeed mechanic & movespeed condition. See randomspeed ore movespeed for details.
 ##### ** 07.12.2017 *** added "ANY" item to steal mechanic. See steal mechanic for details.
 ##### ** 06.12.2017 *** fixed latest issue in lastdamagecause.
