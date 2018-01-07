@@ -53,7 +53,8 @@ ITargetedLocationSkill {
 		ActiveMob am=(ActiveMob)data.getCaster();
 		if (this.itemtype==null||am==null) return false;
 		ArrayList<ItemStack> drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,null);
-		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,(LivingEntity)data.getTrigger().getBukkitEntity(),drops);
+		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
+		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
         Bukkit.getServer().getPluginManager().callEvent(e);
 		drops=e.getDrops();
 		dropItems(drops,BukkitAdapter.adapt(ltarget));
@@ -65,7 +66,8 @@ ITargetedLocationSkill {
 		ActiveMob am=(ActiveMob)data.getCaster();
 		if (this.itemtype==null||am==null) return false;
 		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,etarget);
-		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,(LivingEntity)data.getTrigger().getBukkitEntity(),drops);
+		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
+		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
         Bukkit.getServer().getPluginManager().callEvent(e);
 		if (e.isCancelled()) return false;
 		drops=e.getDrops();
