@@ -11,6 +11,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -63,7 +65,7 @@ ITargetedLocationSkill {
 		Location source=data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
 		Location target=BukkitAdapter.adapt(t);
 		Vector v=this.ued?((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().getDirection()
-				:CustomSkillStuff.calculateTrajectory(source.toVector(),target.toVector(),this.hGain,this.gravity);
+				:Utils.calculateTrajectory(source.toVector(),target.toVector(),this.hGain,this.gravity);
 		for (int a=0;a<this.amount;a++) {
 			Location sl=source.clone();
 			final TNTPrimed grenade=(TNTPrimed)sl.getWorld().spawnEntity(sl,EntityType.PRIMED_TNT);

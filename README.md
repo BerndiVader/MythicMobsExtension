@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.236a for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.236d for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,8 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 07.12.2017 *** added randomspeed mechanic & movespeed condition. See randomspeed ore movespeed for details.
+##### ** 07.12.2017 *** added "ANY" item to steal mechanic. See steal mechanic for details.
 ##### ** 06.12.2017 *** fixed latest issue in lastdamagecause.
 ##### ** 06.12.2017 *** added cancellable to MythicMobsExtItemDropEvent.
 ##### ** 05.12.2017 *** added shuffle option for dropmythicitem mechanic & MythicMobsExtItemDropEvent is called whenever this mechanic is used.
@@ -284,6 +286,24 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## randomspeed mechanic:
+
+Force the target to drop an item from its storagte/equipment to the ground.
+
+##### `- randomspeed{range=[range]}`
+
+Where in `[range]` is the range the new random speed is picked.
+Example:
+
+```yaml
+newSpeed:
+  Skills:
+  - randomspeed{range=0.2to0.5} @self ~onInteract
+```
+
 
 
 
@@ -1251,7 +1271,7 @@ RndLvlMob:
 
 ## StealSkill:
 ##### `- steal{items=ITEM:AMOUNT,ITEM:AMOUNT,.....;failsignal=steal_fail;oksignal=steal_ok}`
-+ `items=` Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player.
++ `items=` Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player. Use "ANY" for any item.
 + `failsignal=` name of the signal that should be send to the mob if the stealing failed. default signal = steal_fail
 + `oksignal=` name of the signal that should be send to the mob if the stealing was good. default signal = steal_ok
 		
@@ -1333,6 +1353,10 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- movespeed{range=[ranged_value]}`
+To use as **Conditions** && **TargetConditions** condition. Check the generic movementSpeed.
+Ex: `- movespeed{rage=<0.51}}` condition is true if the speed is below 0.51.
 
 ##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
 ##### `- lastbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`

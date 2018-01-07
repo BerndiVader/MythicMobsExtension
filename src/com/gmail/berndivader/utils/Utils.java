@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext;
+package com.gmail.berndivader.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -38,6 +38,10 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.PlayerGoggleMechanic;
+import com.gmail.berndivader.mythicmobsext.PlayerSpinMechanic;
+import com.gmail.berndivader.mythicmobsext.StunMechanic;
 import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -55,12 +59,12 @@ import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
-public class CustomSkillStuff implements Listener {
+public class Utils implements Listener {
 	protected static MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected static MobManager mobmanager = mythicmobs.getMobManager();
 	protected static NMSUtils nmsutils=Main.getPlugin().getNMSUtils();
 	
-	public CustomSkillStuff(Plugin plugin) {
+	public Utils(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
@@ -156,7 +160,7 @@ public class CustomSkillStuff implements Listener {
 		Entity victim = e.getEntity();
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
-			Entity damager = CustomSkillStuff.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
+			Entity damager = Utils.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
 			if (damager!=null) victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
 		} else if (victim.hasMetadata("LastDamager")) {
 			victim.removeMetadata("LastDamager", Main.getPlugin());

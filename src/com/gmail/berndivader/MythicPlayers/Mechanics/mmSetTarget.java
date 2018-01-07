@@ -3,7 +3,7 @@ package com.gmail.berndivader.MythicPlayers.Mechanics;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -33,7 +33,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 				am.getThreatTable().clearTarget();
 				am.getThreatTable().getAllThreatTargets().clear();
 			}
-			le = CustomSkillStuff.getTargetedEntity((Player) BukkitAdapter.adapt(data.getCaster().getEntity()));
+			le = Utils.getTargetedEntity((Player) BukkitAdapter.adapt(data.getCaster().getEntity()));
 			if (le != null) {
 				am.getThreatTable().threatGain(BukkitAdapter.adapt(le), 99999999);
 				am.getThreatTable().targetHighestThreat();

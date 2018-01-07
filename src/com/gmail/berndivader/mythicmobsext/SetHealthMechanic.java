@@ -2,6 +2,8 @@ package com.gmail.berndivader.mythicmobsext;
 
 import org.bukkit.entity.LivingEntity;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.io.ConfigManager;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -30,7 +32,7 @@ INoTargetSkill {
 			ActiveMob am=(ActiveMob)data.getCaster();
 			double h=20,mod=0;
 			if (this.r.contains("to")) {
-				h=CustomSkillStuff.randomRangeDouble(this.r);
+				h=Utils.randomRangeDouble(this.r);
 			} else {
 				h=Double.parseDouble(this.r);
 			}

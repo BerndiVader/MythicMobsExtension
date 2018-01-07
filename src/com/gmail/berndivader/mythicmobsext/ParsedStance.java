@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -47,7 +49,7 @@ INoTargetSkill {
 	private boolean castCast(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		if (mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am = mobmanager.getMythicMobInstance(data.getCaster().getEntity());
-			String s=CustomSkillStuff.parseMobVariables(this.stance,data,data.getCaster().getEntity(),e1,l1);
+			String s=Utils.parseMobVariables(this.stance,data,data.getCaster().getEntity(),e1,l1);
 			am.setStance(s);
 			return true;
 		}

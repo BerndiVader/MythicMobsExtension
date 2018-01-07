@@ -31,7 +31,7 @@ ITargetedEntitySkill {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
 		this.thiefhandler = Main.getPlugin().getThiefHandler();
-		this.items=new ArrayList<>(Arrays.asList(mlc.getString(new String[] { "items", "i" }, "").toUpperCase().split(",")));
+		this.items=new ArrayList<>(Arrays.asList(mlc.getString(new String[] { "items", "i" }, "ANY").toUpperCase().split(",")));
 		this.signal_fail = mlc.getString(new String[] { "failsignal", "fail" }, "steal_fail");
 		this.signal_ok = mlc.getString(new String[] { "oksignal", "ok" }, "steal_ok");
 	}
@@ -61,7 +61,7 @@ ITargetedEntitySkill {
 				if (item==null||item.getType()==Material.AIR) continue;
 				it=item.getType().toString();
 				a=item.getAmount();
-				if (ri.equals(it)) {
+				if (ri.equals(it)||ri.equals("ANY")) {
 					if (ra<a) {
 						item1=new ItemStack(item);
 						item1.setAmount(a-ra);

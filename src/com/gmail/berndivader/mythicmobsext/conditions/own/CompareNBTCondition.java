@@ -16,7 +16,7 @@ IEntityCondition {
 
 	public CompareNBTCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		s1=mlc.getString("tag",null);
+		s1=mlc.getString("nbt",null);
 	}
 
 	@Override

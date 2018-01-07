@@ -1,6 +1,6 @@
 package com.gmail.berndivader.healthbar;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -45,8 +45,8 @@ ITargetedEntitySkill {
 			SpeechBubble sb=HealthbarHandler.speechbubbles.get(data.getCaster().getEntity().getUniqueId().toString()+this.id);
 			if (this.oline!=null) {
 				String s2="";
-				String s1=CustomSkillStuff.parseMobVariables(this.oline,data,target,data.getTrigger(),null);
-				if (this.nline!=null) s2=CustomSkillStuff.parseMobVariables(this.nline,data,target,data.getTrigger(),null);
+				String s1=Utils.parseMobVariables(this.oline,data,target,data.getTrigger(),null);
+				if (this.nline!=null) s2=Utils.parseMobVariables(this.nline,data,target,data.getTrigger(),null);
 				if (this.cmp.equals("append")) {
 					String[]arr1=sb.template;
 					String[]arr2=new String[]{s2};

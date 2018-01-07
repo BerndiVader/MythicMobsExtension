@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -24,7 +24,7 @@ IEntitySelector {
 		HashSet<AbstractEntity>targets=new HashSet<>();
 		AbstractEntity target;
 		if (data.getTrigger().isPlayer()) {
-			if ((target=BukkitAdapter.adapt(CustomSkillStuff.getTargetedEntity((Player)data.getTrigger().getBukkitEntity())))!=null) {
+			if ((target=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)data.getTrigger().getBukkitEntity())))!=null) {
 				targets.add(target);
 			};
 		} else if ((target=data.getTrigger().getTarget())!=null) {

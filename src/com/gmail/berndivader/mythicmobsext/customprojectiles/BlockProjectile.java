@@ -29,8 +29,8 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 public class BlockProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
@@ -189,7 +189,7 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {
-				yaw = CustomSkillStuff.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+				yaw = Utils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
 				this.pLocation.setYaw(yaw);
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));

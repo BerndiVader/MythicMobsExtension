@@ -1,8 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.conditions.own;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -36,7 +36,7 @@ IEntityComparisonCondition {
 	public boolean check(AbstractEntity caster, AbstractEntity ae) {
 		ActiveMob am=this.mobmanager.getMythicMobInstance(caster);
 		SkillMetadata data=new SkillMetadata(SkillTrigger.API,am,ae);
-		String stance=CustomSkillStuff.parseMobVariables(this.stance,data,caster,ae,null);
+		String stance=Utils.parseMobVariables(this.stance,data,caster,ae,null);
 		ActiveMob target=this.compareToSelf?am:mobmanager.getMythicMobInstance(ae);
 		return target.getStance().contains(stance);
 	}

@@ -3,7 +3,7 @@ package com.gmail.berndivader.mythicmobsext.conditions.own;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -18,7 +18,7 @@ implements IEntityComparisonCondition {
 
 	public InFrontCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.viewAngle = CustomSkillStuff.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
+		this.viewAngle = Utils.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
 	}
 
 	@Override

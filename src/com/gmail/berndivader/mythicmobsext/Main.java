@@ -24,6 +24,7 @@ import com.gmail.berndivader.mythicmobsext.conditions.own.OwnConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.nanpatch.NaNpatch;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -80,7 +81,7 @@ public class Main extends JavaPlugin {
 			pluginmanager.registerEvents(new UndoBlockListener(), this);
 			this.thiefhandler = new ThiefHandler();
 			logger.info("registered ThiefHandlers!");
-			new CustomSkillStuff(this);
+			new Utils(this);
 			new CustomMechanics(this);
 			logger.info("Found MythicMobs, registered CustomSkills.");
 			Main.mythicplayers = new MythicPlayers(this);

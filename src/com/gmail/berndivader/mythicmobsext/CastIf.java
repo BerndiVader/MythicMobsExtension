@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import com.gmail.berndivader.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -101,10 +102,10 @@ ITargetedLocationSkill {
 			if (sdata.getEntityTargets()!=null&&sdata.getEntityTargets().size()>0) at=sdata.getEntityTargets().iterator().next();
 			if (sdata.getLocationTargets()!=null&&sdata.getLocationTargets().size()>0) al=sdata.getLocationTargets().iterator().next();
 			if (this.meetAction!=null) {
-				mSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.meetAction),sdata,sdata.getCaster().getEntity(),at,al));
+				mSkill=this.skillmanager.getSkill(Utils.parseMobVariables(SkillString.parseMessageSpecialChars(this.meetAction),sdata,sdata.getCaster().getEntity(),at,al));
 			}
 			if (this.elseAction!=null) {
-				eSkill=this.skillmanager.getSkill(CustomSkillStuff.parseMobVariables(SkillString.parseMessageSpecialChars(this.elseAction),sdata,sdata.getCaster().getEntity(),at,al));
+				eSkill=this.skillmanager.getSkill(Utils.parseMobVariables(SkillString.parseMessageSpecialChars(this.elseAction),sdata,sdata.getCaster().getEntity(),at,al));
 			}
 		} else {
 			mSkill=this.meetSkill;

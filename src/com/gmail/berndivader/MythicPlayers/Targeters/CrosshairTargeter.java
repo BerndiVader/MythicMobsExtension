@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -27,7 +27,7 @@ IEntitySelector {
 		SkillCaster caster = data.getCaster();
 		if (caster.getEntity().isPlayer()) {
 			targets.add(BukkitAdapter
-					.adapt(CustomSkillStuff.getTargetedEntity((Player) BukkitAdapter.adapt(caster.getEntity()))));
+					.adapt(Utils.getTargetedEntity((Player) BukkitAdapter.adapt(caster.getEntity()))));
 		}
 		return targets;
 	}

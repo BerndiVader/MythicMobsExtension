@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.MythicPlayers.PlayerManager;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -39,7 +39,7 @@ IEntityCondition {
 				}
 			} else {
 				if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
-					d1=(double)CustomSkillStuff.getBowTension((Player)e.getBukkitEntity());
+					d1=(double)Utils.getBowTension((Player)e.getBukkitEntity());
 				}
 			}
 		}

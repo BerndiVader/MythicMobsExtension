@@ -27,7 +27,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
+import com.gmail.berndivader.utils.Utils;
 
 public class MythicOrbitalProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
@@ -138,7 +138,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 				return;
 
 			try {
-				this.currentLocation = CustomSkillStuff.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ,
+				this.currentLocation = Utils.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ,
 						this.radiusY, this.radPerTick * tick);
 				this.pEntity = MythicOrbitalProjectile.this.mythicmobs.getAPIHelper().spawnMythicMob(customItemName,
 						BukkitAdapter.adapt(this.currentLocation));
@@ -227,7 +227,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 			}
 
 			this.centerLocation = this.target.getBukkitEntity().getLocation().clone().add(0.0D, this.pVOff, 0.0D);
-			this.currentLocation = CustomSkillStuff.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ,
+			this.currentLocation = Utils.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ,
 					this.radiusY, this.radPerTick * tick);
 			if (MythicOrbitalProjectile.this.stopOnHitGround
 					&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
@@ -237,7 +237,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 			Location eloc = this.pEntity.getLocation().clone();
 			float yaw = eloc.getYaw();
 			if (this.pFaceDir) {
-				yaw = CustomSkillStuff.lookAtYaw(eloc, BukkitAdapter.adapt(this.currentLocation));
+				yaw = Utils.lookAtYaw(eloc, BukkitAdapter.adapt(this.currentLocation));
 			} else if (this.pSpin != 0.0) {
 				yaw = ((yaw + this.pSpin) % 360.0F);
 			}

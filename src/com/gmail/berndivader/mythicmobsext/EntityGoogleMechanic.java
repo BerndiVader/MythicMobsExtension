@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.utils.Vec2D;
 import com.gmail.berndivader.volatilecode.VolatileHandler;
 
@@ -53,7 +54,7 @@ ITargetedEntitySkill {
 					this.cancel();
 				} else {
 					if (!b1) {
-						v2=CustomSkillStuff.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
+						v2=Utils.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
 								target.getBukkitEntity().getLocation().add(0,target.getEyeHeight(), 0));
 					} else {
 						v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());

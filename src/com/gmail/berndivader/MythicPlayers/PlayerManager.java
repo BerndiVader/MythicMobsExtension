@@ -35,7 +35,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import com.gmail.berndivader.mythicmobsext.CustomSkillStuff;
 import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -219,7 +218,7 @@ public class PlayerManager implements Listener {
 				float f1;
 				@Override
 				public void run() {
-					if ((f1=CustomSkillStuff.getBowTension(p))>-1) {
+					if ((f1=com.gmail.berndivader.utils.Utils.getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(mythicplayers.plugin(),f1));
 					} else {
 						this.cancel();

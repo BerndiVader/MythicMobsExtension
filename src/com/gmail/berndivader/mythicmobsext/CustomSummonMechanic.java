@@ -2,6 +2,8 @@ package com.gmail.berndivader.mythicmobsext;
 
 import org.bukkit.entity.Creature;
 
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -66,10 +68,10 @@ public class CustomSummonMechanic extends SkillMechanic
 		if (!data.getCaster().getEntity().getWorld().equals(tl.getWorld())) return false;
 		if (this.useEyeDirection) {
 			target = BukkitAdapter
-					.adapt(CustomSkillStuff.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
+					.adapt(Utils.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
 		}
 		target.add(this.addx, this.addy, this.addz);
-		int amount=CustomSkillStuff.randomRangeInt(this.amount);
+		int amount=Utils.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			if (this.noise > 0) {
 				for (int i=1;i<=amount;i++) {
@@ -85,7 +87,7 @@ public class CustomSummonMechanic extends SkillMechanic
 						Creature c=(Creature)ams.getEntity().getBukkitEntity();
 						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
 					}
-					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
+					if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
 						String tt = SkillString.unparseMessageSpecialChars(this.tag);
@@ -122,7 +124,7 @@ public class CustomSummonMechanic extends SkillMechanic
 							||!ams.getEntity().getWorld().equals(data.getCaster().getEntity().getWorld())
 							||ams.getEntity().isDead())
 						continue;
-					if (this.invisible) CustomSkillStuff.applyInvisible(ams.getLivingEntity(),0);
+					if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
 					this.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.setowner) {
 						ams.setOwner(data.getCaster().getEntity().getUniqueId());
