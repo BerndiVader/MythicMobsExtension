@@ -7,6 +7,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -731,6 +732,20 @@ public class Utils implements Listener {
         return f1;
 	}
 	
+	public static int[] shuffleArray(int[]arr1) {
+		int i1;
+		Random r=Main.random;
+		for (int i=arr1.length-1;i>0;i--) {
+			i1=r.nextInt(i+1);
+			if (i1!=i) {
+				arr1[i1]^=arr1[i];
+				arr1[i]^=arr1[i1];
+				arr1[i1]^=arr1[i];
+			}
+		}
+		return arr1;
+	}
+	
 	public static Object cloneObject(Object obj) {
 		try {
             Object clone=obj.getClass().newInstance();
@@ -747,7 +762,7 @@ public class Utils implements Listener {
             		if(childObj==obj) {
             			field.set(clone, clone);
             		} else {
-            			field.set(clone, cloneObject(field.get(obj)));
+            			field.set(clone,cloneObject(field.get(obj)));
             		}
             	}
             }

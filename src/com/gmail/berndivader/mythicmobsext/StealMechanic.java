@@ -8,6 +8,9 @@ import java.util.ListIterator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -26,6 +29,7 @@ ITargetedEntitySkill {
 	private ArrayList<String> items;
 	private String signal_fail;
 	private String signal_ok;
+	private int[]iarr;
 
 	public StealMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -34,6 +38,15 @@ ITargetedEntitySkill {
 		this.items=new ArrayList<>(Arrays.asList(mlc.getString(new String[] { "items", "i" }, "ANY").toUpperCase().split(",")));
 		this.signal_fail = mlc.getString(new String[] { "failsignal", "fail" }, "steal_fail");
 		this.signal_ok = mlc.getString(new String[] { "oksignal", "ok" }, "steal_ok");
+		this.iarr=i();
+	}
+	
+	private static int[]i() {
+		int[]arr1=new int[41];
+		for(int j1=0;j1<41;j1++) {
+			arr1[j1]=j1;
+		}
+		return arr1;
 	}
 
 	@Override
@@ -55,13 +68,28 @@ ITargetedEntitySkill {
 			} catch (NumberFormatException e) {
 				ra=1;
 			}
-			ListIterator<ItemStack>iter2=pl.getInventory().iterator();
+			PlayerInventory pi1=pl.getInventory();
+			ListIterator<ItemStack>iter2=pi1.iterator();
+			if (ri.equals("ANY")) {
+				int[]arr1=Utils.shuffleArray(this.iarr.clone());
+				boolean c=false;
+				int i=0;
+				while(!c&&i<41) {
+					Material m1=pi1.getItem(arr1[i])!=null?pi1.getItem(arr1[i]).getType():Material.AIR;
+					if(m1!=Material.AIR) {
+						c=true;
+						ri=m1.name();
+						break;
+					}
+					i++;
+				}
+			}
 			while(iter2.hasNext()&&!stolen) {
 				item=iter2.next();
 				if (item==null||item.getType()==Material.AIR) continue;
 				it=item.getType().toString();
 				a=item.getAmount();
-				if (ri.equals(it)||ri.equals("ANY")) {
+				if (ri.equals(it)) {
 					if (ra<a) {
 						item1=new ItemStack(item);
 						item1.setAmount(a-ra);

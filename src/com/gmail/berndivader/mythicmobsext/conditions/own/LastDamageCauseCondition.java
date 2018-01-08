@@ -30,7 +30,6 @@ IEntityCondition {
 		if (entity.hasMetadata("LastDamageCause")) cause=entity.getMetadata("LastDamageCause").get(0).asString().toUpperCase();
 		if (damager!=null&&!attackers[0].equals("ANY")) {
 			for(String s1:attackers) {
-				System.err.println(s1);
 				if(s1.equals(damager)) {
 					match=true;
 					break;
