@@ -50,28 +50,24 @@ ITargetedLocationSkill {
 	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation ltarget) {
-		ActiveMob am=(ActiveMob)data.getCaster();
-		if (this.itemtype==null||am==null) return false;
-		ArrayList<ItemStack> drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,null);
-		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
-		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
-        Bukkit.getServer().getPluginManager().callEvent(e);
-		drops=e.getDrops();
-		dropItems(drops,BukkitAdapter.adapt(ltarget));
-		return true;
+		return a(data,null,ltarget);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity etarget) {
+		return a(data,etarget,null);
+	}
+	
+	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		ActiveMob am=(ActiveMob)data.getCaster();
 		if (this.itemtype==null||am==null) return false;
-		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,etarget);
+		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,e1==null?data.getTrigger():e1);
 		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
 		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
         Bukkit.getServer().getPluginManager().callEvent(e);
 		if (e.isCancelled()) return false;
 		drops=e.getDrops();
-		dropItems(drops,BukkitAdapter.adapt(etarget.getLocation()));
+		dropItems(drops,e1!=null?e1.getBukkitEntity().getLocation():BukkitAdapter.adapt(l1));
 		return true;
 	}
 
