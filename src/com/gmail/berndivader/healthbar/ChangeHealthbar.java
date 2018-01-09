@@ -21,7 +21,7 @@ ITargetedEntitySkill {
 	public ChangeHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		ASYNC_SAFE=false;
-		String parse = mlc.getString(new String[] { "display", "d"}, );
+		String parse = mlc.getString(new String[] { "display", "d"},null);
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse = parse.substring(1, parse.length()-1);
 		}

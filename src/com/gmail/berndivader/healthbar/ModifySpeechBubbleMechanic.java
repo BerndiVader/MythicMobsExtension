@@ -19,7 +19,7 @@ ITargetedEntitySkill {
 	private String text;
 	private String id;
 	private String s1;
-	private Float offset;
+	private Double offset;
 	private Double so;
 	private Double fo;
 	private Integer ll;
@@ -37,7 +37,7 @@ ITargetedEntitySkill {
 					this.text=text.substring(1,text.length()-1);
 				}
 		}
-		this.offset=mlc.getFloat(new String[] {"offset","yo"},-999);
+		this.offset=mlc.getDouble(new String[] {"offset","yo"},-999);
 		this.so=mlc.getDouble("so",-999);
 		this.fo=mlc.getDouble("fo",-999);
 		this.i1=mlc.getInteger("timer",-999);

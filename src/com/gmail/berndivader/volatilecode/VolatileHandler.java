@@ -41,5 +41,5 @@ public interface VolatileHandler {
 	void setFieldOfViewPacketSend(Player player, float f1);
 	float getIndicatorPercentage(Player p);
 	Parrot spawnCustomParrot(Location l1,boolean b1);
-	Object getNBTValueOf(Entity e1, String s1);
+	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
 }

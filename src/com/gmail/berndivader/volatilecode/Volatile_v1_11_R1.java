@@ -925,8 +925,8 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public Object getNBTValueOf(Entity e1, String s1) {
+	public boolean getNBTValueOf(Entity e1, String s1,boolean b1) {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 }

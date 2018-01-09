@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.236f for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki

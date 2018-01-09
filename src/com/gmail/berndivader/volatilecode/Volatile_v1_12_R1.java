@@ -23,6 +23,7 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.NBT;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -940,31 +941,90 @@ implements VolatileHandler {
 	}
 	
 	@Override
-	public boolean testForCondition(Entity e, String ns,char m) {
-		return testFor(e,ns,m);
-	}
-	
-	@Override
-	public Object getNBTValueOf(Entity e1, String s1) {
+	public boolean getNBTValueOf(Entity e1, String s1,boolean b1) {
 		return getNBTValue(e1,s1);
 	}
 	
-	private Object getNBTValue(Entity e1, String s1) {
+	private boolean getNBTValue(Entity e1, String s) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
-		NBTTagCompound nbt1=null;
-		Object o1=null;
+		NBTTagCompound nbt1=null,nbt2=null;
+		boolean bl1=false;
 		if ((nbt1=TFa(me))!=null) {
-			if (nbt1.hasKey(s1)) {
-				byte bb=nbt1.getTypeId();
-				switch(bb) {
-				case 0:
-					
-				}
-			} else {
-				return null;
+			try {
+				nbt2=MojangsonParser.parse(s);
 			}
+			catch (MojangsonParseException ex) {
+				System.err.println(ex.getLocalizedMessage());
+				return false;
+			}
+			NBTBase nb1=null,nb2=null;
+			for(String s2:nbt1.c()) {
+				if (nbt2.hasKey(s2)) {
+					nb1=nbt1.get(s2);
+					nb2=nbt2.get(s2);
+					break;
+				}
+			}
+			if (nb1!=null&&nb2!=null) bl1=nbtA(nb2,nb1,bl1=true);
 		}
-		return o1;
+		return bl1;
+	}
+	
+	private boolean nbtA(NBTBase nb1,NBTBase nb2,boolean bl1) {
+		if(!bl1) return bl1;
+		switch(nb1.getTypeId()) {
+		case NBT.TAG_COMPOUND:
+            NBTTagCompound nbt1=(NBTTagCompound)nb1;
+            NBTTagCompound nbt2=(NBTTagCompound)nb2;
+            for (String s:nbt1.c()) {
+            	System.err.println(s);
+            	if (nbt2.hasKey(s)) {
+	                NBTBase nb3=nbt1.get(s);
+	                bl1=nbtA(nb3,nbt2.get(s),bl1=true);
+            	}
+            }
+			break;
+		case NBT.TAG_LIST:
+            NBTTagList nbl1=(NBTTagList)nb1;
+            NBTTagList nbl2=(NBTTagList)nb2;
+            System.err.println("nbl1:"+nbl1);
+            System.err.println("nbl2:"+nbl2);
+            for(int i1=0;i1<nbl1.size();i1++) {
+            	NBTBase nb3=nbl1.i(i1);
+            	NBTBase nb4=nbl2.i(i1);
+            	System.err.println("nb3:"+nb3);
+            	System.err.println("nb4:"+nb4);
+            	nbtA(nb3,nb4,bl1);
+            }
+			break;
+		case NBT.TAG_BYTE:
+		case NBT.TAG_SHORT:
+		case NBT.TAG_LONG:
+		case NBT.TAG_INT:
+		case NBT.TAG_FLOAT:
+		case NBT.TAG_DOUBLE:
+			System.err.println("number");
+			System.err.println(nb1.toString());
+			System.err.println(nb2.toString());
+			break;
+		case NBT.TAG_BYTE_ARRAY:
+		case NBT.TAG_INT_ARRAY:
+			System.err.println("num_array");
+			System.err.println(nb1.toString());
+			System.err.println(nb2.toString());
+			break;
+		case NBT.TAG_STRING:
+			System.err.println("string");
+			System.err.println(nb1.toString());
+			System.err.println(nb2.toString());
+			break;
+		}
+		return bl1;
+	}
+	
+	@Override
+	public boolean testForCondition(Entity e, String ns,char m) {
+		return testFor(e,ns,m);
 	}
  	
 	private boolean testFor(Entity e,String c,char m) {
