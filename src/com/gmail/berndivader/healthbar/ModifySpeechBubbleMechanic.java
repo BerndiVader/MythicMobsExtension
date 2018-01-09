@@ -16,10 +16,14 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text,id,s1;
-	private float offset;
-	private double so,fo;
-	private int ll,i1;
+	private String text;
+	private String id;
+	private String s1;
+	private Double offset;
+	private Double so;
+	private Double fo;
+	private Integer ll;
+	private Integer i1;
 
 	public ModifySpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -33,7 +37,7 @@ ITargetedEntitySkill {
 					this.text=text.substring(1,text.length()-1);
 				}
 		}
-		this.offset=mlc.getFloat(new String[] {"offset","yo"},-999);
+		this.offset=mlc.getDouble(new String[] {"offset","yo"},-999);
 		this.so=mlc.getDouble("so",-999);
 		this.fo=mlc.getDouble("fo",-999);
 		this.i1=mlc.getInteger("timer",-999);

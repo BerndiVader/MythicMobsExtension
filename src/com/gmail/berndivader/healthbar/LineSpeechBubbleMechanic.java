@@ -14,7 +14,10 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String oline,nline,id,cmp;
+	private String oline;
+	private String nline;
+	private String id;
+	private String cmp;
 
 	public LineSpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -23,14 +26,14 @@ ITargetedEntitySkill {
 		String nl=mlc.getString(new String[] {"newline","nl"},null);
 		this.id=mlc.getString("id","bubble");
 		if (nl!=null) {
-			if (nl.startsWith("\"")&&nl.endsWith("\"")) {
+			if (nl.startsWith("\"") && nl.endsWith("\"")) {
 				this.nline=SkillString.parseMessageSpecialChars((nl.substring(1,nl.length()-1)));
 			} else {
 				this.nline=nl;
 			}
 		}
 		if (ol!=null) {
-			if (ol.startsWith("\"")&&ol.endsWith("\"")) {
+			if (ol.startsWith("\"") && ol.endsWith("\"")) {
 				this.oline=SkillString.unparseMessageSpecialChars(ol.substring(1,ol.length()-1));
 			} else {
 				this.oline=ol;

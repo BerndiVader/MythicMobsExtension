@@ -16,33 +16,33 @@ public class CreateHealthbar extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	protected double offset,hOffset,vOffset;
-	protected String template;
-	protected int counter;
-	protected boolean ignoreYaw;
+	protected Double offset;
+	protected Double hOffset;
+	protected Double vOffset;
+	protected String display;
+	protected Integer counter;
+	protected Boolean ignoreYaw;
 	
 	public CreateHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.offset = mlc.getDouble("offset",2D);
-		this.counter = mlc.getInteger("counter",200);
-		this.hOffset=mlc.getDouble("so",0d);
-		this.vOffset=mlc.getDouble("fo",0d);
-		this.ignoreYaw=mlc.getBoolean("iy",false);
-		String parse = mlc.getString("display");
-		if (parse.startsWith("\"") 
-				&& parse.endsWith("\"")) {
+		this.ASYNC_SAFE = false;
+		this.offset = mlc.getDouble(new String[] { "offset", "o" }, 2D);
+		this.counter = mlc.getInteger(new String[] { "counter", "c" }, 200);
+		this.hOffset = mlc.getDouble(new String[] { "sideoffset", "so" }, 0D);
+		this.vOffset = mlc.getDouble(new String[] { "forwardoffset", "fo" }, 0D);
+		this.ignoreYaw = mlc.getBoolean(new String[] { "ignoreyaw", "iy" }, false);
+		String parse = mlc.getString(new String[] { "display", "d" },null);
+		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse = parse.substring(1, parse.length()-1);
 		}
-		this.template = SkillString.parseMessageSpecialChars(parse);
+		this.display = SkillString.parseMessageSpecialChars(parse);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!HealthbarHandler.healthbars.containsKey(target.getUniqueId())
-				&& target.isLiving()) {
+		if (!HealthbarHandler.healthbars.containsKey(target.getUniqueId()) && target.isLiving()) {
 			LivingEntity entity = (LivingEntity)target.getBukkitEntity();
-			new Healthbar(entity,this.offset,this.counter,this.template,this.hOffset,this.vOffset,this.ignoreYaw);
+			new Healthbar(entity,this.offset,this.counter,this.display,this.hOffset,this.vOffset,this.ignoreYaw);
 			return true;
 		};
 		return false;
