@@ -16,10 +16,14 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text,id,s1;
-	private float offset;
-	private double so,fo;
-	private int ll,i1;
+	private String text;
+	private String id;
+	private String s1;
+	private Float offset;
+	private Double so;
+	private Double fo;
+	private Integer ll;
+	private Integer i1;
 
 	public ModifySpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
