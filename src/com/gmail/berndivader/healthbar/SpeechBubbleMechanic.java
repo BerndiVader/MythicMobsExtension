@@ -32,7 +32,7 @@ ITargetedEntitySkill {
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.id=mlc.getString(new String[] { "id", "bubble" }, );
+		this.id=mlc.getString("id","bubble");
 		this.offset=mlc.getDouble(new String[] { "offset", "o" }, 2.1D);
 		this.so=mlc.getDouble(new String[] { "sideoffset", "so"}, 0D);
 		this.fo=mlc.getDouble(new String[] { "forwardoffset", "fo"}, 0D);

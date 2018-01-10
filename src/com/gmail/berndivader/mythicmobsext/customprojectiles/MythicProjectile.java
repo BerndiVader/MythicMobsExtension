@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.utils.Utils;
@@ -124,14 +125,14 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					this.startLocation.setY(this.startLocation.getY() + MythicProjectile.this.startYOffset);
 				}
 				if (MythicProjectile.this.startForwardOffset != 0.0f) {
-					this.startLocation.add(BukkitAdapter.adapt(
-							Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(
-									this.startLocation).getDirection(),MythicProjectile.this.startForwardOffset)));
+					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),MythicProjectile.this.startForwardOffset);
+					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					this.startLocation.add(av);
 				}
 				if (MythicProjectile.this.startSideOffset != 0.0f) {
-					this.startLocation.add(BukkitAdapter.adapt(
-							Utils.getSideOffsetVector(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false)));
-					
+					Vector v=Utils.getSideOffsetVector(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false);
+					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					this.startLocation.add(av);
 				}
 			}
 			this.currentLocation = this.startLocation.clone();

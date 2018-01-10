@@ -15,7 +15,6 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.MythicUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,8 +26,10 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 public class EffectProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected Optional<Skill> onBounceSkill = Optional.empty();
@@ -116,13 +117,14 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 					this.startLocation.setY(this.startLocation.getY() + EffectProjectile.this.startYOffset);
 				}
 				if (EffectProjectile.this.startForwardOffset != 0.0f) {
-					this.startLocation = this.startLocation.add(this.startLocation.getDirection().clone()
-							.multiply(EffectProjectile.this.startForwardOffset));
+					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),EffectProjectile.this.startForwardOffset);
+					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					this.startLocation.add(av);
 				}
 				if (EffectProjectile.this.startSideOffset != 0.0f) {
-					this.startLocation.setPitch(0.0f);
-					this.startLocation = MythicUtil.move(this.startLocation, 0.0, 0.0,
-							EffectProjectile.this.startSideOffset);
+					Vector v=Utils.getSideOffsetVector(this.startLocation.getYaw(), EffectProjectile.this.startSideOffset,false);
+					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					this.startLocation.add(av);
 				}
 			}
 			this.startLocation.clone();

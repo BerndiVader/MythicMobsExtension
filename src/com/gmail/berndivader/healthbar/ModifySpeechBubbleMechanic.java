@@ -35,7 +35,7 @@ ITargetedEntitySkill {
 		this.ll=mlc.getInteger(new String[] { "linelength", "ll" }, 20);
 		this.i1=mlc.getInteger(new String[] { "counter", "c" }, -999);
 		this.s1=mlc.getString(new String[] { "usecounter", "uc" }, "").toLowerCase();
-		this.text=mlc.getString(new String[] { "display", "d" }, null);
+		this.text=mlc.getString(new String[] { "display", "d" },null);
 		if (text!=null) {
 			if (text.startsWith("\"") && text.endsWith("\"")) {
 					this.text=text.substring(1,text.length()-1);

@@ -31,7 +31,7 @@ ITargetedEntitySkill {
 		this.hOffset = mlc.getDouble(new String[] { "sideoffset", "so" }, 0D);
 		this.vOffset = mlc.getDouble(new String[] { "forwardoffset", "fo" }, 0D);
 		this.ignoreYaw = mlc.getBoolean(new String[] { "ignoreyaw", "iy" }, false);
-		String parse = mlc.getString(new String[] { "display", "d" },null);
+		String parse = mlc.getString(new String[] { "display", "d" },"$h");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse = parse.substring(1, parse.length()-1);
 		}
