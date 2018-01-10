@@ -487,61 +487,7 @@ Force the entity to goggle at the targeted entity for duration amount of ticks. 
 Rotates the entity yo degrees relative to its yaw, amount of duration times. Doesnt work too well if the entity have ai.
 
 ##### `- setrotation{dur=200;yo=10} @self ~onTimer:5`
-	
 
-
-## speechbubble mechanic (requires holographicdisplay):
-
-Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
-`so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side. `anim`true or false if the text should be animated at popup. (option) `id` is the id of the entity's speechbubble if you want to use modifybubble or removebubble mechanic.
-Use `<additem.ITEM_NAME>`inside the `text`option to add an itemline to the bubble. Use any valid bukkit item material name. Use <nl> placeholder inside `text`option to force a new line. Use `usecounter`true/false to enable counter for the bubble.
-
-
-##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;so=sideoffset;fo=forwardoffset;time=300} @trigger ~onInteract`
-
-```yaml
-BubbleMonkey:
-  Type: zombie
-  Display: "DingDong"
-  AITargetSelectors:
-  - 0 clear
-  Skills:
-  - equip{i=BlackbeardHead:4} @self ~onSpawn
-  - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
-  - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
-```
-
-## modifybubble mechanic:
-
-Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset;usecounter=true/false;timer=ticks}`
-
-## removebubble mechanic:
-
-Removes an existing bubble from the caster: `removebubble{id=existing_id}`
-
-## linebubble mechanic:
-
-Modify a line of a bubble: `linebubble{id=existing_id;mode=append/replace/remove;oldline="oldlinetext";newline="newlinetext"}`
-If bubble with id have a line that contains `oldline` that line will be removed, replaced with newline, or if used append a newline will be added.
-Example:
-
-```yaml
-BubbleMonkey:
-  Type: zombie
-  Display: "DingDong"
-  AITargetSelectors:
-  - 0 clear
-  Skills:
-  - speechbubble{id=effects;usecounter=false} @self ~onSpawn
-# creating a bubble instance at spawn.
-
-BubbleSkill:
-  Skills:
-#  - linebubble{id=effects;mode=append;newline="<additem.dirt>"}
-#  - linebubble{id=effects;mode=remove;oldline="<additem.dirt>"}
-#  - linebubble[id=effects;mode=replace;oldline="<additem.dirt>";newline="<additem.stone>"}
-```
-	
 
 
 ## disarm mechanic:
