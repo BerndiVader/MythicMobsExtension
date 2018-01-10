@@ -12,21 +12,23 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 public class ParsedDisguiseMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {
-    private String disguise;
-    public ParsedDisguiseMechanic(String skill, MythicLineConfig mlc) {
-        super(skill, mlc);
-        this.disguise=mlc.getString(new String[]{"disguise","d"},"Notch");
-        this.ASYNC_SAFE=false;
-    }
 
-    @Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-        if (CompatibilityManager.LibsDisguises != null) {
-            String d=SkillString.unparseMessageSpecialChars(this.disguise);
-            d=SkillString.parseMobVariables(d,data.getCaster(),target,data.getTrigger());
-            CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
-            return true;
-        }
-        return false;
-    }
+	private String disguise;
+	public ParsedDisguiseMechanic(String skill, MythicLineConfig mlc) {
+	
+		super(skill, mlc);
+		this.disguise=mlc.getString(new String[] { "disguise", "d" }, "Notch");
+		this.ASYNC_SAFE=false;
+	}
+
+	@Override
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		if (CompatibilityManager.LibsDisguises != null) {
+			String d=SkillString.unparseMessageSpecialChars(this.disguise);
+			d=SkillString.parseMobVariables(d,data.getCaster(),target,data.getTrigger());
+			CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
+			return true;
+		}
+		return false;
+	}
 }
