@@ -39,7 +39,7 @@ ITargetedEntitySkill {
 		if (text!=null) {
 			if (text.startsWith("\"") && text.endsWith("\"")) {
 					this.text=text.substring(1,text.length()-1);
-				}
+			}
 		}
 	}
 
