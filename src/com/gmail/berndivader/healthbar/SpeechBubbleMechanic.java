@@ -19,28 +19,31 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text,id;
-	private int ll,time;
-	private float offset;
-	private double so,fo;
-	private boolean b1,b2;
+	private String text;
+	private String id;
+	private Double offset;
+	private Double so;
+	private Double fo;
+	private Integer ll;
+	private Integer time;
+	private Boolean b1;
+	private Boolean b2;
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.text=mlc.getString(new String[] {"text","t"},"");
-		this.id=mlc.getString("id","bubble");
-		if (text.startsWith("\"")
-			&&text.endsWith("\"")) {
+		this.ASYNC_SAFE = false;
+		this.id=mlc.getString(new String[] { "id", "bubble" }, );
+		this.offset=mlc.getDouble(new String[] { "offset", "o" }, 2.1D);
+		this.so=mlc.getDouble(new String[] { "sideoffset", "so"}, 0D);
+		this.fo=mlc.getDouble(new String[] { "forwardoffset", "fo"}, 0D);
+		this.ll=mlc.getInteger(new String[] { "linelength", "ll" }, 20);
+		this.time=mlc.getInteger(new String[] { "counter", "c" }, 200);
+		this.b1=mlc.getBoolean(new String[] { "animation", "anim", "a" }, true);  
+		this.b2=mlc.getBoolean(new String[] { "usecounter", "uc" }, true);
+		this.text=mlc.getString(new String[] { "display", "d" }, "");
+		if (text.startsWith("\"") && text.endsWith("\"")) {
 			this.text=text.substring(1,text.length()-1);
 		}
-		this.ll=mlc.getInteger(new String[] {"linelength","ll"},20);
-		this.offset=mlc.getFloat(new String[] {"offset","yo"},2.1f);
-		this.time=mlc.getInteger(new String[] {"time","ti"},20);
-		this.so=mlc.getDouble("so",0d);
-		this.fo=mlc.getDouble("fo",0d);
-		this.b1=mlc.getBoolean("anim",true);  
-		this.b2=mlc.getBoolean("usecounter",true);
 	}
 
 	@Override
