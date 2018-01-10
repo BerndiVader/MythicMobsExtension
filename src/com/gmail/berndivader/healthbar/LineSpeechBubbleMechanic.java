@@ -22,9 +22,10 @@ ITargetedEntitySkill {
 	public LineSpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		String ol=mlc.getString(new String[] {"oldline","ol"},null);
-		String nl=mlc.getString(new String[] {"newline","nl"},null);
 		this.id=mlc.getString("id","bubble");
+		this.cmp=mlc.getString(new String[] { "mode", "m" }, "replace").toLowerCase();
+		String ol=mlc.getString(new String[] { "oldline", "ol" }, null);
+		String nl=mlc.getString(new String[] { "newline", "nl" }, null);
 		if (nl!=null) {
 			if (nl.startsWith("\"") && nl.endsWith("\"")) {
 				this.nline=SkillString.parseMessageSpecialChars((nl.substring(1,nl.length()-1)));
@@ -39,7 +40,6 @@ ITargetedEntitySkill {
 				this.oline=ol;
 			}
 		}
-		this.cmp=mlc.getString("mode","replace").toLowerCase();
 	}
 
 	@Override
