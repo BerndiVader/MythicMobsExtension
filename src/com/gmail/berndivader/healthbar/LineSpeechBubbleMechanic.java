@@ -71,9 +71,9 @@ ITargetedEntitySkill {
 							if (i>=0&&arr.length>0) {
 				                System.arraycopy(arr1,0,arr,0,i);
 				                System.arraycopy(arr1,i+1,arr,i,arr.length-i);								
+							    sb.template=arr;
+							    i--;
 							}
-						    sb.template=arr;
-						    i=-1;
 						}
 					}
 				}

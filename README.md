@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238b for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238c for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 11.01.2018 *** added hasvehicle condition. minor fix in linebubble mechanic
 ##### ** 11.01.2018 *** fixed parrot mythicspawners issue.
 ##### ** 10.12.2017 *** fixed customprojectiles compatibility with older MythicMobs versions.
 ##### ** 07.12.2017 *** removed debug messages from lastdamagecause & ANY in steal mechanic choose a random, no AIR, inventory slot.
@@ -1357,6 +1358,11 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- hasvehicle{types=[array]||ANY}`
+To use as **Conditions** condition. Check if the caster is riding or driving another entity. Use an array `zombie,skeleton,creeper` or a single type `boat` or `ANY` for any entity.
+Ex: `- hasvehicle{types=ANY}` condition is true if the caster is riding, driving an entity.
+Ex: `- hasvehicle{types=zombie,boat,skeleton}` condition is true if the caster is riding, driving one of the types.
 
 ##### `- movespeed{range=[ranged_value]}`
 To use as **Conditions** && **TargetConditions** condition. Check the generic movementSpeed.

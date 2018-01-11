@@ -31,7 +31,11 @@ ILocationCondition {
 		super(line, mlc);
 		this.mobmanager = Main.getPlugin().getMobManager();
 		ml=mlc.getString(new String[] { "mobtypes", "types", "mobs", "mob", "type", "t", "m" }, "ALL").toUpperCase().split(",");
-		if (ml.length>0&&ml[0].equals("ALL")) this.all=true;
+		if (ml.length==1&&(ml[0].equals("ALL")||ml[0].equals("ANY"))) {
+			this.all=true;
+		} else if (ml.length>0){
+			
+		}
 		this.a=new RangedDouble(mlc.getString(new String[] { "amount","a" }, "0"),false);
 		this.r=mlc.getDouble(new String[] { "radius", "r" },5);
 	}

@@ -129,6 +129,10 @@ public class OwnConditions implements Listener {
 				SkillCondition c=new IsVehicleCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
+			} case "hasvehicle": {
+				SkillCondition c=new HasVehicleCondition(e.getConfig().getLine(),e.getConfig());
+				e.register(c);
+				break;
 			} case "lastdamagecause": {
 				SkillCondition c = new LastDamageCauseCondition(e.getConfig().getLine(), e.getConfig());
 				e.register(c);

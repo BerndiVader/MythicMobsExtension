@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.conditions.own;
 
+import org.bukkit.entity.Entity;
+
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -18,7 +20,10 @@ IEntityComparisonCondition {
 
 	@Override
 	public boolean check(AbstractEntity caster, AbstractEntity target) {
-		if (caster.getVehicle()!=null) return caster.getVehicle().equals(target);
+		Entity e1;
+		if ((e1=caster.getBukkitEntity()).getVehicle()!=null) {
+			return e1.getVehicle().equals(target.getBukkitEntity());
+		}
 		return false;
 	}
 

@@ -417,10 +417,12 @@ implements VolatileHandler {
 	        	break;
 	        }
 	        case "breakblocks": {
+	        	System.err.println("hoho");
 	        	if (e instanceof EntityCreature) {
 	        		int chance=50;
 	        		if (data1!=null 
 	        				&& Utils.isNumeric(data1)) chance=Integer.parseInt(data1);
+		        	System.err.println("hoho1");
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
