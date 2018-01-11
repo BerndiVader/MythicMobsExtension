@@ -57,6 +57,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -73,16 +74,29 @@ public class Utils implements Listener {
 	public void onMythicMobsSpawnEvent(MythicMobSpawnEvent e) {
 		if (e.isCancelled()) return;
 		if (e.getEntity() instanceof Parrot) {
-			e.setCancelled();
-			e.getEntity().remove();
 			MythicMob mm=e.getMobType();
 			LivingEntity p=Main.getPlugin().getVolatileHandler().spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
 	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
-	        ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
+	        final ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
 	        mythicmobs.getMobManager().registerActiveMob(am);
 	        mm.applyMobOptions(am,am.getLevel());
 	        mm.applyMobVolatileOptions(am);
 	        new TriggeredSkillAP(SkillTrigger.SPAWN,am,null);
+	        final Entity entity=e.getEntity();
+	        new BukkitRunnable() {
+				@Override
+				public void run() {
+					ActiveMob am1=null;
+					if ((am1=mythicmobs.getMobManager().getMythicMobInstance(entity))!=null) {
+						MythicSpawner ms=null;
+						if ((ms=am1.getSpawner())!=null) {
+							am.setSpawner(ms);
+							if (!ms.getAssociatedMobs().contains(am.getUniqueId())) ms.trackMob(am);
+							am1.getEntity().remove();
+						};
+					}
+				}
+			}.runTaskLater(Main.getPlugin(),1l);
 		}
 	}
 

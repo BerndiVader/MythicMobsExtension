@@ -363,15 +363,20 @@ implements VolatileHandler {
 	        		if (data!=null) {
 		        		String[]p=data.split(",");
 		        		for (int a=0;a<p.length;a++) {
-	        				if (a==0) {
+		        			switch(a) {
+		        			case 0:
 	        					d1=Double.parseDouble(p[a]);
-	        				} else if (a==1) {
+		        				break;
+		        			case 1:
 	        					i1=Integer.parseInt(p[a]);
-	        				} else if (a==2) {
+		        				break;
+		        			case 2:
 	        					i2=Integer.parseInt(p[a]);
-	        				} else if (a==3) {
+		        				break;
+		        			case 3:
 	        					f1=Float.parseFloat(p[a]);
-	        				}
+		        				break;
+		        			}
 		        		}
 	        		}
 	            	goals.a(i,new PathFinderGoalShoot((EntityInsentient)e,d1,i1,i2,f1));
@@ -386,13 +391,17 @@ implements VolatileHandler {
 	        		float zR=10.0F;
 	        		String[]p=data.split(",");
 	        		for (int a=0;a<p.length;a++) {
-        				if (a==0) {
+	        			switch(a) {
+	        			case 0:
         					speed=Double.parseDouble(p[a]);
-        				} else if (a==1) {
+        					break;
+	        			case 1:
         					aR=Float.parseFloat(p[a]);
-        				} else if (a==2) {
+        					break;
+	        			case 2:
         					zR=Float.parseFloat(p[a]);
-        				}
+        					break;
+	        			}
 	        		}
 	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
 	        			Main.getPlugin().getNMSUtils();
@@ -432,21 +441,25 @@ implements VolatileHandler {
 		        		String[]p=data1.split(",");
 		        		for (int a=0;a<p.length;a++) {
 		        			if (Utils.isNumeric(p[a])) {
-		        				if (a==0) {
+		        				switch(a) {
+		        				case 0:
 		        					x=Double.parseDouble(p[a]);
-		        				} else if (a==1) {
+		        					break;
+		        				case 1:
 		        					y=Double.parseDouble(p[a]);
-		        				} else if (a==2) {
+		        					break;
+		        				case 2:
 		        					z=Double.parseDouble(p[a]);
-		        				} else if (a==3) {
+		        					break;
+		        				case 3:
 		        					mR=Double.parseDouble(p[a]);
-		        				} else if (a==4) {
+		        					break;
+		        				case 4:
 		        					tR=Double.parseDouble(p[a]);
+		        					break;
 		        				}
-		        			} else {
-		        				if (a==5) {
-		        					iT=Boolean.parseBoolean(p[a].toUpperCase());
-		        				}
+		        			} else if (a==5) {
+		        				iT=Boolean.parseBoolean(p[a].toUpperCase());
 		        			}
 		        		}
 	            	}
