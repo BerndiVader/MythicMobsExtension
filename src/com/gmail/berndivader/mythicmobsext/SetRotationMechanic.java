@@ -15,43 +15,44 @@ public class SetRotationMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill{
 	public static String str="mmRotate";
-    private float yawOff,pitchOff;
-    private long d;
+	private Float yawOff;
+	private Float pitchOff;
+	private Long d;
 
-    public SetRotationMechanic(String skill, MythicLineConfig mlc) {
-        super(skill, mlc);
-        this.yawOff=mlc.getFloat(new String[]{"yawoffset","yaw","yo"},5.0F);
-        this.pitchOff=mlc.getFloat(new String[]{"pitchoffset","pitch","po"},0F);
-        this.d=mlc.getLong(new String[]{"duration","dur"},1);
-    }
+	public SetRotationMechanic(String skill, MythicLineConfig mlc) {
+		super(skill, mlc);
+		this.yawOff=mlc.getFloat(new String[] { "yawoffset", "yaw", "yo", "y" }, 5.0F);
+		this.pitchOff=mlc.getFloat(new String[] { "pitchoffset", "pitch", "po", "p" }, 0F);
+		this.d=mlc.getLong(new String[]{ "duration", "d" }, 1);
+	}
 
-    @Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	@Override
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) return false;
 		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
-    	final float yo=this.yawOff,po=this.pitchOff;
-		final long d=this.d;
+		final Float yo=this.yawOff,po=this.pitchOff;
+		final Long d=this.d;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-    	new BukkitRunnable() {
-            float yaw=target.getBukkitEntity().getLocation().getYaw();
-            float pitch=target.getBukkitEntity().getLocation().getPitch();
-			long c=0;
+		new BukkitRunnable() {
+			Float yaw=target.getBukkitEntity().getLocation().getYaw();
+			Float pitch=target.getBukkitEntity().getLocation().getPitch();
+			Long c=0;
 			@Override
 			public void run() {
-				if (c>d||target.isDead()||!target.getBukkitEntity().hasMetadata(str)) {
-			        if (!target.isDead()) {
+				if (c>d || target.isDead() || !target.getBukkitEntity().hasMetadata(str)) {
+					if (!target.isDead()) {
 						target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
-			        }
+					}
 					this.cancel();
 				} else {
-			        yaw=Utils.normalise(yaw+yo,0,360);
-			        pitch=Utils.normalise(pitch+po,0,360);
-			        Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
+					yaw=Utils.normalise(yaw+yo,0,360);
+					pitch=Utils.normalise(pitch+po,0,360);
+					Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
-		        c++;
+				c++;
 			}
-		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L,1L);;
-        return true;
-    }
-    
+		}
+		.runTaskTimerAsynchronously(Main.getPlugin(), 1L,1L);;
+		return true;
+	}
 }
