@@ -20,36 +20,31 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
-	private long dur;
-	private boolean b;
+	private Long dur;
+	private Boolean b;
 	private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
 	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		b(skill.toLowerCase().startsWith("entitylookin"));
-		this.dur=(long)mlc.getInteger(new String[] {"duration","dur"},120);
+		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public Boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (data.getCaster().getEntity().isPlayer()) return false;
 		if (data.getCaster().getEntity().getBukkitEntity().hasMetadata(str)) data.getCaster().getEntity().getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final AbstractEntity caster=data.getCaster().getEntity();
 		final AbstractEntity target=t;
 		caster.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-		final long d=this.dur;
-		final boolean b1=this.b;
+		final Long d=this.dur;
+		final Boolean b1=this.b;
 		new BukkitRunnable() {
-			long l=0;
+			Long l=0;
 			Vec2D v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());
 			@Override
 			public void run() {
-				if (caster==null
-						||target==null
-						||l>d
-						||caster.isDead()
-						||target.isDead()
-						||!caster.getBukkitEntity().hasMetadata(str)) {
+				if (caster==null || target==null || l>d || caster.isDead() || target.isDead() || !caster.getBukkitEntity().hasMetadata(str)) {
 					caster.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
@@ -67,7 +62,7 @@ ITargetedEntitySkill {
 		return true;
 	}
 	
-	private void b(boolean b) {
+	private void b(Boolean b) {
 		this.b=b;
 	}
 
