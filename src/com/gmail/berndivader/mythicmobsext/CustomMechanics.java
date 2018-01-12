@@ -240,7 +240,7 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "setmobhealth": {
-				skill=new SetHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				skill=new SetMobHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "setrandomlevel": {
