@@ -27,7 +27,7 @@ ITargetedEntitySkill {
 	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		b(skill.toLowerCase().startsWith("entitylookin"));
-		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.dur=(long)mlc.getInteger(new String[] { "duration", "d" }, 120);
 	}
 
 	@Override
