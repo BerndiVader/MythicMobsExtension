@@ -6,16 +6,16 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class FakePlayerDeathMechanic
+public class FakeEntityDeathMechanic
 extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
-	private long d;
+	private Long d;
 
-	public FakePlayerDeathMechanic(String skill, MythicLineConfig mlc) {
+	public FakeEntityDeathMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(long)mlc.getInteger("duration",60);
+		this.d=(Long)mlc.getInteger(new String[] { "duration", "d" }, 60);
 	}
 
 	@Override
