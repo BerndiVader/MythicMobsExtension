@@ -18,14 +18,14 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	public static String str="mmSpin";
-	private long d;
-	private float s;
+	private Long d;
+	private Float s;
 	final private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
 	public PlayerSpinMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(long)mlc.getInteger(new String[] {"duration","d"},120);
-		this.s=mlc.getFloat(new String[] {"speed","s"},30.0F);
+		this.d=(Long)mlc.getInteger(new String[] { "duration", "d" }, 120);
+		this.s=mlc.getFloat(new String[] { "speed", "s" }, 30.0F);
 	}
 
 	@Override
@@ -33,11 +33,11 @@ ITargetedEntitySkill {
 		if (!target.isPlayer()) return false;
 		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final Entity entity=target.getBukkitEntity();
-		final long d=this.d;
-		final float s=this.s;
+		final Long d=this.d;
+		final Float s=this.s;
 		entity.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
-			long c=0;
+			Long c=0;
 			@Override
 			public void run() {
 				if (entity==null||entity.isDead()||c>d||!entity.hasMetadata(str)) {
