@@ -24,10 +24,10 @@ ITargetedEntitySkill {
 		super(line, mlc);
 		this.ASYNC_SAFE=false;
 		this.debug=mlc.getBoolean("debug",false);
-		this.velocityX = mlc.getDouble(new String[]{"velocityx", "vx", "x"}, 0.0D);
-		this.velocityY = mlc.getDouble(new String[]{"velocityy", "vy", "y"}, 0.0D);
-		this.velocityZ = mlc.getDouble(new String[]{"velocityz", "vz", "z"}, 0.0D);
-		String strMode = mlc.getString(new String[]{"mode", "m"}, "SET", new String[0]);
+		this.velocityX = mlc.getDouble(new String[] { "velocityx", "vx", "x" }, 0.0D);
+		this.velocityY = mlc.getDouble(new String[] { "velocityy", "vy", "y" }, 0.0D);
+		this.velocityZ = mlc.getDouble(new String[] { "velocityz", "vz", "z" }, 0.0D);
+		String strMode = mlc.getString(new String[] { "mode", "m" }, "SET", new String[0]);
 		switch (strMode.toUpperCase()) {
 			case "ADD": {
 				this.mode = VelocityMode.ADD;
