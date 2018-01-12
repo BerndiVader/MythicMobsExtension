@@ -8,16 +8,16 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class ZoomPlayerMechanic 
+public class PlayerZoomMechanic 
 extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private float f1;
+	private Float f1;
 
-	public ZoomPlayerMechanic(String skill, MythicLineConfig mlc) {
+	public PlayerZoomMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		f(mlc.getFloat(new String[] {"value","v","amount","a"},0.0f));
+		f(mlc.getFloat(new String[] { "value", "v", "amount", "a" }, 0.0F));
 	}
 
 	@Override
@@ -29,7 +29,7 @@ ITargetedEntitySkill {
 		return false;
 	}
 	
-	private void f(float f1) {
+	private void f(Float f1) {
 		this.f1=f1>1.0f?1.0f:f1<0.0f?0.0f:f1;
 	}
 
