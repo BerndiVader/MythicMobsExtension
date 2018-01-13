@@ -76,7 +76,7 @@ ITargetedEntitySkill {
 			this.material=material;
 		}
 		public void setLore(String l) {
-			this.lore=(l==null||l.isEmpty()||l.toUpperCase().equals("ANY"))?"ANY":l;
+			this.lore=(l==null || l.isEmpty() || l.toUpperCase().equals("ANY")) ? "ANY":l;
 		}
 		public void setAmount(Integer a) {
 			this.amount=a;
