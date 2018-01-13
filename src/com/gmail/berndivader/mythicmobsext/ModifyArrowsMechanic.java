@@ -6,24 +6,24 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class RemoveArrowsMechanic 
+public class ModifyArrowsMechanic 
 extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
-	private int a;
-	private char m;
+	private Integer a;
+	private String m;
 
-	public RemoveArrowsMechanic(String skill, MythicLineConfig mlc) {
+	public ModifyArrowsMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.m=mlc.getString("mode","C").toUpperCase().charAt(0);
-		this.a=mlc.getInteger("amount",1);
+		this.m=mlc.getString(new String[] { "mode", "m" }, "CLEAR").toUpperCase();
+		this.a=mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			Main.getPlugin().getVolatileHandler().removeArrowsFromEntity(target.getBukkitEntity(),this.a,this.m);
+			Main.getPlugin().getVolatileHandler().modifyArrowsAtEntity(target.getBukkitEntity(),this.a,this.m);
 			return true;
 		}
 		return false;
