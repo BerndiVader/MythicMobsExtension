@@ -10,26 +10,34 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class RandomLevelMechanic 
+public class SetLevelMechanic 
 extends 
 SkillMechanic 
 implements 
 ITargetedEntitySkill {
 	private MobManager mobmanager;
-	private Integer min;
-	private Integer max;
+	private String a;
 
-	public RandomLevelMechanic(String skill, MythicLineConfig mlc) {
+	public SetLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.mobmanager=Main.getPlugin().getMobManager();
-		this.min=mlc.getInteger("min",1);
-		this.max=mlc.getInteger("max",3);
+		this.a=mlc.getString(new String[] { "amount", "a" }, 1).toUpperCase();
+		if (!a.contains("TO")) {
+			Integer lvl=a;
+			min=null;
+		} else {
+			String[]a1=a.split("TO");
+			min=Integer.parseInteger(a1[0]);
+			max=Integer.parseInteger(a1[1]);
+		}
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		int lvl=ThreadLocalRandom.current().nextInt(min,max+1);
+		if (!min=null) {
+			Integer lvl=ThreadLocalRandom.current().nextInt(min,max+1);
+		}
 		if (target instanceof ActiveMob) {
 			ActiveMob am=mobmanager.getMythicMobInstance(target);
 			am.setLevel(lvl);
