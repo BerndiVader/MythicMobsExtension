@@ -34,21 +34,21 @@ ITargetedEntitySkill {
 		ANY;
 
 		public static WhereType get(String s) {
-	        if (s==null) return null;
-	        try {
-	            return WhereType.valueOf(s.toUpperCase());
-	        }
-	        catch (Exception ex) {
-                return WhereType.ANY;
-            }
-	    }
+			if (s==null) return null;
+			try {
+				return WhereType.valueOf(s.toUpperCase());
+			}
+			catch (Exception ex) {
+				return WhereType.ANY;
+			}
+		}
 	}	
 	
 	public class ItemHolding {
 		Material material;
 		String lore;
-		int amount;
-		boolean matAny;
+		Integer amount;
+		Boolean matAny;
 		WhereType where;
 
 		public ItemHolding() {
@@ -78,22 +78,23 @@ ITargetedEntitySkill {
 		public void setLore(String l) {
 			this.lore=(l==null||l.isEmpty()||l.toUpperCase().equals("ANY"))?"ANY":l;
 		}
-		public void setAmount(int a) {
+		public void setAmount(Integer a) {
 			this.amount=a;
 		}
 		public void setWhere(String w) { this.where=WhereType.get(w); }
-		public boolean isMaterialAny(){
+		public Boolean isMaterialAny(){
 			return this.matAny;
 		}
 	}
 	
 	private ItemHolding holding;
-	private int pd,p;
+	private Integer pd;
+	private Integer p;
 	
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		String tmp=mlc.getString(new String[] {"item"},null);
+		String tmp=mlc.getString(new String[] { "item" }, null);
 		this.holding=new ItemHolding();
 		if (tmp==null) {
 			this.holding.setMaterial("ANY");
@@ -121,17 +122,17 @@ ITargetedEntitySkill {
 				}
 			}
 		}
-		this.pd=mlc.getInteger(new String[] {"pickupdelay","pd"},20);
-		this.p=mlc.getInteger(new String[] {"pieces","amount","a","p"},1);
+		this.pd=mlc.getInteger(new String[] { "pickupdelay", "pd" }, 20);
+		this.p=mlc.getInteger(new String[] { "pieces", "amount", "a", "p" }, 1);
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public Boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			final boolean isPlayer=target.isPlayer();
+			final Boolean isPlayer=target.isPlayer();
 			final LivingEntity e=(LivingEntity)target.getBukkitEntity();
 			final Location l=target.getBukkitEntity().getLocation();
-			for(int a=0;a<this.p;a++) {
+			for(Integer a=0;a<this.p;a++) {
 				List<ItemStack> iis=new ArrayList<ItemStack>();
 				ItemHolding entry=this.holding;
 				if (entry.where.equals(WhereType.ANY)) {
@@ -143,7 +144,7 @@ ITargetedEntitySkill {
 						iis.add(e.getEquipment().getItemInOffHand());
 					}
 				} else {
-					if (isPlayer&&entry.where.equals(WhereType.INVENTORY)) {
+					if (isPlayer && entry.where.equals(WhereType.INVENTORY)) {
 						iis.addAll(Arrays.asList(((Player)e).getInventory().getStorageContents()));
 						iis.remove(((Player)e).getEquipment().getItemInMainHand());
 					} else if (entry.where.equals(WhereType.HAND)) {
@@ -160,13 +161,13 @@ ITargetedEntitySkill {
 		return true;
 	}
 	
-	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
+	private static Boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
 		Collections.shuffle(i);
 		for(ListIterator<ItemStack>it=i.listIterator();it.hasNext();) {
 			ItemStack is = it.next();
 			if (is==null||is.getType().equals(Material.AIR)) continue;
-			int a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
-			if (entry.isMaterialAny()||entry.material.equals(is.getType())) {
+			Integer a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
+			if (entry.isMaterialAny() || entry.material.equals(is.getType())) {
 				if (entry.lore.equals("ANY")) {
 					ItemStack ti=is.clone();
 					ti.setAmount(a);
@@ -180,7 +181,7 @@ ITargetedEntitySkill {
 					}
 					return true;
 				}
-				if (is.hasItemMeta()&&is.getItemMeta().hasLore()) {
+				if (is.hasItemMeta() && is.getItemMeta().hasLore()) {
 					for(Iterator<String>it1=is.getItemMeta().getLore().iterator();it1.hasNext();) {
 						String ll=it1.next();
 						if (ll.contains(entry.lore)) {
