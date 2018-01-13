@@ -3,7 +3,7 @@
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
-Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#mechanics) to see stuff that is not yet in the wiki.
 
 ### Changelog:
 ##### ** 07.12.2017 *** removed debug messages from lastdamagecause & ANY in steal mechanic choose a random, no AIR, inventory slot.
