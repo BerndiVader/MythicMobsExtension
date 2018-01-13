@@ -1,10 +1,9 @@
 package com.gmail.berndivader.mythicmobsext;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import org.apache.commons.lang3.Range;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
+
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -19,37 +18,26 @@ SkillMechanic
 implements
 ITargetedEntitySkill,
 INoTargetSkill {
-	private Range<Double> r1;
+	private String s1;
 
 	public SetSpeedMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		String s1=mlc.getString(new String[] { "amount", "a" }, 0.2D).toUpperCase();
-		if (!s1.contains("TO")) {
-			Double d1=s1;
-			r1=null;
-		} else {
-			String[]arr1=s1.split("TO");
-			r1=Range.between(Double.parseDouble(arr1[0]),Double.parseDouble(arr1[1]));
-		}
+		s1=mlc.getString(new String[] { "amount", "a" }, "0.2D").toLowerCase();
 	}
 
 	@Override
-	public Boolean cast(SkillMetadata data) {
+	public boolean cast(SkillMetadata data) {
 		return d(data.getCaster().getEntity());
 	}
 
 	@Override
-	public Boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		return d(target);
 	}
 	
 	private Boolean d(AbstractEntity target) {
 		if (target.isLiving()) {
-			LivingEntity le1=(LivingEntity)target.getBukkitEntity();
-			if (!r1=null) {
-				Double d1=ThreadLocalRandom.current().nextDouble(r1.getMinimum(),r1.getMaximum());
-			}
-			le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(d1);
+			((LivingEntity)target.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(Utils.randomRangeDouble(s1));
 			return true;
 		}
 		return false;

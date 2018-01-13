@@ -20,18 +20,18 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
-	private Long dur;
-	private Boolean b;
+	private long dur;
+	private boolean b;
 	private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
 	public EntityGoogleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		b(skill.toLowerCase().startsWith("entitylookin"));
-		this.dur=(long)mlc.getInteger(new String[] { "duration", "d" }, 120);
+		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override
-	public Boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (data.getCaster().getEntity().isPlayer()) return false;
 		if (data.getCaster().getEntity().getBukkitEntity().hasMetadata(str)) data.getCaster().getEntity().getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		final AbstractEntity caster=data.getCaster().getEntity();
@@ -40,7 +40,7 @@ ITargetedEntitySkill {
 		final Long d=this.dur;
 		final Boolean b1=this.b;
 		new BukkitRunnable() {
-			Long l=0;
+			long l=0;
 			Vec2D v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());
 			@Override
 			public void run() {

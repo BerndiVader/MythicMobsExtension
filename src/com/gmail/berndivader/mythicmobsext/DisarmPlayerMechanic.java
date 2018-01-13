@@ -17,7 +17,7 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private Long dt;
+	private long dt;
 	
 	public DisarmPlayerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -25,7 +25,7 @@ ITargetedEntitySkill {
 	}
 
 	@Override
-	public Boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (!target.isPlayer()) {
 			if (target.isLiving()) {
 				final LivingEntity e=(LivingEntity)target.getBukkitEntity();

@@ -20,12 +20,12 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
-	private Long dur;
+	private long dur;
 	private VolatileHandler vh=Main.getPlugin().getVolatileHandler();
 
 	public PlayerGoggleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.dur=(Long)mlc.getInteger(new String[] { "duration", "d" }, 120);
+		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override
@@ -34,9 +34,9 @@ ITargetedEntitySkill {
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		final Player p=(Player)target.getBukkitEntity();
 		final AbstractEntity caster=data.getCaster().getEntity();
-		final Long d=this.dur;
+		final long d=this.dur;
 		new BukkitRunnable() {
-			Long count=0;
+			long count=0;
 			@Override
 			public void run() {
 				if (p==null || p.isDead() || count>d || !p.hasMetadata(str)) {

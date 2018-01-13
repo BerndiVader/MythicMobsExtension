@@ -11,11 +11,11 @@ extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
-	private Long d;
+	private long d;
 
 	public FakeEntityDeathMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(Long)mlc.getInteger(new String[] { "duration", "d" }, 60);
+		this.d=(long)mlc.getInteger(new String[] { "duration", "dur" }, 60);
 	}
 
 	@Override

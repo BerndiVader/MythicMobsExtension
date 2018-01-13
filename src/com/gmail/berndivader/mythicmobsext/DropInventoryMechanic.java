@@ -47,8 +47,8 @@ ITargetedEntitySkill {
 	public class ItemHolding {
 		Material material;
 		String lore;
-		Integer amount;
-		Boolean matAny;
+		int amount;
+		boolean matAny;
 		WhereType where;
 
 		public ItemHolding() {
@@ -88,8 +88,8 @@ ITargetedEntitySkill {
 	}
 	
 	private ItemHolding holding;
-	private Integer pd;
-	private Integer p;
+	private int pd;
+	private int p;
 	
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -127,12 +127,12 @@ ITargetedEntitySkill {
 	}
 
 	@Override
-	public Boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			final Boolean isPlayer=target.isPlayer();
+			final boolean isPlayer=target.isPlayer();
 			final LivingEntity e=(LivingEntity)target.getBukkitEntity();
 			final Location l=target.getBukkitEntity().getLocation();
-			for(Integer a=0;a<this.p;a++) {
+			for(int a=0;a<this.p;a++) {
 				List<ItemStack> iis=new ArrayList<ItemStack>();
 				ItemHolding entry=this.holding;
 				if (entry.where.equals(WhereType.ANY)) {
@@ -161,12 +161,12 @@ ITargetedEntitySkill {
 		return true;
 	}
 	
-	private static Boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
+	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
 		Collections.shuffle(i);
 		for(ListIterator<ItemStack>it=i.listIterator();it.hasNext();) {
 			ItemStack is = it.next();
 			if (is==null||is.getType().equals(Material.AIR)) continue;
-			Integer a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
+			int a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
 			if (entry.isMaterialAny() || entry.material.equals(is.getType())) {
 				if (entry.lore.equals("ANY")) {
 					ItemStack ti=is.clone();

@@ -15,9 +15,9 @@ public class SetRotationMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill{
 	public static String str="mmRotate";
-	private Float yawOff;
-	private Float pitchOff;
-	private Long d;
+	private float yawOff;
+	private float pitchOff;
+	private long d;
 
 	public SetRotationMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -30,13 +30,13 @@ ITargetedEntitySkill{
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) return false;
 		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
-		final Float yo=this.yawOff,po=this.pitchOff;
-		final Long d=this.d;
+		final float yo=this.yawOff,po=this.pitchOff;
+		final long d=this.d;
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
 		new BukkitRunnable() {
-			Float yaw=target.getBukkitEntity().getLocation().getYaw();
-			Float pitch=target.getBukkitEntity().getLocation().getPitch();
-			Long c=0;
+			float yaw=target.getBukkitEntity().getLocation().getYaw();
+			float pitch=target.getBukkitEntity().getLocation().getPitch();
+			long c=0;
 			@Override
 			public void run() {
 				if (c>d || target.isDead() || !target.getBukkitEntity().hasMetadata(str)) {

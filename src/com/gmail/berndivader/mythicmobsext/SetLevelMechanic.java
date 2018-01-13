@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext;
 
-import java.util.concurrent.ThreadLocalRandom;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -22,25 +22,14 @@ ITargetedEntitySkill {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		this.mobmanager=Main.getPlugin().getMobManager();
-		this.a=mlc.getString(new String[] { "amount", "a" }, 1).toUpperCase();
-		if (!a.contains("TO")) {
-			Integer lvl=a;
-			min=null;
-		} else {
-			String[]a1=a.split("TO");
-			min=Integer.parseInteger(a1[0]);
-			max=Integer.parseInteger(a1[1]);
-		}
+		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!min=null) {
-			Integer lvl=ThreadLocalRandom.current().nextInt(min,max+1);
-		}
 		if (target instanceof ActiveMob) {
 			ActiveMob am=mobmanager.getMythicMobInstance(target);
-			am.setLevel(lvl);
+			am.setLevel(Utils.randomRangeInt(a));
 			return true;
 		}
 		return false;

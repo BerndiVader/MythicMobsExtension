@@ -13,7 +13,7 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private Integer j;
+	private int j;
 
 	public SetItemCooldown(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

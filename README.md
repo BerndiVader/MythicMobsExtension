@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 13.01.2018 *** fixied issue in entitiesinradius conditions & added ignoresameblock option.
 ##### ** 11.01.2018 *** added hasvehicle condition. minor fix in linebubble mechanic
 ##### ** 11.01.2018 *** fixed parrot mythicspawners issue.
 ##### ** 10.12.2017 *** fixed customprojectiles compatibility with older MythicMobs versions.
@@ -1441,13 +1442,13 @@ an entity as target. Like ~onTimer and such stuff.
 ##### `- isburning{range=[ranged_value];action=[boolean]}`
 By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
 
-##### `- eir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
 
-##### `- leir{types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
 
-##### `- pir{amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
 Check if amount players are in radius.
 
 *Example*
@@ -1462,6 +1463,10 @@ Check if amount players are in radius.
   
   - pir{amount=>0;radius=64}
   # true if there is atleast 1 player in radius of 64 blocks.
+  
+  - eir{types=all;isb=true;amount=>0;radius=10}
+  # true if there is atleast 1 other entity in radius of 10 blocks & not on
+   same block as source location.
 ```
 
 ##### `- playertime{time=[RANGEDVALUE];action=[boolean]}`

@@ -632,6 +632,7 @@ public class Utils implements Listener {
 			split = range.split("to");
 			min = Integer.parseInt(split[0]);
 			max = Integer.parseInt(split[1]);
+			if (max>min) max=min;
 			amount = r.nextInt(min, max+1);
 		} else amount = Integer.parseInt(range);
 		return amount;
@@ -646,6 +647,7 @@ public class Utils implements Listener {
 			split = range.split("to");
 			min = Double.parseDouble(split[0]);
 			max = Double.parseDouble(split[1]);
+			if (max>min) max=min;
 			amount = r.nextDouble(min, max);
 		} else amount = Double.parseDouble(range);
 		return amount;
@@ -784,5 +786,9 @@ public class Utils implements Listener {
         } catch(Exception e) {
         	return null;
         }
+	}
+
+	public static boolean cmpLocByBlock(Location l1, Location l2) {
+		return l1.getBlockX()==l2.getBlockX()&&l1.getBlockY()==l2.getBlockY()&&l1.getBlockZ()==l2.getBlockZ();
 	}	
 }

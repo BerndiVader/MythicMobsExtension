@@ -166,7 +166,7 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "modifyarrows": {
-				skill=new RemoveArrowsMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				skill=new ModifyArrowsMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "mythiceffectprojectile": {
@@ -235,7 +235,8 @@ public class CustomMechanics implements Listener {
 				skill=new SetItemCooldown(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
-			} case "setlevel": {
+			} case "setlevel":
+			case "setrandomelvel": {
 				skill = new SetLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
