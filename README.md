@@ -197,14 +197,6 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 
-# Custom Entities:
-
-## Mythic Parrot:
-
-Bukkit's entity type name: "mythic_parrot" `/summon mythic_parrot` 
-Custom parrot class for better handling of the cookie thing.
-
-
 
 # Mechanics:
 
@@ -291,24 +283,6 @@ PlayEffectOnTarget:
 
 
 
-## randomspeed mechanic:
-
-Force the target to drop an item from its storagte/equipment to the ground.
-
-##### `- randomspeed{range=[range]}`
-
-Where in `[range]` is the range the new random speed is picked.
-Example:
-
-```yaml
-newSpeed:
-  Skills:
-  - randomspeed{range=0.2to0.5} @self ~onInteract
-```
-
-
-
-
 ## itemfloating / blockfloating / entityfloating / mythicfloating mechanic:
 
 Summon a floating item, block, entity or mythicmobs mob relative to caster or static at location.
@@ -323,53 +297,6 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 	 
 Almost all options like in mythicprojectile are useable.
 
-
-
-##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
-
-Set the item used for the attack to a cooldown of 120 ticks.
-
-
-
-## setitemcooldown mechanic:
-
-Set the cooldown of the selected item. Only avail for player targets.
-
-##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
-
-Set the item used for the attack to a cooldown of 120 ticks.
-
-
-
-## modifyarrows mechanic:
-
-Modify the amount of arrows on the targets body. Use "ADD, SUB, CLEAR" for mode and integer value for amount.
-
-##### `- modifyarrows{mode=clear;amount=0} @self ~onInteract`
-
-Removes all arrows  from the targeted body.
-
-##### `- modifyarrows{mode=add;amount=4} @self ~onInteract`
-
-Adds 4 arrows to the arrows on targeted entity's body.
-
-##### `- modifyarrows{mode=sub;amount=4} @self ~onInteract`
-
-Subtract 4 arrows from the total amount of arrows on targeted entity's body.
-
-	
-
-
-## playloading/playcredits mechanic:
-
-Force the player to see the loading screen or the end screen. With a repeat skill its possible to make a blackscreen for the player.
-
-```yaml
-playloading:
-  Skills:
-  - playloading{repeat=60;repeatInterval=1}
-  - closeinventory{delay=61}
-```
 
 
 ## advaipathfinder mechanic:
