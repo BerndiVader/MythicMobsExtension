@@ -32,7 +32,7 @@ public interface VolatileHandler {
 	void forceCancelEndScreenPlayer(Player player);
 	void fakeEntityDeath(Entity entity,long d);
 	int arrowsOnEntity(Entity entity);
-	void modifyArrowsAtEntity(Entity entity, int a, char c);
+	void modifyArrowsAtEntity(Entity entity, int a, String c);
 	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
 	boolean testForCondition(Entity e,String ns,char m) throws CommandException;
