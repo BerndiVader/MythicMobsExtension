@@ -13,11 +13,11 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private int j;
+	private Integer j;
 
 	public SetItemCooldown(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		j(mlc.getInteger(new String[] {"ticks","t"},0));
+		j(mlc.getInteger(new String[] { "ticks", "t" }, 0));
 	}
 
 	@Override
