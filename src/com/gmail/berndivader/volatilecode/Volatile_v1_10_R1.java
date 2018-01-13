@@ -839,18 +839,18 @@ implements VolatileHandler {
 	}
 
 	@Override
-	public void removeArrowsFromEntity(Entity entity,int a,char c) {
+	public void modifyArrowsAtEntity(Entity entity,int a, String c) {
 		net.minecraft.server.v1_10_R1.EntityLiving me=((CraftLivingEntity)entity).getHandle();
 	    DataWatcherObject<Integer>br=DataWatcher.a(EntityLiving.class,DataWatcherRegistry.b);
 		switch(c) {
-		case 'A':
+		case 'ADD':
 			a+=arrowsOnEntity(entity);
 			break;
-		case 'S':
+		case 'SUBSTRACT':
 			a=arrowsOnEntity(entity)-a;
 			if(a<0)a=0;
 			break;
-		case 'C':
+		case 'CLEAR':
 			a=0;
 			break;
 		}
