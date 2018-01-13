@@ -251,6 +251,10 @@ public class CustomMechanics implements Listener {
 				skill=new SetRotationMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
+			} case "setspeed": {
+				skill = new SetSpeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
 			} case "setthreattarget": {
 				skill = new SetThreatTableTargetMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
@@ -269,10 +273,6 @@ public class CustomMechanics implements Listener {
 				break;
 			} case "swap": {
 				skill = new SwapMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "randomspeed": {
-				skill = new RandomSpeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "unequip": {
