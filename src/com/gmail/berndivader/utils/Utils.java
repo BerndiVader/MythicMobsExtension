@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -58,6 +59,9 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import net.minecraft.server.v1_12_R1.NetworkManager;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -65,6 +69,20 @@ public class Utils implements Listener {
 	protected static MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	protected static MobManager mobmanager = mythicmobs.getMobManager();
 	protected static NMSUtils nmsutils=Main.getPlugin().getNMSUtils();
+	
+	public static HashMap<UUID,ChannelHandler>chl;
+	public static Field cField;
+	
+	static {
+	    for(Field f:NetworkManager.class.getDeclaredFields()) {
+	    	if(f.getType().isAssignableFrom(Channel.class)) {
+	    		cField=f;
+	    		cField.setAccessible(true);
+	    		break;
+	    	}
+	    }
+	    chl=new HashMap<>();
+	}
 	
 	public Utils(Plugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);

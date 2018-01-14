@@ -62,9 +62,6 @@ implements VolatileHandler,Listener {
 	private static String signal_AIHIT="AIHIT";
 	private static String meta_WALKSPEED="MMEXTWALKSPEED";
 	
-	private static HashMap<UUID,ChannelHandler>chl;
-	private static Field cField;
-	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
@@ -85,17 +82,6 @@ implements VolatileHandler,Listener {
 					EnumPlayerTeleportFlags.Z
 					}));
 	
-	static {
-	    for(Field f:NetworkManager.class.getDeclaredFields()) {
-	    	if(f.getType().isAssignableFrom(Channel.class)) {
-	    		cField=f;
-	    		cField.setAccessible(true);
-	    		break;
-	    	}
-	    }
-	    chl=new HashMap<>();
-	}
-	
 	public Volatile_v1_12_R1() {
 		registerCustomParrot("mythic_parrot",105,MythicEntityParrot_1_12_R1.class);
 		Bukkit.getServer().getPluginManager().registerEvents(this,Main.getPlugin());
@@ -109,7 +95,7 @@ implements VolatileHandler,Listener {
 	
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInArmListen(e.getPlayer(), new PacketReceivingHandler() {
+	    Utils.chl.put(e.getPlayer().getUniqueId(),channelPlayerInArmListen(e.getPlayer(), new PacketReceivingHandler() {
 	        @Override
 	        public boolean handle(Player p, PacketPlayInArmAnimation packet) {
 	        	float f1=getIndicatorPercentage(p);
@@ -118,12 +104,22 @@ implements VolatileHandler,Listener {
 	        }
 	    }));
 	}
-	
+
 	@EventHandler
 	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
-		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
+		ChannelHandler ch=Utils.chl.get(e.getPlayer().getUniqueId());
 		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
-		chl.remove(e.getPlayer().getUniqueId());
+		Utils.chl.remove(e.getPlayer().getUniqueId());
+	}
+	
+	private boolean closeChannelListener(Player p,ChannelHandler ch) {
+	    try {
+	        ChannelPipeline pipe=gnc(p).pipeline();
+	        pipe.remove(ch);
+	        return true;
+	    } catch(Exception e) {
+	        return false;
+	    }
 	}
 	
 	public ChannelHandler channelPlayerInArmListen(final Player p, final PacketReceivingHandler prh) {
@@ -143,21 +139,11 @@ implements VolatileHandler,Listener {
 	    return ch;
 	}	
 	
-	private boolean closeChannelListener(Player p,ChannelHandler ch) {
-	    try {
-	        ChannelPipeline pipe=gnc(p).pipeline();
-	        pipe.remove(ch);
-	        return true;
-	    } catch(Exception e) {
-	        return false;
-	    }
-	}
-	
 	private Channel gnc(Player p) {
 	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
 	    Channel c=null;
 	    try {
-	        c=(Channel)cField.get(nm);
+	        c=(Channel)Utils.cField.get(nm);
 	    } catch (IllegalArgumentException|IllegalAccessException e) {
 	        e.printStackTrace();
 	    }
@@ -211,7 +197,7 @@ implements VolatileHandler,Listener {
 		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
 		PlayerAbilities arg1=(PlayerAbilities)Utils.cloneObject(me.abilities);
 		if (f1!=0) {
-			player.setMetadata(meta_WALKSPEED,new FixedMetadataValue(Main.getPlugin(),f1));
+			player.setMetadata(meta_WALKSPEED,new FixedMetadataValue(Main.getPlugin(),arg1.walkSpeed));
 		} else if (player.hasMetadata(meta_WALKSPEED)) {
 			f1=player.getMetadata(meta_WALKSPEED).get(0).asFloat();
 		}

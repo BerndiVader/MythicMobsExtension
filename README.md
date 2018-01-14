@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 14.01.2018 *** final fix for zoom mechanic.
 ##### ** 14.01.2018 *** added lastdamageindicator condition. See lastdamageindicator for example.
 ##### ** 13.01.2018 *** fixed issue in entitiesinradius conditions & added ignoresameblock option.
 ##### ** 11.01.2018 *** added hasvehicle condition. minor fix in linebubble mechanic
