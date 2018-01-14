@@ -76,7 +76,9 @@ public class OwnConditions implements Listener {
 				e.register(c);
 				break;
 			} case "lastindicator":
-			case "lastdamageindicator": {
+			case "lastdamageindicator":
+			case "getlastindicator":
+			case "getlastdamageindicator": {
 				SkillCondition c=new GetLastDamageIndicator(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
