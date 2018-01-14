@@ -20,7 +20,7 @@ ITargetedEntitySkill {
 
 	public ForceSpectateMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(long)mlc.getInteger("duration",120);
+		this.d=(long)mlc.getInteger(new String[] {"duration","dur"},120);
 	}
 
 	@Override

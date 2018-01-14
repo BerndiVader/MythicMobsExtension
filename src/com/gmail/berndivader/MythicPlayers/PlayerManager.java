@@ -170,7 +170,7 @@ public class PlayerManager implements Listener {
 		if (e.getPlayer().hasMetadata(meta_MYTHICPLAYER))
 			this.attachActivePlayer(e.getPlayer(), true);
 	}
-
+	
 	@EventHandler
 	public void onMythicPlayerQuit(PlayerQuitEvent e) {
 		if (this.isActivePlayer(e.getPlayer().getUniqueId())) {
@@ -184,8 +184,8 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerDamage(EntityDamageEvent e) {
-		if (e.isCancelled() || mobmanager == null || mobmanager.isActiveMob(e.getEntity().getUniqueId()))
-			return;
+		if (e.isCancelled()) return;
+		if (mobmanager==null||mobmanager.isActiveMob(e.getEntity().getUniqueId())) return;
 		Entity victim = e.getEntity();
 		DamageCause cause = e.getCause();
 		victim.setMetadata("LDC", new FixedMetadataValue(mythicplayers.plugin(), cause.toString()));
@@ -208,7 +208,7 @@ public class PlayerManager implements Listener {
 		SkillTrigger st = e.getPlayer().isSneaking() ? SkillTrigger.UNCROUCH : SkillTrigger.CROUCH;
 		new TriggeredSkillAP(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null);
 	}
-
+	
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
 		final Player p=e.getPlayer();

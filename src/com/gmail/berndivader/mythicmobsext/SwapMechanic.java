@@ -12,8 +12,8 @@ extends
 SkillMechanic 
 implements 
 ITargetedEntitySkill {
-	private Boolean keepTargetYaw;
-	private Boolean keepCasterYaw;
+	private boolean keepTargetYaw;
+	private boolean keepCasterYaw;
 
 	public SwapMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

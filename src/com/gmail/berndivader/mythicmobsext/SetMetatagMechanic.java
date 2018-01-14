@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected String tag;
 	protected MetaTagValue mtv;
-	protected Boolean useCaster;
+	protected boolean useCaster;
 
 	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

@@ -16,12 +16,12 @@ public class CreateHealthbar extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	protected Double offset;
-	protected Double hOffset;
-	protected Double vOffset;
+	protected double offset;
+	protected double hOffset;
+	protected double vOffset;
 	protected String display;
-	protected Integer counter;
-	protected Boolean ignoreYaw;
+	protected int counter;
+	protected boolean ignoreYaw;
 	
 	public CreateHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -31,7 +31,7 @@ ITargetedEntitySkill {
 		this.hOffset = mlc.getDouble(new String[] { "sideoffset", "so" }, 0D);
 		this.vOffset = mlc.getDouble(new String[] { "forwardoffset", "fo" }, 0D);
 		this.ignoreYaw = mlc.getBoolean(new String[] { "ignoreyaw", "iy" }, false);
-		String parse = mlc.getString(new String[] { "display", "d" },"$h");
+		String parse = mlc.getString(new String[] { "display", "dur","text","t" },"$h");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse = parse.substring(1, parse.length()-1);
 		}

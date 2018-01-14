@@ -14,11 +14,11 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	protected Double velocityX;
-	protected Double velocityY;
-	protected Double velocityZ;
+	protected double velocityX;
+	protected double velocityY;
+	protected double velocityZ;
 	protected VelocityMode mode;
-	protected Boolean debug;
+	protected boolean debug;
 
 	public CustomVelocityMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);

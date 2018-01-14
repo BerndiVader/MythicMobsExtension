@@ -21,13 +21,13 @@ implements
 ITargetedEntitySkill {
 	private String text;
 	private String id;
-	private Double offset;
-	private Double so;
-	private Double fo;
-	private Integer ll;
-	private Integer time;
-	private Boolean b1;
-	private Boolean b2;
+	private double offset;
+	private double so;
+	private double fo;
+	private int ll;
+	private int time;
+	private boolean b1;
+	private boolean b2;
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -40,7 +40,7 @@ ITargetedEntitySkill {
 		this.time=mlc.getInteger(new String[] { "counter", "c" }, 200);
 		this.b1=mlc.getBoolean(new String[] { "animation", "anim", "a" }, true);  
 		this.b2=mlc.getBoolean(new String[] { "usecounter", "uc" }, true);
-		this.text=mlc.getString(new String[] { "display", "d" }, "");
+		this.text=mlc.getString(new String[] { "display", "dur","text","t" }, "");
 		if (text.startsWith("\"") && text.endsWith("\"")) {
 			this.text=text.substring(1,text.length()-1);
 		}
@@ -56,7 +56,7 @@ ITargetedEntitySkill {
 		LivingEntity entity=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 		String txt=this.text;
 		txt=SkillString.unparseMessageSpecialChars(txt);
-		txt=SkillString.parseMobVariables(txt, data.getCaster(), target, data.getTrigger());
+		txt=Utils.parseMobVariables(txt,data,data.getCaster().getEntity(),target,null);
 		Location l1=entity.getLocation().clone();
 		ArrayList<String>li1=new ArrayList<String>();
 		String[]a2=txt.split("<nl>");

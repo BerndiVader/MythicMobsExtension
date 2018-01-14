@@ -94,6 +94,7 @@ import net.minecraft.server.v1_10_R1.PathPoint;
 
 public class Volatile_v1_10_R1 
 implements VolatileHandler {
+	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,

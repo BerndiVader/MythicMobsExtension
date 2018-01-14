@@ -24,7 +24,7 @@ ITargetedEntitySkill {
 
 	public PlayerSpinMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(long)mlc.getInteger(new String[] { "duration", "d" }, 120);
+		this.d=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.s=mlc.getFloat(new String[] { "speed", "s" }, 30.0F);
 	}
 

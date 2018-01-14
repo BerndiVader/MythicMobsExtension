@@ -26,17 +26,17 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 	private Plugin plugin = Main.getPlugin();
-	private Integer size;
-	private Integer amount;
-	private Integer fuse;
-	private Integer utime;
-	private Double hGain;
-	private Double gravity;
-	private Boolean fire;
-	private Boolean breakBlocks;
-	private Boolean ueffect;
-	private Boolean undotnt;
-	private Boolean ued;
+	private int size;
+	private int amount;
+	private int fuse;
+	private int utime;
+	private double hGain;
+	private double gravity;
+	private boolean fire;
+	private boolean breakBlocks;
+	private boolean ueffect;
+	private boolean undotnt;
+	private boolean ued;
 
 	public GrenadeMechanic(String h, MythicLineConfig mlc) {
 		super(h, mlc);

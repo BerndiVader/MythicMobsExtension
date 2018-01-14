@@ -21,7 +21,7 @@ ITargetedEntitySkill {
 	
 	public DisarmPlayerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.dt=mlc.getLong(new String[] {"duration", "d" }, 180);
+		this.dt=mlc.getLong(new String[] {"duration", "dur" }, 180);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ ITargetedEntitySkill {
 		if (!target.isPlayer()) {
 			if (target.isLiving()) {
 				final LivingEntity e=(LivingEntity)target.getBukkitEntity();
-				if (!e.getEquipment().getItemInMainHand().getData().getItemType().equals(Material.AIR)) {
+				if (e.getEquipment().getItemInMainHand().getData().getItemType()!=Material.AIR) {
 					final ItemStack is=e.getEquipment().getItemInMainHand().clone();
 					e.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
 					new BukkitRunnable() {
@@ -45,8 +45,7 @@ ITargetedEntitySkill {
 		} else {
 			Player p=(Player)target.getBukkitEntity();
 			int es=p.getInventory().firstEmpty();
-			if (!p.getEquipment().getItemInMainHand().getData().getItemType().equals(Material.AIR)
-					&&es>-1) {
+			if (p.getEquipment().getItemInMainHand().getData().getItemType()!=Material.AIR&&es>-1) {
 				ItemStack is=p.getEquipment().getItemInMainHand().clone();
 				p.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
 				p.getInventory().setItem(es, is.clone());

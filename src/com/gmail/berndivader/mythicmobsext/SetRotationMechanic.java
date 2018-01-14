@@ -23,7 +23,7 @@ ITargetedEntitySkill{
 		super(skill, mlc);
 		this.yawOff=mlc.getFloat(new String[] { "yawoffset", "yaw", "yo", "y" }, 5.0F);
 		this.pitchOff=mlc.getFloat(new String[] { "pitchoffset", "pitch", "po", "p" }, 0F);
-		this.d=mlc.getLong(new String[]{ "duration", "d" }, 1);
+		this.d=mlc.getLong(new String[]{ "duration", "dur" }, 1);
 	}
 
 	@Override

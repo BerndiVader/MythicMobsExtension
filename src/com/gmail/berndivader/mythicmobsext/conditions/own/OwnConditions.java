@@ -75,6 +75,11 @@ public class OwnConditions implements Listener {
 				SkillCondition c=new GetDamageIndicator(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
+			} case "lastindicator":
+			case "lastdamageindicator": {
+				SkillCondition c=new GetLastDamageIndicator(e.getConfig().getLine(),e.getConfig());
+				e.register(c);
+				break;
 			} case "hasmeta":
 			case "hasmetasimple": {
 				SkillCondition c = new HasMetaTagCondition(e.getConfig().getLine(), e.getConfig());

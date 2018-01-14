@@ -11,7 +11,7 @@ extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
-	private Integer a;
+	private int a;
 	private char m;
 
 	public ModifyArrowsMechanic(String skill, MythicLineConfig mlc) {

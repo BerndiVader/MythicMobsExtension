@@ -10,7 +10,7 @@ implements
 ITargetedEntitySkill {
 	
 	private String name;
-	private Boolean v;
+	private boolean v;
 	public RenameEntityMechanic(String line, MythicLineConfig mlc) {
 
 		super(line,mlc);

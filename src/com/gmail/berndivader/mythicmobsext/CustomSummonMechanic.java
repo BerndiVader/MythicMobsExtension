@@ -24,9 +24,9 @@ public class CustomSummonMechanic extends SkillMechanic
 	private MythicMob mm;
 	private MythicEntity me;
 	private String tag,amount;
-	private Integer noise,yNoise;
-	private Boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
-	private Double addx,addy,addz,inFrontBlocks;
+	private int noise,yNoise;
+	private boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
+	private double addx,addy,addz,inFrontBlocks;
 
 	public CustomSummonMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

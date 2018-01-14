@@ -9,6 +9,7 @@ import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,25 +31,39 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.own.GetLastDamageIndicator;
 import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.MessageToMessageDecoder;
 
 public class Volatile_v1_12_R1 
-implements VolatileHandler {
+implements VolatileHandler,Listener {
 	
 	private static String signal_AISHOOT="AISHOOT";
 	private static String signal_AIHIT="AIHIT";
 	private static String meta_WALKSPEED="MMEXTWALKSPEED";
+	
+	private static HashMap<UUID,ChannelHandler>chl;
+	private static Field cField;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
@@ -68,9 +83,22 @@ implements VolatileHandler {
 					EnumPlayerTeleportFlags.X,
 					EnumPlayerTeleportFlags.Y,
 					EnumPlayerTeleportFlags.Z
-					}));	
+					}));
+	
+	static {
+	    for(Field f:NetworkManager.class.getDeclaredFields()) {
+	    	if(f.getType().isAssignableFrom(Channel.class)) {
+	    		cField=f;
+	    		cField.setAccessible(true);
+	    		break;
+	    	}
+	    }
+	    chl=new HashMap<>();
+	}
+	
 	public Volatile_v1_12_R1() {
 		registerCustomParrot("mythic_parrot",105,MythicEntityParrot_1_12_R1.class);
+		Bukkit.getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 	}
 	
 	private static void registerCustomParrot(String s1,int i1,Class<? extends net.minecraft.server.v1_12_R1.Entity>c1) {
@@ -78,6 +106,63 @@ implements VolatileHandler {
 		EntityTypes.b.a(i1,k,c1);
 		if (!EntityTypes.d.contains(k)) EntityTypes.d.add(k);
 	}
+	
+	@EventHandler
+	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
+	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInArmListen(e.getPlayer(), new PacketReceivingHandler() {
+	        @Override
+	        public boolean handle(Player p, PacketPlayInArmAnimation packet) {
+	        	float f1=getIndicatorPercentage(p);
+	        	p.setMetadata(GetLastDamageIndicator.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+	            return false;
+	        }
+	    }));
+	}
+	
+	@EventHandler
+	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
+		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
+		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
+		chl.remove(e.getPlayer().getUniqueId());
+	}
+	
+	public ChannelHandler channelPlayerInArmListen(final Player p, final PacketReceivingHandler prh) {
+	    ChannelPipeline pipe=gnc(p).pipeline();
+	    @SuppressWarnings("rawtypes")
+		ChannelHandler ch=new MessageToMessageDecoder<Packet>() {
+	    	@Override
+			protected void decode(ChannelHandlerContext chc,Packet packet,List<Object>out) throws Exception {
+	            if(packet instanceof PacketPlayInArmAnimation) {
+	                if(!prh.handle(p,(PacketPlayInArmAnimation)packet)) out.add(packet);
+	                return;
+	            }
+	            out.add(packet);
+			}
+	    };
+	    pipe.addAfter("decoder","listener",ch);
+	    return ch;
+	}	
+	
+	private boolean closeChannelListener(Player p,ChannelHandler ch) {
+	    try {
+	        ChannelPipeline pipe=gnc(p).pipeline();
+	        pipe.remove(ch);
+	        return true;
+	    } catch(Exception e) {
+	        return false;
+	    }
+	}
+	
+	private Channel gnc(Player p) {
+	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
+	    Channel c=null;
+	    try {
+	        c=(Channel)cField.get(nm);
+	    } catch (IllegalArgumentException|IllegalAccessException e) {
+	        e.printStackTrace();
+	    }
+	    return c;
+	}	
 	
 	@Override
 	public Parrot spawnCustomParrot(Location l1, boolean b1) {
@@ -88,7 +173,7 @@ implements VolatileHandler {
         world.addEntity(mep,SpawnReason.CUSTOM);
         return (Parrot)mep.getBukkitEntity();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private void sendPlayerPacketsAsync(Iterator<AbstractPlayer>it,List<Packet>pk) {
 		new BukkitRunnable() {
@@ -125,6 +210,11 @@ implements VolatileHandler {
     public void setFieldOfViewPacketSend(Player player, float f1) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
 		PlayerAbilities arg1=(PlayerAbilities)Utils.cloneObject(me.abilities);
+		if (f1!=0) {
+			player.setMetadata(meta_WALKSPEED,new FixedMetadataValue(Main.getPlugin(),f1));
+		} else if (player.hasMetadata(meta_WALKSPEED)) {
+			f1=player.getMetadata(meta_WALKSPEED).get(0).asFloat();
+		}
 		arg1.walkSpeed=f1;
 		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
     }
@@ -948,6 +1038,10 @@ implements VolatileHandler {
 	        }
 	    }
 	}
+	
+	public interface PacketReceivingHandler {
+	    public boolean handle(Player p, PacketPlayInArmAnimation packet);
+	}	
 	
 	public boolean setEntityData(Entity e, String ns) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();

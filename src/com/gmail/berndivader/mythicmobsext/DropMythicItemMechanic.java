@@ -34,9 +34,9 @@ ITargetedEntitySkill,
 ITargetedLocationSkill {
 	private String itemtype;
 	private String dropname;
-	private Integer amount;
-	private Boolean stackable;
-	private Boolean shuffle;
+	private int amount;
+	private boolean stackable;
+	private boolean shuffle;
 
 	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

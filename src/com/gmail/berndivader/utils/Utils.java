@@ -791,4 +791,5 @@ public class Utils implements Listener {
 	public static boolean cmpLocByBlock(Location l1, Location l2) {
 		return l1.getBlockX()==l2.getBlockX()&&l1.getBlockY()==l2.getBlockY()&&l1.getBlockZ()==l2.getBlockZ();
 	}	
+	
 }

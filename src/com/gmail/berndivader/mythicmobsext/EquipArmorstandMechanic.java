@@ -18,7 +18,7 @@ INoTargetSkill {
 
 	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
 	private Material material;
-	private Integer slot;
+	private int slot;
 
 	public EquipArmorstandMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

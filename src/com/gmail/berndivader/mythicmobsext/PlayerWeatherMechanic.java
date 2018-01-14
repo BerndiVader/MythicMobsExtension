@@ -13,8 +13,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 public class PlayerWeatherMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {
-	private Integer duration;
-	private Integer time;
+	private int duration;
+	private int time;
 	private WeatherType type;
 
 	public PlayerWeatherMechanic(String skill, MythicLineConfig mlc) {
@@ -25,7 +25,7 @@ ITargetedEntitySkill {
 			this.type=WeatherType.CLEAR;
 		}
 		this.time=mlc.getInteger(new String[] { "time", "t" }, -1);
-		this.duration=mlc.getInteger(new String[] { "duration", "d" }, 200);
+		this.duration=mlc.getInteger(new String[] { "duration", "dur" }, 200);
 	}
 
 	@Override

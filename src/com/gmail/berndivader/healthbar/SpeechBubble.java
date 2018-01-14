@@ -18,17 +18,17 @@ extends
 CraftHologram {
 	protected LivingEntity entity;
 	protected UUID uuid;
-	protected Double offset;
-	protected Double sOffset;
-	protected Double fOffset;
+	protected double offset;
+	protected double sOffset;
+	protected double fOffset;
 	protected String[] template;
 	protected TextLine textline;
-	protected Integer counter;
-	protected Integer maxlines;
-	protected Integer il1=0;
-	protected Integer ll;
-	protected Boolean useOffset;
-	protected Boolean uc1;
+	protected int counter;
+	protected int maxlines;
+	protected int il1=0;
+	protected int ll;
+	protected boolean useOffset;
+	protected boolean uc1;
 	protected String id;
 	
 	public SpeechBubble(LivingEntity entity, String[] text) {

@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238c for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238e for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,7 +6,8 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
-##### ** 13.01.2018 *** fixied issue in entitiesinradius conditions & added ignoresameblock option.
+##### ** 14.01.2018 *** added lastdamageindicator condition. See lastdamageindicator for example.
+##### ** 13.01.2018 *** fixed issue in entitiesinradius conditions & added ignoresameblock option.
 ##### ** 11.01.2018 *** added hasvehicle condition. minor fix in linebubble mechanic
 ##### ** 11.01.2018 *** fixed parrot mythicspawners issue.
 ##### ** 10.12.2017 *** fixed customprojectiles compatibility with older MythicMobs versions.
@@ -1377,6 +1378,10 @@ Possible range is -1 for nothing at all, or 0.0 to 1.0. Where 1 is full strength
 While `getbowtension`check the strength while the bow is drawn, `lastbowtension` get the last strength of the entity's bowtension if there was any. To add skills ot the entity while draw the bow use getbowtension, if the entity shoot the bow use lastbowtension to get the strength the arrow is fired.
 
 Ex: `- getbowtension{range=>0.9};debug=true}` condition is true if the tension of the bow is more than 90% of its full strength.
+
+##### `- getlastindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Unlike getindicator this condition do not return a realtime value, instead it returns the indicator status of the last armswing. Range is 0.0f to 1.0f. Default value is >0
+Ex: `- getlastindicator{value=1}}` condition is true if the indicator was fully loaded on last swing.
 
 ##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
 To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks the status of the crosshair damageindicator.
