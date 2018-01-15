@@ -47,9 +47,6 @@ INoTargetSkill {
 			case 'A':
 				h+=e.getMaxHealth();
 				break;
-			case 'S':
-				h=e.getMaxHealth()-h<1?1:e.getMaxHealth()-h;
-				break;
 			case 'M':
 				h=e.getMaxHealth()*h;
 				break;
