@@ -19,6 +19,7 @@ IMetaSkill {
 	protected MythicMobs mythicmobs;
 	protected SkillManager skillmanager;
 	protected LinkedHashMap<Integer,SkillEntry> entrylist;
+	private boolean b1;
 	
 	public CustomRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -28,11 +29,12 @@ IMetaSkill {
 		this.entrylist = new LinkedHashMap<>();
 		
 		String parse[] = mlc.getString(new String[] { "skills", "s" }).split(",");
+		b1(mlc.getBoolean(new String[] {"renewrandom","newrandom","rnr"},false));
 
 		if (parse.length>0) {
 			for (int a=0;a<parse.length;a++) {
 				String s=null;
-				Double c = null;
+				double c=0;
 				String par[] = parse[a].split(":");
 				s = par[0];
 				if (par.length>1) c=Double.parseDouble(par[1]);
@@ -42,11 +44,16 @@ IMetaSkill {
 		}
 	}
 
+	private void b1(boolean b1) {
+		this.b1=b1;
+	}
+
 	@Override
 	public boolean cast(SkillMetadata data) {
 		double r = ThreadLocalRandom.current().nextDouble();
 		for (Entry<Integer,SkillEntry> entry:entrylist.entrySet()) {
 			SkillEntry sentry = entry.getValue();
+			if (b1) r=ThreadLocalRandom.current().nextDouble();
 			if (r<=sentry.getChance()) {
 				if (sentry.isSkillPresent()
 						&& sentry.getSkill().isUsable(data)) {

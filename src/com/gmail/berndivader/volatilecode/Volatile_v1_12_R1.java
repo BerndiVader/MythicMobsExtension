@@ -1066,19 +1066,11 @@ implements VolatileHandler,Listener {
 	}
 	
 	private boolean nbtA(NBTBase nb1,NBTBase nb2,boolean bl1) {
-		if(!bl1) return bl1;
+		if(!bl1) {
+			System.err.println("no match!");
+			return bl1;
+		}
 		switch(nb1.getTypeId()) {
-		case NBT.TAG_COMPOUND:
-            NBTTagCompound nbt1=(NBTTagCompound)nb1;
-            NBTTagCompound nbt2=(NBTTagCompound)nb2;
-            for (String s:nbt1.c()) {
-            	System.err.println(s);
-            	if (nbt2.hasKey(s)) {
-	                NBTBase nb3=nbt1.get(s);
-	                bl1=nbtA(nb3,nbt2.get(s),bl1=true);
-            	}
-            }
-			break;
 		case NBT.TAG_LIST:
             NBTTagList nbl1=(NBTTagList)nb1;
             NBTTagList nbl2=(NBTTagList)nb2;
@@ -1089,7 +1081,7 @@ implements VolatileHandler,Listener {
             	NBTBase nb4=nbl2.i(i1);
             	System.err.println("nb3:"+nb3);
             	System.err.println("nb4:"+nb4);
-            	nbtA(nb3,nb4,bl1);
+            	if (!(bl1=nbtA(nb3,nb4,bl1))) return bl1;
             }
 			break;
 		case NBT.TAG_BYTE:
@@ -1101,6 +1093,16 @@ implements VolatileHandler,Listener {
 			System.err.println("number");
 			System.err.println(nb1.toString());
 			System.err.println(nb2.toString());
+			String s1=nb1.toString(),s2=nb2.toString();
+			if (Character.isLetter(s1.charAt(s1.length()-1))) s1=s1.substring(0,s1.length()-1);
+			if (Character.isLetter(s2.charAt(s2.length()-1))) s2=s2.substring(0,s2.length()-1);
+			double d1=Double.parseDouble(s1.toString()),d2=Double.parseDouble(s2.toString());
+			if (d1!=d2) {
+				System.err.println("false");
+				return bl1=false;
+			} else {
+				System.err.println("true");
+			}
 			break;
 		case NBT.TAG_BYTE_ARRAY:
 		case NBT.TAG_INT_ARRAY:
@@ -1109,9 +1111,30 @@ implements VolatileHandler,Listener {
 			System.err.println(nb2.toString());
 			break;
 		case NBT.TAG_STRING:
-			System.err.println("string");
 			System.err.println(nb1.toString());
 			System.err.println(nb2.toString());
+			if (!nb1.toString().equals(nb2.toString())) {
+				System.err.println("false");
+				return bl1=false;
+			} else {
+				System.err.println("true");
+			}
+			break;
+		default:
+            NBTTagCompound nbt1=(NBTTagCompound)nb1;
+            NBTTagCompound nbt2=(NBTTagCompound)nb2;
+            for (String s:nbt1.c()) {
+            	if (!bl1) return false;
+            	if (nbt2.hasKey(s)) {
+	                NBTBase nb3=nbt1.get(s);
+	                System.err.println("comp1:"+nbt2.get(s).toString());
+	                System.err.println("comp2:"+nb3.toString());
+	                bl1=nbtA(nb3,nbt2.get(s),bl1=true);
+            	} else {
+	                NBTBase nb3=nbt1.get(s);
+	                bl1=nbtA(nb3,nbt2.get(s),bl1=false);
+            	}
+            }
 			break;
 		}
 		return bl1;

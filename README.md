@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238e for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238f for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,8 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 15.01.2018 *** fixed random max>min.
+##### ** 14.01.2018 *** added renewrandom option to customrandomskill. See customrandomskill for details.
 ##### ** 14.01.2018 *** final fix for zoom mechanic.
 ##### ** 14.01.2018 *** added lastdamageindicator condition. See lastdamageindicator for example.
 ##### ** 13.01.2018 *** fixed issue in entitiesinradius conditions & added ignoresameblock option.
@@ -641,8 +643,10 @@ set the targeter entity to perma owner of the activemob. Resistent against reloa
 
 Use this mechanic to execute a random skill by chance and priority.
 	
-##### `- advrandomskill{skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
+##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
+##### `- customrandomskill{rrenewrandom=false(default);skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
 + This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
++ If renewrandom/newrandom/rnr is set to true a new random is created for the next entry else for all entries the same random is used.
 	
 ##### `- advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged`
 + Same as above but if no chance match nothing will be executed.

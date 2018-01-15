@@ -642,32 +642,32 @@ public class Utils implements Listener {
 	}
 
 	public static int randomRangeInt(String range) {
-		ThreadLocalRandom r = ThreadLocalRandom.current();
+		ThreadLocalRandom r=ThreadLocalRandom.current();
 		int amount=0;
-		String[] split;
-		int min, max;
+		String[]split;
+		int min,max;
 		if (range.contains("to")) {
-			split = range.split("to");
-			min = Integer.parseInt(split[0]);
-			max = Integer.parseInt(split[1]);
-			if (max>min) max=min;
-			amount = r.nextInt(min, max+1);
-		} else amount = Integer.parseInt(range);
+			split=range.split("to");
+			min=Integer.parseInt(split[0]);
+			max=Integer.parseInt(split[1]);
+			if (max<min) max=min;
+			amount=r.nextInt(min, max+1);
+		} else amount=Integer.parseInt(range);
 		return amount;
 	}
 
 	public static double randomRangeDouble(String range) {
-		ThreadLocalRandom r = ThreadLocalRandom.current();
-		double amount = 0.0D;
-		String[] split;
-		double min, max;
+		ThreadLocalRandom r=ThreadLocalRandom.current();
+		double amount=0.0D;
+		String[]split;
+		double min,max;
 		if (range.contains("to")) {
-			split = range.split("to");
-			min = Double.parseDouble(split[0]);
-			max = Double.parseDouble(split[1]);
-			if (max>min) max=min;
-			amount = r.nextDouble(min, max);
-		} else amount = Double.parseDouble(range);
+			split=range.split("to");
+			min=Double.parseDouble(split[0]);
+			max=Double.parseDouble(split[1]);
+			if (max<min) max=min;
+			amount=r.nextDouble(min,max);
+		} else amount=Double.parseDouble(range);
 		return amount;
 	}
 

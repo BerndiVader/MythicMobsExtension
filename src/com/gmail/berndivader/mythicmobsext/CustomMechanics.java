@@ -22,7 +22,8 @@ public class CustomMechanics implements Listener {
 		mech = e.getMechanicName().toLowerCase();
 		
 		switch (mech) {
-			case "advaipathfinder": {
+		case "advaipathfinder":
+		case "custompathfinder": {
 				skill = new AdvAIPathFinderSelector(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
@@ -71,7 +72,8 @@ public class CustomMechanics implements Listener {
 				skill = new CustomParticleEffect(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
-			} case "customrandomskill": {
+			} case "customrandomskill": 
+			case "advrandomskill": {
 				skill = new CustomRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
