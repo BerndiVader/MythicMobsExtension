@@ -5,6 +5,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
+
 ### Changelog:
 ##### ** 15.01.2018 *** fixed random max>min.
 ##### ** 14.01.2018 *** added renewrandom option to customrandomskill. See customrandomskill for details.
