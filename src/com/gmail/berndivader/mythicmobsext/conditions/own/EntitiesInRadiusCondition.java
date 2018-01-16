@@ -33,7 +33,7 @@ ILocationCondition {
 		super(line, mlc);
 		this.c=line.toUpperCase().charAt(0);
 		String[]t = mlc.getString(new String[] { "entities","entity","types","type","t","e"}, "ALL").toUpperCase().split(",");
-		if (t[0].toUpperCase().equals("ALL"))
+		if (t[0].toUpperCase().equals("ALL")||c=='P')
 			this.all=true;
 		this.a = new RangedDouble(mlc.getString(new String[] { "amount","a" }, ">0"), false);
 		this.r = mlc.getDouble(new String[] { "radius", "r" }, 5);

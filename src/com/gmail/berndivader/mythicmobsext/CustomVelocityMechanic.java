@@ -17,8 +17,8 @@ ITargetedEntitySkill {
 	protected double velocityX;
 	protected double velocityY;
 	protected double velocityZ;
-	protected VelocityMode mode;
 	protected boolean debug;
+	private char c;
 
 	public CustomVelocityMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -27,18 +27,7 @@ ITargetedEntitySkill {
 		this.velocityX = mlc.getDouble(new String[] { "velocityx", "vx", "x" }, 0.0D);
 		this.velocityY = mlc.getDouble(new String[] { "velocityy", "vy", "y" }, 0.0D);
 		this.velocityZ = mlc.getDouble(new String[] { "velocityz", "vz", "z" }, 0.0D);
-		String strMode = mlc.getString(new String[] { "mode", "m" }, "SET", new String[0]);
-		switch (strMode.toUpperCase()) {
-			case "ADD": {
-				this.mode = VelocityMode.ADD;
-				break;
-			} case "MULTIPLY": {
-				this.mode = VelocityMode.MULTIPLY;
-				break;
-			} default: {
-				this.mode = VelocityMode.SET;
-			}
-		}
+		this.c = mlc.getString(new String[] {"mode", "m" },"SET").toUpperCase().charAt(0);
 	}
 
 	@Override
@@ -46,16 +35,20 @@ ITargetedEntitySkill {
 		Entity e = target.getBukkitEntity();
 		Vector v = e.getVelocity().clone();
 		Vector vb = v.clone();
-		if (this.mode.equals((Object)VelocityMode.SET)) {
-			v = new Vector(this.velocityX, this.velocityY, this.velocityZ);
-		} else if (this.mode.equals((Object)VelocityMode.ADD)) {
+		switch(c) {
+		case 'A':
 			v.setX(v.getX()+this.velocityX);
 			v.setY(v.getY()+this.velocityY);
 			v.setZ(v.getZ()+this.velocityZ);
-		} else if (this.mode.equals((Object)VelocityMode.MULTIPLY)) {
+			break;
+		case 'M':
 			v.setX(v.getX()*this.velocityX);
 			v.setY(v.getY()*this.velocityY);
 			v.setZ(v.getZ()*this.velocityZ);
+			break;
+		default:
+			v = new Vector(this.velocityX, this.velocityY, this.velocityZ);
+			break;
 		}
 		if (debug) System.out.println(
         		"dx:"+v.getX()
@@ -66,13 +59,5 @@ ITargetedEntitySkill {
 		if (Double.isNaN(v.length()) || Double.isInfinite(v.length())) v=vb;
 		e.setVelocity(v);
 		return true;
-	}
-	
-	static enum VelocityMode {
-		SET,
-		ADD,
-		MULTIPLY;
-		private VelocityMode() {
-		}
 	}
 }

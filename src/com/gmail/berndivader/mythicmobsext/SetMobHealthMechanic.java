@@ -25,7 +25,7 @@ INoTargetSkill {
 		this.r=mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase();
 		this.b=mlc.getBoolean(new String[] { "ignoremodifier", "im" }, true);
 		this.b1=mlc.getBoolean(new String[] {"setcurrenthealth","sch"},true);
-		this.m=mlc.getString(new String[] { "mode", "m" }, "S").toUpperCase().charAt(0);
+		this.m=mlc.getString(new String[] { "mode", "m" }, "R").toUpperCase().charAt(0);
 	}
 
 	@Override
@@ -38,8 +38,8 @@ INoTargetSkill {
 				mod=ConfigManager.defaultLevelModifierHealth.startsWith("+")
                 		? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))
                 		: (ConfigManager.defaultLevelModifierHealth.startsWith("*") 
-                		? h * Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1)) 
-                		: h * Double.valueOf(ConfigManager.defaultLevelModifierHealth));
+                		? h*Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1)) 
+                		: h*Double.valueOf(ConfigManager.defaultLevelModifierHealth));
             }
 			if (am!=null&&am.getLevel()>1&&mod>0.0) h+=mod*(am.getLevel()-1);
 			LivingEntity e=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
@@ -49,6 +49,9 @@ INoTargetSkill {
 				break;
 			case 'M':
 				h=e.getMaxHealth()*h;
+				break;
+			case 'R':
+				h=e.getMaxHealth()-h<1?1:e.getMaxHealth()-h;
 				break;
 			}
 			h=Math.ceil(h);

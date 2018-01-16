@@ -72,6 +72,7 @@ public class Utils implements Listener {
 	
 	public static HashMap<UUID,ChannelHandler>chl;
 	public static Field cField;
+	public static int serverV;
 	
 	static {
 	    for(Field f:NetworkManager.class.getDeclaredFields()) {
@@ -82,14 +83,20 @@ public class Utils implements Listener {
 	    	}
 	    }
 	    chl=new HashMap<>();
+	    try {
+		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
+	    } catch (Exception e) {
+	    	serverV=11;
+	    }
+	    System.err.println(serverV);
 	}
 	
 	public Utils(Plugin plugin) {
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		if (Utils.serverV>11) plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void onMythicMobsSpawnEvent(MythicMobSpawnEvent e) {
+	public void replaceParrotsEvent(MythicMobSpawnEvent e) {
 		if (e.isCancelled()) return;
 		if (e.getEntity() instanceof Parrot) {
 			MythicMob mm=e.getMobType();

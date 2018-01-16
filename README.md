@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238f for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238g for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -7,6 +7,8 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 ### Changelog:
+##### ** 16.01.2018 *** fixed parrot issue for <1.12 versions.
+##### ** 15.01.2018 *** added randomspeed alias to setspeed mechanic for compatibility.
 ##### ** 15.01.2018 *** fixed random max>min.
 ##### ** 14.01.2018 *** added renewrandom option to customrandomskill. See customrandomskill for details.
 ##### ** 14.01.2018 *** final fix for zoom mechanic.

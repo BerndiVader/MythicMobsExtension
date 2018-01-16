@@ -238,7 +238,7 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "setlevel":
-			case "setrandomelvel": {
+			case "setrandomlevel": {
 				skill = new SetLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
@@ -254,7 +254,8 @@ public class CustomMechanics implements Listener {
 				skill=new SetRotationMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
-			} case "setspeed": {
+			} case "setspeed":
+			case "randomspeed": {
 				skill = new SetSpeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
