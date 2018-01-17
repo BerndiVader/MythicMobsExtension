@@ -85,8 +85,8 @@ public class PlayerManager implements Listener {
 	}
 
 	public void removeAllEffectsFromPlayer(AbstractEntity e) {
+		LivingEntity le = (LivingEntity) e.getBukkitEntity();
 		if (e.hasPotionEffect()) {
-			LivingEntity le = (LivingEntity) e.getBukkitEntity();
 			Iterator<PotionEffect> i = le.getActivePotionEffects().iterator();
 			while (i.hasNext()) {
 				le.removePotionEffect(i.next().getType());
@@ -135,11 +135,11 @@ public class PlayerManager implements Listener {
 	}
 
 	public boolean createActivePlayer(LivingEntity l, MythicMob mm) {
+		l.setMetadata(meta_MYTHICPLAYER, new FixedMetadataValue(mythicplayers.plugin(), mm.getInternalName()));
 		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
 		new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
-		l.setMetadata(meta_MYTHICPLAYER, new FixedMetadataValue(mythicplayers.plugin(), mm.getInternalName()));
 		return true;
 	}
 

@@ -7,6 +7,7 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 ### Changelog:
+##### ** 17.01.2018 *** fixed setmobhealth issues.
 ##### ** 17.01.2018 *** fixed network issue for <1.12 versions.
 ##### ** 16.01.2018 *** fixed parrot issue for <1.12 versions.
 ##### ** 15.01.2018 *** added randomspeed alias to setspeed mechanic for compatibility.

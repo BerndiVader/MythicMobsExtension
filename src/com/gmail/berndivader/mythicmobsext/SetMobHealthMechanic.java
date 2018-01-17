@@ -25,7 +25,7 @@ INoTargetSkill {
 		this.r=mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase();
 		this.b=mlc.getBoolean(new String[] { "ignoremodifier", "im" }, true);
 		this.b1=mlc.getBoolean(new String[] {"setcurrenthealth","sch"},true);
-		this.m=mlc.getString(new String[] { "mode", "m" }, "R").toUpperCase().charAt(0);
+		this.m=mlc.getString(new String[] { "mode","m","set","s" }, "S").toUpperCase().charAt(0);
 	}
 
 	@Override
