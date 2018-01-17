@@ -1,25 +1,23 @@
 package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class mmWorldGuardDenySpawnFlagCondition extends SkillCondition implements ILocationCondition {
+public class mmWorldGuardDenySpawnFlagCondition 
+extends 
+AbstractCustomCondition 
+implements 
+ILocationCondition {
 	private WorldGuardFlags wgf = Main.wgf;
 	private String[] entities;
 
 	public mmWorldGuardDenySpawnFlagCondition(String line, MythicLineConfig mlc) {
-		super(line);
-		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
-		} catch (Exception ex) {
-			this.ACTION = ConditionAction.FALSE;
-		}
+		super(line,mlc);
 		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie")
 				.toUpperCase().split(",");
 	}

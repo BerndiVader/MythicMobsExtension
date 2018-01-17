@@ -7,6 +7,8 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 ### Changelog:
+##### ** 17.01.2018 *** added CustomPathfinderGoal PathfinderGoalJumpOffFromVehicle.
+##### ** 17.01.2018 *** removed hasfaction condition. use infaction & samefaction instead.
 ##### ** 17.01.2018 *** fixed setmobhealth issues.
 ##### ** 17.01.2018 *** fixed network issue for <1.12 versions.
 ##### ** 16.01.2018 *** fixed parrot issue for <1.12 versions.
@@ -693,6 +695,13 @@ Some examples:
 ```
 		
 ### Pathfindergoals:
+
+*jumpoffvehicle:*
+	
+##### `advaipathfinder{goal="[goalpriority_value] jumpoffvehicle"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 jumpoffvehicle"}`
++ Adds the ability to the mob to jump off fron any vehicle if in combat mode.
 
 *attack:*
 	

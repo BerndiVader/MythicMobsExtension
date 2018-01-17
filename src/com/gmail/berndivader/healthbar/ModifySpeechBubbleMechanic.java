@@ -33,9 +33,9 @@ ITargetedEntitySkill {
 		this.so=mlc.getDouble(new String[] { "sideoffset", "so" }, -999);
 		this.fo=mlc.getDouble(new String[] { "forwardoffset", "fo" }, -999);
 		this.ll=mlc.getInteger(new String[] { "linelength", "ll" }, 20);
-		this.i1=mlc.getInteger(new String[] { "counter", "c" }, -999);
+		this.i1=mlc.getInteger(new String[] { "counter","time","c" }, -999);
 		this.s1=mlc.getString(new String[] { "usecounter", "uc" }, "").toLowerCase();
-		this.text=mlc.getString(new String[] { "display", "dur","text","t" },null);
+		this.text=mlc.getString(new String[] { "display", "text","t" },null);
 		if (text!=null) {
 			if (text.startsWith("\"") && text.endsWith("\"")) {
 					this.text=text.substring(1,text.length()-1);

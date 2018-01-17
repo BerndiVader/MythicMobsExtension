@@ -285,6 +285,12 @@ implements VolatileHandler {
 	        	}
 	        	break;
 	        }
+	        case "jumpoffvehicle": {
+	        	if (e instanceof EntityCreature) {
+	            	goals.a(i,(PathfinderGoal)new PathfinderGoalJumpOffFromVehicle(e));
+	        	}
+	        	break;
+	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
 	        	gList.add(uGoal);
@@ -292,6 +298,27 @@ implements VolatileHandler {
 	        }}
 		} catch (Exception e1) {
 			e1.printStackTrace();
+		}
+	}
+	
+	public class PathfinderGoalJumpOffFromVehicle
+	extends
+	PathfinderGoal {
+		protected EntityInsentient e;
+		
+		public PathfinderGoalJumpOffFromVehicle(EntityInsentient e2) {
+			this.e=e2;
+		}
+
+		@Override
+		public boolean a() {
+			return e.getVehicle()!=null;
+		}
+		
+		@Override
+		public boolean b() {
+			if (e.getGoalTarget()!=null) e.stopRiding();
+			return true;
 		}
 	}
     

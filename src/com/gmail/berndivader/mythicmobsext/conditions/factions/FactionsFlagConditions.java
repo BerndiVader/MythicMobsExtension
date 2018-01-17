@@ -20,9 +20,6 @@ public class FactionsFlagConditions implements Listener {
 		if (e.getConditionName().toLowerCase().equals("factionsflag")) {
 			SkillCondition condition = new FactionsFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(condition);
-		} else if (e.getConditionName().toLowerCase().equals("hasfaction")) {
-			SkillCondition c = new HasFactionCondition(e.getConfig().getLine(), e.getConfig());
-			e.register(c);
 		}
 	}
 

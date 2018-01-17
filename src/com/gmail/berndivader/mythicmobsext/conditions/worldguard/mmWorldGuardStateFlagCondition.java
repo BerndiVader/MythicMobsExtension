@@ -1,27 +1,25 @@
 package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class mmWorldGuardStateFlagCondition extends SkillCondition implements ILocationCondition {
+public class mmWorldGuardStateFlagCondition
+extends
+AbstractCustomCondition
+implements
+ILocationCondition {
 
 	private WorldGuardFlags wgf = Main.wgf;
 	private String flagName;
 	private boolean debug;
 
 	public mmWorldGuardStateFlagCondition(String line, MythicLineConfig mlc) {
-		super(line);
-		try {
-			this.ACTION = ConditionAction.valueOf(mlc.getString(new String[] { "action", "a" }, "TRUE").toUpperCase());
-		} catch (Exception ex) {
-			this.ACTION = ConditionAction.TRUE;
-		}
+		super(line,mlc);
 		this.flagName = mlc.getString(new String[] { "flagname", "flag", "f" }, "mob-spawning");
 		this.debug=mlc.getBoolean("debug",false);
 	}
