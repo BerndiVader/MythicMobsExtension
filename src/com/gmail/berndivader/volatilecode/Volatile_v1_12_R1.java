@@ -62,6 +62,9 @@ implements VolatileHandler,Listener {
 	private static String signal_AIHIT="AIHIT";
 	private static String meta_WALKSPEED="MMEXTWALKSPEED";
 	
+	private static HashMap<UUID,ChannelHandler>chl;
+	private static Field cField;
+	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
@@ -82,6 +85,17 @@ implements VolatileHandler,Listener {
 					EnumPlayerTeleportFlags.Z
 					}));
 	
+	static {
+	    for(Field f:NetworkManager.class.getDeclaredFields()) {
+	    	if(f.getType().isAssignableFrom(Channel.class)) {
+	    		cField=f;
+	    		cField.setAccessible(true);
+	    		break;
+	    	}
+	    }
+	    chl=new HashMap<>();
+	}
+	
 	public Volatile_v1_12_R1() {
 		registerCustomParrot("mythic_parrot",105,MythicEntityParrot_1_12_R1.class);
 		Bukkit.getServer().getPluginManager().registerEvents(this,Main.getPlugin());
@@ -95,7 +109,7 @@ implements VolatileHandler,Listener {
 	
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-	    Utils.chl.put(e.getPlayer().getUniqueId(),channelPlayerInArmListen(e.getPlayer(), new PacketReceivingHandler() {
+	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInArmListen(e.getPlayer(), new PacketReceivingHandler() {
 	        @Override
 	        public boolean handle(Player p, PacketPlayInArmAnimation packet) {
 	        	float f1=getIndicatorPercentage(p);
@@ -107,9 +121,9 @@ implements VolatileHandler,Listener {
 
 	@EventHandler
 	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
-		ChannelHandler ch=Utils.chl.get(e.getPlayer().getUniqueId());
+		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
 		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
-		Utils.chl.remove(e.getPlayer().getUniqueId());
+		chl.remove(e.getPlayer().getUniqueId());
 	}
 	
 	private boolean closeChannelListener(Player p,ChannelHandler ch) {
@@ -143,7 +157,7 @@ implements VolatileHandler,Listener {
 	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
 	    Channel c=null;
 	    try {
-	        c=(Channel)Utils.cField.get(nm);
+	        c=(Channel)cField.get(nm);
 	    } catch (IllegalArgumentException|IllegalAccessException e) {
 	        e.printStackTrace();
 	    }
@@ -493,12 +507,10 @@ implements VolatileHandler,Listener {
 	        	break;
 	        }
 	        case "breakblocks": {
-	        	System.err.println("hoho");
 	        	if (e instanceof EntityCreature) {
 	        		int chance=50;
 	        		if (data1!=null 
 	        				&& Utils.isNumeric(data1)) chance=Integer.parseInt(data1);
-		        	System.err.println("hoho1");
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
