@@ -195,6 +195,10 @@ public class CustomMechanics implements Listener {
 				skill=new ParsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
+			} case "nodamageticks": {
+				skill=new NoDamageTicksMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
 			} case "parsedstance":
 		  	case "pstance": {
 				skill = new ParsedStance(e.getContainer().getConfigLine(),e.getConfig());

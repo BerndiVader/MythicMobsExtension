@@ -36,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NoDamageTicksMechanic;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
@@ -173,6 +174,7 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onMythicPlayerQuit(PlayerQuitEvent e) {
+		if (e.getPlayer().hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (this.isActivePlayer(e.getPlayer().getUniqueId())) {
 			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 			this.removeAllEffectsFromPlayer(ap.getEntity());
