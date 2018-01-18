@@ -15,14 +15,14 @@ public class Config {
 	public static ConfigurationSection M_Players;
 	public static ConfigurationSection M_Thiefs;
 	public static ConfigurationSection M_Parrot;
-    public static ConfigurationSection CO;
+	public static ConfigurationSection CO;
 	public static ConfigurationSection WG;
 	public static ConfigurationSection HD;
 
 	public static void load(Plugin plugin) {
 		File configFile = new File(plugin.getDataFolder(), "config.yml");
 		if (!configFile.exists()) {
-		    plugin.getLogger().info("Generating config.yml...");
+			plugin.getLogger().info("Generating config.yml...");
 			plugin.saveDefaultConfig();
 		}
 
@@ -44,13 +44,13 @@ public class Config {
 		}
 
 		UN = config.getConfigurationSection("Configuration.UpdateNotification");
-        NaN = config.getConfigurationSection("Configuration.Patches.NaN_Patch");
-        M_Players = config.getConfigurationSection("Configuration.Modules.Mythic_Players");
-        M_Thiefs = config.getConfigurationSection("Configuration.Modules.Mythic_Thiefs");
-        CO = config.getConfigurationSection("Configuration.Modules.Cached_Owners");
-        M_Parrot = config.getConfigurationSection("Configuration.Entities.Mythic_Parrot");
-        WG = config.getConfigurationSection("Configuration.Compatibility.Worldguard");
-        HD = config.getConfigurationSection("Configuration.Compatibility.Holographic_Displays");
+        	NaN = config.getConfigurationSection("Configuration.Patches.NaN_Patch");
+        	M_Players = config.getConfigurationSection("Configuration.Modules.Mythic_Players");
+        	M_Thiefs = config.getConfigurationSection("Configuration.Modules.Mythic_Thiefs");
+        	CO = config.getConfigurationSection("Configuration.Modules.Cached_Owners");
+        	M_Parrot = config.getConfigurationSection("Configuration.Entities.Mythic_Parrot");
+        	WG = config.getConfigurationSection("Configuration.Compatibility.Worldguard");
+        	HD = config.getConfigurationSection("Configuration.Compatibility.Holographic_Displays");
 	}
 
 }
