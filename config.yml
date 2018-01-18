@@ -1,0 +1,20 @@
+#
+# MythicMobsExtension Config
+# Informations available at https://github.com/BerndiVader/MythicMobsExtension/wiki/Config
+#
+
+Configuration:
+  # DO NOT edit the version number
+  Version: 1
+  Update_Notification: true
+  Patches:
+    NaN_Patch: true
+  Modules:
+    Mythic_Players: true
+    Mythic_Thiefs: true
+    Cached_Owners: true
+  Entities:
+    Mythic_Parrot: true
+  Compatibility:
+    Worldguard: true
+    Holographic_Displays: true
