@@ -19,14 +19,14 @@ public class CustomSummonMechanic extends SkillMechanic
 		implements
 		ITargetedLocationSkill,
 		ITargetedEntitySkill {
-	protected MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
-	protected MobManager mobmanager = this.mythicmobs.getMobManager();
-	private MythicMob mm;
-	private MythicEntity me;
-	private String tag,amount;
-	private int noise,yNoise;
-	private boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
-	private double addx,addy,addz,inFrontBlocks;
+	MythicMobs mythicmobs = Main.getPlugin().getMythicMobs();
+	MobManager mobmanager = this.mythicmobs.getMobManager();
+	MythicMob mm;
+	MythicEntity me;
+	String tag,amount;
+	int noise,yNoise;
+	boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
+	double addx,addy,addz,inFrontBlocks;
 
 	public CustomSummonMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

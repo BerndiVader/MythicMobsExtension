@@ -23,7 +23,7 @@ public class AStarMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
-	private int range;
+	int range;
 
 	public AStarMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

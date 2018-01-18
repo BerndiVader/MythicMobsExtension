@@ -72,8 +72,5 @@ ITargetedEntitySkill {
 		}.runTaskTimer(Main.getPlugin(), 1L,1L);
 		return true;
 	}
-	
-	private void ai(boolean bl1) {
-		this.ai=bl1;
-	}
+
 }

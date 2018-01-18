@@ -15,16 +15,16 @@ extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
-	private boolean pk;
-	private boolean pi;
-	private boolean ia;
-	private boolean iabs;
-	private boolean ip;
-	private boolean p;
-	private boolean pcur;
-	private boolean debug;
-	private DamageCause cause;
-	private String amount;
+	boolean pk;
+	boolean pi;
+	boolean ia;
+	boolean iabs;
+	boolean ip;
+	boolean p;
+	boolean pcur;
+	boolean debug;
+	DamageCause cause;
+	String amount;
 
 	public CustomDamage(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

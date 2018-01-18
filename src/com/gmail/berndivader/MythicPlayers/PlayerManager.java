@@ -35,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NoDamageTicksMechanic;
 
@@ -45,7 +46,6 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 public class PlayerManager implements Listener {
 	public static String meta_MYTHICPLAYER = "MythicPlayer";
@@ -215,12 +215,12 @@ public class PlayerManager implements Listener {
 	public void onUseTrigger(PlayerInteractEvent e) {
 		final Player p=e.getPlayer();
 		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
-			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),MinecraftServer.currentTick));
+			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
 			new BukkitRunnable() {
 				float f1;
 				@Override
 				public void run() {
-					if ((f1=com.gmail.berndivader.utils.Utils.getBowTension(p))>-1) {
+					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.utils.Utils.getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(mythicplayers.plugin(),f1));
 					} else {
 						this.cancel();
@@ -228,9 +228,8 @@ public class PlayerManager implements Listener {
 				}
 			}.runTaskTimer(Main.getPlugin(),1l,1l);
 		}
-		if (!this.isActivePlayer(e.getPlayer().getUniqueId()))
-			return;
-		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
+		if (!this.isActivePlayer(p.getUniqueId())) return;
+		ActivePlayer ap = this.getActivePlayer(p.getUniqueId()).get();
 		TriggeredSkillAP ts = null;
 		if (e.getHand().equals(EquipmentSlot.HAND)) {
 			if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {

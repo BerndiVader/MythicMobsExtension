@@ -6,11 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.NMS.NMSUtils;
 
 public class NaNpatch implements Listener {
-	protected NMSUtils nmsutils = Main.getPlugin().getNMSUtils();
 	protected Plugin plugin;
 
 	public NaNpatch(Plugin plugin) {
@@ -22,8 +20,8 @@ public class NaNpatch implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		if (p.isOnline()) {
-			if (Float.isNaN(nmsutils.getAbsAmount(p))) {
-				if (!nmsutils.setAbsAmount(p, 0.0f)) {
+			if (Float.isNaN(NMSUtils.getAbsAmount(p))) {
+				if (!NMSUtils.setAbsAmount(p, 0.0f)) {
 					this.plugin.getLogger().warning("Unable to patch NaN for " + p.getName() + "!");
 				}
 			}

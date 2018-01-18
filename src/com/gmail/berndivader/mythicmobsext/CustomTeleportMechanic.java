@@ -43,11 +43,11 @@ SkillMechanic
 implements 
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
-	protected String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
-	protected boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
-	protected double delay, noise, maxTargets, frontOffset;
-	protected AbstractEntity entityTarget;
-	protected AbstractLocation startLocation;
+	String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
+	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
+	double delay, noise, maxTargets, frontOffset;
+	AbstractEntity entityTarget;
+	AbstractLocation startLocation;
 
 	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
 		super(line,mlc);

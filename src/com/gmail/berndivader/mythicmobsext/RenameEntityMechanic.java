@@ -9,8 +9,8 @@ public class RenameEntityMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	private String name;
-	private boolean v;
+	String name;
+	boolean v;
 	public RenameEntityMechanic(String line, MythicLineConfig mlc) {
 
 		super(line,mlc);

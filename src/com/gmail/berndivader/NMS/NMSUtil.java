@@ -594,7 +594,9 @@ public class NMSUtil {
                     class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
                     class_Entity_jumpingField.setAccessible(true);
                     class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
+                    class_Entity_moveStrafingField.setAccessible(true);
                     class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
+                    class_Entity_moveForwardField.setAccessible(true);
                 } catch (Throwable not12) {
                     // 1.11
                     current = false;

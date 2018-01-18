@@ -494,7 +494,6 @@ implements VolatileHandler,Listener {
 	        			}
 	        		}
 	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
-	        			Main.getPlugin().getNMSUtils();
 						Entity ee = NMSUtil.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
 	        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
@@ -1294,4 +1293,5 @@ implements VolatileHandler,Listener {
        	eh.getCooldownTracker().a(i,j);
 		return true;
 	}
+	
 }

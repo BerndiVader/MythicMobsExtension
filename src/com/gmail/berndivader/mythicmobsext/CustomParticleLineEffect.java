@@ -20,12 +20,12 @@ CustomParticleEffect
 implements 
 ITargetedEntitySkill,
 ITargetedLocationSkill {
-	protected float distanceBetween;
-	protected float yStartOffset;
-	protected float vDestOffset;
-	protected float hDestOffset;
-	protected boolean fromOrigin;
-	protected boolean ignoreYaw;
+	float distanceBetween;
+	float yStartOffset;
+	float vDestOffset;
+	float hDestOffset;
+	boolean fromOrigin;
+	boolean ignoreYaw;
 
 	public CustomParticleLineEffect(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

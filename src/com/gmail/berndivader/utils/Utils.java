@@ -64,13 +64,11 @@ import think.rpgitems.item.RPGItem;
 public class Utils implements Listener {
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
-	public static NMSUtils nmsutils;
 	public static int serverV;
 	
 	static {
 		mythicmobs=Main.getPlugin().getMythicMobs();
 		mobmanager=Main.getPlugin().getMobManager();
-		nmsutils=Main.getPlugin().getNMSUtils();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
 	    } catch (Exception e) {
@@ -721,9 +719,7 @@ public class Utils implements Listener {
 				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
 			}
 		}
-		if (s.contains(".meta.")) {
-			s=parseMetaVar(s,c,t,l);
-		}
+		if (s.contains(".meta.")) s=parseMetaVar(s,c,t,l);
 		return s;
 	}
 	
@@ -752,7 +748,7 @@ public class Utils implements Listener {
 	}
 	
 	public static float getBowTension(Player p) {
-		int i1=nmsutils.getCurrentTick(Bukkit.getServer()),i2=-1;
+		int i1=NMSUtils.getCurrentTick(Bukkit.getServer()),i2=-1;
         if (((HumanEntity)p).isHandRaised()&&p.hasMetadata(PlayerManager.meta_BOWTICKSTART)) {
         	i2=p.getMetadata(PlayerManager.meta_BOWTICKSTART).get(0).asInt();
         }

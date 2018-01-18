@@ -16,10 +16,10 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 public class CustomRandomSkillMechanic extends SkillMechanic 
 implements
 IMetaSkill {
-	protected MythicMobs mythicmobs;
-	protected SkillManager skillmanager;
-	protected LinkedHashMap<Integer,SkillEntry> entrylist;
-	private boolean b1;
+	MythicMobs mythicmobs;
+	SkillManager skillmanager;
+	LinkedHashMap<Integer,SkillEntry> entrylist;
+	boolean b1;
 	
 	public CustomRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

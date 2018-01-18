@@ -34,7 +34,6 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
-	public static NMSUtils nmsutils;
 	public static Random random;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
@@ -73,7 +72,6 @@ public class Main extends JavaPlugin {
 			}
 		}
  */
-		Main.nmsutils = new NMSUtils();
 		this.volatilehandler = this.getVolatileHandler();
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			Main.mythicmobs = MythicMobs.inst();
@@ -193,10 +191,6 @@ public class Main extends JavaPlugin {
 		return this.maHandler;
 	}
 
-	public NMSUtils getNMSUtils() {
-		return Main.nmsutils;
-	}
-	
     public VolatileHandler getVolatileHandler() {
         if (this.volatilehandler != null) return this.volatilehandler;
 		String v, n;

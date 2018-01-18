@@ -1305,29 +1305,7 @@ public class NMSUtils extends NMSUtil {
 		return false;
 	}
 
-	public static float getForwardMovement(LivingEntity entity) {
-		if (class_Entity_moveForwardField == null)
-			return 0.0f;
-		try {
-			return (float) class_Entity_moveForwardField.get(getHandle(entity));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return 0.0f;
-	}
-
-	public static float getStrafeMovement(LivingEntity entity) {
-		if (class_Entity_moveStrafingField == null)
-			return 0.0f;
-		try {
-			return (float) class_Entity_moveStrafingField.get(getHandle(entity));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return 0.0f;
-	}
-
-	public void setRotation(Entity e, float y, float p) {
+	public static void setRotation(Entity e, float y, float p) {
 		try {
 			Object entityHandle = getHandle(e);
 			class_Entity_setYawPitchMethod.invoke(entityHandle, y, p);
@@ -1336,7 +1314,7 @@ public class NMSUtils extends NMSUtil {
 		}
 	}
 
-	public void SetNMSLocation(Entity e, double x, double y, double z, float r, float p) {
+	public static void SetNMSLocation(Entity e, double x, double y, double z, float r, float p) {
 		try {
 			Object entityHandle = getHandle(e);
 			class_Entity_setLocationMethod.invoke(entityHandle, x, y, z, r, p);
@@ -1345,7 +1323,7 @@ public class NMSUtils extends NMSUtil {
 		}
 	}
 
-	public Float getAbsAmount(Entity e) {
+	public static Float getAbsAmount(Entity e) {
 		try {
 			Object data = getEntityData(e);
 			return (Float) class_NBTTagCompound_getFloatMethod.invoke(data, "AbsorptionAmount");
@@ -1355,7 +1333,7 @@ public class NMSUtils extends NMSUtil {
 		return null;
 	}
 
-	public boolean setAbsAmount(Entity e, float f) {
+	public static boolean setAbsAmount(Entity e, float f) {
 		try {
 			String tag = "AbsorptionAmount";
 			Object entityHandle = getHandle(e);
@@ -1369,21 +1347,7 @@ public class NMSUtils extends NMSUtil {
 		return false;
 	}
 
-	public boolean setRotationNBT(Entity e, float yaw) {
-		try {
-			String tag = "Rotation";
-			Object entityHandle = getHandle(e);
-			Object data = getEntityData(e);
-			setMeta(data,tag,"0.0f,180.0f");
-			class_EntityLiving_writeNBTMethod.invoke(entityHandle, data);
-			return true;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return false;
-	}
-	
-	public int getCurrentTick(Server s1) {
+	public static int getCurrentTick(Server s1) {
 		int i1=0;
 		Object o1;
 		try {
@@ -1392,6 +1356,27 @@ public class NMSUtils extends NMSUtil {
 			ex.printStackTrace();
 		}
 		return i1;
+	}
+	
+	public static float getForwardMovement(LivingEntity entity) {
+		if (class_Entity_moveForwardField == null)
+			return 0.0f;
+		try {
+			return (float) class_Entity_moveForwardField.get(getHandle(entity));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0.0f;
+	}
+
+	public static float getStrafeMovement(LivingEntity entity) {
+		if (class_Entity_moveStrafingField==null) return 0.0f;
+		try {
+			return (float)class_Entity_moveStrafingField.get(getHandle(entity));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0.0f;
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions.own;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -61,12 +62,13 @@ ILocationCondition {
 	private boolean checkEntity(AbstractLocation location,Class<?>clazz) {
 		int count = 0;
 		Location l = BukkitAdapter.adapt(location);
-		for (Entity e:l.getWorld().getEntitiesByClasses(clazz)) {
+		for(Iterator<Entity>i1=l.getWorld().getEntitiesByClasses(clazz).iterator();i1.hasNext();) {
+			Entity e=i1.next();
 			if (!this.all && !mList.contains(e.getType().toString().toUpperCase())) continue;
-			Location el = e.getLocation();
+			Location el=e.getLocation();
 			if (l.getWorld()!=el.getWorld()) continue;
 			if (is&&Utils.cmpLocByBlock(el,l)) continue;
-			double diffsq = l.distanceSquared(el);
+			double diffsq=l.distanceSquared(el);
 			if (diffsq<=Math.pow(this.r,2.0D)) count++;
 		}
 		return this.a.equals(count);

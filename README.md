@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238k for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238l for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -7,6 +7,9 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 ### Changelog:
+##### ** 18.01.2018 *** fixed issue in entitiesinradius condition.
+##### ** 18.01.2018 *** tweaks for nodamageticks.
+##### ** 18.01.2018 *** fixed some more compatibility issues.
 ##### ** 18.01.2018 *** added nodamageticks mechanics. Experimental.
 ##### ** 17.01.2018 *** added CustomPathfinderGoal PathfinderGoalJumpOffFromVehicle.
 ##### ** 17.01.2018 *** removed hasfaction condition. use infaction & samefaction instead.
