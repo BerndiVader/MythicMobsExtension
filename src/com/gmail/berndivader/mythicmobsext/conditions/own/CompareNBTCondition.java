@@ -23,7 +23,7 @@ IEntityCondition {
 	public boolean check(AbstractEntity e) {
 		if (s1!=null) {
 			String s=s1.replaceAll("\\(","{").replaceAll("\\)","}");
-			Main.getPlugin().getVolatileHandler().getNBTValueOf(e.getBukkitEntity(),s,false);
+			return Main.getPlugin().getVolatileHandler().getNBTValueOf(e.getBukkitEntity(),s,false);
 		}
 		return false;
 	}

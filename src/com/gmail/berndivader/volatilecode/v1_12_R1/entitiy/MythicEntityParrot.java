@@ -1,4 +1,4 @@
-package com.gmail.berndivader.volatilecode;
+package com.gmail.berndivader.volatilecode.v1_12_R1.entitiy;
 
 import java.util.Set;
 
@@ -23,12 +23,12 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_12_R1.SoundEffects;
 import net.minecraft.server.v1_12_R1.World;
 
-public class MythicEntityParrot_1_12_R1 
+public class MythicEntityParrot 
 extends EntityParrot {
     private static final Set<Item> bJ = Sets.newHashSet(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     boolean cd;
 
-	public MythicEntityParrot_1_12_R1(World world) {
+	public MythicEntityParrot(World world) {
 		super(world);
         this.setSize(0.5f,0.9f);
         this.moveController=new ControllerMoveFlying(this);

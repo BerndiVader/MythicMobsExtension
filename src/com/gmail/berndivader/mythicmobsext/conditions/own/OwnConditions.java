@@ -32,7 +32,8 @@ public class OwnConditions implements Listener {
 				SkillCondition c = new BiomeFixCondition(e.getConfig().getLine(), e.getConfig());
 				e.register(c);
 				break;
-			} case "cmpnbt": {
+			} case "cmpnbt":
+			case "comparenbt": {
 				SkillCondition c=new CompareNBTCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
@@ -156,6 +157,10 @@ public class OwnConditions implements Listener {
 				break;
 			} case "movespeed": {
 				SkillCondition c=new MovementSpeedCondition(e.getConfig().getLine(),e.getConfig());
+				e.register(c);
+				break;
+			} case "moveto": {
+				SkillCondition c=new MoveToCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
 			} case "oncooldown": {

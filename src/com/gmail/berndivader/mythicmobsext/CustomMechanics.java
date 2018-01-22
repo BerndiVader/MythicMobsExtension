@@ -43,6 +43,10 @@ public class CustomMechanics implements Listener {
 				skill = new BlockProjectile(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
+			} case "bloodyscreen": {
+				skill = new BloodyScreen(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
 			} case "castif": {
 				skill = new CastIf(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
@@ -241,7 +245,7 @@ public class CustomMechanics implements Listener {
 				skill=new SetItemCooldown(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
-			} case "setlevel":
+			}
 			case "setrandomlevel": {
 				skill = new SetLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);

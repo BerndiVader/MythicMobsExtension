@@ -3,7 +3,7 @@ package com.gmail.berndivader.mythicmobsext.customprojectiles;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,23 +17,20 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.volatilecode.VolatileHandler;
+import com.gmail.berndivader.volatilecode.Handler;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
-import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -41,42 +38,35 @@ public class MStatueMechanic extends SkillMechanic
 implements 
 ITargetedEntitySkill,
 ITargetedLocationSkill {
-	protected MythicMobs mythicmobs;
-	protected SkillManager skillmanager;
-	protected MobManager mobmanager;
-	
-    protected Optional<Skill>onTickSkill=Optional.empty(),
+    Optional<Skill>onTickSkill=Optional.empty(),
     		onHitSkill=Optional.empty(),
     		onEndSkill=Optional.empty(),
     		onStartSkill=Optional.empty();
-    protected MythicMob material;
-    protected String onTickSkillName,
+    MythicMob material;
+    String onTickSkillName,
     		onHitSkillName,
     		onEndSkillName,
     		onStartSkillName;
-    protected int tickInterval,duration;
-    protected float ticksPerSecond,
+    int tickInterval,duration;
+    float ticksPerSecond,
     		hitRadius,
     		verticalHitRadius,
     		YOffset;
-    protected double sOffset,
+    double sOffset,
     		fOffset;
-    protected boolean 
-    		hitTarget=true,
-    		hitPlayers=false,
-    		hitNonPlayers=false,
-    		hitTargetOnly=false;
+    boolean facedir,
+    		hitTarget,
+    		hitPlayers,
+    		hitNonPlayers,
+    		hitTargetOnly;
 
     public MStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
-		this.mythicmobs=Main.getPlugin().getMythicMobs();
-		this.skillmanager=this.mythicmobs.getSkillManager();
-		this.mobmanager=this.mythicmobs.getMobManager();
 		String i=mlc.getString(new String[] {"mob","m"},"SkeletonKing");
-		this.material=this.mobmanager.getMythicMob(i);
-		if (this.material==null&&this.mobmanager.getMobTypes().size()>0) {
-			this.material=this.mobmanager.getMobTypes().iterator().next();
+		this.material=Main.mythicmobs.getMobManager().getMythicMob(i);
+		if (this.material==null&&Main.mythicmobs.getMobManager().getMobTypes().size()>0) {
+			this.material=Main.mythicmobs.getMobManager().getMobTypes().iterator().next();
 		}
         this.onTickSkillName=mlc.getString(new String[]{"ontickskill","ontick","ot","skill","s","meta","m"});
         this.onHitSkillName=mlc.getString(new String[]{"onhitskill","onhit","oh"});
@@ -94,17 +84,18 @@ ITargetedLocationSkill {
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, false);
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
+        this.facedir=mlc.getBoolean("facedir",false);
 		if (this.onTickSkillName != null) {
-			this.onTickSkill = skillmanager.getSkill(this.onTickSkillName);
+			this.onTickSkill = Main.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
 		if (this.onHitSkillName != null) {
-			this.onHitSkill = skillmanager.getSkill(this.onHitSkillName);
+			this.onHitSkill = Main.mythicmobs.getSkillManager().getSkill(this.onHitSkillName);
 		}
 		if (this.onEndSkillName != null) {
-			this.onEndSkill = skillmanager.getSkill(this.onEndSkillName);
+			this.onEndSkill = Main.mythicmobs.getSkillManager().getSkill(this.onEndSkillName);
 		}
 		if (this.onStartSkillName != null) {
-			this.onStartSkill = skillmanager.getSkill(this.onStartSkillName);
+			this.onStartSkill = Main.mythicmobs.getSkillManager().getSkill(this.onStartSkillName);
 		}
     }
 
@@ -134,7 +125,7 @@ ITargetedLocationSkill {
     private class StatueTracker
     implements IParentSkill,
     Runnable {
-    	private VolatileHandler vh;
+    	private Handler vh;
         private boolean cancelled,useOffset,iYaw,islocationtarget;
         private SkillMetadata data;
         private ActiveMob am;
@@ -143,7 +134,6 @@ ITargetedLocationSkill {
         private Location currentLocation,oldLocation;
         private int taskId;
         private HashSet<LivingEntity> targets;
-        private List<LivingEntity> inRange;
         private Map<LivingEntity,Long> immune;
         private double sOffset,fOffset,yOffset;
         private int count,dur;
@@ -178,29 +168,6 @@ ITargetedLocationSkill {
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
-            if (MStatueMechanic.this.hitPlayers
-            		||MStatueMechanic.this.hitNonPlayers
-            		||MStatueMechanic.this.hitTarget) {
-                this.inRange = this.currentLocation.getWorld().getLivingEntities();
-                Iterator<LivingEntity> iter = this.inRange.iterator();
-                while (iter.hasNext()) {
-                    LivingEntity e = iter.next();
-                    if (e.getUniqueId().equals(this.caster.getEntity().getUniqueId())
-                    		||e.hasMetadata(Main.noTargetVar)) {
-                        iter.remove();
-                        continue;
-                    }
-                    if (!MStatueMechanic.this.hitPlayers && (e instanceof Player) && !e.equals(target)) {
-                        iter.remove();
-                        continue;
-                    }
-                    if (MStatueMechanic.this.hitNonPlayers || (e instanceof Player) && !e.equals(target)) continue;
-                    iter.remove();
-                }
-                if (MStatueMechanic.this.hitTarget&&target!=null) {
-                    this.inRange.add((LivingEntity)target.getBukkitEntity());
-                }
-            }
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
             this.am=MStatueMechanic.this.material.spawn(BukkitAdapter.adapt(this.currentLocation),0);
@@ -232,33 +199,42 @@ ITargetedLocationSkill {
                 this.stop();
                 return;
             }
-            if (this.entity==null) {
+            if (this.entity==null||this.owner==null||this.owner.isDead()) {
             	this.stop();
             	return;
             }
-            this.oldLocation=this.currentLocation.clone();
+            if (oldLocation.getX()!=currentLocation.getX()
+            		||oldLocation.getY()!=currentLocation.getY()
+            		||oldLocation.getZ()!=currentLocation.getZ()) {
+                this.oldLocation=this.currentLocation.clone();
+            }
             if (!this.islocationtarget) {
             	this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
             } else {
             	this.currentLocation=this.entity.getLocation();
             }
-            if (this.dur>MStatueMechanic.this.tickInterval
-            		&&this.inRange != null) {
+            if (this.dur>MStatueMechanic.this.tickInterval) {
                 HitBox hitBox = new HitBox(this.currentLocation,MStatueMechanic.this.hitRadius,MStatueMechanic.this.verticalHitRadius);
-                for (int i=0;i<this.inRange.size();i++) {
-                    LivingEntity e=this.inRange.get(i);
-					if (e.isDead()||!hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0))) continue;
-					this.targets.add(e);
-					this.immune.put(e, System.currentTimeMillis());
-					break;
-				}
-				this.immune.entrySet().removeIf(entry->entry.getValue()<System.currentTimeMillis()-2000);
-                Iterator<Map.Entry<LivingEntity,Long>> iter = this.immune.entrySet().iterator();
+                ListIterator<Entity>lit1=entity.getNearbyEntities(1,1,1).listIterator();
+                while(lit1.hasNext()) {
+                	Entity ee=lit1.next();
+                	if (ee==this.owner||ee==entity||ee.isDead()
+                			||!(ee instanceof LivingEntity)
+                			||!hitBox.contains(ee.getLocation().add(0,0.6,0))
+                			||this.immune.containsKey((LivingEntity)ee)
+                			||ee.hasMetadata(Main.noTargetVar)
+                			||(ee instanceof Player)&&ee!=entity&&!MStatueMechanic.this.hitPlayers
+                			||!MStatueMechanic.this.hitNonPlayers&&ee!=entity) continue;
+                   	LivingEntity t1=(LivingEntity)ee;
+                   	this.targets.add(t1);
+   					this.immune.put(t1,System.currentTimeMillis());
+   					break;
+                }
+                Iterator<Map.Entry<LivingEntity,Long>>iter=this.immune.entrySet().iterator();
                 while (iter.hasNext()) {
-                    Map.Entry<LivingEntity,Long> entry = iter.next();
+                    Map.Entry<LivingEntity,Long>entry=iter.next();
                     if (entry.getValue()>=System.currentTimeMillis()-2000) continue;
                     iter.remove();
-                    this.inRange.add(entry.getKey());
                 }
                 if (this.targets.size() > 0) {
                     this.doHit((HashSet)this.targets.clone());
@@ -276,7 +252,6 @@ ITargetedLocationSkill {
             	}
             	this.dur=0;
             }
-            
             if (!this.islocationtarget) {
             	double x = this.currentLocation.getX();
             	double z = this.currentLocation.getZ();
@@ -286,9 +261,19 @@ ITargetedLocationSkill {
             	z+=soV.getZ()+foV.getZ();
             	this.currentLocation.setX(x);
             	this.currentLocation.setZ(z);
-            	NMSUtils.setLocation(this.entity,x,this.currentLocation.getY(),z,this.currentLocation.getYaw(), this.currentLocation.getPitch());
+            	NMSUtils.setLocation(this.entity,
+            			x,
+            			this.currentLocation.getY(),
+            			z,
+            			facedir?Utils.lookAtYaw(oldLocation,currentLocation):currentLocation.getYaw(),
+            			this.currentLocation.getPitch());
             } else {
-            	NMSUtils.setLocation(this.entity,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());
+            	NMSUtils.setLocation(this.entity,
+            			this.currentLocation.getX(),
+            			this.currentLocation.getY(),
+            			this.currentLocation.getZ(),
+            			currentLocation.getYaw(),
+            			this.currentLocation.getPitch());
             }
 			this.count++;
 			this.dur++;
@@ -312,9 +297,6 @@ ITargetedLocationSkill {
             TaskManager.get().cancelTask(this.taskId);
             this.entity.remove();
             this.cancelled = true;
-            if (this.inRange != null) {
-                this.inRange.clear();
-            }
         }
 
         @Override

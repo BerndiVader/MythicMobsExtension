@@ -10,8 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.minecraft.server.v1_12_R1.CommandException;
 
-public interface VolatileHandler {
-	
+public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
     public void teleportEntityPacket(Entity entity);
@@ -42,4 +41,6 @@ public interface VolatileHandler {
 	float getIndicatorPercentage(Player p);
 	Parrot spawnCustomParrot(Location l1,boolean b1);
 	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
+	void moveto(LivingEntity entity);
+	void setWBWB(Player p, boolean bl1);
 }

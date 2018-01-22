@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -58,6 +59,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
+import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -65,10 +67,12 @@ public class Utils implements Listener {
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
 	public static int serverV;
+	public static HashMap<UUID,Vec3D>pl;
 	
 	static {
 		mythicmobs=Main.getPlugin().getMythicMobs();
 		mobmanager=Main.getPlugin().getMobManager();
+		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
 	    } catch (Exception e) {
@@ -635,7 +639,7 @@ public class Utils implements Listener {
 		}
 		return uuid;
 	}
-
+	
 	public static int randomRangeInt(String range) {
 		ThreadLocalRandom r=ThreadLocalRandom.current();
 		int amount=0;
@@ -759,6 +763,31 @@ public class Utils implements Listener {
         return f1;
 	}
 	
+	public static boolean isHeadingTo(Vector offset,Vector velocity) {
+		double dbefore=offset.lengthSquared();
+		if (dbefore<0.0001) {
+			return true;
+		}
+		Vector clonedVelocity=velocity.clone();
+		setVecLenSqrt(clonedVelocity,dbefore);
+		return dbefore>clonedVelocity.subtract(offset).lengthSquared();
+	}	
+	
+	public static void setVecLen(Vector vector,double length) {
+		setVecLenSqrt(vector,Math.signum(length)*length*length);
+	}
+
+	public static void setVecLenSqrt(Vector vector, double lengthsquared) {
+		double vlength=vector.lengthSquared();
+		if (Math.abs(vlength)>0.0001) {
+			if (lengthsquared<0) {
+				vector.multiply(-Math.sqrt(-lengthsquared/vlength));
+			} else {
+				vector.multiply(Math.sqrt(lengthsquared/vlength));
+			}
+		}
+	}
+	
 	public static int[] shuffleArray(int[]arr1) {
 		int i1;
 		Random r=Main.random;
@@ -798,9 +827,39 @@ public class Utils implements Listener {
         	return null;
         }
 	}
+	
+	public static boolean parseNBToutcome(String s1,String s2,int i1) {
+		if (0<i1&&i1<7) {
+			if (Character.isLetter(s1.charAt(s1.length()-1))) s1=s1.substring(0,s1.length()-1);
+			if (Character.isLetter(s2.charAt(s2.length()-1))) s2=s2.substring(0,s2.length()-1);
+			double d1=Double.parseDouble(s1.toString()),d2=Double.parseDouble(s2.toString());
+			return d1==d2;
+		} else if (i1==8) {
+			if (s1.toLowerCase().substring(0,4).equals("\"rd:")) {
+				s1=s1.substring(1,s1.length()-1);
+				if (s2.startsWith("\"")&&s2.endsWith("\"")) s2=s2.substring(1,s2.length()-1);
+				RangedDouble rd=new RangedDouble(s1.substring(3));
+				if (Character.isLetter(s2.charAt(s2.length()-1))) s2=s2.substring(0,s2.length()-1);
+				double d1;
+				try {
+					d1=Double.parseDouble(s2);
+				} catch (Exception e) {
+					return false;
+				}
+				return rd.equals(d1);
+			}
+			return s1.equals(s2);
+		}
+		return false;
+	}
 
 	public static boolean cmpLocByBlock(Location l1, Location l2) {
 		return l1.getBlockX()==l2.getBlockX()&&l1.getBlockY()==l2.getBlockY()&&l1.getBlockZ()==l2.getBlockZ();
-	}	
+	}
+	
+	public static boolean playerInMotion(Player p) {
+		Vec3D v3=Utils.pl.get(p.getUniqueId());
+		return Math.abs(v3.getX())>0.02||Math.abs(v3.getY())>0.02||Math.abs(v3.getZ())>=0.02;
+	}
 	
 }

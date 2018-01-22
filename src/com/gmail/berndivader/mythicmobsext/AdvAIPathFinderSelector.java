@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext;
 
 import org.bukkit.entity.LivingEntity;
 
-import com.gmail.berndivader.volatilecode.VolatileHandler;
+import com.gmail.berndivader.volatilecode.Handler;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -15,7 +15,7 @@ public class AdvAIPathFinderSelector extends SkillMechanic
 implements
 ITargetedEntitySkill {
 	
-	VolatileHandler vh = Main.getPlugin().getVolatileHandler();
+	Handler vh = Main.getPlugin().getVolatileHandler();
 	String g;
 	
 	public AdvAIPathFinderSelector(String skill, MythicLineConfig mlc) {

@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238l for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238m for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -7,6 +7,10 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 
 
 ### Changelog:
+##### ** 22.01.2018 *** added bloodyscreen mechanic. See bloodyscreen mechanic for details.
+##### ** 22.01.2018 *** added cmpnbt condition. If more then just a testfor is needed. See cmpnbt for details.
+##### ** 19.01.2018 *** added player support for inmotion condition.
+##### ** 19.01.2018 *** tweaked all floating mechanics & added facedir=[bool] to entity- mythicfloating mechanics.
 ##### ** 18.01.2018 *** fixed issue in entitiesinradius condition.
 ##### ** 18.01.2018 *** tweaks for nodamageticks.
 ##### ** 18.01.2018 *** fixed some more compatibility issues.
@@ -310,6 +314,25 @@ PlayEffectOnTarget:
 
 
 
+## bloodyscreen mechanic:
+
+Force the player to see the border warning effect.
+
+##### `- bloodyscreen{play=[BOOL]}`
+
+Where play=true for on or false for off.
+Example:
+
+```yaml
+BloodyScreen:
+  Skills:
+  - bloodyscreen{play=true}
+  - delay 10
+  - bloodyscreen{play=off}
+```
+
+
+
 ## randomspeed mechanic:
 
 Force the target to drop an item from its storagte/equipment to the ground.
@@ -327,7 +350,6 @@ newSpeed:
 
 
 
-
 ## itemfloating / blockfloating / entityfloating / mythicfloating mechanic:
 
 Summon a floating item, block, entity or mythicmobs mob relative to caster or static at location.
@@ -336,9 +358,9 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 
 ##### `- blockfloating{m=DIRT;md=250;yo=2;so=0;fo=0} ~onSpawn`
 
-##### `- entityfloating{e=pig;md=250;yo=2;so=0;fo=0;noai=true} ~onSpawn`
+##### `- entityfloating{e=pig;md=250;yo=2;so=0;fo=0;noai=true;facedir=[bool]} ~onSpawn`
 
-##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn`
+##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2;facedir[bool]} ~onSpawn`
 	 
 Almost all options like in mythicprojectile are useable.
 
@@ -1383,6 +1405,14 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- comparenbt{nbt=[NBT]||ANY;action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Use as **Conditions** && **TargetConditions** Check the nbt more advanced than testfor can do. With the ability to ignore nbt by adding **id:ignore** or use ranged values **"rd:1to5"** or **"rd:>0"** or **rd:<1** or simple a usual value like **1** Please use "(" && ")" instead of "{" && "}" for compatibility issues. Look at the examples:
+Ex: `- cmpnbt{nbt=(Fire:"rd:>50")}` condition is true if the entity is on fire for more than 50 ticks.
+Ex: `- cmpnbt{nbt=(Fire:-1)}` condition is true if the entity is not on fire.
+Ex: `- cmpnbt{nbt=(Rotation:["rd:<361","rd:>65"])}` condition is true if the pitch is above 65 (looks at ground) while yaw is ignored because its always smaller than 361.
+Ex: `- cmpnbt{nbt=(ArmorItems:[(),(),(),(id:"minecraft:diamond_helmet",Count:"rd:>0")])}` this condition is true if the entity wears nothing but atleast 1 helmet made out of diamonds. :)
+Ex: `- cmpnbt{nbt=(ArmorItems:[(),(),(id:ignore),(id:"minecraft:diamond_helmet",Count:1)])}` this condition is true if the entity wears no shoes, no trousers but a helmet made of diamonds and something else on its chest.
 
 ##### `- hasvehicle{types=[array]||ANY}`
 To use as **Conditions** condition. Check if the caster is riding or driving another entity. Use an array `zombie,skeleton,creeper` or a single type `boat` or `ANY` for any entity.

@@ -13,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.events.MythicMobsExtItemDropEvent;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -34,7 +35,7 @@ ITargetedEntitySkill,
 ITargetedLocationSkill {
 	private String itemtype;
 	private String dropname;
-	private int amount;
+	private String amount;
 	private boolean stackable;
 	private boolean shuffle;
 
@@ -43,7 +44,7 @@ ITargetedLocationSkill {
 		this.ASYNC_SAFE=false;
 		this.itemtype=mlc.getString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },null);
 		this.dropname=mlc.getString(new String[] { "dropname", "customname", "name", "n" },null);
-		this.amount=mlc.getInteger(new String[] { "amount", "a" }, 1);
+		this.amount=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
 		this.stackable=mlc.getBoolean(new String[] { "stackable", "sa" },true);
 		this.shuffle=mlc.getBoolean(new String[] { "shuffle", "s" },false);
 	}
@@ -61,7 +62,7 @@ ITargetedLocationSkill {
 	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		ActiveMob am=(ActiveMob)data.getCaster();
 		if (this.itemtype==null||am==null) return false;
-		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,this.amount,this.stackable,this.shuffle,am,e1==null?data.getTrigger():e1);
+		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,am,e1==null?data.getTrigger():e1);
 		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
 		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
         Bukkit.getServer().getPluginManager().callEvent(e);
