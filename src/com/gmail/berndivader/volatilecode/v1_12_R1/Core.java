@@ -1114,6 +1114,31 @@ implements Handler,Listener {
 	public boolean getNBTValueOf(Entity e1, String s1,boolean b1) {
 		return getNBTValue(e1,s1);
 	}
+
+	@Override
+	public boolean addNBTTag(Entity e1,String s) {
+		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
+		NBTTagCompound nbt1=null,nbt2=null,nbt3=null;
+		if ((nbt1=TFa(me))!=null) {
+			nbt3=nbt1.g();
+			try {
+				nbt2=MojangsonParser.parse(s);
+			}
+			catch (MojangsonParseException ex) {
+				System.err.println(ex.getLocalizedMessage());
+				return false;
+			}
+			UUID u=me.getUniqueID();
+			nbt1.a(nbt2);
+			me.a(u);
+			if(nbt3.equals(nbt1)) {
+				return false;
+			}
+			me.f(nbt1);
+			return true;
+		}
+		return false;
+	}
 	
 	private boolean getNBTValue(Entity e1, String s) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
@@ -1137,7 +1162,6 @@ implements Handler,Listener {
 			}
 			if (nb1!=null&&nb2!=null) bl1=nbtA(nb2,nb1,bl1=true);
 		}
-		System.err.println("outcome:"+bl1);
 		return bl1;
 	}
 	

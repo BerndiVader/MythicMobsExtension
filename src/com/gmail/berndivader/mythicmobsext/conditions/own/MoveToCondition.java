@@ -37,5 +37,5 @@ IEntityCondition {
 		}
 		return false;
 	}
-
+	
 }

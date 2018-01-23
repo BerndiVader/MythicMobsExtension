@@ -241,6 +241,10 @@ public class CustomMechanics implements Listener {
 				skill=new SetFactionMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
+			} case "setnbt": {
+				skill=new SetNbt(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
 			} case "setitemcooldown": {
 				skill=new SetItemCooldown(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);

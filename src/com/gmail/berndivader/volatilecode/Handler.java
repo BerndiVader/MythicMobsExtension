@@ -43,4 +43,5 @@ public interface Handler {
 	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
 	void moveto(LivingEntity entity);
 	void setWBWB(Player p, boolean bl1);
+	boolean addNBTTag(Entity e1, String s);
 }

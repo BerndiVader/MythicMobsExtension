@@ -968,4 +968,10 @@ implements Handler {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean addNBTTag(Entity e1, String s) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

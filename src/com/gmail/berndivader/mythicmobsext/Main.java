@@ -112,7 +112,7 @@ public class Main extends JavaPlugin {
 				Main.healthbarhandler = new HealthbarHandler(this);
 				logger.info("HolographicDisplays support enabled!");
 			}
-			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise")?true:false;
+			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
 			cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			logger.info("CachedOwner support enabled!");
 			
@@ -122,7 +122,6 @@ public class Main extends JavaPlugin {
 					Main.mythicmobs.getRandomSpawningManager().reload();
 				}
 			}.runTask(this);
-			
 			new BukkitRunnable() {
 				@Override
 				public void run() {

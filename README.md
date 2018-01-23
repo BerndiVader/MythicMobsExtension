@@ -1,12 +1,12 @@
-# MythicMobsExtension v1.238m for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238n for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
-
 ### Changelog:
+##### ** 23.01.2018 *** added setnbt mechanic. See setnbt mechanic for details.
 ##### ** 22.01.2018 *** added bloodyscreen mechanic. See bloodyscreen mechanic for details.
 ##### ** 22.01.2018 *** added cmpnbt condition. If more then just a testfor is needed. See cmpnbt for details.
 ##### ** 19.01.2018 *** added player support for inmotion condition.
@@ -311,6 +311,27 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## setnbt mechanic:
+
+Forms a nbt and applies it to the targeted entity. **Note the surrounding "" for nbt option!**
+
+##### `- setnbt{nbt="[NBT]"}`
+
+Any valid nbt can be applied where variables like <mob.name> etc are allowed!
+
+Example:
+
+```yaml
+TestMonkey:
+  Type: zombie
+  Skills:
+  - equip{i=Sword:0} @self ~onSpawn
+  - setnbt{nbt="{LeftHanded:1b}"} @self ~onInteract
+```
+This example makes it that the entity change the weapon from right to left side.
 
 
 
