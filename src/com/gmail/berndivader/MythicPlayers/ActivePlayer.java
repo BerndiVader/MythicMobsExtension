@@ -25,5 +25,5 @@ public class ActivePlayer extends ActiveMob {
 	public Player getPlayer() {
 		return BukkitAdapter.adapt(this.getEntity().asPlayer());
 	}
-	
+
 }

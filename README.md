@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238n for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238o for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 24.01.2018 *** added reducedamagebydistance (rdbd) option to customdamage mechanic.
 ##### ** 23.01.2018 *** added setnbt mechanic. See setnbt mechanic for details.
 ##### ** 22.01.2018 *** added bloodyscreen mechanic. See bloodyscreen mechanic for details.
 ##### ** 22.01.2018 *** added cmpnbt condition. If more then just a testfor is needed. See cmpnbt for details.
@@ -1228,6 +1229,7 @@ Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www
 + `ignoreabs = iabs =` false by default. If absorbation should be ignored or not.
 + `percentage=p=` false by default. If true it uses the amount as percent.
 + `pcur=pc=` false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
++ `rdbd=` if used the damage of the skill is reduced by blockdistance. Ex: rdbd=0.01 reduces the damage by 1% per block.
 	
 
 	

@@ -23,6 +23,7 @@ ITargetedEntitySkill {
 	boolean p;
 	boolean pcur;
 	boolean debug;
+	double dbd;
 	DamageCause cause;
 	String amount;
 
@@ -40,6 +41,7 @@ ITargetedEntitySkill {
 		this.p = mlc.getBoolean(new String[] { "percentage", "p" }, false);
 		this.pcur = mlc.getBoolean(new String[] { "percentcurrent", "pcur", "pc" }, false);
 		String ca = mlc.getString(new String[] { "damagecause", "cause", "dc" }, "CUSTOM").toUpperCase();
+		dbd=mlc.getDouble("rdbd",-7331d);
 		cause=DamageCause.CUSTOM;
 		for (DamageCause dc : DamageCause.values()) {
 			if (dc.toString().equals(ca)) {
@@ -60,6 +62,10 @@ ITargetedEntitySkill {
 		}
 		if (!this.ip)
 			dmg = dmg * data.getPower();
+		if (this.dbd>-7331d) {
+			int dd=(int)Math.sqrt(Utils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),t.getBukkitEntity().getLocation().toVector()));
+			dmg-=(dmg*(dd*dbd));
+		}
 		Utils.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug, this.cause);
 		return true;
 	}
