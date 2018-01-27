@@ -1432,7 +1432,7 @@ FleeButGotNothing:
 # Conditions
 
 
-##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES]}`
+##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:
 LEFT, FORWARD_LEFT, FORWARD, FORWARD_RIGHT, RIGHT, BACKWARD_RIGHT, BACKWARD, BACKWARD_LEFT or ANY. The directions can also be in a list like: left,forward_left,forward_right
 
