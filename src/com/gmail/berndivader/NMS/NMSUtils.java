@@ -1379,4 +1379,13 @@ public class NMSUtils extends NMSUtil {
 		return 0.0f;
 	}
 	
+	public static float getLastYawFloat(Entity entity) {
+		try {
+			return (float)class_Entity_lastYawField.get(getHandle(entity));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0f;
+	}
+	
 }

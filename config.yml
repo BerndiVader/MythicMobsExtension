@@ -6,6 +6,7 @@
 Configuration:
   # DO NOT edit the version number
   Version: 1
+  Debug: false
   Update_Notification: true
   Patches:
     NaN_Patch: true
@@ -17,4 +18,8 @@ Configuration:
     Mythic_Parrot: true
   Compatibility:
     Worldguard: true
+    Factions: true
+    RPGItems: true
+    MobArena: true
     Holographic_Displays: true
+    

@@ -16,19 +16,21 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.cachedowners.CachedOwnerHandler;
-import com.gmail.berndivader.healthbar.HealthbarHandler;
+import com.gmail.berndivader.config.Config;
 import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
+import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.own.OwnConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
+import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
+import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.nanpatch.NaNpatch;
 import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.volatilecode.Handler;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
 
 public class Main extends JavaPlugin {
 	private static Main plugin;
@@ -38,88 +40,86 @@ public class Main extends JavaPlugin {
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
-	public static final String mpNameVar = "mythicprojectile";
-	public static final String noTargetVar = "nottargetable";
 	public static boolean hasRpgItems = false;
 	public static Logger logger;
 	public static PluginManager pluginmanager;
 	public static boolean slappyNewBorn = true;
-	public static MythicMobs mythicmobs;
 	public WorldGuardPlugin wg;
-	private ThiefHandler thiefhandler;
-	private static MobManager mobmanager;
 	private static MythicPlayers mythicplayers;
 	private MobArenaHandler maHandler;
-	private Handler volatilehandler;
+	public static Handler volatilehandler;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 	public static boolean disguisepresent;
+	public Thiefs thiefs;
 
 	public void onEnable() {
 		plugin = this;
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
-/**
- *TODO: implement helper if needed
-		if (!pluginmanager.isPluginEnabled("Helper")) {
-			Plugin helper;
-			logger.info("Helper not found. Try to register");
-			helper=RegisterHelper.init();
-			if (helper==null) {
-				logger.info("There was a problem registering helper classes!");
-				pluginmanager.disablePlugin(this);
-				return;
-			}
+		
+		if(Utils.serverV<10) {
+			logger.warning("******************************************************");
+			logger.warning("     This version of MythicMobsExtension is only");
+			logger.warning("     supported on server versions 1.10 to 1.12.");
+			logger.warning("     We cant garantie that it runs properly.");
+			logger.warning("******************************************************");
 		}
- */
-		this.volatilehandler = this.getVolatileHandler();
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
-			Main.mythicmobs = MythicMobs.inst();
-			Main.mobmanager = Main.mythicmobs.getMobManager();
-			pluginmanager.registerEvents(new UndoBlockListener(), this);
-			this.thiefhandler = new ThiefHandler();
-			logger.info("registered ThiefHandlers!");
-			new Utils(this);
-			new CustomMechanics(this);
-			logger.info("Found MythicMobs, registered CustomSkills.");
-			Main.mythicplayers = new MythicPlayers(this);
-			logger.info("registered MythicPlayers!");
-			new NaNpatch(this);
-			logger.info("NaN patch applied!");
-			new OwnConditions();
-			if (pluginmanager.isPluginEnabled("WorldGuard")) {
+			Main.volatilehandler = this.getVolatileHandler();
+			new Utils();
+			new CustomMechanics();
+			logger.info("registered mechanics.");
+			new CustomConditions();
+			logger.info("registered conditions.");
+			new CustomTargeters();
+			logger.info("registered targeters.");
+			if (Config.m_players) {
+				Main.mythicplayers=new MythicPlayers(this);
+				logger.info("registered mythicplayers!");
+			}
+			if (Config.m_thiefs) {
+				thiefs=new Thiefs();
+				logger.info("registered thiefs!");
+			}
+			if (Config.nan) {
+				new NaNpatch();
+				logger.info("NaN patch applied.");
+			}
+			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
 				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new WorldGuardFlag();
 				logger.info("Worldguard support enabled!");
 			}
-			if (pluginmanager.isPluginEnabled("Factions")
-					&& pluginmanager.isPluginEnabled("MassiveCore")) {
+			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
 				fflags = new FactionsFlags();
 				new FactionsFlagConditions();
 				logger.info("Faction support enabled!");
 			}
-			if (pluginmanager.getPlugin("RPGItems") != null) {
+			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) {
 				logger.info("RPGItems support enabled!");
 				hasRpgItems = true;
 			}
-			if (pluginmanager.isPluginEnabled("MobArena")) {
+			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) {
 				maHandler = new MobArenaHandler();
 				new MobArenaConditions();
 				logger.info("MobArena support enabled!");
 			}
-			if (pluginmanager.isPluginEnabled("HolographicDisplays")) {
-				Main.healthbarhandler = new HealthbarHandler(this);
+			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) {
+				Main.healthbarhandler=new HealthbarHandler(this);
 				logger.info("HolographicDisplays support enabled!");
 			}
 			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
-			cachedOwnerHandler = new CachedOwnerHandler(plugin);
-			logger.info("CachedOwner support enabled!");
+			if (Config.c_owners) {
+				cachedOwnerHandler = new CachedOwnerHandler(plugin);
+				logger.info("CachedOwner support enabled!");
+			}
 			
 	        new BukkitRunnable() {
 				@Override
 				public void run() {
-					Main.mythicmobs.getRandomSpawningManager().reload();
+					Utils.mythicmobs.getRandomSpawningManager().reload();
 				}
 			}.runTask(this);
 			new BukkitRunnable() {
@@ -148,13 +148,10 @@ public class Main extends JavaPlugin {
 			Main.healthbarhandler.removeHealthbars();
 			Main.healthbarhandler.removeSpeechBubbles();
 		}
-		if (this.thiefhandler!=null) Bukkit.getServer().getScheduler().cancelTask(this.thiefhandler.taskid.getTaskId());
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
-		this.thiefhandler = null;
 		Main.mythicplayers = null;
-		Main.mythicmobs = null;
 		this.maHandler = null;
-		this.volatilehandler = null;
+		Main.volatilehandler = null;
 		this.wg = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;
@@ -166,20 +163,8 @@ public class Main extends JavaPlugin {
 		return plugin;
 	}
 
-	public MythicMobs getMythicMobs() {
-		return Main.mythicmobs;
-	}
-
 	public MythicPlayers getMythicPlayers() {
 		return Main.mythicplayers;
-	}
-
-	public MobManager getMobManager() {
-		return Main.mobmanager;
-	}
-
-	public ThiefHandler getThiefHandler() {
-		return this.thiefhandler;
 	}
 
 	private static WorldGuardPlugin getWorldGuard() {
@@ -191,7 +176,7 @@ public class Main extends JavaPlugin {
 	}
 
     public Handler getVolatileHandler() {
-        if (this.volatilehandler != null) return this.volatilehandler;
+        if (Main.volatilehandler != null) return Main.volatilehandler;
 		String v,n;
     	Handler vh=null;
 		n=Bukkit.getServer().getClass().getPackage().getName();

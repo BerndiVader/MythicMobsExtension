@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -35,9 +34,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import com.gmail.berndivader.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.NoDamageTicksMechanic;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
@@ -55,8 +52,6 @@ public class PlayerManager implements Listener {
 	public static String meta_ITEMCHANGE="ITEMCHANGE";
 	public static String signal_QUIT="QUIT";
 	public static String signal_DEATH = "DEATH";
-	public static String meta_BOWTICKSTART="mmibowtick";
-	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
 	private MythicPlayers mythicplayers;
 	private MobManager mobmanager = MythicPlayers.mythicmobs.getMobManager();
 	private ConcurrentHashMap<UUID, ActivePlayer> activePlayers = new ConcurrentHashMap<UUID, ActivePlayer>();
@@ -174,7 +169,6 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onMythicPlayerQuit(PlayerQuitEvent e) {
-		if (e.getPlayer().hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (this.isActivePlayer(e.getPlayer().getUniqueId())) {
 			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 			this.removeAllEffectsFromPlayer(ap.getEntity());
@@ -213,24 +207,9 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
-		final Player p=e.getPlayer();
-		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
-			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(mythicplayers.plugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
-			new BukkitRunnable() {
-				float f1;
-				@Override
-				public void run() {
-					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.utils.Utils.getBowTension(p))>-1) {
-						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(mythicplayers.plugin(),f1));
-					} else {
-						this.cancel();
-					}
-				}
-			}.runTaskTimer(Main.getPlugin(),1l,1l);
-		}
-		if (!this.isActivePlayer(p.getUniqueId())) return;
-		ActivePlayer ap = this.getActivePlayer(p.getUniqueId()).get();
-		TriggeredSkillAP ts = null;
+		if (!this.isActivePlayer(e.getPlayer().getUniqueId())) return;
+		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
+		TriggeredSkillAP ts=null;
 		if (e.getHand().equals(EquipmentSlot.HAND)) {
 			if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 				ts = new TriggeredSkillAP(SkillTrigger.RIGHTCLICK, ap, null, null, true);
@@ -239,9 +218,9 @@ public class PlayerManager implements Listener {
 						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
 			}
 			if (e.getAction().equals(Action.LEFT_CLICK_AIR)) {
-				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
+				ts=new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
 			} else if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-				ts = new TriggeredSkillAP(SkillTrigger.USE, ap, null,
+				ts= new TriggeredSkillAP(SkillTrigger.USE, ap, null,
 						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
 			}
 		}

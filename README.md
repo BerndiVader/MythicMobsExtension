@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238o for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238p for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,9 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 27.01.2018 *** added motiondirection condition. See motiondirection for more details.
+##### ** 26.01.2018 *** tweaked customdamage
+##### ** 26.01.2018 *** implemented muhahahahe's config
 ##### ** 24.01.2018 *** added reducedamagebydistance (rdbd) option to customdamage mechanic.
 ##### ** 23.01.2018 *** added setnbt mechanic. See setnbt mechanic for details.
 ##### ** 22.01.2018 *** added bloodyscreen mechanic. See bloodyscreen mechanic for details.
@@ -1428,6 +1431,10 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES]}`
+**Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:
+LEFT, FORWARD_LEFT, FORWARD, FORWARD_RIGHT, RIGHT, BACKWARD_RIGHT, BACKWARD, BACKWARD_LEFT or ANY. The directions can also be in a list like: left,forward_left,forward_right
 
 ##### `- comparenbt{nbt=[NBT]||ANY;action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Use as **Conditions** && **TargetConditions** Check the nbt more advanced than testfor can do. With the ability to ignore nbt by adding **id:ignore** or use ranged values **"rd:1to5"** or **"rd:>0"** or **rd:<1** or simple a usual value like **1** Please use "(" && ")" instead of "{" && "}" for compatibility issues. Look at the examples:

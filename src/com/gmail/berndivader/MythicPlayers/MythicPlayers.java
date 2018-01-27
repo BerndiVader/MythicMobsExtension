@@ -17,7 +17,6 @@ public class MythicPlayers {
 		mythicmobs = MythicMobs.inst();
 		this.plugin = plugin;
 		if (Bukkit.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
-			Bukkit.getLogger().info("Found MythicMobs, register MythicPlayers.");
 			this.playermanager = new PlayerManager(this);
 			this.plugin.getServer().getPluginManager().registerEvents(new MythicPlayerMythicMobsLoadEvent(),
 					this.plugin);

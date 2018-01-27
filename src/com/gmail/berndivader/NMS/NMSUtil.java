@@ -259,6 +259,11 @@ public class NMSUtil {
     protected static Field class_Entity_motXField;
     protected static Field class_Entity_motYField;
     protected static Field class_Entity_motZField;
+    protected static Field class_Entity_lastXField;
+    protected static Field class_Entity_lastYField;
+    protected static Field class_Entity_lastZField;
+    protected static Field class_Entity_lastPitchField;
+    protected static Field class_Entity_lastYawField;
     protected static Field class_WorldServer_entitiesByUUIDField;
     protected static Field class_ItemStack_tagField;
     protected static Field class_DamageSource_MagicField;
@@ -446,6 +451,16 @@ public class NMSUtil {
             class_Entity_motYField.setAccessible(true);
             class_Entity_motZField = class_Entity.getDeclaredField("motZ");
             class_Entity_motZField.setAccessible(true);
+            class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
+            class_Entity_lastXField.setAccessible(true);
+            class_Entity_lastYField = class_Entity.getDeclaredField("lastY");
+            class_Entity_lastYField.setAccessible(true);
+            class_Entity_lastZField = class_Entity.getDeclaredField("lastZ");
+            class_Entity_lastZField.setAccessible(true);
+            class_Entity_lastPitchField = class_Entity.getDeclaredField("lastPitch");
+            class_Entity_lastPitchField.setAccessible(true);
+            class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
+            class_Entity_lastYawField.setAccessible(true);
             class_ItemStack_tagField = class_ItemStack.getDeclaredField("tag");
             class_ItemStack_tagField.setAccessible(true);
             class_EntityTNTPrimed_source = class_EntityTNTPrimed.getDeclaredField("source");

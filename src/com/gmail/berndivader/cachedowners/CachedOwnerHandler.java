@@ -20,6 +20,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
@@ -29,7 +30,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class CachedOwnerHandler implements Listener {
 	protected final static Plugin plugin = Main.getPlugin();
-	protected final static MobManager mobmanager = Main.getPlugin().getMobManager();
+	protected final static MobManager mobmanager = Utils.mobmanager;
 	protected final static String cacheFileName = "CachedOwners.txt";
 	protected static ConcurrentHashMap<UUID,UUID>cachedOwners;
 	protected static File dir;

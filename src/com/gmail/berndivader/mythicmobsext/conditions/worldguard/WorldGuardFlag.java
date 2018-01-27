@@ -18,10 +18,10 @@ public class WorldGuardFlag implements Listener {
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
 		if (e.getConditionName().toLowerCase().equals("wgstateflag")) {
-			SkillCondition c = new mmWorldGuardStateFlagCondition(e.getConditionName(), e.getConfig());
+			SkillCondition c = new WorldGuardStateFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(c);
 		} else if (e.getConditionName().toLowerCase().equals("wgdenyspawnflag")) {
-			SkillCondition c = new mmWorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
+			SkillCondition c = new WorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(c);
 		}
 	}

@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -27,23 +28,24 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.MythicPlayers.PlayerManager;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.PlayerGoggleMechanic;
-import com.gmail.berndivader.mythicmobsext.PlayerSpinMechanic;
-import com.gmail.berndivader.mythicmobsext.StunMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 import com.gmail.berndivader.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -68,10 +70,21 @@ public class Utils implements Listener {
 	public static MobManager mobmanager;
 	public static int serverV;
 	public static HashMap<UUID,Vec3D>pl;
+	public static String signal_AISHOOT="AISHOOT";
+	public static String signal_AIHIT="AIHIT";
+	public static String meta_WALKSPEED="MMEXTWALKSPEED";
+	public static final String mpNameVar = "mythicprojectile";
+	public static final String noTargetVar = "nottargetable";
+	public static String meta_BOWTICKSTART="mmibowtick";
+	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
+	public static String meta_MYTHICDAMAGE="MythicDamage";
+	public static String meta_LASTDAMAGER="LastDamager";
+	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
+	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
 	
 	static {
-		mythicmobs=Main.getPlugin().getMythicMobs();
-		mobmanager=Main.getPlugin().getMobManager();
+		mythicmobs=MythicMobs.inst();
+		mobmanager=mythicmobs.getMobManager();
 		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
@@ -80,16 +93,36 @@ public class Utils implements Listener {
 	    }
 	}
 	
-	public Utils(Plugin plugin) {
+	public Utils() {
+		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		if (Utils.serverV>11) {
-			plugin.getServer().getPluginManager().registerEvents(this, plugin);
-			Main.logger.info("Found Minecraft 1.12 or higher, patching EntityParrot.");
+			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+			if (Config.m_parrot) Main.logger.info("Found Minecraft 1.12 or higher, patching EntityParrot.");
+		}
+	}
+	
+	@EventHandler
+	public void storeBowTensionEvent(PlayerInteractEvent e) {
+		final Player p=e.getPlayer();
+		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(Main.getPlugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
+			new BukkitRunnable() {
+				float f1;
+				@Override
+				public void run() {
+					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.utils.Utils.getBowTension(p))>-1) {
+						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(Main.getPlugin(),f1));
+					} else {
+						this.cancel();
+					}
+				}
+			}.runTaskTimer(Main.getPlugin(),0l,0l);
 		}
 	}
 	
 	@EventHandler
 	public void replaceParrotsEvent(MythicMobSpawnEvent e) {
-		if (e.isCancelled()) return;
+		if (e.isCancelled()||!Config.m_parrot) return;
 		if (e.getEntity() instanceof Parrot) {
 			MythicMob mm=e.getMobType();
 			LivingEntity p=Main.getPlugin().getVolatileHandler().spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
@@ -143,7 +176,7 @@ public class Utils implements Listener {
 	
 	@EventHandler
 	public void RemoveFallingBlockProjectile(EntityChangeBlockEvent e) {
-		if (e.getEntity().hasMetadata(Main.mpNameVar)) {
+		if (e.getEntity().hasMetadata(Utils.mpNameVar)) {
 			e.setCancelled(true);
 		}
 	}
@@ -166,10 +199,10 @@ public class Utils implements Listener {
 		LivingEntity victim = null;
 		if (e.getEntity() instanceof LivingEntity)
 			victim = (LivingEntity) e.getEntity();
-		if (victim == null || !victim.hasMetadata("MythicDamage"))
+		if (victim == null || !victim.hasMetadata(meta_MYTHICDAMAGE))
 			return;
-		if (victim.getMetadata("mmrpgitemdmg").get(0).asBoolean()) {
-			victim.removeMetadata("MythicDamage", Main.getPlugin());
+		if (victim.getMetadata(meta_MMRPGITEMDMG).get(0).asBoolean()) {
+			victim.removeMetadata(meta_MYTHICDAMAGE, Main.getPlugin());
 			onEntityDamageTaken(e, victim);
 		}
 	}
@@ -179,10 +212,10 @@ public class Utils implements Listener {
 		LivingEntity victim = null;
 		if (e.getEntity() instanceof LivingEntity)
 			victim = (LivingEntity) e.getEntity();
-		if (victim == null || !victim.hasMetadata("MythicDamage"))
+		if (victim == null || !victim.hasMetadata(meta_MYTHICDAMAGE))
 			return;
-		if (!victim.getMetadata("mmrpgitemdmg").get(0).asBoolean()) {
-			victim.removeMetadata("MythicDamage", Main.getPlugin());
+		if (!victim.getMetadata(meta_MMRPGITEMDMG).get(0).asBoolean()) {
+			victim.removeMetadata(meta_MYTHICDAMAGE, Main.getPlugin());
 			onEntityDamageTaken(e, victim);
 		}
 	}
@@ -193,11 +226,11 @@ public class Utils implements Listener {
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
 			Entity damager = Utils.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
-			if (damager!=null) victim.setMetadata("LastDamager", new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
-		} else if (victim.hasMetadata("LastDamager")) {
-			victim.removeMetadata("LastDamager", Main.getPlugin());
+			if (damager!=null) victim.setMetadata(meta_LASTDAMAGER, new FixedMetadataValue(Main.getPlugin(), damager.getType().toString()));
+		} else if (victim.hasMetadata(meta_LASTDAMAGER)) {
+			victim.removeMetadata(meta_LASTDAMAGER, Main.getPlugin());
 		}
-		victim.setMetadata("LastDamageCause", new FixedMetadataValue(Main.getPlugin(), cause.toString()));
+		victim.setMetadata(meta_LASTDAMAGECAUSE,new FixedMetadataValue(Main.getPlugin(), cause.toString()));
 	}
 	
 	@EventHandler
@@ -218,6 +251,7 @@ public class Utils implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p=e.getPlayer();
+		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (p.hasMetadata(StunMechanic.str)) {
 			p.setGravity(true);
 			p.removeMetadata(StunMechanic.str,Main.getPlugin());
@@ -275,9 +309,9 @@ public class Utils implements Listener {
 		target.setMetadata("IgnoreArmor", new FixedMetadataValue(Main.getPlugin(), ignorearmor));
 		target.setMetadata("PreventKnockback", new FixedMetadataValue(Main.getPlugin(), preventKnockback));
 		target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(), ignoreabs));
-		target.setMetadata("MythicDamage", new FixedMetadataValue(Main.getPlugin(), true));
+		target.setMetadata(meta_MYTHICDAMAGE, new FixedMetadataValue(Main.getPlugin(), true));
 		target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(), debug));
-		target.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), false));
+		target.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), false));
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage = rpgItemPlayerHit((Player) target, damage);
 		}
@@ -326,7 +360,7 @@ public class Utils implements Listener {
 			}
 		}
 		if (useDamage)
-			p.setMetadata("mmrpgitemdmg", new FixedMetadataValue(Main.getPlugin(), true));
+			p.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), true));
 		return round(damage, 3);
 	}
 
@@ -336,7 +370,7 @@ public class Utils implements Listener {
 		List<Entity> ne = player.getNearbyEntities(range, range, range);
 		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en:ne) {
-			if ((en instanceof LivingEntity) && !en.hasMetadata(Main.noTargetVar)) {
+			if ((en instanceof LivingEntity) && !en.hasMetadata(Utils.noTargetVar)) {
 				entities.add((LivingEntity) en);
 			}
 		}
@@ -758,8 +792,8 @@ public class Utils implements Listener {
 	
 	public static float getBowTension(Player p) {
 		int i1=NMSUtils.getCurrentTick(Bukkit.getServer()),i2=-1;
-        if (((HumanEntity)p).isHandRaised()&&p.hasMetadata(PlayerManager.meta_BOWTICKSTART)) {
-        	i2=p.getMetadata(PlayerManager.meta_BOWTICKSTART).get(0).asInt();
+        if (((HumanEntity)p).isHandRaised()&&p.hasMetadata(meta_BOWTICKSTART)) {
+        	i2=p.getMetadata(meta_BOWTICKSTART).get(0).asInt();
         }
         if (i2==-1) return (float)i2;
         int i3=i1-i2;
@@ -864,7 +898,7 @@ public class Utils implements Listener {
 	
 	public static boolean playerInMotion(Player p) {
 		Vec3D v3=Utils.pl.get(p.getUniqueId());
-		return Math.abs(v3.getX())>0.02||Math.abs(v3.getY())>0.02||Math.abs(v3.getZ())>=0.02;
+		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
 	}
 	
 }
