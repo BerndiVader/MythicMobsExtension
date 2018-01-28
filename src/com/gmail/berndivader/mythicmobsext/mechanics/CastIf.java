@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import com.gmail.berndivader.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -27,6 +28,7 @@ import io.lumine.xikage.mythicmobs.skills.conditions.InvalidCondition;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
+import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 
 public class CastIf
 extends
@@ -128,14 +130,18 @@ ITargetedLocationSkill {
 		Optional<SkillTargeter> maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter st=maybeTargeter.get();
-			if (st instanceof CustomTargeter
-					&&((CustomTargeter) st).getTargeter().isPresent()) {
-				st=((CustomTargeter) st).getTargeter().get();
-			}
+            if (st instanceof CustomTargeter) {
+                String s1=ts.substring(1);
+                MythicLineConfig mlc=new MythicLineConfig(s1);
+                String s2=s1.contains("{")?s1.substring(0,s1.indexOf("{")):s1;
+            	if ((st=CustomTargeters.getCustomTargeter(s2,mlc))==null) st=new MTTrigger(mlc);
+            }
 			if (st instanceof IEntitySelector) {
+				if (data.getEntityTargets()==null) data.setEntityTargets(new HashSet<>());
 	            ((IEntitySelector)st).filter(data, false);
 	            data.setEntityTargets(((IEntitySelector)st).getEntities(data));
 			} else if (st instanceof ILocationSelector) {
+				if (data.getLocationTargets()==null) data.setLocationTargets(new HashSet<>());
 	            ((ILocationSelector)st).filter(data);
 	            data.setLocationTargets(((ILocationSelector)st).getLocations(data));
 			}

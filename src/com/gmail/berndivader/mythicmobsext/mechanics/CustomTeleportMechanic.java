@@ -14,6 +14,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -33,9 +34,11 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
+import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTOrigin;
+import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 
 public class CustomTeleportMechanic 
@@ -214,6 +217,12 @@ ITargetedLocationSkill {
 		maybeTargeter=Optional.of(AbstractSkill.parseSkillTargeter(target));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter targeter = maybeTargeter.get();
+            if (targeter instanceof CustomTargeter) {
+                String s1=target.substring(1);
+                MythicLineConfig mlc=new MythicLineConfig(s1);
+                String s2=s1.contains("{")?s1.substring(0,s1.indexOf("{")):s1;
+            	if ((targeter=CustomTargeters.getCustomTargeter(s2,mlc))==null) targeter=new MTTrigger(mlc);
+            }
 			if (targeter instanceof IEntitySelector) {
 				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));
 				((IEntitySelector) targeter).filter(data, false);

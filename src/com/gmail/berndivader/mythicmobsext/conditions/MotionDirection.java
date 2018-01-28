@@ -31,7 +31,6 @@ IEntityCondition {
 			MotionDirectionType mdt;
 			for(int i1=0;i1<arr1.length;i1++) {
 				if ((mdt=MotionDirectionType.get(arr1[i1]))==null) continue;
-				System.err.println(mdt.toString());
 				dirs.add(mdt);
 			}
 		};

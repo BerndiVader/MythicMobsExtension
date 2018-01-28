@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238p for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238q for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,7 +6,9 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
-##### ** 28.01.2018 *** adding more compatibility for 1.10 1.11
+##### ** 28.01.2018 *** fixed crosshairlocation targeter.
+##### ** 28.01.2018 *** tweaked castif & customteleport to work with customtargeters.
+##### ** 28.01.2018 *** start adding more compatibility for 1.10 1.11
 ##### ** 27.01.2018 *** added crosshairlocation targeter.
 ##### ** 27.01.2018 *** added player support for hastarget condition.
 ##### ** 27.01.2018 *** added motiondirection condition. See motiondirection for more details.
@@ -409,13 +411,7 @@ First set the zoom to 1 after 180 ticks set the zoom back to 0.
 
 
 
-##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
-
-Set the item used for the attack to a cooldown of 120 ticks.
-
-
-
-## setitemcooldown mechanic:
+## setitemcooldown mechanic (1.12 or higher only):
 
 Set the cooldown of the selected item. Only avail for player targets.
 

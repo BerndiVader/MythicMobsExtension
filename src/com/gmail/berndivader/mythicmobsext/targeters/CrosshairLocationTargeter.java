@@ -34,10 +34,14 @@ ILocationSelector {
 	
     private Location getTargetedBlockLocation(Player p1, int i1) {
         BlockIterator it1=new BlockIterator(p1,i1);
-        Block b1=it1.next();
+        Block b1=it1.next(),b2;
         while (it1.hasNext()) {
+        	b2=b1;
             b1=it1.next();
-            if (b1.getType()==Material.AIR) continue;
+            if (b1.getType()!=Material.AIR) {
+            	b1=b2;
+            	break;
+            }
         }
         return b1.getLocation();
     }	

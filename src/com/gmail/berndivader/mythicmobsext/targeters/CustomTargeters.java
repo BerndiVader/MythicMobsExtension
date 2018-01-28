@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
+import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class CustomTargeters
@@ -18,45 +19,39 @@ Listener {
 	}
 	
 	@EventHandler
-	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
-		String TargeterName = e.getTargeterName().toLowerCase();
+	public void onMythicTargetersLoad(MythicTargeterLoadEvent e) {
+		SkillTargeter st;
+		if ((st=getCustomTargeter(e.getTargeterName(),e.getConfig()))!=null) e.register(st);
+	}
+
+	public static SkillTargeter getCustomTargeter(String s1,MythicLineConfig mlc) {
+		String TargeterName = s1.toLowerCase();
 		switch (TargeterName) {
 		case "crosshair":
 		case "crosshairentity":{
-			SkillTargeter targeter = new CrosshairTargeter(e.getConfig());
-			e.register(targeter);
-			break;
+			return new CrosshairTargeter(mlc);
 		}
 		case "crosshairlocation":{
-			SkillTargeter targeter = new CrosshairLocationTargeter(e.getConfig());
-			e.register(targeter);
-			break;
+			return new CrosshairLocationTargeter(mlc);
 		}
 		case "ownertarget": {
-			SkillTargeter targeter=new OwnerTargetTargeter(e.getConfig());
-			e.register(targeter);
-			break;
+			return new OwnerTargetTargeter(mlc);
 		}
 		case "lastdamager": {
-			SkillTargeter targeter=new LastDamagerTargeter(e.getConfig());
-			e.register(targeter);
-			break;
-		}case "triggerstarget": {
-			SkillTargeter targeter=new TriggerTargetTargeter(e.getConfig());
-			e.register(targeter);
-			break;
-		}case "targetstarget": {
-			SkillTargeter targeter=new TargetsTargetTargeter(e.getConfig());
-			e.register(targeter);
-			break;
-		}case "eyedirection": {
-			SkillTargeter targeter=new EyeDirectionTargeter(e.getConfig());
-			e.register(targeter);
-			break;
-		}case "triggerdirection": {
-			SkillTargeter targeter=new TriggerDirectionTargeter(e.getConfig());
-			e.register(targeter);
-			break;
+			return new LastDamagerTargeter(mlc);
+		}
+		case "triggerstarget": {
+			return new TriggerTargetTargeter(mlc);
+		}
+		case "targetstarget": {
+			return new TargetsTargetTargeter(mlc);
+		}
+		case "eyedirection": {
+			return new EyeDirectionTargeter(mlc);
+		}
+		case "triggerdirection": {
+			return new TriggerDirectionTargeter(mlc);
 		}}
+		return null;
 	}
 }
