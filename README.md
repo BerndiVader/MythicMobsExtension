@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 28.01.2018 *** added store boolean option to motiondirection condition.
 ##### ** 28.01.2018 *** fixed crosshairlocation targeter.
 ##### ** 28.01.2018 *** tweaked castif & customteleport to work with customtargeters.
 ##### ** 28.01.2018 *** start adding more compatibility for 1.10 1.11
@@ -1431,9 +1432,9 @@ FleeButGotNothing:
 # Conditions
 
 
-##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];store=[BOOL];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:
-LEFT, FORWARD_LEFT, FORWARD, FORWARD_RIGHT, RIGHT, BACKWARD_RIGHT, BACKWARD, BACKWARD_LEFT or ANY. The directions can also be in a list like: left,forward_left,forward_right
+LEFT, FORWARD_LEFT, FORWARD, FORWARD_RIGHT, RIGHT, BACKWARD_RIGHT, BACKWARD, BACKWARD_LEFT or leave blank for any. The directions can also be in a list like: left,forward_left,forward_right
 
 ##### `- comparenbt{nbt=[NBT]||ANY;action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Use as **Conditions** && **TargetConditions** Check the nbt more advanced than testfor can do. With the ability to ignore nbt by adding **id:ignore** or use ranged values **"rd:1to5"** or **"rd:>0"** or **rd:<1** or simple a usual value like **1** Please use "(" && ")" instead of "{" && "}" for compatibility issues. Look at the examples:

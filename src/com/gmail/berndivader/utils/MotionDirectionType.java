@@ -9,7 +9,7 @@ public enum MotionDirectionType {
 	BACKWARD_RIGHT,
 	BACKWARD,
 	BACKWARD_LEFT;
-
+	
 	public static MotionDirectionType get(String s) {
         if (s==null) return null;
         try {

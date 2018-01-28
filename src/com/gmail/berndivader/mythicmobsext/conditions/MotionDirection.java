@@ -3,9 +3,11 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import java.util.HashSet;
 
 import org.bukkit.Location;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.utils.MotionDirectionType;
 import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.utils.Vec3D;
@@ -19,8 +21,13 @@ extends
 AbstractCustomCondition
 implements
 IEntityCondition {
+	private static String str;
 	HashSet<MotionDirectionType>dirs;
-	boolean bl1;
+	boolean bl1,bl2;
+	
+	static {
+		str="MMEMOTIONDIR";
+	}
 
 	public MotionDirection(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -33,7 +40,8 @@ IEntityCondition {
 				if ((mdt=MotionDirectionType.get(arr1[i1]))==null) continue;
 				dirs.add(mdt);
 			}
-		};
+		}
+		bl2=mlc.getBoolean("store",false);
 	}
 	
 	@Override
@@ -49,7 +57,6 @@ IEntityCondition {
 				:NMSUtils.getEntityLastMot(var1.getBukkitEntity());
 		t.add(v3.getX(),0,v3.getZ());
 		if (v3.getX()!=0||v3.getZ()!=0) {
-			if (bl1) return true;
 			float f1=Utils.lookAtYaw(t,s);
 			t.setYaw(f1);
 	        Vvp=s.toVector();
@@ -59,7 +66,9 @@ IEntityCondition {
 	        VDD=Vd.clone();
 	        float a=(float)Math.toDegrees(Math.acos(Vd.dot(Vvd)));
 	        a=VDD.crossProduct(Vvd.multiply(2D).normalize()).getY()<0.0d?-a:a;
-	        return dirs.contains(MotionDirectionType.getMotionDirection((a-NMSUtils.getLastYawFloat(var1.getBukkitEntity())+630)%360));
+	        MotionDirectionType mdt=MotionDirectionType.getMotionDirection((a-NMSUtils.getLastYawFloat(var1.getBukkitEntity())+630)%360);
+	        if (bl2) var1.getBukkitEntity().setMetadata(MotionDirection.str, new FixedMetadataValue(Main.getPlugin(),mdt.toString()));
+	        return bl1||dirs.contains(mdt);
 		}
 		return false;
 	}
