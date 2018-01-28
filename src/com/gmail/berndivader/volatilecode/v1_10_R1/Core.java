@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,10 +17,15 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicator;
 import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.utils.Vec3D;
 import com.gmail.berndivader.volatilecode.Handler;
@@ -32,6 +38,11 @@ import com.gmail.berndivader.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoa
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.MessageToMessageDecoder;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -52,6 +63,16 @@ import net.minecraft.server.v1_10_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_10_R1.CommandException;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder;
+import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_10_R1.Packet;
+import net.minecraft.server.v1_10_R1.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_10_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_10_R1.PacketPlayInSteerVehicle;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_10_R1.NetworkManager;
+import net.minecraft.server.v1_10_R1.WorldBorder;
 import net.minecraft.server.v1_10_R1.PacketPlayOutAbilities;
 import net.minecraft.server.v1_10_R1.CommandTestFor;
 import net.minecraft.server.v1_10_R1.GameProfileSerializer;
@@ -80,6 +101,11 @@ import net.minecraft.server.v1_10_R1.EntityHuman;
 public class Core 
 implements Handler {
 	
+	private static WorldBorder wb;
+	
+	private static HashMap<UUID,ChannelHandler>chl;
+	private static Field cField;	
+	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
@@ -102,6 +128,111 @@ implements Handler {
 	
 	public Core() {
 	}
+	
+	static {
+        wb=new WorldBorder();
+        wb.world=MinecraftServer.getServer().getWorldServer(0);
+        wb.setCenter(999999,999999);
+        wb.setSize(1);
+        wb.setWarningDistance(1);
+	    for(Field f:NetworkManager.class.getDeclaredFields()) {
+	    	if(f.getType().isAssignableFrom(Channel.class)) {
+	    		cField=f;
+	    		cField.setAccessible(true);
+	    		break;
+	    	}
+	    }
+	    chl=new HashMap<>();
+	}
+	
+	interface PacketReceivingHandler {
+	    void handle(Player p,PacketPlayInArmAnimation packet);
+	    void handle(Player p,PacketPlayInFlying packet);
+	    void handle(Player p,PacketPlayInSteerVehicle packet);
+	}
+	
+	@EventHandler
+	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
+		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.utils.Vec3D(0d,0d,0d));
+	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInProzess(e.getPlayer(), new PacketReceivingHandler() {
+	    	@Override
+	        public void handle(Player p, PacketPlayInArmAnimation packet) {
+	        	float f1=getIndicatorPercentage(p);
+	        	p.setMetadata(GetLastDamageIndicator.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+	            return;
+	        }
+			@Override
+			public void handle(Player p,PacketPlayInFlying packet) {
+				net.minecraft.server.v1_10_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
+				com.gmail.berndivader.utils.Vec3D v3=new com.gmail.berndivader.utils.Vec3D(me.locX,me.locY,me.locZ);
+				double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
+				v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
+						?v3.length(new com.gmail.berndivader.utils.Vec3D(dx,dy,dz))
+						:new com.gmail.berndivader.utils.Vec3D(0,0,0);
+				Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
+				return;
+			}
+			@Override
+			public void handle(Player p, PacketPlayInSteerVehicle packet) {
+				return;
+			}
+	    }));
+	}
+
+	@EventHandler
+	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
+		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
+		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
+		Utils.pl.remove(e.getPlayer().getUniqueId());
+		chl.remove(e.getPlayer().getUniqueId());
+	}
+	
+	private boolean closeChannelListener(Player p,ChannelHandler ch) {
+	    try {
+	        ChannelPipeline pipe=gnc(p).pipeline();
+	        pipe.remove(ch);
+	        return true;
+	    } catch(Exception e) {
+	        return false;
+	    }
+	}
+	
+	public ChannelHandler channelPlayerInProzess(final Player p, final PacketReceivingHandler prh) {
+	    ChannelPipeline pipe=gnc(p).pipeline();
+	    @SuppressWarnings("rawtypes")
+		ChannelHandler ch=new MessageToMessageDecoder<Packet>() {
+	    	@Override
+			protected void decode(ChannelHandlerContext chc,Packet packet,List<Object>out) throws Exception {
+	    		switch(packet.getClass().getSimpleName()) {
+	    		case "PacketPlayInSteerVehicle":
+	            	prh.handle(p,(PacketPlayInSteerVehicle)packet);
+	            	break;
+	    		case "PacketPlayInArmAnimation":
+	                prh.handle(p,(PacketPlayInArmAnimation)packet);
+	    			break;
+	    		case "PacketPlayInPosition":
+	    		case "PacketPlayInPositionLook":
+	    		case "PacketPlayInLook":
+	    			prh.handle(p,(PacketPlayInFlying)packet);
+	    			break;
+	    		}
+	    		out.add(packet);
+			}
+	    };
+	    pipe.addAfter("decoder","listener",ch);
+	    return ch;
+	}	
+	
+	private Channel gnc(Player p) {
+	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
+	    Channel c=null;
+	    try {
+	        c=(Channel)cField.get(nm);
+	    } catch (IllegalArgumentException|IllegalAccessException e) {
+	        e.printStackTrace();
+	    }
+	    return c;
+	}	
 
 	@Override
 	public void forceSetPositionRotation(Entity entity,double x,double y,double z,float yaw,float pitch,boolean f,boolean g) {
@@ -508,9 +639,12 @@ implements Handler {
 	}
 
 	@Override
-	public void setWBWB(Player p, boolean bl1) {
-		// TODO Auto-generated method stub
-		
+	public void setWBWB(Player p,boolean bl1) {
+		EntityPlayer ep=((CraftPlayer)p).getHandle();
+		WorldBorder wb=ep.world.getWorldBorder();
+		if (bl1) wb=Core.wb;
+  		PacketPlayOutWorldBorder ppw=new PacketPlayOutWorldBorder(wb,EnumWorldBorderAction.INITIALIZE);
+   		ep.playerConnection.sendPacket(ppw);
 	}
 
 	@Override
@@ -520,8 +654,8 @@ implements Handler {
 	}
 
 	@Override
-	public Vec3D lastPosEntity(Entity bukkitEntity) {
-		// TODO Auto-generated method stub
-		return null;
+	public Vec3D lastPosEntity(Entity e1) {
+		net.minecraft.server.v1_10_R1.Entity me=((CraftEntity)e1).getHandle();
+		return new Vec3D(me.motX,me.motY,me.motZ);
 	}
 }

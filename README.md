@@ -6,6 +6,9 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 28.01.2018 *** adding more compatibility for 1.10 1.11
+##### ** 27.01.2018 *** added crosshairlocation targeter.
+##### ** 27.01.2018 *** added player support for hastarget condition.
 ##### ** 27.01.2018 *** added motiondirection condition. See motiondirection for more details.
 ##### ** 26.01.2018 *** tweaked customdamage
 ##### ** 26.01.2018 *** implemented muhahahahe's config
@@ -1684,6 +1687,9 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@crosshairlocation{length=[VALUE]}`
+Get the nearest block location at crosshair or the location length amount of blocks away.
 
 ##### `@crosshair`
 Returns the crosshair targeted entity or location if caster is a player

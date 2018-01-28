@@ -1,5 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import org.bukkit.entity.Player;
+
+import com.gmail.berndivader.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
@@ -16,6 +20,10 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		return entity.getTarget() != null;
+		if (entity.isPlayer()) {
+			return Utils.getTargetedEntity((Player)entity.getBukkitEntity())!=null;
+		} else {
+			return entity.getTarget() != null;
+		}
 	}
 }

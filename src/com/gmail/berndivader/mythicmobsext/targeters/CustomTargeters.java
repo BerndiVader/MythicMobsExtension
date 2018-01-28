@@ -21,8 +21,14 @@ Listener {
 	public void onMythicMobsTargetersLoad(MythicTargeterLoadEvent e) {
 		String TargeterName = e.getTargeterName().toLowerCase();
 		switch (TargeterName) {
-		case "crosshair": {
+		case "crosshair":
+		case "crosshairentity":{
 			SkillTargeter targeter = new CrosshairTargeter(e.getConfig());
+			e.register(targeter);
+			break;
+		}
+		case "crosshairlocation":{
+			SkillTargeter targeter = new CrosshairLocationTargeter(e.getConfig());
 			e.register(targeter);
 			break;
 		}

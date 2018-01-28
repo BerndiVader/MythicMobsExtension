@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.utils.MotionDirectionType;
 import com.gmail.berndivader.utils.Utils;
 import com.gmail.berndivader.utils.Vec3D;
@@ -48,7 +47,7 @@ IEntityCondition {
 		Vector Vvp,Vap,Vvd,Vd,VDD;
 		Vec3D v3=var1.isPlayer()
 				?Utils.pl.getOrDefault(var1.getUniqueId(),new Vec3D(0,0,0))
-				:Main.getPlugin().getVolatileHandler().lastPosEntity(var1.getBukkitEntity());
+				:NMSUtils.getEntityLastMot(var1.getBukkitEntity());
 		t.add(v3.getX(),0,v3.getZ());
 		if (v3.getX()!=0||v3.getZ()!=0) {
 			if (bl1) return true;

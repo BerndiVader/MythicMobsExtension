@@ -1,5 +1,6 @@
 package com.gmail.berndivader.NMS;
 
+import com.gmail.berndivader.utils.Vec3D;
 import com.google.common.io.BaseEncoding;
 
 import org.bukkit.Art;
@@ -1386,6 +1387,20 @@ public class NMSUtils extends NMSUtil {
 			ex.printStackTrace();
 		}
 		return 0f;
+	}
+	
+	public static Vec3D getEntityLastMot(Entity e) {
+		Object o=getHandle(e);
+		Vec3D v3=null;
+		try {
+			double dx=(double)class_Entity_motXField.get(o)
+					,dy=(double)class_Entity_motYField.get(o)
+					,dz=(double)class_Entity_motZField.get(o);
+			v3=new Vec3D(dx,dy,dz);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return v3;
 	}
 	
 }

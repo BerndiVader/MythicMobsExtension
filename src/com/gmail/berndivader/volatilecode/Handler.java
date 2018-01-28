@@ -46,5 +46,6 @@ public interface Handler {
 	void moveto(LivingEntity entity);
 	void setWBWB(Player p, boolean bl1);
 	boolean addNBTTag(Entity e1, String s);
+	@Deprecated
 	public Vec3D lastPosEntity(Entity bukkitEntity);
 }
