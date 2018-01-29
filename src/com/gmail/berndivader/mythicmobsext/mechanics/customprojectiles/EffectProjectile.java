@@ -28,7 +28,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class EffectProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected Optional<Skill> onBounceSkill = Optional.empty();

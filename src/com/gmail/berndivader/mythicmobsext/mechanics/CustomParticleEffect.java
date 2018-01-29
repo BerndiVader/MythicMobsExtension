@@ -17,7 +17,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class CustomParticleEffect 
 extends

@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -25,13 +25,13 @@ IEntityCondition {
 		if (entity.isPlayer()) {
 			switch(this.tt) {
 			case 'C':
-				return Main.getPlugin().getVolatileHandler().playerIsCrouching((Player)entity.getBukkitEntity());
+				return Volatile.handler.playerIsCrouching((Player)entity.getBukkitEntity());
 			case 'R':
-				return Main.getPlugin().getVolatileHandler().playerIsRunning((Player)entity.getBukkitEntity());
+				return Volatile.handler.playerIsRunning((Player)entity.getBukkitEntity());
 			case 'S':
-				return Main.getPlugin().getVolatileHandler().playerIsSleeping((Player)entity.getBukkitEntity());
+				return Volatile.handler.playerIsSleeping((Player)entity.getBukkitEntity());
 			case 'J':
-				return Main.getPlugin().getVolatileHandler().playerIsJumping((Player)entity.getBukkitEntity());
+				return Volatile.handler.playerIsJumping((Player)entity.getBukkitEntity());
 			}
 		}
 		return false;

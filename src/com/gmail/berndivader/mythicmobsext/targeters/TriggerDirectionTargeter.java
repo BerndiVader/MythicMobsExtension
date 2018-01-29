@@ -5,8 +5,8 @@ import java.util.HashSet;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.AbstractVector;

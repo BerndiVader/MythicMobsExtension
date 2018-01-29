@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class ThiefHandler {
 	public BukkitTask taskid;

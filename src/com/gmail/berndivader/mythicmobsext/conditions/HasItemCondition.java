@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 
-import com.gmail.berndivader.jboolexpr.BooleanExpression;
-import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
+import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
+import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;

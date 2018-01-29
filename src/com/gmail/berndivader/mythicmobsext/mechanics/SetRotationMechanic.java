@@ -4,7 +4,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -48,7 +49,7 @@ ITargetedEntitySkill{
 				} else {
 					yaw=Utils.normalise(yaw+yo,0,360);
 					pitch=Utils.normalise(pitch+po,0,360);
-					Main.getPlugin().getVolatileHandler().rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
+					Volatile.handler.rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
 				c++;
 			}

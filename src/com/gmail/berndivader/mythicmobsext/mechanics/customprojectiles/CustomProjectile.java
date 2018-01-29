@@ -14,7 +14,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import java.util.Optional;
 
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class CustomProjectile extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected MythicMobs mythicmobs;

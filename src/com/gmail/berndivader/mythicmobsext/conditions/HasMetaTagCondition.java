@@ -10,7 +10,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;

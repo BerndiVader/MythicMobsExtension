@@ -31,7 +31,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 public class ItemProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
@@ -228,9 +229,9 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			this.pItem.setInvulnerable(true);
 			this.pItem.setGravity(false);
 			this.pItem.setPickupDelay(Integer.MAX_VALUE);
-			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem,l, null);
-			Main.getPlugin().getVolatileHandler().teleportEntityPacket(this.pItem);
-			Main.getPlugin().getVolatileHandler().changeHitBox((Entity)this.pItem,0,0,0);
+			Volatile.handler.setItemMotion(this.pItem,l, null);
+			Volatile.handler.teleportEntityPacket(this.pItem);
+			Volatile.handler.changeHitBox((Entity)this.pItem,0,0,0);
 		}
 
 		public void modifyVelocity(double v) {
@@ -329,7 +330,7 @@ public class ItemProjectile extends CustomProjectile implements ITargetedEntityS
 			}
 			Location loc = BukkitAdapter.adapt(this.currentLocation).clone();
 			Location eloc = BukkitAdapter.adapt(this.oldLocation).clone();
-			Main.getPlugin().getVolatileHandler().setItemMotion(this.pItem, eloc, eloc);
+			Volatile.handler.setItemMotion(this.pItem, eloc, eloc);
 			this.pItem.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(this.currentLocation, ItemProjectile.this.hitRadius,

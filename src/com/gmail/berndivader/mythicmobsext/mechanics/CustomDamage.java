@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

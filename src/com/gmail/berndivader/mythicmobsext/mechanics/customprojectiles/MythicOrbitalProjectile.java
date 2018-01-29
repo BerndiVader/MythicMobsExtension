@@ -25,9 +25,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 public class MythicOrbitalProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
@@ -144,7 +145,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 						BukkitAdapter.adapt(this.currentLocation));
 				this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 				if (!this.targetable)
-					Main.getPlugin().getVolatileHandler().changeHitBox(this.pEntity,0,0,0);
+					Volatile.handler.changeHitBox(this.pEntity,0,0,0);
 					this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();

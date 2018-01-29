@@ -9,7 +9,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -52,7 +53,7 @@ ITargetedEntitySkill {
 			return false;
 		}
 		if (target.getBukkitEntity().getType().equals(EntityType.SNOWMAN)) {
-			Main.getPlugin().getVolatileHandler().removeSnowmanHead(target.getBukkitEntity());
+			Volatile.handler.removeSnowmanHead(target.getBukkitEntity());
 		}
 		LivingEntity e=(LivingEntity)BukkitAdapter.adapt(target);
 		ItemStack armor;

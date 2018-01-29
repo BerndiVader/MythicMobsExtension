@@ -6,11 +6,11 @@ import org.bukkit.Location;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.MotionDirectionType;
-import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.MotionDirectionType;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

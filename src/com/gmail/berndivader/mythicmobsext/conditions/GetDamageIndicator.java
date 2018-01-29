@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -24,7 +24,7 @@ IEntityCondition {
 	@Override
 	public boolean check(AbstractEntity e) {
 		if (e.isPlayer()) {
-			return this.rd.equals((double)Main.getPlugin().getVolatileHandler().getIndicatorPercentage((Player)e.getBukkitEntity()));
+			return this.rd.equals((double)Volatile.handler.getIndicatorPercentage((Player)e.getBukkitEntity()));
 		}
 		return true;
 	}

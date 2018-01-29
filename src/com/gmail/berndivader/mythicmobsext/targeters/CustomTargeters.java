@@ -40,6 +40,12 @@ Listener {
 		case "lastdamager": {
 			return new LastDamagerTargeter(mlc);
 		}
+		case "targetmotion":
+		case "triggermotion":
+		case "selfmotion":
+		case "ownermotion":{
+			return new TargetMotionTargeter(mlc);
+		}
 		case "triggerstarget": {
 			return new TriggerTargetTargeter(mlc);
 		}

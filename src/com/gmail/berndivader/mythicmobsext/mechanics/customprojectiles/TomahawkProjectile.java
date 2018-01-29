@@ -29,8 +29,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 
 public class TomahawkProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 

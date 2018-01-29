@@ -5,9 +5,10 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.utils.Vec2D;
-import com.gmail.berndivader.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -22,7 +23,7 @@ implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
 	private long dur;
-	private Handler vh=Main.getPlugin().getVolatileHandler();
+	private Handler vh=Volatile.handler;
 
 	public PlayerGoggleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

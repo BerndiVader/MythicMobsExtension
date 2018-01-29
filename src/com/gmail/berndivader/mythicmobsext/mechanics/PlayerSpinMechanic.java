@@ -5,7 +5,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -21,7 +22,7 @@ ITargetedEntitySkill {
 	public static String str="mmSpin";
 	private long d;
 	private float s;
-	final private Handler vh=Main.getPlugin().getVolatileHandler();
+	final private Handler vh=Volatile.handler;
 
 	public PlayerSpinMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

@@ -2,8 +2,8 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Entity;
 
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -44,7 +44,7 @@ INoTargetSkill {
 	}
 	
 	boolean setNbt(Entity e1,String s1) {
-		return Main.getPlugin().getVolatileHandler().addNBTTag(e1,s1);
+		return Volatile.handler.addNBTTag(e1,s1);
 	}
 
 }

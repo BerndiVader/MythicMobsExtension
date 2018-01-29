@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -28,7 +28,7 @@ IEntityCondition {
 	public boolean check(AbstractEntity e) {
 		boolean b=true;
 		try {
-			b=Main.getPlugin().getVolatileHandler().testForCondition(e.getBukkitEntity(),this.c,m);
+			b=Volatile.handler.testForCondition(e.getBukkitEntity(),this.c,m);
 		} catch (CommandException e1) {
 			e1.printStackTrace();
 		}

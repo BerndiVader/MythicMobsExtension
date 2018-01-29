@@ -5,6 +5,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -30,20 +31,20 @@ ITargetedEntitySkill {
 		if (target.isPlayer()
 				&&(target.getBukkitEntity().getEntityId()==data.getCaster().getEntity().getBukkitEntity().getEntityId())) {
 			Player p=(Player)target.getBukkitEntity();
-			Main.getPlugin().getVolatileHandler().forceSpectate(p,p);
+			Volatile.handler.forceSpectate(p,p);
 			target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 			return true;
 		} 
 		if (target.isPlayer()
 				&&!target.getBukkitEntity().hasMetadata(str)) {
 			Player p=(Player)target.getBukkitEntity();
-			Main.getPlugin().getVolatileHandler().forceSpectate(p,data.getCaster().getEntity().getBukkitEntity());
+			Volatile.handler.forceSpectate(p,data.getCaster().getEntity().getBukkitEntity());
 			p.setMetadata(str, new FixedMetadataValue(Main.getPlugin(),str));
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					if (p!=null&&p.isOnline()&&p.hasMetadata(str)) {
-						Main.getPlugin().getVolatileHandler().forceSpectate(p,p);
+						Volatile.handler.forceSpectate(p,p);
 						p.removeMetadata(str,Main.getPlugin());
 					}
 				}

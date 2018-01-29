@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.utils.FacingDirectionType;
+import com.gmail.berndivader.mythicmobsext.utils.FacingDirectionType;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

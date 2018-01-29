@@ -35,6 +35,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
@@ -273,7 +274,7 @@ public class PlayerManager implements Listener {
 				@Override
 				public void run() {
 					if (p.isDead()) {
-						Main.getPlugin().getVolatileHandler().setDeath(p,false);
+						Volatile.handler.setDeath(p,false);
 						Optional<ActivePlayer> maybeActivePlayer = getActivePlayer(p.getUniqueId());
 						if (maybeActivePlayer.isPresent()) {
 							ActivePlayer ap = maybeActivePlayer.get();

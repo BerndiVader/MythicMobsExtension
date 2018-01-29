@@ -15,10 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -148,7 +149,7 @@ ITargetedLocationSkill {
         }
 
         private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
-        	this.vh=Main.getPlugin().getVolatileHandler();
+        	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
             this.cancelled = false;
             this.data = data;

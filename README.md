@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238q for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238r for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,8 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 29.01.2018 *** start working on chatai.
+##### ** 29.01.2018 *** fixed issue with CustomParrots and randomspawning.
 ##### ** 29.01.2018 *** tweaked ownsitem to use the whole item lore entry.
 ##### ** 28.01.2018 *** added store boolean option to motiondirection condition.
 ##### ** 28.01.2018 *** fixed crosshairlocation targeter.

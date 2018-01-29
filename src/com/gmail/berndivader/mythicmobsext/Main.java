@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,22 +13,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import com.gmail.berndivader.NMS.NMSUtils;
-import com.gmail.berndivader.cachedowners.CachedOwnerHandler;
-import com.gmail.berndivader.config.Config;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
+import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
+import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
 import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
-import com.gmail.berndivader.nanpatch.NaNpatch;
-import com.gmail.berndivader.utils.Utils;
-import com.gmail.berndivader.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
@@ -47,7 +45,6 @@ public class Main extends JavaPlugin {
 	public WorldGuardPlugin wg;
 	private static MythicPlayers mythicplayers;
 	private MobArenaHandler maHandler;
-	public static Handler volatilehandler;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 	public static boolean disguisepresent;
 	public Thiefs thiefs;
@@ -66,7 +63,6 @@ public class Main extends JavaPlugin {
 			logger.warning("******************************************************");
 		}
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
-			Main.volatilehandler = this.getVolatileHandler();
 			new Utils();
 			new CustomMechanics();
 			logger.info("registered mechanics.");
@@ -151,7 +147,6 @@ public class Main extends JavaPlugin {
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		Main.mythicplayers = null;
 		this.maHandler = null;
-		Main.volatilehandler = null;
 		this.wg = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;
@@ -174,23 +169,4 @@ public class Main extends JavaPlugin {
 	public MobArenaHandler getMobArenaHandler() {
 		return this.maHandler;
 	}
-
-    public Handler getVolatileHandler() {
-        if (Main.volatilehandler != null) return Main.volatilehandler;
-		String v,n;
-    	Handler vh=null;
-		n=Bukkit.getServer().getClass().getPackage().getName();
-        v=n.substring(n.lastIndexOf(46)+1);
-        try {
-            Class<?>c=Class.forName("com.gmail.berndivader.volatilecode."+v+".Core");
-            if (Handler.class.isAssignableFrom(c)) vh=(Handler)c.getConstructor(new Class[0]).newInstance(new Object[0]);
-        } catch (Exception ex) {
-        	if (ex instanceof ClassNotFoundException) {
-        		logger.warning("Server version not supported!");
-        	}
-        	ex.printStackTrace();
-        }
-        return vh;
-    }
-
 }

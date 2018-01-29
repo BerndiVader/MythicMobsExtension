@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -24,7 +25,7 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Main.getPlugin().getVolatileHandler().forceCancelEndScreenPlayer((Player)target.getBukkitEntity());
+			Volatile.handler.forceCancelEndScreenPlayer((Player)target.getBukkitEntity());
 			return true;
 		}
 		return false;

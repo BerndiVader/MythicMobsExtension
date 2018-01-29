@@ -5,6 +5,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -67,7 +68,7 @@ ITargetedEntitySkill {
 						pitch=t.getLocation().getPitch();
 					}
 					if (gravity) y=t.getLocation().getY();
-					Main.getPlugin().getVolatileHandler().forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing,gravity);
+					Volatile.handler.forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing,gravity);
 				}
 				count++;
 			}
