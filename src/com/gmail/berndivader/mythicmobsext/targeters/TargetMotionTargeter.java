@@ -23,7 +23,13 @@ IEntitySelector {
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		switch(selector) {
 		case "target":
-			
+			break;
+		case "trigger":
+			break;
+		case "owner":
+			break;
+		case "self":
+			break;
 		}
 		return null;
 	}
