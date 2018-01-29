@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 29.01.2018 *** tweaked ownsitem to use the whole item lore entry.
 ##### ** 28.01.2018 *** added store boolean option to motiondirection condition.
 ##### ** 28.01.2018 *** fixed crosshairlocation targeter.
 ##### ** 28.01.2018 *** tweaked castif & customteleport to work with customtargeters.

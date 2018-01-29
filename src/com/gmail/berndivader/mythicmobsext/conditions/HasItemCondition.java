@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.regex.Pattern;
 
 import com.gmail.berndivader.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.jboolexpr.MalformedBooleanException;
@@ -179,10 +180,12 @@ IEntityCondition {
 					&& entry.amount.equals(is.getAmount())) {
 				if (entry.lore.equals("ANY")) return true;
 				if (is.hasItemMeta()&&is.getItemMeta().hasLore()) {
+					String l="";
 					for(Iterator<String>it=is.getItemMeta().getLore().iterator();it.hasNext();) {
-						String l=it.next();
-						if (l.contains(entry.lore)) return true;
+						l+=it.next()+" ";
 					}
+					Pattern p1;
+					return (p1=Pattern.compile(entry.lore)).matcher(l).find();
 				}
 
 			}
