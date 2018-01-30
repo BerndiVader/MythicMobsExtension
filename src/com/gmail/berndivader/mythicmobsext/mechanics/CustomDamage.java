@@ -45,7 +45,8 @@ ITargetedEntitySkill {
 		this.uc = mlc.getBoolean(new String[] { "usecaster", "uc" }, false);
 		this.pcur = mlc.getBoolean(new String[] { "percentcurrent", "pcur", "pc" }, false);
 		ca = mlc.getString(new String[] { "damagecause", "cause", "dc" }, "CUSTOM").toUpperCase();
-		rdbd=(dbd=mlc.getDouble(new String[] { "reducedamagebydistance", "rdbd","damagebydistance","dbd","increasedamagebydistance","idbd" },0))>0;
+		dbd=-mlc.getDouble(new String[] { "reducedamagebydistance", "rdbd","damagebydistance","dbd" },0);
+		rdbd=(dbd=mlc.getDouble(new String[] { "increasedamagebydistance","idbd" },dbd))<0;
 		dbd=Math.abs(dbd);
 		cause=DamageCause.CUSTOM;
 		for (DamageCause dc : DamageCause.values()) {
