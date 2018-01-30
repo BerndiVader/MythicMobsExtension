@@ -1396,7 +1396,7 @@ public class NMSUtils extends NMSUtil {
 			double dx=(double)class_Entity_motXField.get(o)
 					,dy=(double)class_Entity_motYField.get(o)
 					,dz=(double)class_Entity_motZField.get(o);
-			v3=new Vec3D(dx,dy,dz);
+			v3=new Vec3D(-dx,-dy,-dz);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

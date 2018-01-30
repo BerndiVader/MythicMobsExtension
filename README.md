@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238r for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.238s for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter
 ##### ** 29.01.2018 *** start working on chatai.
 ##### ** 29.01.2018 *** fixed issue with CustomParrots and randomspawning.
 ##### ** 29.01.2018 *** tweaked ownsitem to use the whole item lore entry.
@@ -1687,6 +1688,12 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@targetmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@triggermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@ownermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@selfmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+Get the location length size infront of the targeted entitys motion.
 
 ##### `@crosshairlocation{length=[VALUE]}`
 Get the nearest block location at crosshair or the location length amount of blocks away.

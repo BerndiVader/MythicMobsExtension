@@ -332,9 +332,8 @@ public class EntityProjectile extends CustomProjectile implements ITargetedEntit
 			}
 			Location eloc = this.pEntity.getLocation();
 			float yaw = eloc.getYaw();
-			if (this.pSpin != 0.0) {
-				yaw = ((yaw + this.pSpin) % 360.0F);
-			}
+			if (this.pFaceDir) yaw=Utils.lookAtYaw(eloc,BukkitAdapter.adapt(currentLocation));
+			if (this.pSpin != 0.0) yaw=((yaw+this.pSpin)%360.0F);
 			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
 					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {

@@ -500,7 +500,8 @@ public class Utils implements Listener {
 		d.multiply(o);
 		return d;
 	}
-	
+
+	@Deprecated
 	public static Vector getSideOffsetVector(float vYa, double hO, boolean iy) {
 		double y = 0d;
 		if (!iy)
@@ -509,6 +510,15 @@ public class Utils implements Listener {
 		double zo=Math.sin(y)*hO;
 		return new Vector(xo,0d,zo);
 	}
+	
+	public static Vector getSideOffsetVectorFixed(float vYa, double hO, boolean iy) {
+		double y=0d;
+		if (!iy) y=Math.toRadians(vYa);
+		double xo=Math.cos(y)*hO;
+		double zo=Math.sin(y)*hO;
+		return new Vector(xo,y,zo);
+	}
+	
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();
