@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.238s for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.239 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 31.01.2018 *** added update notification
 ##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter
 ##### ** 29.01.2018 *** start working on chatai.
 ##### ** 29.01.2018 *** fixed issue with CustomParrots and randomspawning.

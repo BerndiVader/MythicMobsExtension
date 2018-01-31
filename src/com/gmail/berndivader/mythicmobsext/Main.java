@@ -1,5 +1,8 @@
 package com.gmail.berndivader.mythicmobsext;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
@@ -7,6 +10,7 @@ import java.util.logging.Logger;
 
 
 import org.bukkit.entity.Entity;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -59,17 +63,39 @@ public class Main extends JavaPlugin {
 			logger.warning("******************************************************");
 			logger.warning("     This version of MythicMobsExtension is only");
 			logger.warning("     supported on server versions 1.10 to 1.12.");
-			logger.warning("     We cant garantie that it runs properly.");
+			logger.warning("     We cant guarantee that it runs properly.");
 			logger.warning("******************************************************");
 		}
+
+		if (Config.update) {
+			String version = null;
+			PluginDescriptionFile pdf = getDescription();
+			try {
+				URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
+				InputStream in = url.openStream();
+				BufferedReader br = new BufferedReader( new InputStreamReader(in) );
+				version = br.readLine();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				logger.warning("Could not find version file!");
+			}
+			if (!pdf.getVersion().equals(version)) {
+				logger.info("A new MythicMobsExtension v"+version+" is available, get it here:");
+				logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
+			} else {
+				logger.info("Plugin is up-to-date!");
+			}
+		}
+
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			new Utils();
 			new CustomMechanics();
-			logger.info("registered mechanics.");
+			logger.info("registered mechanics!");
 			new CustomConditions();
-			logger.info("registered conditions.");
+			logger.info("registered conditions!");
 			new CustomTargeters();
-			logger.info("registered targeters.");
+			logger.info("registered targeters!");
 			if (Config.m_players) {
 				Main.mythicplayers=new MythicPlayers(this);
 				logger.info("registered mythicplayers!");
@@ -80,7 +106,7 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.nan) {
 				new NaNpatch();
-				logger.info("NaN patch applied.");
+				logger.info("NaN patch applied!");
 			}
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
 				wg = getWorldGuard();
