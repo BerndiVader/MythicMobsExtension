@@ -1,0 +1,49 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+allprojects {
+	version = "1.239-SNAPSHOT"
+	group = "com.gmail.berndivader"
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly files('./lib/spigot-1.12.2.jar')
+    compileOnly files('./lib/spigot-1.11.2.jar')
+    compileOnly files('./lib/spigot-1.10.2.jar')
+    compileOnly files('./lib/Factions.jar')
+    compileOnly files('./lib/HolographicDisplays.jar')
+    compileOnly files('./lib/LibsDisguises.jar')
+    compileOnly files('./lib/MassiveCore.jar')
+    compileOnly files('./lib/MobArena.jar')
+    compileOnly files('./lib/MythicMobs-4.3.2.jar')
+    compileOnly files('./lib/rpgitem-reloaded-1.11-v.231.jar')
+    compileOnly files('./lib/worldedit-bukkit-6.1.jar')
+    compileOnly files('./lib/worldguard-6.2.jar')
+}
+
+processResources {
+	inputs.property "version", project.version
+	from (sourceSets.main.resources.srcDirs) {
+		include "plugin.yml"
+		expand "version": project.version
+	}
+
+	from (sourceSets.main.resources.srcDirs) {
+		exclude "plugin.yml"
+	}
+}
+
+task createPom  {
+    pom {
+        project {
+            groupId project.group
+            artifactId project.name
+            version project.version
+        }
+    }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+}

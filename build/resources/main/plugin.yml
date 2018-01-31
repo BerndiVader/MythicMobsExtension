@@ -1,0 +1,5 @@
+name: MythicMobsExtension
+main: com.gmail.berndivader.mythicmobsext.Main
+version: 1.239-SNAPSHOT
+softdepend: [RPGItems, MobArena, HolographicDisplays, WorldGuard, Factions, MassiveCore, Helper]
+depend: [MythicMobs]

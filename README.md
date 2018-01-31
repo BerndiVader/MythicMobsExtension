@@ -1,11 +1,50 @@
-# MythicMobsExtension v1.238 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.239 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
-Click [here](https://github.com/BerndiVader/MythicMobsExtension#mechanics) to see stuff that is not yet in the wiki.
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
+##### ** 31.01.2018 *** added update notification
+##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter
+##### ** 29.01.2018 *** start working on chatai.
+##### ** 29.01.2018 *** fixed issue with CustomParrots and randomspawning.
+##### ** 29.01.2018 *** tweaked ownsitem to use the whole item lore entry.
+##### ** 28.01.2018 *** added store boolean option to motiondirection condition.
+##### ** 28.01.2018 *** fixed crosshairlocation targeter.
+##### ** 28.01.2018 *** tweaked castif & customteleport to work with customtargeters.
+##### ** 28.01.2018 *** start adding more compatibility for 1.10 1.11
+##### ** 27.01.2018 *** added crosshairlocation targeter.
+##### ** 27.01.2018 *** added player support for hastarget condition.
+##### ** 27.01.2018 *** added motiondirection condition. See motiondirection for more details.
+##### ** 26.01.2018 *** tweaked customdamage
+##### ** 26.01.2018 *** implemented muhahahahe's config
+##### ** 24.01.2018 *** added reducedamagebydistance (rdbd) option to customdamage mechanic.
+##### ** 23.01.2018 *** added setnbt mechanic. See setnbt mechanic for details.
+##### ** 22.01.2018 *** added bloodyscreen mechanic. See bloodyscreen mechanic for details.
+##### ** 22.01.2018 *** added cmpnbt condition. If more then just a testfor is needed. See cmpnbt for details.
+##### ** 19.01.2018 *** added player support for inmotion condition.
+##### ** 19.01.2018 *** tweaked all floating mechanics & added facedir=[bool] to entity- mythicfloating mechanics.
+##### ** 18.01.2018 *** fixed issue in entitiesinradius condition.
+##### ** 18.01.2018 *** tweaks for nodamageticks.
+##### ** 18.01.2018 *** fixed some more compatibility issues.
+##### ** 18.01.2018 *** added nodamageticks mechanics. Experimental.
+##### ** 17.01.2018 *** added CustomPathfinderGoal PathfinderGoalJumpOffFromVehicle.
+##### ** 17.01.2018 *** removed hasfaction condition. use infaction & samefaction instead.
+##### ** 17.01.2018 *** fixed setmobhealth issues.
+##### ** 17.01.2018 *** fixed network issue for <1.12 versions.
+##### ** 16.01.2018 *** fixed parrot issue for <1.12 versions.
+##### ** 15.01.2018 *** added randomspeed alias to setspeed mechanic for compatibility.
+##### ** 15.01.2018 *** fixed random max>min.
+##### ** 14.01.2018 *** added renewrandom option to customrandomskill. See customrandomskill for details.
+##### ** 14.01.2018 *** final fix for zoom mechanic.
+##### ** 14.01.2018 *** added lastdamageindicator condition. See lastdamageindicator for example.
+##### ** 13.01.2018 *** fixed issue in entitiesinradius conditions & added ignoresameblock option.
+##### ** 11.01.2018 *** added hasvehicle condition. minor fix in linebubble mechanic
+##### ** 11.01.2018 *** fixed parrot mythicspawners issue.
+##### ** 10.12.2017 *** fixed customprojectiles compatibility with older MythicMobs versions.
 ##### ** 07.12.2017 *** removed debug messages from lastdamagecause & ANY in steal mechanic choose a random, no AIR, inventory slot.
 ##### ** 07.12.2017 *** fixed NPE in dropmythicitem if trigger is not present.
 ##### ** 07.12.2017 *** added randomspeed mechanic & movespeed condition. See randomspeed ore movespeed for details.
@@ -197,6 +236,14 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#mechanics) to se
 
 
 
+# Custom Entities:
+
+## Mythic Parrot:
+
+Bukkit's entity type name: "mythic_parrot" `/summon mythic_parrot` 
+Custom parrot class for better handling of the cookie thing.
+
+
 
 # Mechanics:
 
@@ -283,6 +330,63 @@ PlayEffectOnTarget:
 
 
 
+## setnbt mechanic:
+
+Forms a nbt and applies it to the targeted entity. **Note the surrounding "" for nbt option!**
+
+##### `- setnbt{nbt="[NBT]"}`
+
+Any valid nbt can be applied where variables like <mob.name> etc are allowed!
+
+Example:
+
+```yaml
+TestMonkey:
+  Type: zombie
+  Skills:
+  - equip{i=Sword:0} @self ~onSpawn
+  - setnbt{nbt="{LeftHanded:1b}"} @self ~onInteract
+```
+This example makes it that the entity change the weapon from right to left side.
+
+
+
+## bloodyscreen mechanic:
+
+Force the player to see the border warning effect.
+
+##### `- bloodyscreen{play=[BOOL]}`
+
+Where play=true for on or false for off.
+Example:
+
+```yaml
+BloodyScreen:
+  Skills:
+  - bloodyscreen{play=true}
+  - delay 10
+  - bloodyscreen{play=off}
+```
+
+
+
+## randomspeed mechanic:
+
+Force the target to drop an item from its storagte/equipment to the ground.
+
+##### `- randomspeed{range=[range]}`
+
+Where in `[range]` is the range the new random speed is picked.
+Example:
+
+```yaml
+newSpeed:
+  Skills:
+  - randomspeed{range=0.2to0.5} @self ~onInteract
+```
+
+
+
 ## itemfloating / blockfloating / entityfloating / mythicfloating mechanic:
 
 Summon a floating item, block, entity or mythicmobs mob relative to caster or static at location.
@@ -291,13 +395,345 @@ Summon a floating item, block, entity or mythicmobs mob relative to caster or st
 
 ##### `- blockfloating{m=DIRT;md=250;yo=2;so=0;fo=0} ~onSpawn`
 
-##### `- entityfloating{e=pig;md=250;yo=2;so=0;fo=0;noai=true} ~onSpawn`
+##### `- entityfloating{e=pig;md=250;yo=2;so=0;fo=0;noai=true;facedir=[bool]} ~onSpawn`
 
-##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2} ~onSpawn`
+##### `- mythicfloating{m=MythicMobType;md=250;yo=2;so=2;fo=2;facedir[bool]} ~onSpawn`
 	 
 Almost all options like in mythicprojectile are useable.
 
 
+
+## playerzoom mechanic:
+
+Zoom the player's view. Where v is a value of 0 (no zoom) to 1.0f full avail zoom.
+Ex:
+
+```yaml
+zoom:
+  Skills:
+  - playerzoom{v=1.0f}
+  - playerzoom{delay=180;v=0.0f}
+```
+First set the zoom to 1 after 180 ticks set the zoom back to 0.
+
+
+
+## setitemcooldown mechanic (1.12 or higher only):
+
+Set the cooldown of the selected item. Only avail for player targets.
+
+##### `- setitemcooldown{ticks=120} @trigger ~onDamaged`
+
+Set the item used for the attack to a cooldown of 120 ticks.
+
+
+
+## modifyarrows mechanic:
+
+Modify the amount of arrows on the targets body. Use "ADD, SUB, CLEAR" for mode and integer value for amount.
+
+##### `- modifyarrows{mode=clear;amount=0} @self ~onInteract`
+
+Removes all arrows  from the targeted body.
+
+##### `- modifyarrows{mode=add;amount=4} @self ~onInteract`
+
+Adds 4 arrows to the arrows on targeted entity's body.
+
+##### `- modifyarrows{mode=sub;amount=4} @self ~onInteract`
+
+Subtract 4 arrows from the total amount of arrows on targeted entity's body.
+
+	
+
+
+## playloading/playcredits mechanic:
+
+Force the player to see the loading screen or the end screen. With a repeat skill its possible to make a blackscreen for the player.
+
+```yaml
+playloading:
+  Skills:
+  - playloading{repeat=60;repeatInterval=1}
+  - closeinventory{delay=61}
+```
+
+This force all targeted players to see the loading screen for 60 ticks. Use closeinventory to return the player into normal view.
+
+```yaml
+playblackscreen:
+  Skills:
+  - playcredits{repeat=60;repeatInterval=1}
+  - closeinventory{delay=61}
+```
+
+This force all targeted players to see a black screen for 60 ticks. Use closeinventory to return the player into normal view.
+	
+
+
+## dropinventory mechanic:
+
+Force the target to drop an item from its storagte/equipment to the ground.
+
+##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER]} @trigger ~onInteract`
+
+Where in `item=""` all the item information is stored. `pickupdelay` = amount of ticks the item cannot be picked up again. `pieces` how many 
+pieces out of the inventory, regardless of itemstacks, are dropped.
+
+Examples:
+
+```yaml
+drop2pieces:
+  Skills:
+  - dropinventory{item="material=DIRT,amount=1,where=HAND";pieces=2} @trigger ~onInteract
+  
+dropAll:
+  Skills:
+  - dropinventory{item="material=ANY,amount=64,where=ANY";pieces=41} @trigger ~onDamaged
+```
+
+First example drop 2 dirt regardless the item is in an stack or there are just two single dirtstacks in the inventory. The second example
+drop the inventory entirely because of where & material = any, amount is atleast a stack and pieces = 41 (max slots of a player) 
+	
+
+
+## closeinventory mechanic:
+
+Force the player to close the current open inventory.
+
+##### `- closeinventory @trigger ~onInteract`
+	
+
+
+## fakedeath mechanic:
+
+Force a fake death sequence of the castermob.
+
+##### `- fakedeath{duration=50} ~onDamaged`
+
+This play the fake death sequence for the mob. After 50 ticks the mob appear again. This can be used to do some real wiered stuff:
+
+```yaml
+fakedeath:
+  Skills:
+  - fakedeath{duration=500}
+  - delay 14
+  - heal{oh=true}
+  - setrotation{yo=2;dur=500} @self
+```
+
+This skill for example, will stop the death sequence when the mob is horizontal position for 500 ticks.....
+	
+
+
+## setmobhealth mechanic:
+
+Set the mythicmobs mob health and maxhealth to a new amount. Random amount allowed. Ignore or allow level health modifier. Use set add or multiply
+the amount.
+
+##### `- setmobhealth{health=2to5;ignoremodifier=true;set=+} ~onInteract`
+
+add a random value between 2 and 5 to the maxhealth.
+
+##### `- setmobhealth{health=10to20;ignoremodifier=true} ~onInteract`
+
+set the maxhealth to random value between 10 and 20.
+
+##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=*} ~onInteract`
+
+multiply the maxhealth with a random value between 0.5 and 1.
+
+	
+
+
+## entitygoggleat/entitygoggle mechanic:
+
+Force the entity to goggle at the targeted entity for duration amount of ticks. Doesnt work too well if the entity have ai.
+
+##### `- entitygoggleat{dur=300} @trigger ~onDamaged`
+	
+
+
+## setrotation mechanic:
+
+Rotates the entity yo degrees relative to its yaw, amount of duration times. Doesnt work too well if the entity have ai.
+
+##### `- setrotation{dur=200;yo=10} @self ~onTimer:5`
+	
+
+
+## speechbubble mechanic (requires holographicdisplay):
+
+Use this mechanic to add something like a speechbubble to your mob. Use it like this. `text` inside of "" is the output text. `linelength` or `ll` is the max charlength of the lines. `offset` or `yo` is the yoffset of the bubble. `time` or `ti` is how long the bubble is shown above the mob.
+`so`and `fo`for side and forward offset relative to casters direction, where vertical negative is behind and horizontal negative is right side. `anim`true or false if the text should be animated at popup. (option) `id` is the id of the entity's speechbubble if you want to use modifybubble or removebubble mechanic.
+Use `<additem.ITEM_NAME>`inside the `text`option to add an itemline to the bubble. Use any valid bukkit item material name. Use <nl> placeholder inside `text`option to force a new line. Use `usecounter`true/false to enable counter for the bubble.
+
+
+##### `speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.2;so=sideoffset;fo=forwardoffset;time=300} @trigger ~onInteract`
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - equip{i=BlackbeardHead:4} @self ~onSpawn
+  - speechbubble{text="&5<target.name>&f, hello! My name is &3<mob.name>&f Nice to meet you. How are you doing? I think its a pretty nice weather today, isnt it?";ll=20;offset=2.6;time=300} @trigger ~onInteract
+  - speechbubble{text="&5<target.name> &2Stop punching me around!";ll=80;offset=2.6;time=300} @trigger ~onDamaged
+```
+
+## modifybubble mechanic:
+
+Use this mechanic to modify a existing bubble for the caster: `modifybubble{id=existing_id;text="new test";ll=linelength;so=sideoffset;fo=forwardoffset;offset=offset;usecounter=true/false;timer=ticks}`
+
+## removebubble mechanic:
+
+Removes an existing bubble from the caster: `removebubble{id=existing_id}`
+
+## linebubble mechanic:
+
+Modify a line of a bubble: `linebubble{id=existing_id;mode=append/replace/remove;oldline="oldlinetext";newline="newlinetext"}`
+If bubble with id have a line that contains `oldline` that line will be removed, replaced with newline, or if used append a newline will be added.
+Example:
+
+```yaml
+BubbleMonkey:
+  Type: zombie
+  Display: "DingDong"
+  AITargetSelectors:
+  - 0 clear
+  Skills:
+  - speechbubble{id=effects;usecounter=false} @self ~onSpawn
+# creating a bubble instance at spawn.
+
+BubbleSkill:
+  Skills:
+#  - linebubble{id=effects;mode=append;newline="<additem.dirt>"}
+#  - linebubble{id=effects;mode=remove;oldline="<additem.dirt>"}
+#  - linebubble[id=effects;mode=replace;oldline="<additem.dirt>";newline="<additem.stone>"}
+```
+	
+
+
+## disarm mechanic:
+
+Disarm the targeted player and store the equipped item in the first free slot in the players inventory. The mechanic is not executed if 
+the player has no space in its inventory. If used on a none player the entity is disarmed for duration amount of ticks instead of stored in inventory.
+
+##### `- disarm{duration=200} @trigger ~onDamaged`
+	
+
+
+## playergoggle or playergoggleat mechanic:
+
+Force the targeted player to stare at caster while still is full moveable for duration amount of ticks. Use the `isgoggling` condition 
+to determine if the player already goggles at something.
+
+##### `- playergoggleat{d=[duration_ticks]} @any_player_targeter ~onDamaged`
+	
+
+
+## playerspin mechanic:
+
+spin the player target around. Use the `isspinning` condition to determine if  the player is already spinning around.
+
+##### `- playerspin{d=[duration_ticks];s=[spin_speed]} @any_player_targeter ~onDamaged`
+	
+
+
+## extinguish mechanic:
+
+extinguish the target if its on fire.
+
+##### `- extinguish @self ~onDamaged`
+
+if the mob is damaged and in case the mob is on fire it extinguish the mob.
+	
+
+
+## asquip mechanic:
+
+Equip an armor stand with any Bukkit Material Type. Equp the head slot with any Material.
+	
+##### `- asequip{item=DIAMOND_SWORD:4} ~onSpawn`
+
+If mobtype = armorstand equip diamond sword on head slot.
+
+
+
+## playerweather mechanic:
+
+Change the weather and time for the targeted player only. The effect will last duration amount of ticks.
+	
+##### `- playerweather{weather=w=CLEAR||DOWNFALL;time=t=[time];duration=d=[integer]} @PIR{r=20} ~onSpawn`
+
+
+
+## setfaction mechanic:
+
+Set the faction of the targeted entity if its an MythicMobs mob. Any variable present at runtime can be used. (Additional you should look at the conditions infaction and samefaction)
+	
+```yaml
+- setfaction{faction=SomeFaction} @self ~onSpawn
+- setfaction{faction=<mob.name> @self ~onSpawn
+```
+
+
+## parseddisguise mechanic:
+
+Same as the build-in disguise mechanic. But additional it parse every variable that is present while the skill is executed.    
+	
+##### `- parseddisguise{d=PLAYER:<mob.name>:<target.name>} @trigger ~onDamaged`
+	
+
+
+## renameentity mechanic:
+    
+Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed. You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity.
+	
+##### `- renameentity{name=[PARSEDSTRING];visible=[BOOLEAN]}`
+	
+	
+## setcachedowner mechanic:
+
+set the targeter entity to perma owner of the activemob. Resistent against reload and server restart until the mob is dead. Althought only make sense on despawn false mobs.
+	
+##### `- setcachedowner @trigger ~onInteract`
+
+	
+	
+## advrandomskill mechanic:
+
+Use this mechanic to execute a random skill by chance and priority.
+	
+##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
+##### `- customrandomskill{rrenewrandom=false(default);skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
++ This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
++ If renewrandom/newrandom/rnr is set to true a new random is created for the next entry else for all entries the same random is used.
+	
+##### `- advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged`
++ Same as above but if no chance match nothing will be executed.
+
+	
+
+## changehealthbar mechanic:
+
+Use this mechanic to change the display of the mobs healthbar if exists.
+	
+##### `- changehealthbar{display="[>>>$h<<<]"} @self ~onDamaged`
++ Changes the healthbar display if the mob is damaged.
+
+
+## createhealthbar mechanic:
+
+Use this mechanic to display a healthbar above the mythicmobs head.
+	
+##### `- createhealthbar{so=0;fo=0;iy=false;offset=2.5;counter=10;display="[|||$h|||]"} @self ~onSpawn`
+	  
+Creates a healthbar for the spawned mob with an y-offset of 2.5. And adds so(sideoffset) to left/right of mob and add fo(frontBackOffset). Use iy(ignoreYaw) if you dont want sideoffset affected by the entity's yaw.
+	
+The healthbar is removed after the mob is removed. Use "$h" as placeholder for the mobs health. If counter is set the healthbar is visible counter amount ticks after the mob is damaged. Use -1 to set it perma visible.
 
 ## advaipathfinder mechanic:
 
@@ -316,6 +752,13 @@ Some examples:
 ```
 		
 ### Pathfindergoals:
+
+*jumpoffvehicle:*
+	
+##### `advaipathfinder{goal="[goalpriority_value] jumpoffvehicle"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 jumpoffvehicle"}`
++ Adds the ability to the mob to jump off fron any vehicle if in combat mode.
 
 *attack:*
 	
@@ -391,6 +834,21 @@ SpawnEvent:
 + In addition there are two signals send:
 + *GOAL_STARTRETURNHOME* - Send to mob if the entity start to travel home.
 + *GOAL_ENDRETURNHOME* - Send to mob if the entity is arrived at home.
+
+
+## parsedstance mechanic:
+
+##### `- parsedstance{s="<trigger.uuid>"} @self`
+##### `- pstance{s="<target.l.dx>,<target.l.dy>,<target.l.dz>,<target.l.w>"} @targetlocation`
+
+Set a the stance of an activemob filled parsed variables, like <mob.uuid> <target.uuid> and so on. In addition see parsedstance condition to compare parsed stances.
+
+*special variables*
++ <target.l.*> are parsed within pstance with the block position of the location if there is a location targeter
++ <target.l.dx dy dz> to get the coordinates as double not the block position.
++ <target.meta.*> where * is the name of the metatag. If used with a location targeter the block metatags are used.
++ <mob.meta.*> where * is the name of the metaag. Ex: `<mob.meta.<trigger.uuid>` reteruns the value stored in casters triggers uuid tag if 
+there is one.
 
 
 ## CustomProjectiles mechanics (for MythicMobs 4.1.0 or higher) based on the idea of muhahahahahe:
@@ -505,4 +963,821 @@ IP-Tick-bouncing:
 IP-bounce-effect:
   Skills:
   - customparticles{p=explosion;amount=5;hs=0;vs=0.0;speed=0;yoffset=0.5;foffset=0} @origin
+```
+
+
+## MetaMechanics & Conditions:
+
+### setmeta mechchanic:
+Set parsed(!) metadata for the target. You can use all variables that are avaible while the skill is executed.
+
+##### `- setmeta{meta="tag=tagname;value=tagvalue;type=BOOLEAN/NUMERIC/STRING";usecaster=BOOLEAN}`
+			
+The tags "tag" and "value" can contain any mob variable. Example: `[- setmeta{meta=<target.uuid>} @self]` add the uuid of the target as metatag to the mob. You can also use values and types, but this is more for further purpose. Still you can go form them too. If usecaster is set to true the metatag is always set for the caster of the skill. No matter what targeter is used.
+		
+`- setmeta{meta="tag=lastdamagedentity;value=<trigger.uuid>;type=STRING"} @self ~onAttack`
+			
+This will set the lastdamagedentity tag of the mob to the victims uuid. It is possible to set a metadata of a block by using a location targeter. All blocks including air are valid.
+		
+### delmeta mechanic:
+
+Delete a metatag from the targeted entity. Be aware, if you remove tags that are not added by yourself, might break something else!
+		
+##### `- delmeta{meta="tag=lastdamagedentity"} @self ~onCombatDrop`
+			
+This remove the lastdamagedentity tag if the mob stop fighting.
+		
+### hasmeta condition:
+
+With this condition you can check any parsed meta. In its main purpose its a compare condition. Mean its a TargetConditions because it needs 2 entities. But by setting the cs tag (compareself) in the condition, you can choose if the target or the caster metas are checked. Its also possible to use a list of tags. All mob variables that are useable at the moment the skill is executed can be used. Use hasmetasimple if you only need ot check a single entry.
+
+##### `- hasmeta{meta="tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING";cs=true/false;action=true/false/cast/castinstead}`
+
+##### `- hasmetasimple{tag=tagname;value=metavalue;type=BOOLEAN/NUMERIC/STRING;cs=true/false;action=true/false/cast/castinstead}`
+
+Example: `- hasmeta{meta="tag=lastdamagedentity;value=<target.uuid>;type=STRING";cs=true;action=true}`
+			
+This will check the caster entity if it has the tag "lastdamagedentity" and if it contains the uuid of the target. If cs=false it would check the target entity. The following condition use a list. ATM it will meet the condition if only 1 of the tags match. This will be changed in the future.
+		
+Example: `- hasmeta{meta="tag=<target.uuid>||tag=<trigger.uuid>";cs=true;action=true}`
+			
+Checks if the caster mob have the tag target uuid or trigger.uuid.
+			
+The following example shows how to make it, that every entity can hit the villager only once. After that the entity have to interact with the villager do get removed and can hit him again one time:
+
+```yaml
+Mob yaml:
+
+MetaMonkey:
+  Health: 1000
+  Type: villager
+  Display: "Meta Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - skill{s=cancelDamageIfMeta;sync=true} @trigger ~onDamaged
+  - skill{s=setMetaTag} @trigger ~onDamaged
+  - skill{s=delMetaTag} @trigger ~onInteract
+
+  
+Skill yaml:
+
+delMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";action=true;cs=true}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i remove you from my black list!"} @world
+  - delmeta{meta="tag=<trigger.uuid>"} @self
+  
+setMetaTag:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=false}
+  Skills:
+  - message{msg="<mob.name> >> <trigger.name> i will remember you!"} @world
+  - setmeta{meta="tag=<trigger.uuid>"} @self
+  
+cancelDamageIfMeta:
+  TargetConditions:
+  - hasmeta{list="tag=<target.uuid>";cs=true;action=true}
+  Skills:
+  - cancelevent
+```
+
+
+
+
+## customteleport skill:
+Advanced teleport mechanic. Use this to teleport from/to variable destinations with variable behaviors.
+
+Options:
++ `destination=` MythicMobs targeter or vanilla targeter. Use "" that the targeter can be parsed.
++ `noise=n=` number, random point around the target
++ `teleportdelay=tdelay=td=` number, delay in ticks between teleportation (if more than 1)
++ `infrontof=front=f=` true/false, teleport in front of target (if target is a entity)
++ `returntostart=return=r=` true/false, if the source entity should return to its start position
++ `betweenlastentitysignal=bls=` signalname to be send to caster mob between the teleportations, where the trigger is the last entity (if target was an entity)
++ `betweennextentitysignal=bns=` signalname to be send to caster mob 
++ `ignoreowner=io=` true/false, if the owner of the caster mob should be ignored.
++ `maxtargets=mt=` number, the maximium number of targets.
++ `targetinsight=insight=is=` true/false, only the targets insight of the current position are used.
+				
+```yaml
+Example Mob:
+
+Monkey:
+  Health: 300
+  Type: zombie
+  Display: "Monkey"
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - customsummon{t=ChainDummy;setowner=true} @selflocation ~onDamaged
+  
+ChainDummy:
+  Type: armor_stand
+  Options:
+    Invisible: true
+    Invincible: true
+  Skills:
+  - customteleport{destination="@EIR{r=40}";teleportdelay=10;front=false;fs=ende;bns=bns;bls=bls;r=false;io=true;is=true} @self ~onSpawn
+  - skill{s=chain} @trigger ~onSignal:bns
+  - remove @self ~onSignal:ende
+  
+#  NOTICE THE "" FOR THE DESTINATION!
+
+Example Skill:
+
+chain:
+  Skills:
+  - lightning
+  - customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-0.5;distanceBetween=0.5;tyo=1.25}
+  
+  
+Or use some variables in the destination targeter:
+
+	- customteleport{destination="@Location{c=<mob.l.x>,<mob.l.y>,<mob.l.z>}"} @eir{r=40} ~onDamaged
+  
+```
+	
+	
+## dropmythicitem skill:
+	
+Drop a mythicitem or a mythicdroptable.
+
+Options:
++ `mythicitem=item=itemtype=type=t=i=` Internal name of the mythic item or the mythic droptable.
++ `amount=a=` the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
++ `shuffle=true/false` if true the droptable itemlist will be shuffled by random.
+	
+`- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack`
+	
+This drop one MythicItem at all players in radius of 20 if the mob targets a entity. Additional, whenever this mechanic is called there is a
+`MythicMobsExtItemDropEvent`called with the mythicmobs the trigger and the drop as an arraylist.
+
+
+
+## customparticleline skill (for MythicMobs 4.1.0 or higher):
+
+The same like the original but added vDestOffset & hDestOffset to adjust the targetlocation.
+Use vDestOffset to adjust the height and use hDestOffset to adjust the x/z position. Use idoy true/false(default) = ignoredestoffsetyaw to ignore the yaw of the targetlocation. With this its possible to target a specific part of the entity.
+	
+`- customparticleline{particle=reddust;amount=5;color=#feff90;ys=2.5;vd=1.0;hd=-1.0;idoy=true;distanceBetween=0.5;tyo=1.25} @pir{r=10} ~onTimer:5`
+
+
+
+## setthreattarget & clearthreattarget skill:
+
+Use setthreattarget to clear the activemobs threattable and add {a=double} targeter to the threat. Default amount is 65536.
+	
+##### `- setthreattarget{a=11111} @p`
+	
+To clear the threattable and trigger the dropCombat Event use:
+	
+##### `- clearthreattarget @self`
+
+
+
+## SwapSkill:
+
+Swap location of caster and target. Use keeptargetyaw=kty false/true or keepcasteryaw=kcy false/true to keep the original direction or not.
+	
+##### `- swap{kty=true;kcy=false} @target`
+
+
+
+## StunSkill:
+	
+Use this mechanic to stun the target. 
+	
+##### `- stun{duration=Ticks;facing=true/false;gravity=true/false;stopai=true/false} @target`
+	
+Where `duration=d=`how many ticks the target will be stunned and `facing=true/false` if yaw pitch of entity shall remain. `gravity=true/false` false(default) turn off gravity while the entity is stunned. In addition there is the **isstunned condition**. Look at Conditions. If stopai is used. The ai of the mob will be disabled while playing the stun and reapplied afterwards.
+	
+
+
+## CustomSummonSkill:
+
+Use this mechanic to add ax,ay,az to the targetlocation. Use ranged value in amount option. Use leashtocaster(leash/lc) to leash the summoned mob
+to the caster.
+	
+##### `- customsummon{a=2to20;type=mobname} @self`
+	
+Summon 2 to 20 mobs of type mobname.
+	
+##### `- customsummon{type=WITHER_SKELETON;amount=5;radius=4;ax=5;ay=1;az=2} @self`
+	
+This example do not check for a safeplace it will spawn the mob no matter if its in block or such. If you want to use safeplace add noise. Example:
+	
+##### `- customsummon{type=WITHER_SKELETON;amount=5;radius=4;noise=1;ax=5;ay=1;az=2} @self`
+	
+This example shows how to spawn mobs relative to the direction of the targeted mob:
+	
+##### `- customsummon{t=mobname;ued=true;ifb=1} @self`
+	
+`ued=useEyeDirection=EyeDirection;ifb=inFrontBlocks=inFront`
+	
+Use setowner (true/false) to set the owner to the mob which casted the custumsummon skill.
+	
+##### `- customsummon{t=mobname;setowner=true} @selflocation`
+	
+This summon the mob mobname and set its owner to the mob which casted the skill.
+	
+Use `tag` option to add a parsed string to the scoreboard of the summoned mob. Variables are allowed and are parsed.
+	
+##### `- customsummon{t=mobname;tag=<target.uuid>} @self`
+	
+This summon the mob mobname and add the uuid of the target to the summoned mobs scoreboard.
+	
+Use `invisible=inv` option to summon the mob invisible.
+
+
+
+## OxygenSkill:
+
+Use this mechanic to add oxygen to the LivingEntity.
+	
+##### `- oxygen{a=20} @self`
+	
+`a = amount =` the amount of oxygen that will be added. A player has a usual max air amount of 300. A amount of 20 gives about 1 bubble air.
+	
+	
+	
+## FeedSkill:
+
+Add specific amount of food to the players foodlevel.
+	
+##### `- feed{a=1} @PIR{r=20}`
+	
+`a = amount =` the food amount. The amount of 1 add 1/2 foodlevel.
+
+
+
+## RemovePotionSkill or CureSkill:
+
+Use this mechanic to remove all or a specific potion from the targeted entity. Use removepotion or cure.
+
+##### `- cure{t=ALL} @self`
+##### `- cure{t=INVISIBILITY} @PIR{r=30}`
+	
+##### `- removepotion{t=ALL} @self`
+##### `- removepotion{t=INVISIBILITY} @PIR{r=30}`
+	
+`t = type = p = potion =`ALL by default. Use "ALL" to remove all effects or use a single effect or a list like: `p=INVISIBILITY,SPEED,HEAL`
+
+	
+
+## CustomDamageSkill:
+
+Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www.mythicmobs.net/index.php?threads/skill-damage-bypassed-armour.3373/ this thread for details of the issue.
+	
+##### `- customdamage{a=1to2;ia=false;pk=false;pi=false;iabs=false}`
++ `a = amount =` 1 by default. The amount of damage applied. 1 = 1/2 heart. Ranged amount possbile: 1to2
++ `ia = i = ignorearmor =` false by default. If the armor of the target should be ignored or not.
++ `pk = pkb = preventknockback =` false by default. If knockback should be applied or not.
++ `pi = preventimmunity =` false by default. If immunity should be used or not.
++ `ignoreabs = iabs =` false by default. If absorbation should be ignored or not.
++ `percentage=p=` false by default. If true it uses the amount as percent.
++ `pcur=pc=` false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
++ `rdbd=` if used the damage of the skill is reduced by blockdistance. Ex: rdbd=0.01 reduces the damage by 1% per block.
+	
+
+	
+
+## EquipSkullSkill:
+
+This is a fix for custom player heads for 1.8.8 as it appeard to not work with mm versions greater than 2.5.1
+
+##### `- equipskull{skull=mythicitemname}` 
++ `skull=s=`  a valid MythicMobsItem to equip on head.
+		
+Example:
+
+```yaml
+mob yml:
+
+Monkey:
+  Type: zombie
+  Display: 'a MythicMobs Monkey'
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - equipskull{skull=Pirate} @self ~onSpawn 1
+  
+item yml:
+
+Pirate:
+  Id: 397
+  Data: 3
+  Options:
+    SkinTexture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVmMDEyOTdlMmUxYWNkMDQ4ODJhMGM0NGU0OGYxZjE1Y2JiYTI1ODJmOTFiMDgxYzkyOTIwZmVkOGYzMjIwIn19fQ====
+```
+
+## unEquipSkill:
+
+##### `- unequip{armor=<all>||<list>||<single>;signal=<string>}`
++ `armor=` all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
++ `signal=` name of the signal which will be send to the target if set.
+
+		
+## DamageArmorSkill:
+
+##### `- damagearmor{armor=<all>||<list>||<single>;damage=<int>||<ranged>;signal=<string>}`
++ `armor=` all / helmet / chest / leggings / boots / hand / offhand - can be single name or all or a list
++ `damage=` armor damage amount as integer or as ranged value for ranged value use "to".
++ `signal=` name of the signal which should be send to mob if an armor part is broken. dont set it if you dont want a signal to be send.
+				
+Example:
+
+```yaml
+dmgpig:
+  Type: pig
+  Display: 'DontHitMe'
+  Health: 500
+  Damage: 1
+  Faction: neutral
+  Despawn: true
+  AIGoalSelectors:
+  - 0 clear
+  - 1 randomstroll
+  - 2 float
+  Skills:
+  # this will damage the whole armor and handitem & offhanditem with damage value of 20
+  - damagearmor{armor=all;damage=20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will damage only the chest with a random value between 1 to 20
+  - damagearmor{armor=chest;damage=1to20;signal=armorbroken} @target ~onDamaged >0 1
+  # this will repear hand,offhand,helmet items with a random value between 20 to 40
+  - damagearmor{armor=hand,offhand,helmet;damage=-20to-40;signal=armorbroken} @trigger ~onDamaged >0 1
+  - message{msg="Oh dear! A part of your armor is gone!"} @trigger ~onSignal:armorbroken
+```
+
+
+## GrenadeSkill:
+
+##### `- grenade{size=3;amount=1;fuse=20;fire=false;breakblocks=true;utime=60;ueffect=true;undotnt=true;ued=boolean}`
++ `size=` radius of the explosion
++ `amount=` how many grenades the mob throw at once
++ `fuse=` how long the fuse tick
++ `fire=` should there be fire too? true / false
++ `breakblocks=` damage the blocks? true / false
++ `utime=` how many ticks until restore the blocks
++ `ueffect=` should there be a restore effect? true / false
++ `undotnt=` should the blocks be restored at all? true / false
++ `ued=` if true the grenade is thrown in eye direction. if false the grenade is thrown in target direction
+
+Example:
+
+```yaml
+grenadezombie:
+  Type: zombie
+  Health: 20
+  Skills:
+  - grenade{size=2;amount=1;fuse=20;fire=false;breakblocks=true;utime=40;ueffect=true;undotnt=true} @target ~onTimer:200
+  - grenade{size=2;amount=1;fuse=60;fire=false;breakblocks=false;utime=40;ueffect=false;undotnt=false} @pir{r=20} ~onTimer:60
+```
+
+
+## SetRandomLevelSkill:
+
+##### `- setrandomlevel{min=1;max=10;self=true}`
++ `min=` lowest level
++ `max=` highest level
++ `self=` true = targetself / false = target any other targeted mob
+		
+Example:
+
+```yaml
+RndLvlMob:
+  Type: zombie
+  Skills:
+  - setrandomlevel{min=1;max=10;self=true} @self ~onSpawn 1
+```
+
+
+## StealSkill:
+##### `- steal{items=ITEM:AMOUNT,ITEM:AMOUNT,.....;failsignal=steal_fail;oksignal=steal_ok}`
++ `items=` Can be a list of valid spigot items. One of the items shuffled by random will be tried to steal from the targeted player. Use "ANY" for any item.
++ `failsignal=` name of the signal that should be send to the mob if the stealing failed. default signal = steal_fail
++ `oksignal=` name of the signal that should be send to the mob if the stealing was good. default signal = steal_ok
+		
+##### `- DropStolenItems`
+Use this skill and the mob drop all its stolen items. Good idea to use it on death. Or all the items are gone with the mob to herobrine.
+		
+**There is a buildin cancel damage condition if the mob should make no damage while try to steal. It can be activated if the stance of the mob is "gostealing" So if the mob have the gostealing stance set, it will do no damage to its target.** 
+
+Thief example:
+
+mob yml:
+
+```yaml
+thief:
+  Type: villager
+  Display: 'Thief'
+  Health: 20
+  Damage: 0
+  Modules:
+    ThreatTable: true
+  Options:
+    AlwaysShowName: false
+    Despawn: true
+  AIGoalSelectors:
+    - 0 clear
+    - 1 meleeattack
+    - 2 avoidskeletons
+    - 3 avoidzombies
+    - 4 randomstroll
+    - 5 float
+  AITargetSelectors:
+    - 0 clear
+    - 1 players
+  Skills:
+    - setstance{stance=gostealing} @self ~onSpawn 1
+    - skill{s=FleeGotSomeStuff;sync=true} ~onSignal:steal_ok 1
+    - skill{s=FleeButGotNothing;sync=true} ~onSignal:steal_fail 1
+    - skill{s=Steal} ~onTimer:60 >0 1
+    - DropStolenItems ~onDeath 1
+```
+skillfile:
+
+```yaml
+Steal:
+  Cooldown: 1
+  TargetConditions:
+  - distance{d=<3} true
+  - lineofsight true
+  Conditions:
+  - stance{s=gostealing} true
+  Skills:
+  - steal{items=DIAMOND_SWORD:1,IRON_SWORD:1,DIAMOND:3,EMERALD:3;failsignal=steal_fail;oksignal=steal_ok} @NearestPlayer 0.75
+  
+FleeGotSomeStuff:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=fleeplayers}
+    - effect:smoke @self
+    - potion{type=SPEED;duration=200;level=1} @self
+    - delay 400
+    - effect:smoke @self
+    - remove @self
+  
+FleeButGotNothing:
+  Cooldown: 1
+  Skills:
+    - setstance{stance=flee} @self
+    - RunAIGoalSelector{s=clear}
+    - delay 2
+    - RunAIGoalSelector{s=randomstroll}
+    - delay 400
+    - effect:smoke @self
+    - remove @self
+```
+
+
+# Conditions
+
+
+##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];store=[BOOL];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:
+LEFT, FORWARD_LEFT, FORWARD, FORWARD_RIGHT, RIGHT, BACKWARD_RIGHT, BACKWARD, BACKWARD_LEFT or leave blank for any. The directions can also be in a list like: left,forward_left,forward_right
+
+##### `- comparenbt{nbt=[NBT]||ANY;action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Use as **Conditions** && **TargetConditions** Check the nbt more advanced than testfor can do. With the ability to ignore nbt by adding **id:ignore** or use ranged values **"rd:1to5"** or **"rd:>0"** or **rd:<1** or simple a usual value like **1** Please use "(" && ")" instead of "{" && "}" for compatibility issues. Look at the examples:
+Ex: `- cmpnbt{nbt=(Fire:"rd:>50")}` condition is true if the entity is on fire for more than 50 ticks.
+Ex: `- cmpnbt{nbt=(Fire:-1)}` condition is true if the entity is not on fire.
+Ex: `- cmpnbt{nbt=(Rotation:["rd:<361","rd:>65"])}` condition is true if the pitch is above 65 (looks at ground) while yaw is ignored because its always smaller than 361.
+Ex: `- cmpnbt{nbt=(ArmorItems:[(),(),(),(id:"minecraft:diamond_helmet",Count:"rd:>0")])}` this condition is true if the entity wears nothing but atleast 1 helmet made out of diamonds. :)
+Ex: `- cmpnbt{nbt=(ArmorItems:[(),(),(id:ignore),(id:"minecraft:diamond_helmet",Count:1)])}` this condition is true if the entity wears no shoes, no trousers but a helmet made of diamonds and something else on its chest.
+
+##### `- hasvehicle{types=[array]||ANY}`
+To use as **Conditions** condition. Check if the caster is riding or driving another entity. Use an array `zombie,skeleton,creeper` or a single type `boat` or `ANY` for any entity.
+Ex: `- hasvehicle{types=ANY}` condition is true if the caster is riding, driving an entity.
+Ex: `- hasvehicle{types=zombie,boat,skeleton}` condition is true if the caster is riding, driving one of the types.
+
+##### `- movespeed{range=[ranged_value]}`
+To use as **Conditions** && **TargetConditions** condition. Check the generic movementSpeed.
+Ex: `- movespeed{rage=<0.51}}` condition is true if the speed is below 0.51.
+
+##### `- getbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+##### `- lastbowtension{range=[ranged_value];debug=[boolean];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Get the players bow tension.
+Possible range is -1 for nothing at all, or 0.0 to 1.0. Where 1 is full strength. If unsure add `debug=true` and check the values in console.
+
+While `getbowtension`check the strength while the bow is drawn, `lastbowtension` get the last strength of the entity's bowtension if there was any. To add skills ot the entity while draw the bow use getbowtension, if the entity shoot the bow use lastbowtension to get the strength the arrow is fired.
+
+Ex: `- getbowtension{range=>0.9};debug=true}` condition is true if the tension of the bow is more than 90% of its full strength.
+
+##### `- getlastindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Unlike getindicator this condition do not return a realtime value, instead it returns the indicator status of the last armswing. Range is 0.0f to 1.0f. Default value is >0
+Ex: `- getlastindicator{value=1}}` condition is true if the indicator was fully loaded on last swing.
+
+##### `- getindicator{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks the status of the crosshair damageindicator.
+Range is 0.0f to 1.0f. Default value is <1.1
+Ex: `- getindicator{value=<0.51}}` condition is true if the indicator is not at more than 50%.
+
+##### `- oncooldown{value=[ranged_value];action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, **PLAYER ONLY** condition. Checks if the selected item is on cooldown. value=0 if not.
+Ex: `- oncooldown{v=1to10};action=CASTINSTEAD lowcooldownskill}`
+
+##### `- testfor{vc="[valid testfor stuff]";action=[boolean]||[CAST]||[CASTINSTEAD]}`
+To use as **Conditions** && **TargetConditions**, return true if caster or target match the testfor. See https://www.digminecraft.com/game_commands/testfor_command.php **PLEASE NOT THE "" for vc option!**
+
+##### `- sameworld{action=[boolean]}`
+To use as **TargetConditions**, return true if caster & target location in same world.
+
+##### `- onsolidblock{action=[boolean]}`
+To use as **Conditions**, return true if the location is *ON* a solidblock.
+
+##### `- insolidblock{action=[boolean]}`
+To use as **Conditions**, return true if the location is *INSIDE* a solidblock.
+
+##### `- jumping{action=[boolean]}`
+To use as **TaretConditions or Conditions**, return true if the entity is jumping.
+
+##### `- crouching{action=[boolean]}`
+To use as **TaretConditions or Conditions**, return true if the entity is crouching.
+
+##### `- sleeping{action=[boolean]}`
+To use as **TaretConditions or Conditions**, return true if the entity is sleeping.
+
+##### `- running{action=[boolean]}`
+To use as **TaretConditions or Conditions**, return true if the entity is running.
+
+##### `- samespawner{action=[boolean]}`
+To use as **TargetConditions**, return true if caster & target have same mythicspawner.
+
+##### `- hasspawner{names=[arraylist]||[ANY]}`
+Checks if the mythicmobs mob comes from a mythicspawner. Use a List or ANY.
+
+##### `- isgoggling{action=[boolean]}`
+Checks if the player is goggling at something. See playergoggle mechanic.
+
+##### `- isspinning{action=[boolean]}`
+Checks if the player is spinning around. See playerspin mechanic.
+
+##### `- isvehicle{action=[boolean]}`
+To use as **TargetConditions**, checks if the caster is riding its target.
+
+##### `- ispresent{action=[boolean]}`
+Checks if the the entity exists. Only makes sense as TargetCondtions though. Useful for triggers where its not always sure that there will be
+an entity as target. Like ~onTimer and such stuff.
+
+*Example*
+
+```yaml
+  TargetConditions:
+  - ispresent{action=true}
+  # true if the target is an entity and it exists.
+```
+
+
+##### `- isburning{range=[ranged_value];action=[boolean]}`
+By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
+
+##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+
+##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+
+##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
+Check if amount players are in radius.
+
+*Example*
+
+```yaml
+  Conditions:
+  - eir{types=ARROW,DIAMOND_SWORD;amount=1to10;radius=10}
+  # true if there are 1 to 10 dropped items of type arrow and diamond_sword around.
+  
+  - leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
+  # true if there are more than 5 entities of the type list around.
+  
+  - pir{amount=>0;radius=64}
+  # true if there is atleast 1 player in radius of 64 blocks.
+  
+  - eir{types=all;isb=true;amount=>0;radius=10}
+  # true if there is atleast 1 other entity in radius of 10 blocks & not on
+   same block as source location.
+```
+
+##### `- playertime{time=[RANGEDVALUE];action=[boolean]}`
+Check the player only time.
+
+##### `- playerweather{weather=[CLEAR||DOWNFALL];action=[boolean]}`
+Check the player only weather.
+
+##### `- owneralive{action=[boolean]}`
+Returns true if the mobs owner is online, alive or in same world.
+
+##### `- infaction{faction=[STRING]or[ARRAY];action=[BOOLEAN]}`
+Determines if the caster or target (if used in TargetConditions) is in the faction or in one of the factions if used as array. Any mythicmobs
+variable avail at runtime can be used. Eg: `faction=<mob.stance>`
+
+*Example*
+
+```yaml
+  Conditions:
+  - infaction{faction=SomeFaction;action=true}
+  - infaction{faction=aFaction,anotherFaction,yetAnotherFaction;action=true}
+```
+
+#####`- samefaction{faction=[STRING]or[ARRAY];action=[BOOLEAN]}`
+Determines if the caster **AND** target are in the same faction or in one of the factions if used as array. Any mythicmobs variable avail at
+runtime can be used. Eg: `faction=<trigger.name>`
+
+*Example*
+
+```yaml
+  TargetConditions:
+  - samefaction{faction=SomeFaction;action=true}
+  - samefaction{faction=aFaction,anotherFaction,yetAnotherFaction;action=true}
+```
+
+##### `- lookatme{fov=[double];yo=[double];debug=[boolean]}`
+##### `- looksatme{fov=[double];yo=[double];debug=[boolean]}`
+  
+This condition can determine if the target is looking at the caster. Therefor a **field-of-view-ratio** defined in fov as a double is used. For normal sized entities a fov-ratio of **1.999D** (used by default) is a good value to use. You can also adjust the Yoffset by define **yo**. For the standard sized entities a yo of **-0.4D** (used by default) is a good value. Usually the default offsets working very well on almost all entities. But if you need to adjust them, you can set **debug=true** and if the condition is used the fov and vecY offsets are written into the console. With that info you can easy adjust the values to your need.
+
+*Example:*
+
+```yaml
+mobfile:
+
+WeepingMonkey:
+  Health: 500
+  Type: zombie
+  Display: "Weeping Monkey"
+  Skills:
+  - skill{s=freeze} @pir{r=32} ~onTimer:20
+  
+skillfile:
+
+freeze:
+  Conditions:
+  - isstunned{action=false}
+  TargetConditions:
+  - infront{view=45}
+  - lookatme
+  Skills:
+  - stun{d=60;facing=true} @self
+```
+
+##### `- relativedirection{angle=[RANGEDVALUE];action=[BOOLEAN]}`
+Use this condition to determinate the relative direction to the target. Use this condition in **TargetConditions**. Where 180 is the right side. 90 degree is straight infront and 270 degrees are exact behind. If you use `angle=0to180` the it compares if the target comes from infront, where `angle=90to270` means the targeted entity is somewhere on the right side of the caster. etc...
+
+*Example:*
+
+```yaml
+skillfile:
+
+    targetsonleft:
+      TargetConditions:
+      - relativedirection{angle=>315}
+      - relativedirection{angle=<45}
+      Skills:
+      - message{msg="Found <trigger.name> on my left!"} @world
+      
+mobfile:
+    Monkey:
+      Health: 500
+      Type: zombie
+      AITargetSelectors:
+      - 0 clear
+      AIGoalSelectors:
+      - 0 clear
+      - 1 randomstroll
+      Display: "Me Monkey"
+      Skills:
+      - skill{s=targetsonleft} @pir{r=20} ~onTimer:20
+```
+
+##### `- ownsitem/iteminhand{list="where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT]";action=[BOOLEAN]}`
+##### `- ownsitemsimple{where=[ANY||HAND||ARMOR||INVENTORY];material=[ANY||MATERIALTYPE];amount=[RANGEDVALUE];lore=[LORETEXT];action=[BOOLEAN]}`
+Works as target or entitycondition. A single value or a boolean expression argument can be given (see below for some examples).
+This condition works on all living entities, where the INVENTORY where type only works for players.
+
+**NOTE:** The ownsitemsimple variant is used to only add 1 item to compare. There is no list and no "" but also no boolean expression.
+
+```yaml
+ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"
+```
+Returns true if the entity holds an *iron sword* **AND** wears a *diamond chestplate*.
+
+```yaml
+ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"||"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"
+```
+True if the entity holds an *iron sword* **OR** wears a *diamond chestplate*.
+
+```yaml
+ownsitem{list="where=HAND;material=IRON_SWORD;amount=1"&&"where=ARMOR;material=DIAMOND_CHESTPLATE;amount=1"||"where=INVENTORY;material=DIRT;amount=1"
+```
+True if the player holds an *iron sword* **AND** wears a *diamond chestplate* **OR** has 1 piece of *dirt* in its inventory.
+
+##### `- inmotion{action=[BOOLEAN]}`
+Checks if the entity is in motion. Do not work for players or none living entities.
+
+##### `- facingdirection{direction=dir=d=facing=face=d=[DIRECTION];action=[BOOLEAN]}`
+Check the entities direction. Possible values: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
+
+##### `- parsedstance{s="<target.uuid>";cs=true;action=true}`
+If cs (compareself) = true the TargetCondition check if the target's uuid is in the casters stance. If cs = false the condition check if the stance is set in the targeted entity if its a mythicmobs mob. 
+
+
+# Targeters
+#### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
+
+
+
+##### `@targetmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@triggermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@ownermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+##### `@selfmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
+Get the location length size infront of the targeted entitys motion.
+
+##### `@crosshairlocation{length=[VALUE]}`
+Get the nearest block location at crosshair or the location length amount of blocks away.
+
+##### `@crosshair`
+Returns the crosshair targeted entity or location if caster is a player
+
+##### `@ownertarget`
+If caster mob have an owner it returns the target of the owner or if owner is player the crosshair target.
+
+##### `@lastdamager`
+Returns the entity if the lastdamage was done by an entity.
+
+##### `@targeterstarget`
+Returns the target of the targeted entity. In case of target is a player the crosshair target.
+
+##### `@triggerstarget`
+Returns the target of the triggered entity. In case of target is a player the corsshair target.
+
+##### `@eyedirection{length=[VALUE]`
+Returns the location length blocks away from the direction the caster is looking. `@eyedirection{l=20}` returns the location 20 blocks infront of the direction the caster is looking at.
+
+##### `@triggerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the trigger is looking. `@triggerdirection{l=20}` returns the location 20 blocks infront of the direction the trigger is looking at.
+
+##### `@targetdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the target is looking. `@targetdirection{l=20}` returns the location 20 blocks infront of the direction the target is looking at.
+
+##### `@ownerdirection{length=[VALUE]`
+Returns the location length blocks away from the direction the owner is looking. `@ownerdirection{l=20}` returns the location 20 blocks infront of the direction the owner is looking at.
+
+
+
+
+#### ~onKill trigger with lastdamagecause condition example
+
+```yaml
+BowMonkey:
+  Type: skeleton
+  Display: "&cBowMonkey"
+  AITargetSelectors:
+  - 0 clear
+  - 1 monsters
+  Skills:
+  - skill{s=DamageCauseMeele} @self ~onDamaged
+  - skill{s=DamageCauseProjectile} @self ~onDamaged
+  - skill{s=KillCauseProjectile} @trigger ~onKill
+  - skill{s=KillCauseMeele} @trigger ~onKill
+
+MeeleMonkey:
+  Type: zombie
+  Display: "&cMeeleMonkey"
+  AITargetSelectors:
+  - 0 clear
+  - 1 monsters  
+  Skills:
+  - skill{s=DamageCauseMeele} @self ~onDamaged
+  - skill{s=DamageCauseProjectile} @self ~onDamaged
+  - skill{s=KillCauseProjectile} @trigger ~onKill
+  - skill{s=KillCauseMeele} @trigger ~onKill
+
+KillCauseProjectile:
+  TargetConditions:
+  - lastdamagecause{cause=PROJECTILE;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Sorry <trigger.name> i am no Wilhelm Tell though!"} @world
+  
+KillCauseMeele:
+  TargetConditions:
+  - lastdamagecause{cause=ENTITY_ATTACK;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="I killed <trigger.name> just with my hands only!"} @world
+  
+DamageCauseProjectile:
+  Conditions:
+  - lastdamagecause{cause=PROJECTILE;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Someone try to shoot me down!"} @world
+  
+DamageCauseMeele:
+  Conditions:
+  - lastdamagecause{cause=ENTITY_ATTACK;damager=ANY;action=TRUE}
+  Skills:
+  - message{msg="Help! It punch me in my face!"} @world
 ```
