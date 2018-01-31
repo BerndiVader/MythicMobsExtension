@@ -6,6 +6,7 @@ https://github.com/BerndiVader/MythicMobsExtension/wiki
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
 
 ### Changelog:
+##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
 ##### ** 31.01.2018 *** added update notification
 ##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter
 ##### ** 29.01.2018 *** start working on chatai.
