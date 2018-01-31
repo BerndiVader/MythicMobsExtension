@@ -47,6 +47,7 @@ import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -82,8 +83,10 @@ public class Utils implements Listener {
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
+	private static Handler handler;
 	
 	static {
+		handler=Volatile.handler;
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
 		pl=new HashMap<>();
@@ -126,7 +129,7 @@ public class Utils implements Listener {
 		if (e.isCancelled()||!Config.m_parrot) return;
 		if (e.getEntity() instanceof Parrot) {
 			MythicMob mm=e.getMobType();
-			LivingEntity p=Volatile.handler.spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
+			LivingEntity p=handler.spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
 	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
 	        final ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
 	        mythicmobs.getMobManager().registerActiveMob(am);

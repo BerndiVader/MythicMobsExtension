@@ -6,7 +6,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
-import net.minecraft.server.v1_12_R1.CommandException;
 
 public class TestForCondition
 extends
@@ -27,11 +26,7 @@ IEntityCondition {
 	@Override
 	public boolean check(AbstractEntity e) {
 		boolean b=true;
-		try {
-			b=Volatile.handler.testForCondition(e.getBukkitEntity(),this.c,m);
-		} catch (CommandException e1) {
-			e1.printStackTrace();
-		}
+		b=Volatile.handler.testForCondition(e.getBukkitEntity(),this.c,m);
 		return b;
 	}
 

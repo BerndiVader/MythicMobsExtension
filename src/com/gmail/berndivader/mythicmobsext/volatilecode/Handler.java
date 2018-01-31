@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import net.minecraft.server.v1_12_R1.CommandException;
-
 public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
@@ -36,7 +34,7 @@ public interface Handler {
 	void modifyArrowsAtEntity(Entity entity, int a, char c);
 	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
-	boolean testForCondition(Entity e,String ns,char m) throws CommandException;
+	boolean testForCondition(Entity e,String ns,char m);
 	float getItemCoolDown(Player p);
 	public boolean setItemCooldown(Player p,int j);
 	void setFieldOfViewPacketSend(Player player, float f1);
