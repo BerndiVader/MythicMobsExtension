@@ -1,11 +1,18 @@
 package main.java.com.gmail.berndivader.mythicmobsext;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -64,6 +71,28 @@ public class Main extends JavaPlugin {
 			logger.warning("     We cant garantie that it runs properly.");
 			logger.warning("******************************************************");
 		}
+
+		if (Config.update) {
+			String version = null;
+			PluginDescriptionFile pdf = getDescription();
+			try {
+				URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
+				InputStream in = url.openStream();
+				BufferedReader br = new BufferedReader( new InputStreamReader(in) );
+				version = br.readLine().toString();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				logger.warning("Could not find version file!");
+			}
+			if (!pdf.getVersion().equals(version)) {
+				logger.info("A new Version of MythicMobsExtension is available, get it here:");
+				logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
+			} else {
+				logger.info("Plugin is up-to-date!");
+			}
+		}
+
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			new Volatile();
 			new Utils();

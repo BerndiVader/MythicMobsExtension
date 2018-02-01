@@ -102,7 +102,7 @@ public class Utils implements Listener {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		if (Utils.serverV>11) {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
-			if (Config.m_parrot) Main.logger.info("Found Minecraft 1.12 or higher, patching EntityParrot.");
+			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
 		}
 	}
 	
