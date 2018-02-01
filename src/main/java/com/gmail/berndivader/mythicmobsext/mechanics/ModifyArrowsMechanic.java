@@ -1,6 +1,6 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

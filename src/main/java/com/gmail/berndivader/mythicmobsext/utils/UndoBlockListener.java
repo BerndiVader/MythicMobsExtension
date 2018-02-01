@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.utils;
+package main.java.com.gmail.berndivader.mythicmobsext.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 public class UndoBlockListener implements Listener {
 

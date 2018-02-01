@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,48 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicator;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathFinderGoalShoot;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalFollowEntity;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.MessageToMessageDecoder;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftSnowman;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 
 import net.minecraft.server.v1_10_R1.EntityCreature;
 import net.minecraft.server.v1_10_R1.EntityInsentient;
@@ -97,6 +55,47 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutEntityVelocity;
 import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_10_R1.EntityItem;
 import net.minecraft.server.v1_10_R1.EntityHuman;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathFinderGoalShoot;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalFollowEntity;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.MessageToMessageDecoder;
 
 public class Core 
 implements Handler {
@@ -153,22 +152,22 @@ implements Handler {
 	
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
+		Utils.pl.put(e.getPlayer().getUniqueId(),new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
 	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInProzess(e.getPlayer(), new PacketReceivingHandler() {
 	    	@Override
 	        public void handle(Player p, PacketPlayInArmAnimation packet) {
 	        	float f1=getIndicatorPercentage(p);
-	        	p.setMetadata(GetLastDamageIndicator.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+	        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
 	            return;
 	        }
 			@Override
 			public void handle(Player p,PacketPlayInFlying packet) {
 				net.minecraft.server.v1_10_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-				com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
+				main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
 				double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
 				v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-						?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-						:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
+						?v3.length(new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
+						:new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
 				Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
 				return;
 			}

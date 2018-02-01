@@ -1,12 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.thiefs;
+package main.java.com.gmail.berndivader.mythicmobsext.thiefs;
 
 import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-
-import com.gmail.berndivader.mythicmobsext.thiefs.Thief;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;

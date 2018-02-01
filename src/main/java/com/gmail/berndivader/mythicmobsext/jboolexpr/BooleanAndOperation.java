@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.jboolexpr;
+package main.java.com.gmail.berndivader.mythicmobsext.jboolexpr;
 
 final class BooleanAndOperation implements IBoolean {
 

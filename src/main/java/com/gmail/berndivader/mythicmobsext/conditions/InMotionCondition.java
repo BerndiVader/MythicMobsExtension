@@ -1,10 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

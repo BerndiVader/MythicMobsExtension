@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.nanpatch;
+package main.java.com.gmail.berndivader.mythicmobsext.nanpatch;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -6,8 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 public class NaNpatch implements Listener {
 

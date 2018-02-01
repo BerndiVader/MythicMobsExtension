@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.utils;
+package main.java.com.gmail.berndivader.mythicmobsext.utils;
 
 public enum FacingDirectionType {
 	NORTH,

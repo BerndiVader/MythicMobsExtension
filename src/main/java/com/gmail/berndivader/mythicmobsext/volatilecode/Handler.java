@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode;
 
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);

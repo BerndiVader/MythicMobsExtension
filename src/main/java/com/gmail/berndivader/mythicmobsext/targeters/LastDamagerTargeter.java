@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.targeters;
+package main.java.com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 

@@ -1,14 +1,14 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
+
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
-
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.util.Vector;
 
 public class LookingAtMeCondition 
 extends

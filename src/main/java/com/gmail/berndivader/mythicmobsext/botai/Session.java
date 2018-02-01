@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.botai;
+package main.java.com.gmail.berndivader.mythicmobsext.botai;
 
 public interface Session {
     Thought think(Thought t) throws Exception;

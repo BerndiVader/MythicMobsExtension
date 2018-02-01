@@ -1,8 +1,8 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode;
 
 import org.bukkit.Bukkit;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 public class Volatile {
 	public static Handler handler;

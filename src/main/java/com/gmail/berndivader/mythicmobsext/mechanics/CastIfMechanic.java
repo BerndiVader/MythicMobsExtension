@@ -1,15 +1,15 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
-import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
+import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -30,7 +30,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 
-public class CastIf
+public class CastIfMechanic
 extends
 SkillMechanic
 implements
@@ -54,7 +54,7 @@ ITargetedLocationSkill {
 	private Optional<String> meetTargeter = Optional.empty();
 	private Optional<String> elseTargeter = Optional.empty();
 
-	public CastIf(String skill, MythicLineConfig mlc) {
+	public CastIfMechanic(String skill, MythicLineConfig mlc) {
 		super(skill,mlc);
 		this.ASYNC_SAFE=false;
 		this.breakOnMeet = mlc.getBoolean(new String[] { "breakonmeet", "breakmeet" }, false);

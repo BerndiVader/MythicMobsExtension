@@ -1,8 +1,8 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -10,14 +10,14 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class BloodyScreen 
+public class BloodyScreenMechanic
 extends 
 SkillMechanic 
 implements
 ITargetedEntitySkill {
 	boolean bl1;
 
-	public BloodyScreen(String skill, MythicLineConfig mlc) {
+	public BloodyScreenMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		bl1=mlc.getBoolean("play",true);
 	}

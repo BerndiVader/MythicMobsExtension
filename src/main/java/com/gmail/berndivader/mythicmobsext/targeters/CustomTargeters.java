@@ -1,10 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.targeters;
+package main.java.com.gmail.berndivader.mythicmobsext.targeters;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

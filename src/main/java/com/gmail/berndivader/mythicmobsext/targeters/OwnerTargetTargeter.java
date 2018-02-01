@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.targeters;
+package main.java.com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
@@ -6,8 +6,8 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;

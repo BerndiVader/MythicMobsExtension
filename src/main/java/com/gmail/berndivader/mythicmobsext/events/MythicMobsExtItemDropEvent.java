@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.events;
+package main.java.com.gmail.berndivader.mythicmobsext.events;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class CustomDamage
+public class CustomDamageMechanic
 extends
 SkillMechanic
 implements
@@ -30,7 +30,7 @@ ITargetedEntitySkill {
 	String amount;
 	String ca;
 
-	public CustomDamage(String skill, MythicLineConfig mlc) {
+	public CustomDamageMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
 		this.ASYNC_SAFE = false;

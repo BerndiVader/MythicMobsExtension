@@ -1,10 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
@@ -72,14 +72,14 @@ public class CustomConditions implements Listener {
 			} case "getindicator":
 			case "damageindicator":
 			case "indicator": {
-				SkillCondition c=new GetDamageIndicator(e.getConfig().getLine(),e.getConfig());
+				SkillCondition c=new GetDamageIndicatorCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
 			} case "lastindicator":
 			case "lastdamageindicator":
 			case "getlastindicator":
 			case "getlastdamageindicator": {
-				SkillCondition c=new GetLastDamageIndicator(e.getConfig().getLine(),e.getConfig());
+				SkillCondition c=new GetLastDamageIndicatorCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
 			} case "hasmeta":
@@ -96,7 +96,7 @@ public class CustomConditions implements Listener {
 				e.register(c);
 				break;
 			} case "health": {
-				SkillCondition c = new Healthcondition(e.getConfig().getLine(),e.getConfig());
+				SkillCondition c = new HealthCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
 			} case "infaction": {
@@ -159,7 +159,7 @@ public class CustomConditions implements Listener {
 				e.register(c);
 				break;
 			} case "motiondirection": {
-				SkillCondition c=new MotionDirection(e.getConfig().getLine(),e.getConfig());
+				SkillCondition c=new MotionDirectionCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);
 				break;
 			} case "oncooldown": {

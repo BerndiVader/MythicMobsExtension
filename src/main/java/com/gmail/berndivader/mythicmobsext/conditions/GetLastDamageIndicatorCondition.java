@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.Player;
 
@@ -7,7 +7,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class GetLastDamageIndicator 
+public class GetLastDamageIndicatorCondition
 extends 
 AbstractCustomCondition
 implements
@@ -15,7 +15,7 @@ IEntityCondition {
 	private RangedDouble rd;
 	public static String meta_LASTDAMAGEINDICATOR="MMEXTINDICATOR";
 
-	public GetLastDamageIndicator(String line, MythicLineConfig mlc) {
+	public GetLastDamageIndicatorCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		rd(mlc.getString("value",">0"));
 	}

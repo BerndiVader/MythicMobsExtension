@@ -1,13 +1,5 @@
-package com.gmail.berndivader.mythicmobsext.botai;
+package main.java.com.gmail.berndivader.mythicmobsext.botai;
 
-import org.w3c.dom.Document;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpCookie;
@@ -18,6 +10,15 @@ import java.security.MessageDigest;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
 
 class Utils {
     

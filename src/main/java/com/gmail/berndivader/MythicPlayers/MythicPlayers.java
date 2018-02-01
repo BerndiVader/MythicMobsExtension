@@ -1,4 +1,4 @@
-package com.gmail.berndivader.MythicPlayers;
+package main.java.com.gmail.berndivader.MythicPlayers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

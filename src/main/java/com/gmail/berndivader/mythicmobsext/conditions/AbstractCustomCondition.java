@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;

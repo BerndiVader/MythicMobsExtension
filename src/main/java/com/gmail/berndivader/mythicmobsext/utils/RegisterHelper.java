@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.utils;
+package main.java.com.gmail.berndivader.mythicmobsext.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,7 +18,7 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 
-import com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 public class RegisterHelper {
 	

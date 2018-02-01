@@ -1,11 +1,11 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.*;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.*;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
@@ -25,7 +25,7 @@ public class CustomMechanics implements Listener {
 		switch (mech) {
 		case "advaipathfinder":
 		case "custompathfinder": {
-				skill = new AdvAIPathFinderSelector(e.getContainer().getConfigLine(),e.getConfig());
+				skill = new AdvAIPathFinderMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "asequip": {
@@ -45,11 +45,11 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "bloodyscreen": {
-				skill = new BloodyScreen(e.getContainer().getConfigLine(), e.getConfig());
+				skill = new BloodyScreenMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "castif": {
-				skill = new CastIf(e.getContainer().getConfigLine(), e.getConfig());
+				skill = new CastIfMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "clearthreattarget": {
@@ -66,7 +66,7 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "customdamage": {
-				skill = new CustomDamage(e.getContainer().getConfigLine(), e.getConfig());
+				skill = new CustomDamageMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "customparticleline": {
@@ -136,10 +136,6 @@ public class CustomMechanics implements Listener {
 				skill = new EntityProjectile(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
-			} case "equipskull": {
-				skill = new EquipFixMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
 			} case "extinguish": {
 				skill=new ExtinguishMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
@@ -202,7 +198,7 @@ public class CustomMechanics implements Listener {
 				break;
 			} case "parsedstance":
 		  	case "pstance": {
-				skill = new ParsedStance(e.getContainer().getConfigLine(),e.getConfig());
+				skill = new ParsedStanceMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "playcredits": {
@@ -239,16 +235,16 @@ public class CustomMechanics implements Listener {
 				e.register(skill);
 				break;
 			} case "setnbt": {
-				skill=new SetNbt(e.getContainer().getConfigLine(),e.getConfig());
+				skill=new SetNbtMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "setitemcooldown": {
-				skill=new SetItemCooldown(e.getContainer().getConfigLine(),e.getConfig());
+				skill=new SetItemCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			}
 			case "setrandomlevel": {
-				skill = new SetLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
+				skill = new SetMobLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
 			} case "setmeta": {

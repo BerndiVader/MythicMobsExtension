@@ -1,6 +1,6 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -9,7 +9,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class SetLevelMechanic 
+public class SetMobLevelMechanic
 extends 
 SkillMechanic 
 implements 
@@ -17,7 +17,7 @@ ITargetedEntitySkill {
 	private String a;
 	int min,max;
 
-	public SetLevelMechanic(String skill, MythicLineConfig mlc) {
+	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));

@@ -1,10 +1,10 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;

@@ -1,4 +1,19 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
+
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -15,20 +30,6 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.util.Vector;
-
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class EffectProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected Optional<Skill> onBounceSkill = Optional.empty();

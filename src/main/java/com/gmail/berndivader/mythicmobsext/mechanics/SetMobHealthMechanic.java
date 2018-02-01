@@ -1,8 +1,8 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.LivingEntity;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.ConfigManager;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

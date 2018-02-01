@@ -1,4 +1,4 @@
-package com.gmail.berndivader.MythicPlayers;
+package main.java.com.gmail.berndivader.MythicPlayers;
 
 import java.util.Optional;
 import java.util.UUID;

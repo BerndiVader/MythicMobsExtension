@@ -1,20 +1,20 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-public class Healthcondition 
+public class HealthCondition
 extends
 AbstractCustomCondition
 implements
 IEntityCondition {
 	protected RangedDouble pc;
 
-	public Healthcondition(String line, MythicLineConfig mlc) {
+	public HealthCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.pc=new RangedDouble(mlc.getString(new String[]{"percentage","p"},"1to100"),false);
 	}

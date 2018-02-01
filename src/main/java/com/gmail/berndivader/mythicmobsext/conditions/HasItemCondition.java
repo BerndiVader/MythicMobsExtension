@@ -1,22 +1,23 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 
-import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
-import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
-import com.gmail.berndivader.mythicmobsext.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
+import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class HasItemCondition 
 extends

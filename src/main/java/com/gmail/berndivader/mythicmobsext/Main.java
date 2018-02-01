@@ -1,34 +1,35 @@
-package com.gmail.berndivader.mythicmobsext;
+package main.java.com.gmail.berndivader.mythicmobsext;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
-
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
+import main.java.com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
+import main.java.com.gmail.berndivader.mythicmobsext.config.Config;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
+import main.java.com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
+import main.java.com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
+import main.java.com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+
 import com.garbagemule.MobArena.MobArenaHandler;
-import com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
-import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
-import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
-import com.gmail.berndivader.mythicmobsext.config.Config;
-import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
-import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
-import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
-import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
-import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
-import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {

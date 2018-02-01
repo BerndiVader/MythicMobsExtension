@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.astar;
+package main.java.com.gmail.berndivader.mythicmobsext.astar;
 
 import org.bukkit.Location;
 

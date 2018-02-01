@@ -1,9 +1,9 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Entity;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -13,7 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-public class SetNbt 
+public class SetNbtMechanic
 extends 
 SkillMechanic
 implements
@@ -21,7 +21,7 @@ ITargetedEntitySkill,
 INoTargetSkill {
 	String s1;
 
-	public SetNbt(String skill, MythicLineConfig mlc) {
+	public SetNbtMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		s1=mlc.getString("nbt");
 		if (s1.startsWith("\"")&&s1.endsWith("\"")) {

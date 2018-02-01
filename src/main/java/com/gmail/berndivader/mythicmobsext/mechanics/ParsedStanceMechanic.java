@@ -1,6 +1,6 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -13,7 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-public class ParsedStance extends SkillMechanic
+public class ParsedStanceMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill,
 ITargetedLocationSkill,
@@ -21,7 +21,7 @@ INoTargetSkill {
 	
 	protected String stance;
 
-	public ParsedStance(String skill, MythicLineConfig mlc) {
+	public ParsedStanceMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		String s = mlc.getString(new String[]{"stance","s"});
 		if (s.startsWith("\"") && s.endsWith("\"")) s=s.substring(1,s.length()-1);

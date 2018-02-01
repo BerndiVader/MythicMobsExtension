@@ -1,9 +1,9 @@
-package com.gmail.berndivader.MythicPlayers.Mechanics;
+package main.java.com.gmail.berndivader.MythicPlayers.Mechanics;
 
 import org.bukkit.entity.LivingEntity;
 
-import com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import com.gmail.berndivader.MythicPlayers.PlayerManager;
+import main.java.com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import main.java.com.gmail.berndivader.MythicPlayers.PlayerManager;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

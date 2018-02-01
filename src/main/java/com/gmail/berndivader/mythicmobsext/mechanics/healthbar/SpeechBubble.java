@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
 
 import java.util.UUID;
 
@@ -9,7 +9,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 

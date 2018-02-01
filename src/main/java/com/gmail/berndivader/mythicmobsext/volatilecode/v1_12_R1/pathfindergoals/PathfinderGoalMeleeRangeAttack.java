@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
 import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityLiving;

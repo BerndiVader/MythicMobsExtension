@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.utils;
+package main.java.com.gmail.berndivader.mythicmobsext.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -38,17 +38,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.config.Config;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
-import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
-import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
-import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import main.java.com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import main.java.com.gmail.berndivader.mythicmobsext.config.Config;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
+import main.java.com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -64,6 +63,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -115,7 +115,7 @@ public class Utils implements Listener {
 				float f1;
 				@Override
 				public void run() {
-					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
+					if (p!=null&&p.isOnline()&&(f1=main.java.com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(Main.getPlugin(),f1));
 					} else {
 						this.cancel();
@@ -272,7 +272,7 @@ public class Utils implements Listener {
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
 		if (debug)
-			Main.logger.info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
+			Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled()) return;
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();

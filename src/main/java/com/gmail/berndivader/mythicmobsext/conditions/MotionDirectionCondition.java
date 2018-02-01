@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.HashSet;
 
@@ -6,17 +6,17 @@ import org.bukkit.Location;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.utils.MotionDirectionType;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.MotionDirectionType;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-public class MotionDirection 
+public class MotionDirectionCondition
 extends 
 AbstractCustomCondition
 implements
@@ -29,7 +29,7 @@ IEntityCondition {
 		str="MMEMOTIONDIR";
 	}
 
-	public MotionDirection(String line, MythicLineConfig mlc) {
+	public MotionDirectionCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		dirs=new HashSet<>();
 		bl1=false;
@@ -67,7 +67,7 @@ IEntityCondition {
 	        float a=(float)Math.toDegrees(Math.acos(Vd.dot(Vvd)));
 	        a=VDD.crossProduct(Vvd.multiply(2D).normalize()).getY()<0.0d?-a:a;
 	        MotionDirectionType mdt=MotionDirectionType.getMotionDirection((a-NMSUtils.getLastYawFloat(var1.getBukkitEntity())+630)%360);
-	        if (bl2) var1.getBukkitEntity().setMetadata(MotionDirection.str, new FixedMetadataValue(Main.getPlugin(),mdt.toString()));
+	        if (bl2) var1.getBukkitEntity().setMetadata(MotionDirectionCondition.str, new FixedMetadataValue(Main.getPlugin(),mdt.toString()));
 	        return bl1||dirs.contains(mdt);
 		}
 		return false;

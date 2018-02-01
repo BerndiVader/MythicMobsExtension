@@ -1,8 +1,9 @@
-package com.gmail.berndivader.mythicmobsext.botai;
+package main.java.com.gmail.berndivader.mythicmobsext.botai;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+
 public class Bot {
     final String bid;
 

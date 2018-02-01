@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -9,38 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathFinderGoalShoot;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalFollowEntity;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
 
 import net.minecraft.server.v1_11_R1.CommandException;
 import net.minecraft.server.v1_11_R1.CommandTestFor;
@@ -71,6 +39,37 @@ import net.minecraft.server.v1_11_R1.EntityLiving;
 import net.minecraft.server.v1_11_R1.PathfinderGoal;
 import net.minecraft.server.v1_11_R1.PathfinderGoalFleeSun;
 import net.minecraft.server.v1_11_R1.PathfinderGoalSelector;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftItem;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathFinderGoalShoot;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalFollowEntity;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 
 public class Core 
 implements Handler {

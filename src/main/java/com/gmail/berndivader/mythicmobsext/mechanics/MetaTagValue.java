@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
 
 public class MetaTagValue {
 	private Object value;

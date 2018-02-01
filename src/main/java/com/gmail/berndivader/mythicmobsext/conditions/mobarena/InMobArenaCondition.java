@@ -1,13 +1,14 @@
-package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
+package main.java.com.gmail.berndivader.mythicmobsext.conditions.mobarena;
 
-import com.garbagemule.MobArena.MobArenaHandler;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
+import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import main.java.com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
+
+import com.garbagemule.MobArena.MobArenaHandler;
 
 public class InMobArenaCondition 
 extends

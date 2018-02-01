@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.cachedowners;
+package main.java.com.gmail.berndivader.mythicmobsext.cachedowners;
 
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;

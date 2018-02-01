@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
 
 import org.bukkit.entity.LivingEntity;
 

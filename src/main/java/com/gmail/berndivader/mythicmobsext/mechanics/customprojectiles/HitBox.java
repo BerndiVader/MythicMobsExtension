@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+package main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
 import org.bukkit.Location;
 import org.bukkit.World;

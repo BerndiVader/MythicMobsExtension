@@ -1,8 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
-
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
-import org.bukkit.event.entity.EntityTeleportEvent;
+package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.EntityHuman;
@@ -17,6 +13,10 @@ import net.minecraft.server.v1_12_R1.NavigationAbstract;
 import net.minecraft.server.v1_12_R1.NavigationFlying;
 import net.minecraft.server.v1_12_R1.PathType;
 import net.minecraft.server.v1_12_R1.PathfinderGoal;
+
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.event.entity.EntityTeleportEvent;
 
 public class PathfinderGoalFollowEntity extends PathfinderGoal {
 	private final EntityInsentient d;
