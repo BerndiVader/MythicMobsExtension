@@ -4,6 +4,8 @@
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
+Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
+Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
 ##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
