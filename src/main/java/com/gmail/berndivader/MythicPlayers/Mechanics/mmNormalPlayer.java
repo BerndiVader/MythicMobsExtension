@@ -1,10 +1,10 @@
-package main.java.com.gmail.berndivader.MythicPlayers.Mechanics;
+package com.gmail.berndivader.MythicPlayers.Mechanics;
 
 import java.util.Optional;
 
-import main.java.com.gmail.berndivader.MythicPlayers.ActivePlayer;
-import main.java.com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import main.java.com.gmail.berndivader.MythicPlayers.PlayerManager;
+import com.gmail.berndivader.MythicPlayers.ActivePlayer;
+import com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import com.gmail.berndivader.MythicPlayers.PlayerManager;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

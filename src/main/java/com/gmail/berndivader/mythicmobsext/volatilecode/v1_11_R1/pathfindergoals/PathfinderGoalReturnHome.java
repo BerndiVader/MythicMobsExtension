@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.astar;
+package com.gmail.berndivader.mythicmobsext.astar;
 
 public enum PathingResult {
 	

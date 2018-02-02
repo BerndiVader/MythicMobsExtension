@@ -1,11 +1,11 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.*;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.*;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;

@@ -1,9 +1,9 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions;
+package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

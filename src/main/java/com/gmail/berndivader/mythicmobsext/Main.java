@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext;
+package com.gmail.berndivader.mythicmobsext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,23 +17,23 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
-import main.java.com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
-import main.java.com.gmail.berndivader.mythicmobsext.config.Config;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
-import main.java.com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
-import main.java.com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
-import main.java.com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
+import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
+import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
+import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
+import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
+import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
+import com.gmail.berndivader.mythicmobsext.config.Config;
+import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
+import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
+import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
+import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 
@@ -83,10 +83,10 @@ public class Main extends JavaPlugin {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				logger.warning("Could not find version file!");
+				logger.warning("Could not read version file!");
 			}
 			if (!pdf.getVersion().equals(version)) {
-				logger.info("A new Version of MythicMobsExtension is available, get it here:");
+				logger.info("MythicMobsExtension v"+version+" is available, get it here:");
 				logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
 			} else {
 				logger.info("Plugin is up-to-date!");
@@ -95,13 +95,12 @@ public class Main extends JavaPlugin {
 
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			new Volatile();
-			new Utils();
 			new CustomMechanics();
-			logger.info("registered mechanics.");
+			logger.info("registered mechanics!");
 			new CustomConditions();
-			logger.info("registered conditions.");
+			logger.info("registered conditions!");
 			new CustomTargeters();
-			logger.info("registered targeters.");
+			logger.info("registered targeters!");
 			if (Config.m_players) {
 				Main.mythicplayers=new MythicPlayers(this);
 				logger.info("registered mythicplayers!");
@@ -110,9 +109,10 @@ public class Main extends JavaPlugin {
 				thiefs=new Thiefs();
 				logger.info("registered thiefs!");
 			}
+			new Utils();
 			if (Config.nan) {
 				new NaNpatch();
-				logger.info("NaN patch applied.");
+				logger.info("NaN patch applied!");
 			}
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
 				wg = getWorldGuard();

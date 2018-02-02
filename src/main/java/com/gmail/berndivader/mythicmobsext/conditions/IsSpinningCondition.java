@@ -1,6 +1,6 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions;
+package com.gmail.berndivader.mythicmobsext.conditions;
 
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.botai;
+package com.gmail.berndivader.mythicmobsext.botai;
 
 import java.io.*;
 import java.math.BigInteger;

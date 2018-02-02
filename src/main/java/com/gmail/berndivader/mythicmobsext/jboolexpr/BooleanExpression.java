@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.jboolexpr;
+package com.gmail.berndivader.mythicmobsext.jboolexpr;
 
 public abstract class BooleanExpression implements IBoolean {
 	BooleanExpression() {

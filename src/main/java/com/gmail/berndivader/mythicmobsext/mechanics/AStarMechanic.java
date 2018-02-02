@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Iterator;
 import java.util.List;
@@ -7,8 +7,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import main.java.com.gmail.berndivader.mythicmobsext.astar.*;
-import main.java.com.gmail.berndivader.mythicmobsext.astar.AStar.InvalidPathException;
+import com.gmail.berndivader.mythicmobsext.astar.*;
+import com.gmail.berndivader.mythicmobsext.astar.AStar.InvalidPathException;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;

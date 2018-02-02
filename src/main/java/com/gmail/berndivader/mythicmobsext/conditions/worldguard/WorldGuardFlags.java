@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions.worldguard;
+package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -6,7 +6,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;

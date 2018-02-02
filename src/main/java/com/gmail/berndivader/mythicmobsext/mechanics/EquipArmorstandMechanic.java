@@ -1,10 +1,10 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;

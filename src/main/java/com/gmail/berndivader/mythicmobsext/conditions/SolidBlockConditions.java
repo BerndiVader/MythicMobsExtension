@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions;
+package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.block.BlockFace;
 

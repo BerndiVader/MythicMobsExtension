@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.config;
+package com.gmail.berndivader.mythicmobsext.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 public class Config {
 

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
+package com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;

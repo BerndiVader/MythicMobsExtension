@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -56,16 +56,16 @@ import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathFinderGoalShoot;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalFollowEntity;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalFollowEntity;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;

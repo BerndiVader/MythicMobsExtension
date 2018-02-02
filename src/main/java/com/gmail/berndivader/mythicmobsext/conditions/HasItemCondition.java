@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions;
+package com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -9,9 +9,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
-import main.java.com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
+import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

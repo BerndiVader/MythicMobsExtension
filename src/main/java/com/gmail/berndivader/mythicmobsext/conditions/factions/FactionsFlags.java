@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions.factions;
+package com.gmail.berndivader.mythicmobsext.conditions.factions;
 
 import org.bukkit.Location;
 

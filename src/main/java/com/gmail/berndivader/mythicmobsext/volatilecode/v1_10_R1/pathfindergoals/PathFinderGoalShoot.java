@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals;
 
 import net.minecraft.server.v1_10_R1.EntityInsentient;
 import net.minecraft.server.v1_10_R1.EntityLiving;
@@ -6,7 +6,7 @@ import net.minecraft.server.v1_10_R1.IRangedEntity;
 import net.minecraft.server.v1_10_R1.MathHelper;
 import net.minecraft.server.v1_10_R1.PathfinderGoal;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;

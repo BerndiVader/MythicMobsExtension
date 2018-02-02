@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,10 +12,10 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;

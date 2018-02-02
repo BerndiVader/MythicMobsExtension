@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -33,20 +33,20 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import main.java.com.gmail.berndivader.mythicmobsext.config.Config;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.config.Config;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -113,7 +113,7 @@ implements Handler,Listener {
 	
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-		Utils.pl.put(e.getPlayer().getUniqueId(),new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
+		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
 	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInProzess(e.getPlayer(), new PacketReceivingHandler() {
 	    	@Override
 	        public void handle(Player p, PacketPlayInArmAnimation packet) {
@@ -124,11 +124,11 @@ implements Handler,Listener {
 			@Override
 			public void handle(Player p,PacketPlayInFlying packet) {
 				net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-				main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
+				com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
 				double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
 				v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-						?v3.length(new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-						:new main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
+						?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
+						:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
 				Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
 				return;
 			}
@@ -530,7 +530,7 @@ implements Handler,Listener {
 	        			}
 	        		}
 	        		if (tE!=null && tE.isAlive()) {
-		            	goals.a(i, (PathfinderGoal)new main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalFollowEntity(e,tE,speed,zR,aR));
+		            	goals.a(i, (PathfinderGoal)new com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalFollowEntity(e,tE,speed,zR,aR));
 	        		}
 	        	}
 	        	break;

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.botai;
+package com.gmail.berndivader.mythicmobsext.botai;
 
 public class Thought {
     String[]arr1;

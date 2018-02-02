@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.jboolexpr;
+package com.gmail.berndivader.mythicmobsext.jboolexpr;
 
 import java.util.ArrayList;
 import java.util.List;

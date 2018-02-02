@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;

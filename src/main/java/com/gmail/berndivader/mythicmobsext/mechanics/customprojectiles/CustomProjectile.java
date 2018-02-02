@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class CustomProjectile extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected MythicMobs mythicmobs;

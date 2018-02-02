@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoals;
 
 import java.util.HashSet;
 
@@ -21,7 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 	protected EntityInsentient entity;

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.MythicPlayers.Mechanics;
+package com.gmail.berndivader.MythicPlayers.Mechanics;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;

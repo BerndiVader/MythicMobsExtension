@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy;
 
 import java.util.Set;
 
@@ -22,7 +22,7 @@ import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.Main;
 
 public class MythicEntityParrot 
 extends EntityParrot {

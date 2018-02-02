@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.utils;
+package com.gmail.berndivader.mythicmobsext.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -38,16 +38,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import main.java.com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import main.java.com.gmail.berndivader.mythicmobsext.config.Config;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
-import main.java.com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.config.Config;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
+import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -115,7 +115,7 @@ public class Utils implements Listener {
 				float f1;
 				@Override
 				public void run() {
-					if (p!=null&&p.isOnline()&&(f1=main.java.com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
+					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(Main.getPlugin(),f1));
 					} else {
 						this.cancel();

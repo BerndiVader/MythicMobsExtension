@@ -1,11 +1,11 @@
-package main.java.com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
 import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityLiving;
 import net.minecraft.server.v1_12_R1.EnumHand;
 import net.minecraft.server.v1_12_R1.PathfinderGoalMeleeAttack;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;

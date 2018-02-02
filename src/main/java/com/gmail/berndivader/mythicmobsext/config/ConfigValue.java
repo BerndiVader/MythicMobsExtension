@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.config;
+package com.gmail.berndivader.mythicmobsext.config;
 
 public enum ConfigValue {
 

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,10 +15,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import main.java.com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Utils;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;

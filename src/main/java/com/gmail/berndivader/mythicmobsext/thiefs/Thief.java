@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.thiefs;
+package com.gmail.berndivader.mythicmobsext.thiefs;
 
 import java.util.UUID;
 

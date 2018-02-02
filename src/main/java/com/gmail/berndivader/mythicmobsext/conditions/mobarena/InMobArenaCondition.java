@@ -1,7 +1,7 @@
-package main.java.com.gmail.berndivader.mythicmobsext.conditions.mobarena;
+package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
 
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.NMS;
+package com.gmail.berndivader.mythicmobsext.NMS;
 
 import com.google.common.io.BaseEncoding;
 
@@ -63,7 +63,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import main.java.com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 /**
  * A generic place to put compatibility-based utilities.

@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.MythicPlayers;
+package com.gmail.berndivader.MythicPlayers;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -33,9 +33,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
-import main.java.com.gmail.berndivader.mythicmobsext.Main;
-import main.java.com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
+import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;

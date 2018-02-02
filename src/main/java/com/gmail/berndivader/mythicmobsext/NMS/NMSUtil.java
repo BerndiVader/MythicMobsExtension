@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.NMS;
+package com.gmail.berndivader.mythicmobsext.NMS;
 
 import org.apache.commons.lang.StringUtils;
 

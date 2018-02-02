@@ -1,4 +1,4 @@
-package main.java.com.gmail.berndivader.mythicmobsext.utils;
+package com.gmail.berndivader.mythicmobsext.utils;
 
 public class Vec3D
 implements
