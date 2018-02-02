@@ -52,7 +52,7 @@ processResources {
 task createPom  {
     pom {
         project {
-            groupId project.group
+            groupId "com.gmail.berndivader"
             artifactId project.name
             version project.version
         }

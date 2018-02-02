@@ -8,6 +8,7 @@ Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
+##### ** 02.02.2018 *** close inputstream for config
 ##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
 ##### ** 31.01.2018 *** added update notification
 ##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter

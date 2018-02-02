@@ -33,7 +33,6 @@ import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 
@@ -77,15 +76,16 @@ public class Main extends JavaPlugin {
 			PluginDescriptionFile pdf = getDescription();
 			try {
 				URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
-				InputStream in = url.openStream();
-				BufferedReader br = new BufferedReader( new InputStreamReader(in) );
-				version = br.readLine().toString();
+				try (InputStream in=url.openStream();
+				BufferedReader br=new BufferedReader( new InputStreamReader(in))) {
+					version=br.readLine().toString();
+				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				logger.warning("Could not read version file!");
 			}
-			if (!pdf.getVersion().equals(version)) {
+			if (!pdf.getVersion().endsWith("SNAPSHOT")&&!pdf.getVersion().equals(version)) {
 				logger.info("MythicMobsExtension v"+version+" is available, get it here:");
 				logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
 			} else {
@@ -94,7 +94,6 @@ public class Main extends JavaPlugin {
 		}
 
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
-			new Volatile();
 			new CustomMechanics();
 			logger.info("registered mechanics!");
 			new CustomConditions();
