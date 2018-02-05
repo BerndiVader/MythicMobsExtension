@@ -1,10 +1,9 @@
 #
 # MythicMobsExtension Config
-# Informations available at https://github.com/BerndiVader/MythicMobsExtension/wiki/Config
+# Informations available at github.com/BerndiVader/MythicMobsExtension/wiki/Config
 #
-
 Configuration:
-  # DO NOT edit the version number
+# DO NOT edit the version number
   Version: 1
   Debug: false
   Update_Notification: true
@@ -22,4 +21,3 @@ Configuration:
     RPGItems: true
     MobArena: true
     Holographic_Displays: true
-    

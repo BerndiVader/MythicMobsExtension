@@ -13,6 +13,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 
 public class Config {
 
+	static String name="config.yml";
 	public static boolean debug;
 	public static boolean update;
 	public static boolean nan;
@@ -30,15 +31,11 @@ public class Config {
 	static {
 		Plugin plugin=Main.getPlugin();
 		config=new YamlConfiguration();
-		File configFile = new File(Main.getPlugin().getDataFolder(), "config.yml");
+		File configFile = new File(plugin.getDataFolder(), name);
 		if (!configFile.exists()) {
-			plugin.getLogger().info("Generating config.yml...");
-			if (!plugin.getDataFolder().exists()) {
-				plugin.getDataFolder().mkdirs();
-			}
-			plugin.saveDefaultConfig();
+			plugin.getLogger().info("Generating "+name+"...");
+			plugin.saveResource(name,false);
 		}
-
 		try {
 			config.load(configFile);
 		} catch (InvalidConfigurationException e) {
@@ -94,5 +91,5 @@ public class Config {
 		mobarena = config.getBoolean(ConfigValue.MOBARENA.getPath());
 		h_displays = config.getBoolean(ConfigValue.H_DISPLAYS.getPath());
 	}
-
+	
 }

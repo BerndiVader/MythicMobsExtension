@@ -272,6 +272,10 @@ public class CustomMechanics implements Listener {
 				skill=new StoreCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
+			} case "getmobfield": {
+				skill=new GetMobField(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
 			} case "stun": {
 				skill = new StunMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
