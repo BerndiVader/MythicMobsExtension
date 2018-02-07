@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -33,7 +34,7 @@ INoTargetSkill {
 			f1=ActiveMob.class.getDeclaredField(mlc.getString("field",""));
 			f1.setAccessible(true);
 		} catch (NoSuchFieldException | SecurityException e) {
-			Main.logger.warning(e.getLocalizedMessage());
+			Main.logger.warning("Field "+e.getLocalizedMessage()+" doesnt exists in ActiveMob.class!");
 		}
 	}
 
@@ -47,6 +48,7 @@ INoTargetSkill {
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
+			if ((o instanceof Optional)&&((Optional<?>)o).isPresent()) o=((Optional<?>)o).get();
 			if (!bl1&&s2!=null) {
 				target.getBukkitEntity().setMetadata(s2,new FixedMetadataValue(Main.getPlugin(),o.toString()));
 			} else {

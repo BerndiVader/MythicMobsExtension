@@ -86,7 +86,7 @@ implements Handler,Listener {
 	
 	static {
         wb=new WorldBorder();
-        wb.world=MinecraftServer.getServer().getWorldServer(0);
+        wb.world=MinecraftServer.getServer().getWorldServer(1);
         wb.setCenter(999999,999999);
         wb.setSize(1);
         wb.setWarningDistance(1);
