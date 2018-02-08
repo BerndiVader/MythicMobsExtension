@@ -164,6 +164,10 @@ public class CustomMechanics implements Listener {
 				skill = new ItemProjectile(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
+			} case "jsmechanic": {
+				skill = new JavascriptMechanic(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
 			} case "modifyarrows": {
 				skill=new ModifyArrowsMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);

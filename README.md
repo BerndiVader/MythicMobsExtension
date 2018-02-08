@@ -8,6 +8,8 @@ Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
+##### ** 07.02.2018 *** added jsmechanic & jscondition. See jsmechanic or jscondition for details.
+##### ** 05.02.2018 *** added getmobfield mechanic. See getmobfield mechanic for details.
 ##### ** 02.02.2018 *** close inputstream for config
 ##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
 ##### ** 31.01.2018 *** added update notification
@@ -330,6 +332,58 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## jsmechanic mechanic:
+
+Execute a javascript function out of the script.js file provied in MythicMobsExtension folder.
+
+##### `- jsmechanic{js="[JS_FUNCTION"}`
+
+Example:
+
+```yaml
+Dummy1:
+  Type: zombie
+  Health: 10
+  Skills:
+  - jsmechanic{js="ChangeTargetsName";newname=jsmechanicrox} @self ~onDamaged
+```
+
+Scripts.js:
+
+```js
+var ChangeTargetsName=function(data,target,mlc) {
+	if (target instanceof org.bukkit.entity.LivingEntity) {
+		target.setCustomName(mlc.getString("newname","whatever"));
+		target.setCustomNameVisible(true);
+		return true;
+	}
+	return false;	
+}
+```
+
+This example change the name of the castermob to jsmechanicrox.
+
+
+
+## getmobfield mechanic:
+
+Get a MythicMob intern field and store it into a metatag or into stance.
+
+##### `- getmobfield{field=[VALID_ACTIVEMOBFIELD];meta=[NAME];stance=[BOOL]}`
+
+Example:
+
+```yaml
+TestMonkey:
+  Type: zombie
+  Skills:
+  - getmobfield{field=lastSignal;stance=true} @self ~onInteract
+  - message{msg="<mob.stance>"} @world ~onInteract
+```
+This example loads the mobs last signal into the mobs stance variable and broadcast the <mob.stance> into the world.
 
 
 

@@ -132,6 +132,10 @@ public class CustomConditions implements Listener {
 				SkillCondition c = new IsStunnedCondition(e.getConfig().getLine(), e.getConfig());
 				e.register(c);
 				break;
+			} case "jscondition": {
+				SkillCondition c = new JavascriptCondition(e.getConfig().getLine(), e.getConfig());
+				e.register(c);
+				break;
 			} case "isvehicle": {
 				SkillCondition c=new IsVehicleCondition(e.getConfig().getLine(),e.getConfig());
 				e.register(c);

@@ -84,6 +84,7 @@ public class Utils implements Listener {
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
+	public static String scripts;
 	private static Handler handler;
 	
 	static {
@@ -99,6 +100,7 @@ public class Utils implements Listener {
 	
 	public Utils() {
 		handler=Volatile.handler;
+		scripts=Nashorn.scripts;
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		if (Utils.serverV>11) {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
