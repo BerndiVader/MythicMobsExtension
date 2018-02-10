@@ -20,21 +20,25 @@ public class Nashorn {
 	public static String pathStr;
 	public static String scripts;
 	public static String filename="Scripts.js";
-
+	
 	static {
-		NashornScriptEngineFactory factory = new NashornScriptEngineFactory();	
+		Thread.currentThread().setContextClassLoader(Main.getPlugin().getClass().getClassLoader());
+		NashornScriptEngineFactory factory=new NashornScriptEngineFactory();
 		nash=factory.getScriptEngine();
 		invoc=(Invocable)nash;
 		pathStr=Main.getPlugin().getDataFolder().toString();
 		Main.getPlugin().saveResource(filename,false);
-		Path p1=Paths.get(pathStr,filename);
+	}
+	
+	public Nashorn() {
+		new MythicMobsReload();
 		try {
+			Path p1=Paths.get(pathStr,filename);
 			scripts=new String(Files.readAllBytes(p1));
 			nash.eval(scripts);
 		} catch (IOException | ScriptException e) {
 			e.printStackTrace();
 		}
-		new MythicMobsReload();
 	}
 	
 }

@@ -29,7 +29,7 @@ ILocationCondition {
 		super(line, mlc);
 		this.mlc=mlc;
 		simple=mlc.getBoolean("simple",false);
-		String s1=mlc.getString("js",js);
+		String s1=mlc.getString(new String[] {"js","eval","invok"},js);
 		js=SkillString.parseMessageSpecialChars(s1.substring(1,s1.length()-1));
 	}
 
@@ -43,9 +43,9 @@ ILocationCondition {
 		return eval(mlc,arg0.getBukkitEntity(),null);
 	}
 	
-	private boolean eval(MythicLineConfig mlc,Entity et,Location lt) {
+	private boolean eval(MythicLineConfig mlc,Entity e1,Location l1) {
 		try {
-			Nashorn.invoc.invokeFunction(js,null,et!=null?(Entity)et:lt!=null?(Location)lt:null,mlc);
+			Nashorn.invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}

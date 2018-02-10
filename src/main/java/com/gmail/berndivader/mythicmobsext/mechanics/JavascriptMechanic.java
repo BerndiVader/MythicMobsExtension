@@ -33,7 +33,7 @@ ITargetedLocationSkill {
 		super(skill, mlc);
 		this.mlc=mlc;
 		simple=mlc.getBoolean("simple",false);
-		String s1=mlc.getString("js",js);
+		String s1=mlc.getString(new String[] {"js","eval","invok"},js);
 		js=SkillString.parseMessageSpecialChars(s1.substring(1,s1.length()-1));
 	}
 
@@ -52,9 +52,9 @@ ITargetedLocationSkill {
 		return eval(data,null,null);
 	}
 
-	private boolean eval(SkillMetadata data,Entity et,Location lt) {
+	private boolean eval(SkillMetadata data,Entity e1,Location l1) {
 		try {
-			Nashorn.invoc.invokeFunction(js,data,et!=null?(Entity)et:lt!=null?(Location)lt:null,mlc);
+			Nashorn.invoc.invokeFunction(js,data,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}

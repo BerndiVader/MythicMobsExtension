@@ -8,6 +8,10 @@ Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
+##### ** 09.02.2018 *** added classloader for nashorn to access bukkit plugin classes.
+##### ** 09.02.2018 *** fixed issue where errors in scripts stop plugin from loading.
+##### ** 09.02.2018 *** added more nashorn compatility for bukkit.
+##### ** 08.02.2018 *** added error tracking for channellisteners.
 ##### ** 07.02.2018 *** added jsmechanic & jscondition. See jsmechanic or jscondition for details.
 ##### ** 05.02.2018 *** added getmobfield mechanic. See getmobfield mechanic for details.
 ##### ** 02.02.2018 *** close inputstream for config
