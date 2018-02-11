@@ -2,8 +2,6 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -21,7 +19,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class CustomMechanics implements Listener {
-	static HashMap<String,Class<? extends SkillMechanic>>internals;
+	static HashMap<String,String>internals;
    	static String filename;
 	
    	static {
@@ -41,7 +39,14 @@ public class CustomMechanics implements Listener {
 		if(internals.containsKey(mech)) {
 			try {
 				if (internals.containsKey(mech)) {
-					skill=internals.get(mech).getConstructor(String.class,MythicLineConfig.class).newInstance(e.getContainer().getConfigLine(),e.getConfig());
+					Class<?>c1=null;
+					try {
+						c1=Class.forName(internals.get(mech));
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+					Class<? extends SkillMechanic>iclass=c1.asSubclass(SkillMechanic.class);
+					skill=iclass.getConstructor(String.class,MythicLineConfig.class).newInstance(e.getContainer().getConfigLine(),e.getConfig());
 					if (skill!=null) e.register(skill);
 				}
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -116,15 +121,13 @@ public class CustomMechanics implements Listener {
 		    	if (jarEntry.getName().endsWith(".class")) {
 		    		String s1=jarEntry.getName();
 		    		if (s1.startsWith("com/gmail/berndivader/mythicmobsext/mechanics")) {
-						URL[]urls={new URL("jar:file:"+filename+"!/"+s1)};
-						ClassLoader cl=URLClassLoader.newInstance(urls,this.getClass().getClassLoader());
 						String cn1=s1.substring(0,s1.length()-6).replace("/",".");
-						Class<?>c1=Class.forName(cn1,true,cl);
+						Class<?>c1=Class.forName(cn1);
 						if (c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
 							Class<? extends SkillMechanic>iclass=c1.asSubclass(SkillMechanic.class);
 							SkillAnnotation skill=iclass.getAnnotation(SkillAnnotation.class);
 							if (skill!=null&&!internals.containsKey(skill.name())) {
-								internals.put(skill.name(),iclass);
+								internals.put(skill.name(),cn1);
 							}
 						}
 	            	}
