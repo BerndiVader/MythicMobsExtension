@@ -8,6 +8,9 @@ Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
+##### ** 10.02.2018 *** added possibility to load externals mechanics stored in MythicMobsExtension/externals folder.
+##### ** 10.02.2018 *** some internal changes.
+##### ** 10.02.2018 *** added cmp option for castif to use && || between condition and targetcondition.
 ##### ** 09.02.2018 *** added classloader for nashorn to access bukkit plugin classes.
 ##### ** 09.02.2018 *** fixed issue where errors in scripts stop plugin from loading.
 ##### ** 09.02.2018 *** added more nashorn compatility for bukkit.

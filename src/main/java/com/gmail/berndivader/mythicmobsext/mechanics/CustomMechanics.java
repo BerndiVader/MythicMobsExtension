@@ -1,63 +1,59 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.io.FileInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.*;
+import com.gmail.berndivader.mythicmobsext.externals.Externals;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class CustomMechanics implements Listener {
+	static HashMap<String,Class<? extends SkillMechanic>>internals;
+   	static String filename;
+	
+   	static {
+   		filename=Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+   	}
 
 	public CustomMechanics() {
+		loadInternals();
 		Bukkit.getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 	}
-
+	
 	@EventHandler
 	public void onMMSkillLoad(MythicMechanicLoadEvent e) {
 		String mech;
 		SkillMechanic skill;
-		mech = e.getMechanicName().toLowerCase();
-		
+		mech=e.getMechanicName().toLowerCase();
+		if(internals.containsKey(mech)) {
+			try {
+				if (internals.containsKey(mech)) {
+					skill=internals.get(mech).getConstructor(String.class,MythicLineConfig.class).newInstance(e.getContainer().getConfigLine(),e.getConfig());
+					if (skill!=null) e.register(skill);
+				}
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+				e1.printStackTrace();
+			}
+			return;
+		}
 		switch (mech) {
 		case "advaipathfinder":
 		case "custompathfinder": {
 				skill = new AdvAIPathFinderMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "asequip": {
-				skill=new EquipArmorstandMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "astar": {
-				skill=new AStarMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "blockfloating": {
-				skill=new BStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "blockprojectile": {
-				skill = new BlockProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "bloodyscreen": {
-				skill = new BloodyScreenMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "castif": {
-				skill = new CastIfMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "clearthreattarget": {
-				skill = new ClearThreatTableMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "closeinventory": {
-				skill=new CloseInventoryMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "cure":
@@ -65,65 +61,9 @@ public class CustomMechanics implements Listener {
 				skill = new RemovePotionEffectMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
-			} case "customdamage": {
-				skill = new CustomDamageMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "customparticleline": {
-				skill = new CustomParticleLineEffect(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "customparticles": {
-				skill = new CustomParticleEffect(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
 			} case "customrandomskill": 
 			case "advrandomskill": {
 				skill = new CustomRandomSkillMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "customsummon": {
-				skill = new CustomSummonMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "customteleport": {
-				skill = new CustomTeleportMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "customvelocity": {
-				skill=new CustomVelocityMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "damagearmor": {
-				skill = new DamageArmorMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "delmeta": {
-				skill = new DeleteMetatagMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "disarm": {
-				skill=new DisarmPlayerMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "dropcombat": {
-				skill=new DropCombatMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "dropinventory": {
-				skill=new DropInventoryMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "dropmythicitem": {
-				skill = new DropMythicItemMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "endereffect": {
-				skill = new EnderDragonDeathEffect(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "entityfloating": {
-				skill=new EStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "entitygoggle":
@@ -132,81 +72,9 @@ public class CustomMechanics implements Listener {
 				skill=new EntityGoogleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
-			} case "entityprojectile": {
-				skill = new EntityProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "extinguish": {
-				skill=new ExtinguishMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "fakedeath": {
-				skill=new FakeEntityDeathMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "feed": {
-				skill = new FeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "forcespectate": {
-				skill=new ForceSpectateMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "grenade": {
-				skill = new GrenadeMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "itemfloating": {
-				skill=new IStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "itemprojectile": {
-				skill = new ItemProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "jsmechanic": {
-				skill = new JavascriptMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "modifyarrows": {
-				skill=new ModifyArrowsMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "mythiceffectprojectile": {
-				skill = new EffectProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "mythicfloating": {
-				skill=new MStatueMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "mythicorbitalprojectile": {
-				skill = new MythicOrbitalProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "mythicprojectile": {
-				skill = new MythicProjectile(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "oxygen": {
-				skill = new OxygenMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "parseddisguise": {
-				skill=new ParsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "nodamageticks": {
-				skill=new NoDamageTicksMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
 			} case "parsedstance":
 		  	case "pstance": {
 				skill = new ParsedStanceMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "playcredits": {
-				skill=new PlayCreditsMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			} case "playergoggle":
@@ -214,85 +82,57 @@ public class CustomMechanics implements Listener {
 				skill=new PlayerGoggleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
-			} case "playerspin": {
-				skill=new PlayerSpinMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "playerweather": {
-				skill=new PlayerWeatherMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "playerzoom": {
-				skill=new PlayerZoomMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "playloading": {
-				skill=new PlayLoadingMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "renameentity": {
-				skill = new RenameEntityMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "setfaction": {
-				skill=new SetFactionMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "setnbt": {
-				skill=new SetNbtMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "setitemcooldown": {
-				skill=new SetItemCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			}
-			case "setrandomlevel": {
-				skill = new SetMobLevelMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "setmeta": {
-				skill = new SetMetatagMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "setmobhealth": {
-				skill=new SetMobHealthMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "setrotation": {
-				skill=new SetRotationMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
 			} case "setspeed":
 			case "randomspeed": {
 				skill = new SetSpeedMechanic(e.getContainer().getConfigLine(), e.getConfig());
 				e.register(skill);
 				break;
-			} case "setthreattarget": {
-				skill = new SetThreatTableTargetMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "storecooldown": {
-				skill=new StoreCooldownMechanic(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "getmobfield": {
-				skill=new GetMobField(e.getContainer().getConfigLine(),e.getConfig());
-				e.register(skill);
-				break;
-			} case "stun": {
-				skill = new StunMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "swap": {
-				skill = new SwapMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
-			} case "unequip": {
-				skill = new UnequipMechanic(e.getContainer().getConfigLine(), e.getConfig());
-				e.register(skill);
-				break;
 			}
+			default:
+			try {
+				if (Externals.extMechanics.containsKey(mech)) {
+					skill = Externals.extMechanics.get(mech).getConstructor(String.class,MythicLineConfig.class).newInstance(e.getContainer().getConfigLine(),e.getConfig());
+					if (skill!=null) {
+						e.register(skill);
+						break;
+					}
+				}
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	void loadInternals() {
+		internals=new HashMap<>();
+		try {
+		   	JarInputStream jarFile=new JarInputStream(new FileInputStream(filename));
+		   	JarEntry jarEntry;
+		    while (true) {
+		    	jarEntry=jarFile.getNextJarEntry();
+		    	if (jarEntry==null) break;
+		    	if (jarEntry.getName().endsWith(".class")) {
+		    		String s1=jarEntry.getName();
+		    		if (s1.startsWith("com/gmail/berndivader/mythicmobsext/mechanics")) {
+						URL[]urls={new URL("jar:file:"+filename+"!/"+s1)};
+						ClassLoader cl=URLClassLoader.newInstance(urls,this.getClass().getClassLoader());
+						String cn1=s1.substring(0,s1.length()-6).replace("/",".");
+						Class<?>c1=Class.forName(cn1,true,cl);
+						if (c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
+							Class<? extends SkillMechanic>iclass=c1.asSubclass(SkillMechanic.class);
+							SkillAnnotation skill=iclass.getAnnotation(SkillAnnotation.class);
+							if (skill!=null&&!internals.containsKey(skill.name())) {
+								internals.put(skill.name(),iclass);
+							}
+						}
+	            	}
+	            }
+	        }
+	        jarFile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

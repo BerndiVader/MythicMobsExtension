@@ -85,11 +85,13 @@ public class Utils implements Listener {
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
 	public static String scripts;
+	public static String str_PLUGINPATH;
 	private static Handler handler;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
+		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
 		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);

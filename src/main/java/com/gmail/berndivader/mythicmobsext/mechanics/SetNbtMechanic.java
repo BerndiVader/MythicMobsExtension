@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -13,6 +14,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
+@SkillAnnotation(name="setnbt",author="BerndiVader")
 public class SetNbtMechanic
 extends 
 SkillMechanic

@@ -17,6 +17,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -35,7 +37,13 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 import io.lumine.xikage.mythicmobs.util.HitBox;
 
-public class BlockProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
+@SkillAnnotation(name="blockprojectile",author="BerndiVader")
+public class BlockProjectile 
+extends 
+CustomProjectile 
+implements 
+ITargetedEntitySkill, 
+ITargetedLocationSkill {
 
 	protected String pEntityName;
 	protected float pEntitySpin;

@@ -4,6 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -16,7 +17,13 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
+@SkillAnnotation(name="setmeta",author="BerndiVader")
+public class SetMetatagMechanic 
+extends 
+SkillMechanic 
+implements
+ITargetedLocationSkill,
+ITargetedEntitySkill {
 	protected String tag;
 	protected MetaTagValue mtv;
 	protected boolean useCaster;

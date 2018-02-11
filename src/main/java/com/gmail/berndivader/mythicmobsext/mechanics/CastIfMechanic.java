@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -30,6 +31,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 
+@SkillAnnotation(name="castif",author="BerndiVader")
 public class CastIfMechanic
 extends
 SkillMechanic
@@ -191,9 +193,13 @@ ITargetedLocationSkill {
 						Boolean.toString(condition.evaluateCaster(sdata)));
 			}
 		}
+		return expressBoolean(cline);
+	}
+	
+	boolean expressBoolean(String expr) {
 		BooleanExpression be;
 		try {
-			be = BooleanExpression.readLR(cline);
+			be = BooleanExpression.readLR(expr);
 		} catch (MalformedBooleanException e) {
 			Main.logger.warning("There was a problem parsing BoolExpr: "+this.getConfigLine());
 			return false;

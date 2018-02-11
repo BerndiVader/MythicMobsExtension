@@ -24,7 +24,7 @@ Listener {
 	@EventHandler
 	public void onMythicMobsReload(MythicReloadedEvent e) {
 		try {
-			Nashorn.scripts=new String(Files.readAllBytes(Paths.get(Nashorn.pathStr,"Scripts.js")));
+			Nashorn.scripts=new String(Files.readAllBytes(Paths.get(Utils.str_PLUGINPATH,Nashorn.filename)));
 			Nashorn.nash.eval(Nashorn.scripts);
 		} catch (IOException | ScriptException ex) {
 			ex.printStackTrace();

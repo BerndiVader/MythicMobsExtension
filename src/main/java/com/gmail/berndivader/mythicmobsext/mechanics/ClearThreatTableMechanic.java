@@ -1,11 +1,14 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@SkillAnnotation(name="clearthreattarget",author="BerndiVader")
 public class ClearThreatTableMechanic
 extends 
 SkillMechanic

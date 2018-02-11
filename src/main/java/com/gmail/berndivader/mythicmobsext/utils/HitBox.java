@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
+package com.gmail.berndivader.mythicmobsext.utils;
 
 import org.bukkit.Location;
 import org.bukkit.World;

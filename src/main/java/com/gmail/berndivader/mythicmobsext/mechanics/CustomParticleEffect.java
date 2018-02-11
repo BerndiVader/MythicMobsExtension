@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -20,6 +21,7 @@ import io.lumine.xikage.mythicmobs.skills.ParticleMaker;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@SkillAnnotation(name="customparticles",author="BerndiVader")
 public class CustomParticleEffect 
 extends
 SkillMechanic

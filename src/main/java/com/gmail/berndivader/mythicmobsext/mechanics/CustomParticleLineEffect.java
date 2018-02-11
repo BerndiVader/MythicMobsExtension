@@ -3,6 +3,8 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -14,6 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.ParticleMaker;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@SkillAnnotation(name="customparticleline",author="BerndiVader")
 public class CustomParticleLineEffect
 extends 
 CustomParticleEffect

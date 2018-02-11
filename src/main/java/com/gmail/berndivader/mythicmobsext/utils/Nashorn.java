@@ -17,7 +17,6 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 public class Nashorn {
 	static ScriptEngine nash;
 	public static Invocable invoc;
-	public static String pathStr;
 	public static String scripts;
 	public static String filename="Scripts.js";
 	
@@ -26,14 +25,13 @@ public class Nashorn {
 		NashornScriptEngineFactory factory=new NashornScriptEngineFactory();
 		nash=factory.getScriptEngine();
 		invoc=(Invocable)nash;
-		pathStr=Main.getPlugin().getDataFolder().toString();
 		Main.getPlugin().saveResource(filename,false);
 	}
 	
 	public Nashorn() {
 		new MythicMobsReload();
 		try {
-			Path p1=Paths.get(pathStr,filename);
+			Path p1=Paths.get(Utils.str_PLUGINPATH,filename);
 			scripts=new String(Files.readAllBytes(p1));
 			nash.eval(scripts);
 		} catch (IOException | ScriptException e) {

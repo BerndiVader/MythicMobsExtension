@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.astar.*;
 import com.gmail.berndivader.mythicmobsext.astar.AStar.InvalidPathException;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -19,6 +20,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@SkillAnnotation(name="astar",author="BerndiVader")
 public class AStarMechanic extends SkillMechanic 
 implements
 ITargetedEntitySkill,

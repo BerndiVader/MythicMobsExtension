@@ -26,6 +26,7 @@ import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagCondi
 import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.config.Config;
+import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
 import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
@@ -142,6 +143,8 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 				logger.info("CachedOwner support enabled!");
 			}
+			new Externals();
+			logger.info("enabled externals!");
 			
 	        new BukkitRunnable() {
 				@Override

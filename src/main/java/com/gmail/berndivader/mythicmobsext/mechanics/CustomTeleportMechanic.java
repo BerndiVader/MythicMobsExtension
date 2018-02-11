@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -41,6 +42,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.MTOrigin;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 
+@SkillAnnotation(name="customteleport",author="BerndiVader")
 public class CustomTeleportMechanic 
 extends 
 SkillMechanic 
