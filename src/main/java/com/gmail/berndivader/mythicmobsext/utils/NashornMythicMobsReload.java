@@ -13,11 +13,11 @@ import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 
-public class MythicMobsReload 
+public class NashornMythicMobsReload 
 implements
 Listener {
 	
-	public MythicMobsReload() {
+	public NashornMythicMobsReload() {
 		Main.pluginmanager.registerEvents(this,Main.getPlugin());
 	}
 	
@@ -25,7 +25,7 @@ Listener {
 	public void onMythicMobsReload(MythicReloadedEvent e) {
 		try {
 			Nashorn.scripts=new String(Files.readAllBytes(Paths.get(Utils.str_PLUGINPATH,Nashorn.filename)));
-			Nashorn.nash.eval(Nashorn.scripts);
+			Nashorn.get().nash.eval(Nashorn.scripts);
 		} catch (IOException | ScriptException ex) {
 			ex.printStackTrace();
 		}

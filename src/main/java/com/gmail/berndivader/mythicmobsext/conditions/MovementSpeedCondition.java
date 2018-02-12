@@ -3,11 +3,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="movespeed",author="BerndiVader")
 public class MovementSpeedCondition
 extends
 AbstractCustomCondition

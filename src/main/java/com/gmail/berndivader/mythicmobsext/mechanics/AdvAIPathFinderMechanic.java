@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.LivingEntity;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -12,6 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
+@SkillAnnotation(name="advaipathfinder,custompathfinder",author="BerndiVader")
 public class AdvAIPathFinderMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {

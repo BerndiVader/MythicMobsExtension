@@ -11,27 +11,31 @@ import java.util.jar.JarFile;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
+import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public class Externals
 implements
 Listener {
-	ExternalsLoader loader;
-	public static HashMap<String,Class<? extends SkillMechanic>>extMechanics;
-	public static HashMap<String,Class<? extends AbstractCustomCondition>>extConditions;
-	public static HashMap<String,Class<? extends SkillTargeter>>extTargeters;
-	
+	public ExternalsLoader loader;
+	public static HashMap<String,Class<? extends SkillMechanic>>mechanics;
+	public static HashMap<String,Class<? extends SkillCondition>>conditions;
+	public static HashMap<String,Class<? extends SkillTargeter>>targeters;
+   	public static int m,c,t,ml,cl,tl;
+   	
 	static {
-		extMechanics=new HashMap<>();
-		extConditions=new HashMap<>();
-		extTargeters=new HashMap<>();
+		Main.pluginmanager.getClass().getName();
+		mechanics=new HashMap<>();
+		conditions=new HashMap<>();
+		targeters=new HashMap<>();
+   		m=c=t=ml=cl=tl=0;
 	}
 	
 	public Externals() {
@@ -45,6 +49,7 @@ Listener {
 		}
 		
 		public void load() {
+			ml=cl=tl=0;
 			File f1;
 			if ((f1=new File(Utils.str_PLUGINPATH,"externals")).exists()) {
 				File[]externals=f1.listFiles();
@@ -53,12 +58,20 @@ Listener {
 						loadExt(external);
 					}
 				}
-				
 			} else {
 				f1.mkdir();
 			}
-			
-			
+			m=mechanics.size();
+			c=conditions.size();
+			t=targeters.size();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					Main.logger.info(m+" ext.mechanics loaded.");
+					Main.logger.info(c+" ext.conditions loaded.");
+					Main.logger.info(t+" ext.targeters loaded.");
+				}
+			}.runTaskLaterAsynchronously(Main.getPlugin(),20);
 		}
 		private void loadExt(File external) {
 			try {
@@ -74,11 +87,24 @@ Listener {
 					if(je.isDirectory()||!cn1.endsWith(".class")) continue;
 					cn1=cn1.substring(0,cn1.length()-6).replace("/",".");
 					Class<?>c1=Class.forName(cn1,true,cl);
-					if (c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
+					if (c1==null) continue;
+					if (SkillMechanic.class.isAssignableFrom(c1)) {
 						Class<? extends SkillMechanic>extClass=c1.asSubclass(SkillMechanic.class);
 						SkillAnnotation skill=extClass.getAnnotation(SkillAnnotation.class);
-						if (skill!=null&&!extMechanics.containsKey(skill.name())) {
-							extMechanics.put(skill.name(),extClass);
+						if (skill!=null&&!mechanics.containsKey(skill.name())) {
+							mechanics.put(skill.name(),extClass);
+						}
+					} else if (SkillCondition.class.isAssignableFrom(c1)) {
+						Class<? extends SkillCondition>extClass=c1.asSubclass(SkillCondition.class);
+						ConditionAnnotation cond=extClass.getAnnotation(ConditionAnnotation.class);
+						if (cond!=null&&!conditions.containsKey(cond.name())) {
+							conditions.put(cond.name(),extClass);
+						}
+					} else if (SkillTargeter.class.isAssignableFrom(c1)) {
+						Class<? extends SkillTargeter>extClass=c1.asSubclass(SkillTargeter.class);
+						TargeterAnnotation tar=extClass.getAnnotation(TargeterAnnotation.class);
+						if (tar!=null&&!targeters.containsKey(tar.name())) {
+							targeters.put(tar.name(),extClass);
 						}
 					}
 				}

@@ -27,17 +27,14 @@ import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaCondition
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
+import com.gmail.berndivader.mythicmobsext.externals.Internals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
-import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import com.garbagemule.MobArena.MobArenaHandler;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 	private static Main plugin;
@@ -51,12 +48,13 @@ public class Main extends JavaPlugin {
 	public static Logger logger;
 	public static PluginManager pluginmanager;
 	public static boolean slappyNewBorn = true;
-	public WorldGuardPlugin wg;
 	private static MythicPlayers mythicplayers;
-	private MobArenaHandler maHandler;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 	public static boolean disguisepresent;
 	public Thiefs thiefs;
+	
+	public Internals internals;
+	public Externals externals;
 
 	public void onEnable() {
 		plugin = this;
@@ -93,8 +91,9 @@ public class Main extends JavaPlugin {
 				logger.info("Plugin is up-to-date!");
 			}
 		}
-
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
+			internals=new Internals();
+			externals=new Externals();
 			new CustomMechanics();
 			logger.info("registered mechanics!");
 			new CustomConditions();
@@ -115,7 +114,6 @@ public class Main extends JavaPlugin {
 				logger.info("NaN patch applied!");
 			}
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new WorldGuardFlag();
 				logger.info("Worldguard support enabled!");
@@ -130,7 +128,6 @@ public class Main extends JavaPlugin {
 				hasRpgItems = true;
 			}
 			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) {
-				maHandler = new MobArenaHandler();
 				new MobArenaConditions();
 				logger.info("MobArena support enabled!");
 			}
@@ -143,8 +140,7 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 				logger.info("CachedOwner support enabled!");
 			}
-			new Externals();
-			logger.info("enabled externals!");
+			logger.info("External mechanics, conditions, targeters loaded!");
 			
 	        new BukkitRunnable() {
 				@Override
@@ -180,8 +176,6 @@ public class Main extends JavaPlugin {
 		}
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		Main.mythicplayers = null;
-		this.maHandler = null;
-		this.wg = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;
 		Main.fflags = null;
@@ -196,11 +190,4 @@ public class Main extends JavaPlugin {
 		return Main.mythicplayers;
 	}
 
-	private static WorldGuardPlugin getWorldGuard() {
-		return (WorldGuardPlugin) pluginmanager.getPlugin("WorldGuard");
-	}
-
-	public MobArenaHandler getMobArenaHandler() {
-		return this.maHandler;
-	}
 }

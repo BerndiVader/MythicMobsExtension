@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -18,6 +19,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="entitiesinradius,eir,leir,livingentitiesinradius,pir,playersinradius",author="BerndiVader")
 public class EntitiesInRadiusCondition
 extends
 AbstractCustomCondition

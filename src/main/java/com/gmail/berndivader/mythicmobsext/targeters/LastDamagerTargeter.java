@@ -5,12 +5,15 @@ import java.util.HashSet;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import com.gmail.berndivader.mythicmobsext.externals.TargeterAnnotation;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 
+@TargeterAnnotation(name="lastdamager",author="BerndiVader")
 public class LastDamagerTargeter
 extends
 IEntitySelector {

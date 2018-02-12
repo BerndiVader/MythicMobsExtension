@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.healthbar;
+package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 

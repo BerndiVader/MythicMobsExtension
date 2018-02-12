@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -19,7 +18,7 @@ ILocationCondition {
 
 	public InMobArenaCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.maHandler = Main.getPlugin().getMobArenaHandler();
+		this.maHandler = new MobArenaHandler();
 	}
 
 	@Override

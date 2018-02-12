@@ -2,11 +2,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="relativedirection",author="BerndiVader")
 public class DirectionalDamageCondition
 extends
 AbstractCustomCondition

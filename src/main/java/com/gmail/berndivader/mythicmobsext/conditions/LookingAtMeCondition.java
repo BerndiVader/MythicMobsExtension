@@ -4,12 +4,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="lookatme,looksatme",author="BerndiVader")
 public class LookingAtMeCondition 
 extends
 AbstractCustomCondition

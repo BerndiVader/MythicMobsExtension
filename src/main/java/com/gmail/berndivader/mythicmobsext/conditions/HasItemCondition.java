@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -19,6 +20,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
 public class HasItemCondition 
 extends
 AbstractCustomCondition

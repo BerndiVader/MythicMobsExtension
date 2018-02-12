@@ -15,7 +15,6 @@ public enum ConfigValue {
 	RPGITEMS("Configuration.Compatibility.RPGItems", true),
 	MOBARENA("Configuration.Compatibility.MobArena", true),
 	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true);
-
 	private final String path;
 	private final Object value;
 

@@ -2,10 +2,13 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.EntityType;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
+@ConditionAnnotation(name="hasvehicle",author="BerndiVader")
 public class HasVehicleCondition
 extends
 AbstractCustomCondition

@@ -56,7 +56,7 @@ ITargetedLocationSkill {
 
 	private boolean eval(SkillMetadata data,Entity e1,Location l1) {
 		try {
-			Nashorn.invoc.invokeFunction(js,data,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
+			Nashorn.get().invoc.invokeFunction(js,data,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}

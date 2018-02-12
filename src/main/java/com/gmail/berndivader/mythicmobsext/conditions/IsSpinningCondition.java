@@ -1,11 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
+@ConditionAnnotation(name="isspinning",author="BerndiVader")
 public class IsSpinningCondition 
 extends
 AbstractCustomCondition

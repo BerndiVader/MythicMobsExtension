@@ -1,11 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
+@ConditionAnnotation(name="isstunned,stunned",author="BerndiVader")
 public class IsStunnedCondition 
 extends 
 AbstractCustomCondition 

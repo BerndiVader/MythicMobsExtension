@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -14,6 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@SkillAnnotation(name="customrandomskill,advrandomskill",author="BerndiVader")
 public class CustomRandomSkillMechanic extends SkillMechanic 
 implements
 IMetaSkill {

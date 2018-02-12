@@ -5,6 +5,7 @@ import javax.script.ScriptException;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Nashorn;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -15,6 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
+@ConditionAnnotation(name="jscondition",author="BerndiVader")
 public class JavascriptCondition 
 extends 
 AbstractCustomCondition
@@ -45,7 +47,7 @@ ILocationCondition {
 	
 	private boolean eval(MythicLineConfig mlc,Entity e1,Location l1) {
 		try {
-			Nashorn.invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
+			Nashorn.get().invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}

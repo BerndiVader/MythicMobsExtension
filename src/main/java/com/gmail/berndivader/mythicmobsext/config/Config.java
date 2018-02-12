@@ -26,6 +26,7 @@ public class Config {
 	public static boolean rpgitems;
 	public static boolean mobarena;
 	public static boolean h_displays;
+	public static boolean externals;
 	final static YamlConfiguration config;
 
 	static {

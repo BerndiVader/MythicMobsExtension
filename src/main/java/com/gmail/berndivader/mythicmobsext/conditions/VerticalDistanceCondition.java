@@ -1,10 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
+@ConditionAnnotation(name="vdistance",author="BerndiVader")
 public class VerticalDistanceCondition
 extends
 AbstractCustomCondition

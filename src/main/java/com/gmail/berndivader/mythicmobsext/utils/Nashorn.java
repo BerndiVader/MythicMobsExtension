@@ -15,28 +15,35 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 @SuppressWarnings("restriction")
 public class Nashorn {
-	static ScriptEngine nash;
-	public static Invocable invoc;
+	static Nashorn nashorn;
+	ScriptEngine nash;
+	public Invocable invoc;
 	public static String scripts;
 	public static String filename="Scripts.js";
 	
-	static {
+	public Nashorn() {
+		nashorn=this;
 		Thread.currentThread().setContextClassLoader(Main.getPlugin().getClass().getClassLoader());
-		NashornScriptEngineFactory factory=new NashornScriptEngineFactory();
-		nash=factory.getScriptEngine();
-		invoc=(Invocable)nash;
+		new NashornMythicMobsReload();
+		Path p1=Paths.get(Utils.str_PLUGINPATH,filename);
+		try {
+			scripts=new String(Files.readAllBytes(p1));
+			NashornScriptEngineFactory factory=new NashornScriptEngineFactory();
+			nash=factory.getScriptEngine();
+			nash.eval(scripts);
+			invoc=(Invocable)nash;
+		} catch (IOException | ScriptException e1) {
+			e1.printStackTrace();
+		}
 		Main.getPlugin().saveResource(filename,false);
 	}
 	
-	public Nashorn() {
-		new MythicMobsReload();
-		try {
-			Path p1=Paths.get(Utils.str_PLUGINPATH,filename);
-			scripts=new String(Files.readAllBytes(p1));
-			nash.eval(scripts);
-		} catch (IOException | ScriptException e) {
-			e.printStackTrace();
-		}
+	public static Nashorn get() {
+		return nashorn;
+	}
+
+	public Object invoke() {
+		return Nashorn.this.invoc;
 	}
 	
 }

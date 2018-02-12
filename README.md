@@ -8,6 +8,7 @@ Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
 ### Changelog:
+##### ** 11.02.2018 *** hugh rework how buildin conditions, mechanics and targeters are loaded.
 ##### ** 10.02.2018 *** added possibility to load externals mechanics stored in MythicMobsExtension/externals folder.
 ##### ** 10.02.2018 *** some internal changes.
 ##### ** 10.02.2018 *** added cmp option for castif to use && || between condition and targetcondition.
