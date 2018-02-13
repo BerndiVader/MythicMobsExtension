@@ -7,6 +7,8 @@ Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities)
 Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
 Click [here](http://mc.hackerzlair.org/repo) for the repos
 
+## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
+
 ### Changelog:
 ##### ** 11.02.2018 *** hugh rework how buildin conditions, mechanics and targeters are loaded.
 ##### ** 10.02.2018 *** added possibility to load externals mechanics stored in MythicMobsExtension/externals folder.
