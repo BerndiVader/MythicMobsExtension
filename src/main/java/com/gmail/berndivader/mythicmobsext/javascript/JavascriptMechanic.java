@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics;
+package com.gmail.berndivader.mythicmobsext.javascript;
 
 import javax.script.ScriptException;
 
@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
-import com.gmail.berndivader.mythicmobsext.utils.Nashorn;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -58,9 +57,9 @@ ITargetedLocationSkill {
 		try {
 			Nashorn.get().invoc.invokeFunction(js,data,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
 	}
-
 }

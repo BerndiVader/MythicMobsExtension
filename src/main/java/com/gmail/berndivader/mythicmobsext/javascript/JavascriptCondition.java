@@ -1,12 +1,12 @@
-package com.gmail.berndivader.mythicmobsext.conditions;
+package com.gmail.berndivader.mythicmobsext.javascript;
 
 import javax.script.ScriptException;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
-import com.gmail.berndivader.mythicmobsext.utils.Nashorn;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -49,9 +49,9 @@ ILocationCondition {
 		try {
 			Nashorn.get().invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
 	}
-
 }

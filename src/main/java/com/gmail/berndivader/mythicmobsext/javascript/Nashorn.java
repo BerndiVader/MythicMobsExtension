@@ -1,15 +1,17 @@
-package com.gmail.berndivader.mythicmobsext.utils;
+package com.gmail.berndivader.mythicmobsext.javascript;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
@@ -18,13 +20,12 @@ public class Nashorn {
 	static Nashorn nashorn;
 	ScriptEngine nash;
 	public Invocable invoc;
-	public static String scripts;
-	public static String filename="Scripts.js";
+	public static String scripts,filename="Scripts.js";
+	public static Bindings bindings;
 	
 	public Nashorn() {
 		nashorn=this;
 		Thread.currentThread().setContextClassLoader(Main.getPlugin().getClass().getClassLoader());
-		new NashornMythicMobsReload();
 		Path p1=Paths.get(Utils.str_PLUGINPATH,filename);
 		try {
 			scripts=new String(Files.readAllBytes(p1));

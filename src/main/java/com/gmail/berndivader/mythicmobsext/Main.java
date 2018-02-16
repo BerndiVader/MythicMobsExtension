@@ -30,6 +30,7 @@ import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
@@ -94,12 +95,16 @@ public class Main extends JavaPlugin {
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			internals=new Internals();
 			externals=new Externals();
+			new Utils();
+			logger.info("enabled externals");
 			new CustomMechanics();
 			logger.info("registered mechanics!");
 			new CustomConditions();
 			logger.info("registered conditions!");
 			new CustomTargeters();
 			logger.info("registered targeters!");
+			new JavaScript();
+			logger.info("enabled javascript!");
 			if (Config.m_players) {
 				Main.mythicplayers=new MythicPlayers(this);
 				logger.info("registered mythicplayers!");
@@ -108,7 +113,6 @@ public class Main extends JavaPlugin {
 				thiefs=new Thiefs();
 				logger.info("registered thiefs!");
 			}
-			new Utils();
 			if (Config.nan) {
 				new NaNpatch();
 				logger.info("NaN patch applied!");

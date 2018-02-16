@@ -101,12 +101,6 @@ public class Utils implements Listener {
 	}
 	
 	public Utils() {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				new Nashorn();
-			}
-		}.runTask(Main.getPlugin());
 		handler=Volatile.handler;
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		if (Utils.serverV>11) {
