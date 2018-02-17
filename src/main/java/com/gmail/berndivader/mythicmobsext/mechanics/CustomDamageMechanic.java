@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -11,7 +11,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="customdamage",author="BerndiVader")
+@ExternalAnnotation(name="customdamage",author="BerndiVader")
 public class CustomDamageMechanic
 extends
 SkillMechanic

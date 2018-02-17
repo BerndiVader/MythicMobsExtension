@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.239 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.240 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -10,6 +10,9 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 17.02.2018 *** added relative to playerweather's time option.
+##### ** 16.02.2018 *** work on external & internal loader.
+##### ** 15.02.2018 *** some changes to javascript. 
 ##### ** 11.02.2018 *** hugh rework how buildin conditions, mechanics and targeters are loaded.
 ##### ** 10.02.2018 *** added possibility to load externals mechanics stored in MythicMobsExtension/externals folder.
 ##### ** 10.02.2018 *** some internal changes.

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -31,7 +31,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 
-@SkillAnnotation(name="castif",author="BerndiVader")
+@ExternalAnnotation(name="castif",author="BerndiVader")
 public class CastIfMechanic
 extends
 SkillMechanic

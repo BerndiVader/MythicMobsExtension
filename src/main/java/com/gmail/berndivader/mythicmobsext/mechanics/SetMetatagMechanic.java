@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -17,7 +17,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-@SkillAnnotation(name="setmeta",author="BerndiVader")
+@ExternalAnnotation(name="setmeta",author="BerndiVader")
 public class SetMetatagMechanic 
 extends 
 SkillMechanic 

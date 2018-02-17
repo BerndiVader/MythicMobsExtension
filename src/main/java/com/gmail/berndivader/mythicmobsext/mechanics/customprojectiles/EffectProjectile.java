@@ -13,7 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -34,7 +34,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@SkillAnnotation(name="mythiceffectprojectile",author="BerndiVader")
+@ExternalAnnotation(name="mythiceffectprojectile",author="BerndiVader")
 public class EffectProjectile
 extends 
 CustomProjectile

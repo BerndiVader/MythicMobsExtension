@@ -16,7 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -36,7 +36,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="entityfloating",author="BerndiVader")
+@ExternalAnnotation(name="entityfloating",author="BerndiVader")
 public class EStatueMechanic extends SkillMechanic
 implements 
 ITargetedEntitySkill,

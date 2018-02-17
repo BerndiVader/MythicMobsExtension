@@ -5,7 +5,7 @@ import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -13,13 +13,13 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="playerweather",author="BerndiVader")
+@ExternalAnnotation(name="playerweather",author="BerndiVader")
 public class PlayerWeatherMechanic extends SkillMechanic
 implements
 ITargetedEntitySkill {
-	private int duration;
-	private int time;
-	private WeatherType type;
+	int duration, time;
+	WeatherType type;
+	boolean relative;
 
 	public PlayerWeatherMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -30,6 +30,7 @@ ITargetedEntitySkill {
 		}
 		this.time=mlc.getInteger(new String[] { "time", "t" }, -1);
 		this.duration=mlc.getInteger(new String[] { "duration", "dur" }, 200);
+		relative=mlc.getBoolean("relative",false);
 	}
 
 	@Override
@@ -37,7 +38,7 @@ ITargetedEntitySkill {
 		if (target.isPlayer()) {
 			Player p=(Player)target.getBukkitEntity();
 			if (this.time>-1) {
-				p.setPlayerTime(this.time,true);
+				p.setPlayerTime(this.time,relative);
 			}
 			p.setPlayerWeather(this.type);
 			new WeatherTracker(this.duration, p);

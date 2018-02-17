@@ -1,13 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.FacingDirectionType;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ConditionAnnotation(name="facingdirection",author="BerndiVader")
+@ExternalAnnotation(name="facingdirection",author="BerndiVader")
 public class FacingDirectionCondition 
 extends 
 AbstractCustomCondition

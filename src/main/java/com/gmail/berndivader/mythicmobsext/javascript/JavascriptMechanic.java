@@ -5,7 +5,7 @@ import javax.script.ScriptException;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 
-@SkillAnnotation(name="jsmechanic",author="BerndiVader")
+@ExternalAnnotation(name="jsmechanic",author="BerndiVader")
 public class JavascriptMechanic 
 extends 
 SkillMechanic 

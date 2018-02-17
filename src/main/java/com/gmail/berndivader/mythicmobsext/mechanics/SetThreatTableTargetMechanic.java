@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -11,7 +11,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
-@SkillAnnotation(name="setthreattarget",author="BerndiVader")
+@ExternalAnnotation(name="setthreattarget",author="BerndiVader")
 public class SetThreatTableTargetMechanic 
 extends 
 SkillMechanic 

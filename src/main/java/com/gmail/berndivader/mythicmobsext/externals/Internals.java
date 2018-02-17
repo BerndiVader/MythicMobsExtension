@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.externals;
 
 import java.io.FileInputStream;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -43,6 +44,11 @@ Listener {
 			load();
 		}
 		
+		SimpleEntry<ExternalAnnotation,Class<?>> getClazz(String cn1) throws ClassNotFoundException{
+			Class<?>c1=Class.forName(cn1);
+			return new SimpleEntry<>(c1.getAnnotation(ExternalAnnotation.class),c1);
+		}
+		
 		void load() {
 	   		ml=cl=tl=0;
 			try {
@@ -53,53 +59,48 @@ Listener {
 			    	if (jarEntry==null) break;
 			    	if (jarEntry.getName().endsWith(".class")) {
 			    		String s1=jarEntry.getName();
+						String cn1=s1.substring(0,s1.length()-6).replace("/",".");
 			    		if (s1.startsWith("com/gmail/berndivader/mythicmobsext/mechanics")) {
-							String cn1=s1.substring(0,s1.length()-6).replace("/",".");
-							Class<?>c1=Class.forName(cn1);
-							if (c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
-								SkillAnnotation skill=c1.getAnnotation(SkillAnnotation.class);
-								if (skill!=null) {
-									String[]arr1=skill.name().split(",");
-									for(int i1=0;i1<arr1.length;i1++) {
-										if (!mechanics.containsKey(arr1[i1])) {
-											mechanics.put(arr1[i1],cn1);
-										}
+			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+			    			Class<?>c1=entry.getValue();
+			    			ExternalAnnotation skill=entry.getKey();
+							if (skill!=null&&c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
+								String[]arr1=skill.name().split(",");
+								for(int i1=0;i1<arr1.length;i1++) {
+									if (!mechanics.containsKey(arr1[i1])) {
+										mechanics.put(arr1[i1],cn1);
 									}
 								}
 							}
 		            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/conditions")) {
-							String cn1=s1.substring(0,s1.length()-6).replace("/",".");
-							Class<?>c1=Class.forName(cn1);
-							if (c1!=null&&SkillCondition.class.isAssignableFrom(c1)) {
-								ConditionAnnotation anno=c1.getAnnotation(ConditionAnnotation.class);
-								if (anno!=null) {
-									String[]arr1=anno.name().split(",");
-									for(int i1=0;i1<arr1.length;i1++) {
-										if (!conditions.containsKey(arr1[i1])) {
-											conditions.put(arr1[i1],cn1);
-										}
+			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+			    			Class<?>c1=entry.getValue();
+			    			ExternalAnnotation anno=entry.getKey();
+							if (anno!=null&&c1!=null&&SkillCondition.class.isAssignableFrom(c1)) {
+								String[]arr1=anno.name().split(",");
+								for(int i1=0;i1<arr1.length;i1++) {
+									if (!conditions.containsKey(arr1[i1])) {
+										conditions.put(arr1[i1],cn1);
 									}
 								}
 							}
 		            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/targeters")) {
-		            		String cn1=s1.substring(0,s1.length()-6).replace("/",".");
-		            		Class<?>c1=Class.forName(cn1);
-		            		if (c1!=null&&SkillTargeter.class.isAssignableFrom(c1)) {
-		            			TargeterAnnotation anno=c1.getAnnotation(TargeterAnnotation.class);
-		            			if (anno!=null) {
-		            				String[]arr1=anno.name().split(",");
-		            				for(int i1=0;i1<arr1.length;i1++) {
-		            					if (!targeters.containsKey(arr1[i1])) {
-		            						targeters.put(arr1[i1],cn1);
-		            					}
-		            				}
-		            			}
+			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+			    			Class<?>c1=entry.getValue();
+			    			ExternalAnnotation anno=entry.getKey();
+		            		if (anno!=null&c1!=null&&SkillTargeter.class.isAssignableFrom(c1)) {
+	            				String[]arr1=anno.name().split(",");
+	            				for(int i1=0;i1<arr1.length;i1++) {
+	            					if (!targeters.containsKey(arr1[i1])) {
+	            						targeters.put(arr1[i1],cn1);
+	            					}
+	            				}
 		            		}
 		            	}
 			    	}
 			    }
 		        jarFile.close();
-			} catch (Exception e) {
+		    } catch (Exception e) {
 				e.printStackTrace();
 			}
 			m=mechanics.size();

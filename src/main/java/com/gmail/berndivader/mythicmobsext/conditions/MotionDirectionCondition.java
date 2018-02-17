@@ -7,7 +7,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.MotionDirectionType;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -17,7 +17,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ConditionAnnotation(name="motiondirection",author="BerndiVader")
+@ExternalAnnotation(name="motiondirection",author="BerndiVader")
 public class MotionDirectionCondition
 extends 
 AbstractCustomCondition

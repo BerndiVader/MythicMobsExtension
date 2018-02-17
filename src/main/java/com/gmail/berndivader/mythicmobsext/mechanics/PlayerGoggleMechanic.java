@@ -5,7 +5,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -17,7 +17,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="playergoggle,playergoggleat",author="BerndiVader")
+@ExternalAnnotation(name="playergoggle,playergoggleat",author="BerndiVader")
 public class PlayerGoggleMechanic 
 extends 
 SkillMechanic 

@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -16,7 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-@ConditionAnnotation(name="jscondition",author="BerndiVader")
+@ExternalAnnotation(name="jscondition",author="BerndiVader")
 public class JavascriptCondition 
 extends 
 AbstractCustomCondition

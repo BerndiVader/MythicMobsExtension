@@ -7,7 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.externals.TargeterAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
-@TargeterAnnotation(name="targetmotion,triggermotion,selfmotion,ownermotion",author="BerndiVader")
+@ExternalAnnotation(name="targetmotion,triggermotion,selfmotion,ownermotion",author="BerndiVader")
 public class TargetMotionTargeter 
 extends 
 ILocationSelector {

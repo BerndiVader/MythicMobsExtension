@@ -2,14 +2,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.block.BlockFace;
 
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-@ConditionAnnotation(name="onsolidblock,insolidblock",author="BerndiVader")
+@ExternalAnnotation(name="onsolidblock,insolidblock",author="BerndiVader")
 public class SolidBlockConditions
 extends
 AbstractCustomCondition

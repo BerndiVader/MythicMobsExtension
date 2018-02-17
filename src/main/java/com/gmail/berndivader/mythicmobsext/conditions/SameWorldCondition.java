@@ -1,12 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
 
-@ConditionAnnotation(name="sameworld",author="BerndiVader")
+@ExternalAnnotation(name="sameworld",author="BerndiVader")
 public class SameWorldCondition
 extends
 AbstractCustomCondition

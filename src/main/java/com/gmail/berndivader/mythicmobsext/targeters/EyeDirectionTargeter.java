@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
-import com.gmail.berndivader.mythicmobsext.externals.TargeterAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
-@TargeterAnnotation(name="eyedirection",author="BerndiVader")
+@ExternalAnnotation(name="eyedirection",author="BerndiVader")
 public class EyeDirectionTargeter
 extends
 ILocationSelector {

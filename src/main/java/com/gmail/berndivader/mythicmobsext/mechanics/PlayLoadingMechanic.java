@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -11,7 +11,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="playloading",author="BerndiVader")
+@ExternalAnnotation(name="playloading",author="BerndiVader")
 public class PlayLoadingMechanic 
 extends
 SkillMechanic 

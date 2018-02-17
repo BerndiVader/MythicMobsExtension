@@ -19,7 +19,7 @@ import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -38,7 +38,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@SkillAnnotation(name="mythicprojectile",author="BerndiVader")
+@ExternalAnnotation(name="mythicprojectile",author="BerndiVader")
 public class MythicProjectile 
 extends
 CustomProjectile

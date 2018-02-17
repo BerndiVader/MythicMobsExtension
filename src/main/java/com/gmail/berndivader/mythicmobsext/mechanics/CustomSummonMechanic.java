@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Creature;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -15,7 +15,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
 import io.lumine.xikage.mythicmobs.skills.*;
 
-@SkillAnnotation(name="customsummon",author="BerndiVader")
+@ExternalAnnotation(name="customsummon",author="BerndiVader")
 public class CustomSummonMechanic extends SkillMechanic
 		implements
 		ITargetedLocationSkill,

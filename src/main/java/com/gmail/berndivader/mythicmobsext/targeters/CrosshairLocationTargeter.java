@@ -8,7 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
-import com.gmail.berndivader.mythicmobsext.externals.TargeterAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -16,7 +16,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
-@TargeterAnnotation(name="crosshairlocation",author="BerndiVader")
+@ExternalAnnotation(name="crosshairlocation",author="BerndiVader")
 public class CrosshairLocationTargeter
 extends
 ILocationSelector {

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -12,7 +12,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@SkillAnnotation(name="asequip",author="BerndiVader")
+@ExternalAnnotation(name="asequip",author="BerndiVader")
 public class EquipArmorstandMechanic extends SkillMechanic
 implements
 INoTargetSkill {

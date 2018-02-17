@@ -2,14 +2,14 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.externals.ConditionAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
-@ConditionAnnotation(name="lastindicator,lastdamageindicator,getlastindicator,getlastdamageindicator",author="BerndiVader")
+@ExternalAnnotation(name="lastindicator,lastdamageindicator,getlastindicator,getlastdamageindicator",author="BerndiVader")
 public class GetLastDamageIndicatorCondition
 extends 
 AbstractCustomCondition

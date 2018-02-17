@@ -117,40 +117,46 @@ implements Handler,Listener {
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
 		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
-		try {
-		    chl.put(e.getPlayer().getUniqueId(),channelPlayerInProzess(e.getPlayer(), new PacketReceivingHandler() {
-		    	@Override
-		        public void handle(Player p, PacketPlayInArmAnimation packet) {
-		        	float f1=getIndicatorPercentage(p);
-		        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
-		            return;
-		        }
-				@Override
-				public void handle(Player p,PacketPlayInFlying packet) {
-					net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-					com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
-					double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
-					v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-							?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-							:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-					Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
-					return;
+		final Player player=e.getPlayer();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+				    chl.put(player.getUniqueId(),channelPlayerInProzess(player,new PacketReceivingHandler() {
+				    	@Override
+				        public void handle(Player p, PacketPlayInArmAnimation packet) {
+				        	float f1=getIndicatorPercentage(p);
+				        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+				            return;
+				        }
+						@Override
+						public void handle(Player p,PacketPlayInFlying packet) {
+							net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
+							com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
+							double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
+							v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
+									?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
+									:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
+							Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
+							return;
+						}
+						@Override
+						public void handle(Player p, PacketPlayInSteerVehicle packet) {
+							return;
+						}
+				    }));
+				} catch (NoSuchElementException ex) {
+					Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
+					try {
+					    PrintWriter pw=new PrintWriter(new File(Main.getPlugin().getDataFolder()+File.separator+"channelerror.txt"));
+					    ex.printStackTrace(pw);
+					    pw.close();			
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
 				}
-				@Override
-				public void handle(Player p, PacketPlayInSteerVehicle packet) {
-					return;
-				}
-		    }));
-		} catch (NoSuchElementException ex) {
-			Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
-			try {
-			    PrintWriter pw=new PrintWriter(new File(Main.getPlugin().getDataFolder()+File.separator+"channelerror.txt"));
-			    ex.printStackTrace(pw);
-			    pw.close();			
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
 			}
-		}
+		}.runTaskLater(Main.getPlugin(),1l);
 	}
 
 	@EventHandler

@@ -16,7 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.externals.SkillAnnotation;
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -37,7 +37,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 import io.lumine.xikage.mythicmobs.util.HitBox;
 
-@SkillAnnotation(name="entityprojectile",author="BerndiVader")
+@ExternalAnnotation(name="entityprojectile",author="BerndiVader")
 public class EntityProjectile 
 extends 
 CustomProjectile 
