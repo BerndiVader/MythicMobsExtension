@@ -10,6 +10,7 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 18.02.2018 *** added storeservertick mechanic.
 ##### ** 17.02.2018 *** added relative to playerweather's time option.
 ##### ** 16.02.2018 *** work on external & internal loader.
 ##### ** 15.02.2018 *** some changes to javascript. 
@@ -345,6 +346,16 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## storeservertick (storetick) mechanic:
+
+Store the current servertick into scoreboard or metatag.
+
+##### `- storetick{tag=[NAME];meta=[BOOL]}`
+
+Where tag is name of the tag and meta true/false(default) if scoreboard or metatag should be used.
 
 
 
