@@ -859,4 +859,8 @@ implements Handler,Listener {
 		return new Vec3D(me.motX,me.motY,me.motZ);
 	}
 	
+	@Override
+	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
+		return null;
+	}
 }

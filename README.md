@@ -10,6 +10,7 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 20.02.2018 *** added advancement & achievement conditions.
 ##### ** 18.02.2018 *** added storeservertick mechanic.
 ##### ** 17.02.2018 *** added relative to playerweather's time option.
 ##### ** 16.02.2018 *** work on external & internal loader.
@@ -1518,6 +1519,16 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- achievement{achievement=[ACHIEVEMENTNAME]||[ARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player has the defined achievement or achievements.
++ achievement=ach=achievements: valid achievement entry or an array.
+[valid achievements](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Achievement.html)
+
+##### `- advancement{advancement=[ADV_KEY]||[ADV_KEY_ARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player has the defined advancement or advancements.
++ advancement=adv=advancements: valid advancement entry or an array.
+[valid advancements](https://minecraft.gamepedia.com/Advancements)
 
 ##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];store=[BOOL];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:

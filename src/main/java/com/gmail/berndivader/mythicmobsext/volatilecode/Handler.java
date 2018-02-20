@@ -1,6 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode;
 
+import java.util.HashMap;
+
 import org.bukkit.Location;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -46,4 +50,5 @@ public interface Handler {
 	boolean addNBTTag(Entity e1, String s);
 	@Deprecated
 	public Vec3D lastPosEntity(Entity bukkitEntity);
+	HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1);
 }

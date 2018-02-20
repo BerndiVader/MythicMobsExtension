@@ -54,6 +54,8 @@ import net.minecraft.server.v1_11_R1.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
@@ -644,5 +646,11 @@ Listener {
 	public Vec3D lastPosEntity(Entity bukkitEntity) {
 		net.minecraft.server.v1_11_R1.Entity me=((CraftEntity)bukkitEntity).getHandle();
 		return new Vec3D(me.motX,me.motY,me.motZ);
+	}
+
+	@Override
+	public HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

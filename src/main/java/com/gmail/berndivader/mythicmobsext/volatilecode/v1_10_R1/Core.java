@@ -59,6 +59,8 @@ import net.minecraft.server.v1_10_R1.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftSnowman;
@@ -661,5 +663,11 @@ Listener {
 	public Vec3D lastPosEntity(Entity e1) {
 		net.minecraft.server.v1_10_R1.Entity me=((CraftEntity)e1).getHandle();
 		return new Vec3D(me.motX,me.motY,me.motZ);
+	}
+
+	@Override
+	public HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
