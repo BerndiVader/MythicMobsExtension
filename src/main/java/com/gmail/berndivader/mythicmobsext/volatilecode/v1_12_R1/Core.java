@@ -144,6 +144,11 @@ implements Handler,Listener {
 						public void handle(Player p, PacketPlayInSteerVehicle packet) {
 							return;
 						}
+						@Override
+						public void handle(Player p, PacketPlayInBlockDig packet) {
+							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
+							return;
+						}
 				    }));
 				} catch (NoSuchElementException ex) {
 					Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
@@ -194,6 +199,9 @@ implements Handler,Listener {
 	    		case "PacketPlayInPositionLook":
 	    		case "PacketPlayInLook":
 	    			prh.handle(p,(PacketPlayInFlying)packet);
+	    			break;
+	    		case "PacketPlayInBlockDig":
+	    			prh.handle(p,(PacketPlayInBlockDig)packet);
 	    			break;
 	    		}
 	    		out.add(packet);
@@ -625,6 +633,7 @@ implements Handler,Listener {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
 	    void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
+	    void handle(Player p,PacketPlayInBlockDig packet);
 	}
 	
 	public boolean setEntityData(Entity e, String ns) {

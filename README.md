@@ -10,6 +10,7 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 21.02.2018 *** added mining condition. See conditions for details.
 ##### ** 21.02.2018 *** fixed exception if default javascript files missing.
 ##### ** 21.02.2018 *** added externals & javascript to config.
 ##### ** 20.02.2018 *** added advancement & achievement conditions.
@@ -1521,6 +1522,9 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- mining{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player is digging into a block. Aliases ismining, digging, isdigging.
 
 ##### `- achievement{achievement=[ACHIEVEMENTNAME]||[ARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Player only condition** Check if the player has the defined achievement or achievements.

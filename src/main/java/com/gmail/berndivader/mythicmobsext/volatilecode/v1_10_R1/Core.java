@@ -24,6 +24,7 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFla
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder;
 import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_10_R1.PacketPlayInBlockDig;
 import net.minecraft.server.v1_10_R1.Packet;
 import net.minecraft.server.v1_10_R1.PacketPlayInArmAnimation;
 import net.minecraft.server.v1_10_R1.PacketPlayInFlying;
@@ -153,7 +154,8 @@ Listener {
 	
 	interface PacketReceivingHandler {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p,PacketPlayInFlying packet);
+	    void handle(Player p, PacketPlayInBlockDig packet);
+		void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
 	}
 	
@@ -180,6 +182,11 @@ Listener {
 			}
 			@Override
 			public void handle(Player p, PacketPlayInSteerVehicle packet) {
+				return;
+			}
+			@Override
+			public void handle(Player p, PacketPlayInBlockDig packet) {
+				p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
 				return;
 			}
 	    }));
@@ -220,6 +227,9 @@ Listener {
 	    		case "PacketPlayInPositionLook":
 	    		case "PacketPlayInLook":
 	    			prh.handle(p,(PacketPlayInFlying)packet);
+	    			break;
+	    		case "PacketPlayInBlockDig2":
+	    			prh.handle(p,(PacketPlayInBlockDig)packet);
 	    			break;
 	    		}
 	    		out.add(packet);

@@ -84,6 +84,7 @@ public class Utils implements Listener {
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
+	public static String meta_MMEDIGGING="MMEDIGGING";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	private static Handler handler;
