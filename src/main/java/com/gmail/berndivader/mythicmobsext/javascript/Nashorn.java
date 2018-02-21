@@ -20,14 +20,20 @@ public class Nashorn {
 	static Nashorn nashorn;
 	ScriptEngine nash;
 	public Invocable invoc;
-	public static String scripts,filename="Scripts.js";
+	public static String scripts,filename="Scripts.js",examples="ExampleScripts.js",includes="Includes.js";
 	public static Bindings bindings;
 	
 	public Nashorn() {
 		nashorn=this;
+		Path p1;
+		p1=Paths.get(Utils.str_PLUGINPATH,examples);
+		if (!p1.toFile().exists()) Main.getPlugin().saveResource(examples,false);
+		p1=Paths.get(Utils.str_PLUGINPATH,includes);
+		if (!p1.toFile().exists()) Main.getPlugin().saveResource(includes,false);
 		Thread.currentThread().setContextClassLoader(Main.getPlugin().getClass().getClassLoader());
-		Path p1=Paths.get(Utils.str_PLUGINPATH,filename);
 		try {
+			p1=Paths.get(Utils.str_PLUGINPATH,filename);
+			Main.getPlugin().saveResource(filename,true);
 			scripts=new String(Files.readAllBytes(p1));
 			NashornScriptEngineFactory factory=new NashornScriptEngineFactory();
 			nash=factory.getScriptEngine();
@@ -36,7 +42,6 @@ public class Nashorn {
 		} catch (IOException | ScriptException e1) {
 			e1.printStackTrace();
 		}
-		Main.getPlugin().saveResource(filename,false);
 	}
 	
 	public static Nashorn get() {

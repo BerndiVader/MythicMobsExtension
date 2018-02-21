@@ -27,6 +27,7 @@ public class Config {
 	public static boolean mobarena;
 	public static boolean h_displays;
 	public static boolean externals;
+	public static boolean javascript;
 	final static YamlConfiguration config;
 
 	static {
@@ -53,7 +54,7 @@ public class Config {
 		// updates
 		int version = config.getInt(ConfigValue.VERSION.getPath());
 
-		if (version <= 1) {
+		if (version <= 2) {
 			for (ConfigValue value : ConfigValue.values()) {
 				if (!config.isSet(value.getPath())) {
 					config.set(value.getPath(), value.getDefaultValue());
@@ -91,6 +92,8 @@ public class Config {
 		rpgitems = config.getBoolean(ConfigValue.RPGITEMS.getPath());
 		mobarena = config.getBoolean(ConfigValue.MOBARENA.getPath());
 		h_displays = config.getBoolean(ConfigValue.H_DISPLAYS.getPath());
+		externals=config.getBoolean(ConfigValue.EXTERNALS.getPath());
+		javascript=config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
 	}
 	
 }

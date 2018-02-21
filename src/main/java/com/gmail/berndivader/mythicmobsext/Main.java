@@ -93,18 +93,22 @@ public class Main extends JavaPlugin {
 			}
 		}
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
-			internals=new Internals();
-			externals=new Externals();
 			new Utils();
-			logger.info("enabled externals");
+			internals=new Internals();
+			if (Config.externals) {
+				externals=new Externals();
+				logger.info("enabled externals");
+			}
 			new CustomMechanics();
 			logger.info("registered mechanics!");
 			new CustomConditions();
 			logger.info("registered conditions!");
 			new CustomTargeters();
 			logger.info("registered targeters!");
-			new JavaScript();
-			logger.info("enabled javascript!");
+			if (Config.javascript) {
+				new JavaScript();
+				logger.info("enabled javascript!");
+			}
 			if (Config.m_players) {
 				Main.mythicplayers=new MythicPlayers(this);
 				logger.info("registered mythicplayers!");

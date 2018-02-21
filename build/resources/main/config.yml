@@ -4,7 +4,7 @@
 #
 Configuration:
 # DO NOT edit the version number
-  Version: 1
+  Version: 2
   Debug: false
   Update_Notification: true
   Patches:
@@ -21,3 +21,5 @@ Configuration:
     RPGItems: true
     MobArena: true
     Holographic_Displays: true
+  Externals: true
+  Javascript: true

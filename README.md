@@ -10,6 +10,8 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 21.02.2018 *** fixed exception if default javascript files missing.
+##### ** 21.02.2018 *** added externals & javascript to config.
 ##### ** 20.02.2018 *** added advancement & achievement conditions.
 ##### ** 18.02.2018 *** added storeservertick mechanic.
 ##### ** 17.02.2018 *** added relative to playerweather's time option.
