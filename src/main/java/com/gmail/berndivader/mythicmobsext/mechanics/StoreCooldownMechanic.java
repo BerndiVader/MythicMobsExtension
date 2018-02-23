@@ -25,8 +25,6 @@ IMetaSkill {
 	@Override
 	public boolean cast(SkillMetadata data) {
 		Skill skill=Utils.mythicmobs.getSkillManager().getSkill(this.name).get();
-		if (skill!=null) {
-		}
 		return false;
 		
 	}

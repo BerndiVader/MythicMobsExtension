@@ -47,7 +47,7 @@ ILocationCondition {
 	
 	private boolean eval(MythicLineConfig mlc,Entity e1,Location l1) {
 		try {
-			Nashorn.get().invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
+			return (boolean)Nashorn.get().invoc.invokeFunction(js,e1!=null?(Entity)e1:l1!=null?(Location)l1:null,mlc);
 		} catch (NoSuchMethodException | ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
