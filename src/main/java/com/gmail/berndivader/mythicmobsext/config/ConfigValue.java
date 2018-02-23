@@ -14,8 +14,9 @@ public enum ConfigValue {
 	FACTIONS("Configuration.Compatibility.Factions", true),
 	RPGITEMS("Configuration.Compatibility.RPGItems", true),
 	MOBARENA("Configuration.Compatibility.MobArena", true),
-	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true);
-
+	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true),
+	EXTERNALS("Configuration.Externals",true),
+	JAVASCRIPT("Configuration.Javascript",true);
 	private final String path;
 	private final Object value;
 

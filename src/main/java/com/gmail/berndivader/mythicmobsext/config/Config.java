@@ -1,18 +1,19 @@
 package com.gmail.berndivader.mythicmobsext.config;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Arrays;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Arrays;
-
 public class Config {
 
+	static String name="config.yml";
 	public static boolean debug;
 	public static boolean update;
 	public static boolean nan;
@@ -25,20 +26,18 @@ public class Config {
 	public static boolean rpgitems;
 	public static boolean mobarena;
 	public static boolean h_displays;
+	public static boolean externals;
+	public static boolean javascript;
 	final static YamlConfiguration config;
 
 	static {
 		Plugin plugin=Main.getPlugin();
 		config=new YamlConfiguration();
-		File configFile = new File(Main.getPlugin().getDataFolder(), "config.yml");
+		File configFile = new File(plugin.getDataFolder(), name);
 		if (!configFile.exists()) {
-			plugin.getLogger().info("Generating config.yml...");
-			if (!plugin.getDataFolder().exists()) {
-				plugin.getDataFolder().mkdirs();
-			}
-			plugin.saveDefaultConfig();
+			plugin.getLogger().info("Generating "+name+"...");
+			plugin.saveResource(name,false);
 		}
-
 		try {
 			config.load(configFile);
 		} catch (InvalidConfigurationException e) {
@@ -55,7 +54,7 @@ public class Config {
 		// updates
 		int version = config.getInt(ConfigValue.VERSION.getPath());
 
-		if (version <= 1) {
+		if (version <= 2) {
 			for (ConfigValue value : ConfigValue.values()) {
 				if (!config.isSet(value.getPath())) {
 					config.set(value.getPath(), value.getDefaultValue());
@@ -93,6 +92,8 @@ public class Config {
 		rpgitems = config.getBoolean(ConfigValue.RPGITEMS.getPath());
 		mobarena = config.getBoolean(ConfigValue.MOBARENA.getPath());
 		h_displays = config.getBoolean(ConfigValue.H_DISPLAYS.getPath());
+		externals=config.getBoolean(ConfigValue.EXTERNALS.getPath());
+		javascript=config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
 	}
-
+	
 }

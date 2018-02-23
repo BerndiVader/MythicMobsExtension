@@ -1,9 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.NMS;
 
-
 import org.apache.commons.lang.StringUtils;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

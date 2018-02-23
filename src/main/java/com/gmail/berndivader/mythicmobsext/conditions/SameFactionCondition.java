@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -8,8 +9,10 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
+
 import org.bukkit.entity.Entity;
 
+@ExternalAnnotation(name="samefaction",author="BerndiVader")
 public class SameFactionCondition 
 extends 
 AbstractCustomCondition

@@ -7,7 +7,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 public class Volatile {
 	public static Handler handler;
 	
-	public Volatile() {
+	static {
 		String v,n;
 		n=Bukkit.getServer().getClass().getPackage().getName();
         v=n.substring(n.lastIndexOf(46)+1);

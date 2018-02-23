@@ -1,9 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.externals.*;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
+@ExternalAnnotation(name="biomefix",author="BerndiVader")
 public class BiomeFixCondition 
 extends 
 AbstractCustomCondition 

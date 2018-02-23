@@ -1,11 +1,34 @@
-# MythicMobsExtension v1.239 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.240 for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
 
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
+Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
+Click [here](http://mc.hackerzlair.org/repo) for the repos
+
+## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 21.02.2018 *** added mining condition. See conditions for details.
+##### ** 21.02.2018 *** fixed exception if default javascript files missing.
+##### ** 21.02.2018 *** added externals & javascript to config.
+##### ** 20.02.2018 *** added advancement & achievement conditions.
+##### ** 18.02.2018 *** added storeservertick mechanic.
+##### ** 17.02.2018 *** added relative to playerweather's time option.
+##### ** 16.02.2018 *** work on external & internal loader.
+##### ** 15.02.2018 *** some changes to javascript. 
+##### ** 11.02.2018 *** hugh rework how buildin conditions, mechanics and targeters are loaded.
+##### ** 10.02.2018 *** added possibility to load externals mechanics stored in MythicMobsExtension/externals folder.
+##### ** 10.02.2018 *** some internal changes.
+##### ** 10.02.2018 *** added cmp option for castif to use && || between condition and targetcondition.
+##### ** 09.02.2018 *** added classloader for nashorn to access bukkit plugin classes.
+##### ** 09.02.2018 *** fixed issue where errors in scripts stop plugin from loading.
+##### ** 09.02.2018 *** added more nashorn compatility for bukkit.
+##### ** 08.02.2018 *** added error tracking for channellisteners.
+##### ** 07.02.2018 *** added jsmechanic & jscondition. See jsmechanic or jscondition for details.
+##### ** 05.02.2018 *** added getmobfield mechanic. See getmobfield mechanic for details.
+##### ** 02.02.2018 *** close inputstream for config
 ##### ** 31.01.2018 *** project moved to gradle. minor fix for lastindicator.
 ##### ** 31.01.2018 *** added update notification
 ##### ** 30.01.2018 *** added targetmotion, triggermotion, ownermotion & selfmotion targeter
@@ -327,6 +350,68 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## storeservertick (storetick) mechanic:
+
+Store the current servertick into scoreboard or metatag.
+
+##### `- storetick{tag=[NAME];meta=[BOOL]}`
+
+Where tag is name of the tag and meta true/false(default) if scoreboard or metatag should be used.
+
+
+
+## jsmechanic mechanic:
+
+Execute a javascript function out of the script.js file provied in MythicMobsExtension folder.
+
+##### `- jsmechanic{js="[JS_FUNCTION"}`
+
+Example:
+
+```yaml
+Dummy1:
+  Type: zombie
+  Health: 10
+  Skills:
+  - jsmechanic{js="ChangeTargetsName";newname=jsmechanicrox} @self ~onDamaged
+```
+
+Scripts.js:
+
+```js
+var ChangeTargetsName=function(data,target,mlc) {
+	if (target instanceof org.bukkit.entity.LivingEntity) {
+		target.setCustomName(mlc.getString("newname","whatever"));
+		target.setCustomNameVisible(true);
+		return true;
+	}
+	return false;	
+}
+```
+
+This example change the name of the castermob to jsmechanicrox.
+
+
+
+## getmobfield mechanic:
+
+Get a MythicMob intern field and store it into a metatag or into stance.
+
+##### `- getmobfield{field=[VALID_ACTIVEMOBFIELD];meta=[NAME];stance=[BOOL]}`
+
+Example:
+
+```yaml
+TestMonkey:
+  Type: zombie
+  Skills:
+  - getmobfield{field=lastSignal;stance=true} @self ~onInteract
+  - message{msg="<mob.stance>"} @world ~onInteract
+```
+This example loads the mobs last signal into the mobs stance variable and broadcast the <mob.stance> into the world.
 
 
 
@@ -1437,6 +1522,19 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- mining{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player is digging into a block. Aliases ismining, digging, isdigging.
+
+##### `- achievement{achievement=[ACHIEVEMENTNAME]||[ARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player has the defined achievement or achievements.
++ achievement=ach=achievements: valid achievement entry or an array.
+[valid achievements](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Achievement.html)
+
+##### `- advancement{advancement=[ADV_KEY]||[ADV_KEY_ARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**Player only condition** Check if the player has the defined advancement or advancements.
++ advancement=adv=advancements: valid advancement entry or an array.
+[valid advancements](https://minecraft.gamepedia.com/Advancements)
 
 ##### `- motiondirection{directions=[MOTIONDIRECTIONTPYE]||[MOTIONDIRECTIONTYPES];store=[BOOL];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Conditions** && **TargetConditions** Checks in which direction the entity is moving to. Regardless its eyedirection. Possible directions:

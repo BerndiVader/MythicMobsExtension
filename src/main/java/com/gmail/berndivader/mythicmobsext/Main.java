@@ -1,17 +1,22 @@
 package com.gmail.berndivader.mythicmobsext;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
-
 import org.bukkit.entity.Entity;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
@@ -21,15 +26,16 @@ import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagCondi
 import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.config.Config;
+import com.gmail.berndivader.mythicmobsext.externals.Externals;
+import com.gmail.berndivader.mythicmobsext.externals.Internals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
-import com.gmail.berndivader.mythicmobsext.mechanics.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
+import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 	private static Main plugin;
@@ -43,12 +49,13 @@ public class Main extends JavaPlugin {
 	public static Logger logger;
 	public static PluginManager pluginmanager;
 	public static boolean slappyNewBorn = true;
-	public WorldGuardPlugin wg;
 	private static MythicPlayers mythicplayers;
-	private MobArenaHandler maHandler;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 	public static boolean disguisepresent;
 	public Thiefs thiefs;
+	
+	public Internals internals;
+	public Externals externals;
 
 	public void onEnable() {
 		plugin = this;
@@ -63,15 +70,45 @@ public class Main extends JavaPlugin {
 			logger.warning("     We cant garantie that it runs properly.");
 			logger.warning("******************************************************");
 		}
+
+		if (Config.update) {
+			String version = null;
+			PluginDescriptionFile pdf = getDescription();
+			try {
+				URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
+				try (InputStream in=url.openStream();
+				BufferedReader br=new BufferedReader( new InputStreamReader(in))) {
+					version=br.readLine().toString();
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				logger.warning("Could not read version file!");
+			}
+			if (!pdf.getVersion().endsWith("SNAPSHOT")&&!pdf.getVersion().equals(version)) {
+				logger.info("MythicMobsExtension v"+version+" is available, get it here:");
+				logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
+			} else {
+				logger.info("Plugin is up-to-date!");
+			}
+		}
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
-			new Volatile();
 			new Utils();
+			internals=new Internals();
+			if (Config.externals) {
+				externals=new Externals();
+				logger.info("enabled externals");
+			}
 			new CustomMechanics();
-			logger.info("registered mechanics.");
+			logger.info("registered mechanics!");
 			new CustomConditions();
-			logger.info("registered conditions.");
+			logger.info("registered conditions!");
 			new CustomTargeters();
-			logger.info("registered targeters.");
+			logger.info("registered targeters!");
+			if (Config.javascript) {
+				new JavaScript();
+				logger.info("enabled javascript!");
+			}
 			if (Config.m_players) {
 				Main.mythicplayers=new MythicPlayers(this);
 				logger.info("registered mythicplayers!");
@@ -82,10 +119,9 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.nan) {
 				new NaNpatch();
-				logger.info("NaN patch applied.");
+				logger.info("NaN patch applied!");
 			}
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				wg = getWorldGuard();
 				wgf = new WorldGuardFlags();
 				new WorldGuardFlag();
 				logger.info("Worldguard support enabled!");
@@ -100,7 +136,6 @@ public class Main extends JavaPlugin {
 				hasRpgItems = true;
 			}
 			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) {
-				maHandler = new MobArenaHandler();
 				new MobArenaConditions();
 				logger.info("MobArena support enabled!");
 			}
@@ -113,6 +148,7 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 				logger.info("CachedOwner support enabled!");
 			}
+			logger.info("External mechanics, conditions, targeters loaded!");
 			
 	        new BukkitRunnable() {
 				@Override
@@ -148,8 +184,6 @@ public class Main extends JavaPlugin {
 		}
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		Main.mythicplayers = null;
-		this.maHandler = null;
-		this.wg = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;
 		Main.fflags = null;
@@ -164,11 +198,4 @@ public class Main extends JavaPlugin {
 		return Main.mythicplayers;
 	}
 
-	private static WorldGuardPlugin getWorldGuard() {
-		return (WorldGuardPlugin) pluginmanager.getPlugin("WorldGuard");
-	}
-
-	public MobArenaHandler getMobArenaHandler() {
-		return this.maHandler;
-	}
 }

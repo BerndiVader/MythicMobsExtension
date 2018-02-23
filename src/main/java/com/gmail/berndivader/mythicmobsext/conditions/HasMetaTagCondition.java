@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 
+import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -21,6 +22,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
+@ExternalAnnotation(name="hasmeta,hasmetasimple",author="BerndiVader")
 public class HasMetaTagCondition
 extends
 AbstractCustomCondition

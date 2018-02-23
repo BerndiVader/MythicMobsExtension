@@ -1,10 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
@@ -38,7 +39,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicator;
+import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -50,6 +51,8 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -86,7 +89,7 @@ implements Handler,Listener {
 	
 	static {
         wb=new WorldBorder();
-        wb.world=MinecraftServer.getServer().getWorldServer(0);
+        wb.world=MinecraftServer.getServer().getWorldServer(1);
         wb.setCenter(999999,999999);
         wb.setSize(1);
         wb.setWarningDistance(1);
@@ -114,30 +117,51 @@ implements Handler,Listener {
 	@EventHandler
 	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
 		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
-	    chl.put(e.getPlayer().getUniqueId(),channelPlayerInProzess(e.getPlayer(), new PacketReceivingHandler() {
-	    	@Override
-	        public void handle(Player p, PacketPlayInArmAnimation packet) {
-	        	float f1=getIndicatorPercentage(p);
-	        	System.err.println(f1);
-	        	p.setMetadata(GetLastDamageIndicator.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
-	            return;
-	        }
+		final Player player=e.getPlayer();
+		new BukkitRunnable() {
 			@Override
-			public void handle(Player p,PacketPlayInFlying packet) {
-				net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-				com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
-				double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
-				v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-						?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-						:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-				Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
-				return;
+			public void run() {
+				try {
+				    chl.put(player.getUniqueId(),channelPlayerInProzess(player,new PacketReceivingHandler() {
+				    	@Override
+				        public void handle(Player p, PacketPlayInArmAnimation packet) {
+				        	float f1=getIndicatorPercentage(p);
+				        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+				            return;
+				        }
+						@Override
+						public void handle(Player p,PacketPlayInFlying packet) {
+							net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
+							com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
+							double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
+							v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
+									?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
+									:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
+							Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
+							return;
+						}
+						@Override
+						public void handle(Player p, PacketPlayInSteerVehicle packet) {
+							return;
+						}
+						@Override
+						public void handle(Player p, PacketPlayInBlockDig packet) {
+							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
+							return;
+						}
+				    }));
+				} catch (NoSuchElementException ex) {
+					Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
+					try {
+					    PrintWriter pw=new PrintWriter(new File(Main.getPlugin().getDataFolder()+File.separator+"channelerror.txt"));
+					    ex.printStackTrace(pw);
+					    pw.close();			
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
-			@Override
-			public void handle(Player p, PacketPlayInSteerVehicle packet) {
-				return;
-			}
-	    }));
+		}.runTaskLater(Main.getPlugin(),1l);
 	}
 
 	@EventHandler
@@ -175,6 +199,9 @@ implements Handler,Listener {
 	    		case "PacketPlayInPositionLook":
 	    		case "PacketPlayInLook":
 	    			prh.handle(p,(PacketPlayInFlying)packet);
+	    			break;
+	    		case "PacketPlayInBlockDig":
+	    			prh.handle(p,(PacketPlayInBlockDig)packet);
 	    			break;
 	    		}
 	    		out.add(packet);
@@ -606,6 +633,7 @@ implements Handler,Listener {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
 	    void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
+	    void handle(Player p,PacketPlayInBlockDig packet);
 	}
 	
 	public boolean setEntityData(Entity e, String ns) {
@@ -840,4 +868,8 @@ implements Handler,Listener {
 		return new Vec3D(me.motX,me.motY,me.motZ);
 	}
 	
+	@Override
+	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
+		return null;
+	}
 }

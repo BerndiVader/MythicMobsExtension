@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 
+import java.util.Optional;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -12,7 +14,6 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import java.util.Optional;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 

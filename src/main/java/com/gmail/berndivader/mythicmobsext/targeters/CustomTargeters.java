@@ -1,10 +1,14 @@
 package com.gmail.berndivader.mythicmobsext.targeters;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.externals.Externals;
+import com.gmail.berndivader.mythicmobsext.externals.Internals;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicTargeterLoadEvent;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -13,7 +17,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 public class CustomTargeters
 implements
 Listener {
-	
 	public CustomTargeters() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 	}
@@ -21,43 +24,28 @@ Listener {
 	@EventHandler
 	public void onMythicTargetersLoad(MythicTargeterLoadEvent e) {
 		SkillTargeter st;
-		if ((st=getCustomTargeter(e.getTargeterName(),e.getConfig()))!=null) e.register(st);
+		if ((st=getCustomTargeter(e.getTargeterName().toLowerCase(),e.getConfig()))!=null) {
+			Internals.tl++;
+			e.register(st);
+		}
 	}
 
 	public static SkillTargeter getCustomTargeter(String s1,MythicLineConfig mlc) {
-		String TargeterName = s1.toLowerCase();
-		switch (TargeterName) {
-		case "crosshair":
-		case "crosshairentity":{
-			return new CrosshairTargeter(mlc);
+		SkillTargeter t=null;
+		Class<? extends SkillTargeter>cl1=null;
+		if (Internals.targeters.containsKey(s1)) {
+			cl1=Main.getPlugin().internals.loader.loadT(s1);
+		} else if (Externals.targeters.containsKey(s1)) {
+			cl1=Externals.targeters.get(s1);
 		}
-		case "crosshairlocation":{
-			return new CrosshairLocationTargeter(mlc);
+		if (cl1!=null) {
+			try {
+				t=cl1.getConstructor(MythicLineConfig.class).newInstance(mlc);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e1) {
+				e1.printStackTrace();
+			}
 		}
-		case "ownertarget": {
-			return new OwnerTargetTargeter(mlc);
-		}
-		case "lastdamager": {
-			return new LastDamagerTargeter(mlc);
-		}
-		case "targetmotion":
-		case "triggermotion":
-		case "selfmotion":
-		case "ownermotion":{
-			return new TargetMotionTargeter(mlc);
-		}
-		case "triggerstarget": {
-			return new TriggerTargetTargeter(mlc);
-		}
-		case "targetstarget": {
-			return new TargetsTargetTargeter(mlc);
-		}
-		case "eyedirection": {
-			return new EyeDirectionTargeter(mlc);
-		}
-		case "triggerdirection": {
-			return new TriggerDirectionTargeter(mlc);
-		}}
-		return null;
+		return t;
 	}
 }

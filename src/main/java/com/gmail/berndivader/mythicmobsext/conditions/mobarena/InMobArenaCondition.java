@@ -1,13 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
 
-import com.garbagemule.MobArena.MobArenaHandler;
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
+
+import com.garbagemule.MobArena.MobArenaHandler;
 
 public class InMobArenaCondition 
 extends
@@ -18,7 +18,7 @@ ILocationCondition {
 
 	public InMobArenaCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.maHandler = Main.getPlugin().getMobArenaHandler();
+		this.maHandler = new MobArenaHandler();
 	}
 
 	@Override

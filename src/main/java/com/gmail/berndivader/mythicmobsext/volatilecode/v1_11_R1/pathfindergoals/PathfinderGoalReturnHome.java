@@ -2,13 +2,6 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoal
 
 import java.util.Optional;
 
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
-import org.bukkit.event.entity.EntityTeleportEvent;
-
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import net.minecraft.server.v1_11_R1.BlockPosition;
 import net.minecraft.server.v1_11_R1.EntityInsentient;
 import net.minecraft.server.v1_11_R1.IBlockData;
@@ -17,6 +10,14 @@ import net.minecraft.server.v1_11_R1.NavigationAbstract;
 import net.minecraft.server.v1_11_R1.PathType;
 import net.minecraft.server.v1_11_R1.PathfinderGoal;
 import net.minecraft.server.v1_11_R1.Vec3D;
+
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
+import org.bukkit.event.entity.EntityTeleportEvent;
+
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public class PathfinderGoalReturnHome extends PathfinderGoal {
 	private final EntityInsentient d;

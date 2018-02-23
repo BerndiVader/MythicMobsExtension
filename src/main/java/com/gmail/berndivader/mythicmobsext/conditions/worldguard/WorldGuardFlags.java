@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -17,7 +18,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class WorldGuardFlags {
 	private Set<EntityType> entitytypes;
-	private WorldGuardPlugin worldguard = Main.getPlugin().wg;
+	private WorldGuardPlugin worldguard = (WorldGuardPlugin) Main.pluginmanager.getPlugin("WorldGuard");
 	private FlagRegistry fr = worldguard.getFlagRegistry();
 
 	@SuppressWarnings("deprecation")

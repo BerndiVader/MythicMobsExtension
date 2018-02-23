@@ -2,6 +2,13 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_11_R1.pathfindergoal
 
 import java.util.HashSet;
 
+import net.minecraft.server.v1_11_R1.EntityInsentient;
+import net.minecraft.server.v1_11_R1.EntityLiving;
+import net.minecraft.server.v1_11_R1.MathHelper;
+import net.minecraft.server.v1_11_R1.PathEntity;
+import net.minecraft.server.v1_11_R1.PathPoint;
+import net.minecraft.server.v1_11_R1.PathfinderGoal;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,13 +22,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-
-import net.minecraft.server.v1_11_R1.EntityInsentient;
-import net.minecraft.server.v1_11_R1.EntityLiving;
-import net.minecraft.server.v1_11_R1.MathHelper;
-import net.minecraft.server.v1_11_R1.PathEntity;
-import net.minecraft.server.v1_11_R1.PathPoint;
-import net.minecraft.server.v1_11_R1.PathfinderGoal;
 
 public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 	protected EntityInsentient entity;

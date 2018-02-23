@@ -2,10 +2,6 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy;
 
 import java.util.Set;
 
-import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.google.common.collect.Sets;
 
 import net.minecraft.server.v1_12_R1.ControllerMoveFlying;
@@ -22,6 +18,11 @@ import net.minecraft.server.v1_12_R1.MobEffects;
 import net.minecraft.server.v1_12_R1.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_12_R1.SoundEffects;
 import net.minecraft.server.v1_12_R1.World;
+
+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.gmail.berndivader.mythicmobsext.Main;
 
 public class MythicEntityParrot 
 extends EntityParrot {

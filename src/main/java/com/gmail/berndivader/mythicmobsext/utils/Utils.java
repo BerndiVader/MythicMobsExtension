@@ -46,7 +46,6 @@ import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -64,6 +63,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
@@ -84,11 +84,15 @@ public class Utils implements Listener {
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
+	public static String meta_MMEDIGGING="MMEDIGGING";
+	public static String scripts;
+	public static String str_PLUGINPATH;
 	private static Handler handler;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
+		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
 		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
@@ -102,7 +106,7 @@ public class Utils implements Listener {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		if (Utils.serverV>11) {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
-			if (Config.m_parrot) Main.logger.info("Found Minecraft 1.12 or higher, patching EntityParrot.");
+			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
 		}
 	}
 	
@@ -272,7 +276,7 @@ public class Utils implements Listener {
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
 		if (debug)
-			Main.logger.info("CustomDamage cancelled? " + Boolean.toString(e.isCancelled()));
+			Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled()) return;
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();

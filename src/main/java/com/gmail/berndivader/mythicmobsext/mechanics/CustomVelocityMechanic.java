@@ -3,12 +3,15 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mythicmobsext.externals.*;
+
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
+@ExternalAnnotation(name="customvelocity",author="BerndiVader")
 public class CustomVelocityMechanic 
 extends 
 SkillMechanic 

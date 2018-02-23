@@ -11,48 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
-import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicator;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathFinderGoalShoot;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalBreakBlocks;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalFollowEntity;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.MessageToMessageDecoder;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftSnowman;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
-
 import net.minecraft.server.v1_10_R1.EntityCreature;
 import net.minecraft.server.v1_10_R1.EntityInsentient;
 import net.minecraft.server.v1_10_R1.EntityLiving;
@@ -66,6 +24,7 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutPosition.EnumPlayerTeleportFla
 import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder;
 import net.minecraft.server.v1_10_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_10_R1.PacketPlayInBlockDig;
 import net.minecraft.server.v1_10_R1.Packet;
 import net.minecraft.server.v1_10_R1.PacketPlayInArmAnimation;
 import net.minecraft.server.v1_10_R1.PacketPlayInFlying;
@@ -98,8 +57,55 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_10_R1.EntityItem;
 import net.minecraft.server.v1_10_R1.EntityHuman;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftSnowman;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalFollowEntity;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_10_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.MessageToMessageDecoder;
+
 public class Core 
-implements Handler {
+implements
+Handler,
+Listener {
 	
 	private static WorldBorder wb;
 	
@@ -127,6 +133,7 @@ implements Handler {
 					}));	
 	
 	public Core() {
+		Bukkit.getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 	}
 	
 	static {
@@ -147,7 +154,8 @@ implements Handler {
 	
 	interface PacketReceivingHandler {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p,PacketPlayInFlying packet);
+	    void handle(Player p, PacketPlayInBlockDig packet);
+		void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
 	}
 	
@@ -158,7 +166,7 @@ implements Handler {
 	    	@Override
 	        public void handle(Player p, PacketPlayInArmAnimation packet) {
 	        	float f1=getIndicatorPercentage(p);
-	        	p.setMetadata(GetLastDamageIndicator.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+	        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
 	            return;
 	        }
 			@Override
@@ -174,6 +182,11 @@ implements Handler {
 			}
 			@Override
 			public void handle(Player p, PacketPlayInSteerVehicle packet) {
+				return;
+			}
+			@Override
+			public void handle(Player p, PacketPlayInBlockDig packet) {
+				p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
 				return;
 			}
 	    }));
@@ -214,6 +227,9 @@ implements Handler {
 	    		case "PacketPlayInPositionLook":
 	    		case "PacketPlayInLook":
 	    			prh.handle(p,(PacketPlayInFlying)packet);
+	    			break;
+	    		case "PacketPlayInBlockDig2":
+	    			prh.handle(p,(PacketPlayInBlockDig)packet);
 	    			break;
 	    		}
 	    		out.add(packet);
@@ -657,5 +673,11 @@ implements Handler {
 	public Vec3D lastPosEntity(Entity e1) {
 		net.minecraft.server.v1_10_R1.Entity me=((CraftEntity)e1).getHandle();
 		return new Vec3D(me.motX,me.motY,me.motZ);
+	}
+
+	@Override
+	public HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
