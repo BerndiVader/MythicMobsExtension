@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
@@ -47,7 +48,7 @@ INoTargetSkill {
 			}
 			score.setScore(i1);
 		} else {
-			data.getCaster().getEntity().getBukkitEntity().setMetadata(s1,new FixedMetadataValue(Main.getPlugin(),i1));
+			data.getCaster().getEntity().getBukkitEntity().setMetadata(Utils.parseMobVariables(s1,data,data.getCaster().getEntity(),null,null),new FixedMetadataValue(Main.getPlugin(),i1));
 		}
 		return true;
 	}

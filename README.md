@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.240 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+	# MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
 ### Wiki:
 https://github.com/BerndiVader/MythicMobsExtension/wiki
@@ -10,6 +10,8 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 27.02.2018 *** added mmemessage mechanic. See mmemessage for details.
+##### ** 25.02.2018 *** added MME var support to all notable mechanics.
 ##### ** 21.02.2018 *** added mining condition. See conditions for details.
 ##### ** 21.02.2018 *** fixed exception if default javascript files missing.
 ##### ** 21.02.2018 *** added externals & javascript to config.
@@ -350,6 +352,16 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## mmemessage / custommessage / sendmessage mechanic:
+
+Send a message parsed with MM & MME variables.
+
+##### `- sendmessage{msg="Owner <mob.meta.owner>"} @world`
+
+Where msg/m is is the message inside double quotes.
 
 
 

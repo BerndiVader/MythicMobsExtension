@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.compatibility.CompatibilityManager;
@@ -28,7 +29,7 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (CompatibilityManager.LibsDisguises != null) {
 			String d=SkillString.unparseMessageSpecialChars(this.disguise);
-			d=SkillString.parseMobVariables(d,data.getCaster(),target,data.getTrigger());
+			d=Utils.parseMobVariables(d,data,data.getCaster().getEntity(),target,null);
 			CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
 			return true;
 		}

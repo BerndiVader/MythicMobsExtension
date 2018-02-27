@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -40,7 +41,7 @@ ITargetedEntitySkill {
 			lS = (LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 		}
 		if (lS!=null) {
-			String pG = SkillString.parseMobVariables(this.g, data.getCaster(), t, data.getTrigger());
+			String pG=Utils.parseMobVariables(this.g, data, data.getCaster().getEntity(),t,null);
 			vh.aiPathfinderGoal(lS, pG, lT);
 			return true;
 		}

@@ -6,6 +6,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.MetaTagValue.ValueTypes;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -57,9 +58,9 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (this.tag == null || this.tag.isEmpty())
 			return false;
-		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), target, data.getTrigger());
-		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ? SkillString.parseMobVariables(
-				(String) this.mtv.getValue(), data.getCaster(), target, data.getTrigger()) : this.mtv.getValue();
+		String parsedTag=Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),target,null);
+		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ? Utils.parseMobVariables(
+				(String)this.mtv.getValue(),data,data.getCaster().getEntity(),target,null) : this.mtv.getValue();
 		if (this.useCaster) {
 			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		} else {
@@ -73,9 +74,9 @@ ITargetedEntitySkill {
 		Block target = BukkitAdapter.adapt(location).getBlock();
 		if (this.tag == null || this.tag.isEmpty())
 			return false;
-		String parsedTag = SkillString.parseMobVariables(this.tag, data.getCaster(), null, data.getTrigger());
+		String parsedTag = Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),null,location);
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
-				? SkillString.parseMobVariables((String) this.mtv.getValue(), data.getCaster(), null, data.getTrigger())
+				? Utils.parseMobVariables((String)this.mtv.getValue(),data,data.getCaster().getEntity(),null,location)
 				: this.mtv.getValue();
 		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		return true;

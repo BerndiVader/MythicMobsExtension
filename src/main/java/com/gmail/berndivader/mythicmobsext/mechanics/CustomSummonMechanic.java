@@ -89,7 +89,7 @@ public class CustomSummonMechanic extends SkillMechanic
 					Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 					if (this.tag!=null) {
 						String tt = SkillString.unparseMessageSpecialChars(this.tag);
-						tt = SkillString.parseMobVariables(tt, data.getCaster(), te, data.getTrigger());
+						tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
 						ams.getEntity().addScoreboardTag(tt);
 					}
 					if (this.setowner) {
