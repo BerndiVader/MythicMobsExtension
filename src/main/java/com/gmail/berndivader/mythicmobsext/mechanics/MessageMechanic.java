@@ -28,7 +28,6 @@ ITargetedEntitySkill {
 		} else {
 			msg="Invalid msg format in config of: "+line;
 		}
-		System.err.println(msg);
 	}
 
 	@Override
