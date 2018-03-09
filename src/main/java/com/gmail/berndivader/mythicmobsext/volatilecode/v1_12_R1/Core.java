@@ -49,6 +49,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -459,16 +460,20 @@ implements Handler,Listener {
         String data1=null;
         String[] parse = uGoal.split(" ");
         if (parse[0].matches("[0-9]*")) {
-        	i = Integer.parseInt(parse[0]);
-        	if (parse.length>1) {
-        		goal = parse[1];
-        		if (parse.length>2) {
-        			data = parse[2];
-        		}
-        		if (parse.length>3) {
-        			data1 = parse[3];
-        		}
-        	}
+        	i=Integer.parseInt(parse[0]);
+    		String[]cpy=new String[parse.length-1];
+    		System.arraycopy(parse,0,cpy,0,0);
+    		System.arraycopy(parse,1,cpy,0,parse.length-1);
+    		parse=cpy;
+        }
+      	if(parse.length>0) {
+       		goal=parse[0];
+       		if (parse.length>1) {
+       			data = parse[1];
+       		}
+       		if (parse.length>2) {
+       			data1 = parse[2];
+       		}
         }
 		try {
 			goalsField = EntityInsentient.class.getDeclaredField("goalSelector");
@@ -575,6 +580,13 @@ implements Handler,Listener {
 	        case "jumpoffvehicle": {
 	        	if (e instanceof EntityCreature) {
 	            	goals.a(i,(PathfinderGoal)new PathfinderGoalJumpOffFromVehicle(e));
+	        	}
+	        	break;
+	        }
+	        case "notifycollide": {
+	        	if (e instanceof EntityInsentient) {
+	        		int c=data!=null&&Utils.isNumeric(data)?Integer.parseInt(data):5;
+                    goals.a(i, (PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
 	        	}
 	        	break;
 	        }

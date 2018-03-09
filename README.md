@@ -1,15 +1,14 @@
-	# MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-### Wiki:
-https://github.com/BerndiVader/MythicMobsExtension/wiki
-
-Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
-Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
-Click [here](http://mc.hackerzlair.org/repo) for the repos
-
-## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
+#### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki)
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
+Click [Snapshot](http://mc.hackerzlair.org:8080) for the lastest builds.
+Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
+#### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+##### ** 08.03.2018 *** added lastcollided conditions. See conditions for details.
+##### ** 08.03.2018 *** added notifyoncollide pathfindergoal. See pathfindergoals for details.
 ##### ** 27.02.2018 *** added mmemessage mechanic. See mmemessage for details.
 ##### ** 25.02.2018 *** added MME var support to all notable mechanics.
 ##### ** 21.02.2018 *** added mining condition. See conditions for details.
@@ -850,6 +849,15 @@ Some examples:
 		
 ### Pathfindergoals:
 
+*notifyoncollide:*
+	
+##### `custompathfinder{goal="[goalpriority_value] notifyoncollide [delay]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="notifyoncollide 20"}`
++ Adds the ability to the mob to trigger onBlock if the mob collides with another entity. The trigger of the onBlock is 
+the collided entity.
++ Additional the goal also creates its own event called **OnEntityCollideEvent** useful for externals or js mechanics.
+
 *jumpoffvehicle:*
 	
 ##### `advaipathfinder{goal="[goalpriority_value] jumpoffvehicle"}`
@@ -914,7 +922,6 @@ SpawnEvent:
 		
 *breakblocks:*
 
-
 ##### `advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array] [blockbreakchance_value]"}`
 	
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}`
@@ -922,7 +929,6 @@ SpawnEvent:
 + The entity have a chance of 50% to break the block. Possible chances 0-100;
 
 *returnhome:*
-
 
 ##### `advaipathfinder{goal="[goalpriority_value] returnhome [speed_value] [x],[y],[z],[travel_radius],[tp_radius],[boolean_ignoretarget]"}`
 	
@@ -1534,6 +1540,11 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- lastcollided{type=[ENTITYTYPE]||[TYPESARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare if one of the given types match with the last collided entity.
+Requires a valid bukkit [EntityType](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html)
++ types=type=t: valid entitytype or an array of valid types. 
 
 ##### `- mining{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Player only condition** Check if the player is digging into a block. Aliases ismining, digging, isdigging.
