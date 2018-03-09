@@ -586,7 +586,7 @@ implements Handler,Listener {
 	        case "notifycollide": {
 	        	if (e instanceof EntityInsentient) {
 	        		int c=data!=null&&Utils.isNumeric(data)?Integer.parseInt(data):5;
-                    goals.a(i, (PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
+                    goals.a(i,(PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
 	        	}
 	        	break;
 	        }

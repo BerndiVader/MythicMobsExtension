@@ -19,7 +19,7 @@ IEntityCondition {
 	
 	public LastCollidedEntity(String line, MythicLineConfig mlc) {
 		super(line,mlc);
-		arr1=mlc.getString(new String[] {"types","type","t"},"").toLowerCase().split(",");
+		arr1=mlc.getString(new String[]{"types","type","t"},"").toLowerCase().split(",");
 	}
 
 	@Override

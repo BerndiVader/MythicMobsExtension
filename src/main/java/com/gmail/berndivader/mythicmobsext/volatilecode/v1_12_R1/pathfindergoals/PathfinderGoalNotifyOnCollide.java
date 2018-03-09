@@ -53,10 +53,11 @@ extends PathfinderGoal {
         return true;
     }
 
-    public void e() {
+    @SuppressWarnings("unchecked")
+	public void e() {
         ListIterator<Entity> it1=this.w.getEntities((Entity)this.e,this.e.getBoundingBox()).listIterator();
         while (it1.hasNext()) {
-            Entity ee=(Entity)it1.next();
+            Entity ee=it1.next();
             if (this.cd.containsKey(ee.getUniqueID())) continue;
             this.cd.put(ee.getUniqueID(),this.c);
             new OnEntityCollideEvent(this.e.getBukkitEntity(),ee.getBukkitEntity());

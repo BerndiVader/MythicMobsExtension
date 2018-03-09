@@ -1,12 +1,15 @@
 # MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
+
 #### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki)
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
 Click [Snapshot](http://mc.hackerzlair.org:8080) for the lastest builds.
 Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 #### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
+
 ### Changelog:
+
 ##### ** 08.03.2018 *** added lastcollided conditions. See conditions for details.
 ##### ** 08.03.2018 *** added notifyoncollide pathfindergoal. See pathfindergoals for details.
 ##### ** 27.02.2018 *** added mmemessage mechanic. See mmemessage for details.
