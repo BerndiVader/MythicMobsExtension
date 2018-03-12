@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 12.03.2018 *** added skillcooldown condition. See skillcooldown for details.
 ##### ** 10.03.2018 *** moved chatlistener & clicklistener to mme intern mechanics. See chat & click listener for details.
 ##### ** 08.03.2018 *** added lastcollided conditions. See conditions for details.
 ##### ** 08.03.2018 *** added notifyoncollide pathfindergoal. See pathfindergoals for details.
@@ -1632,6 +1633,44 @@ FleeButGotNothing:
 
 # Conditions
 
+
+##### `- skillcooldown{skill=[SKILLNAME];id=[STRING];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Check if the skill *skill* is on cooldown and if true store the remaining cooldown value into mob score <mob[target||trigger].score.[SKILLNAME+ID]>
+and into metatag [SKILLNAME+ID].
++ skill: name of the skill to check.
++ id: the id for the metatag
+
+Example:
+
+```yaml
+
+#mob:
+MythicPlayer:
+  Type: player
+  Health: 20
+  Options:
+    Persistent: true
+  Skills:
+  - castif{c="skillcooldown{skill=cooldown1;id=SKILL};action=true";meet=cd_show1;else=cooldown1} @self ~onUse
+  - castif{c="skillcooldown{skill=cooldown2;id=SKILL};action=true";meet=cd_show2;else=cooldown2} @self ~onRightClick
+
+#skill:
+cd_show1:
+  Skills:
+  - actionmessage{m="skill1 cooldown <target.score.cooldown1SKILL>"} @self
+cooldown1:
+  Cooldown: 10
+  Skills:
+  - lightning
+cd_show2:
+  Skills:
+  - actionmessage{m="skill2 cooldown <target.score.cooldown2SKILL>"} @self
+cooldown2:
+  Cooldown: 10
+  Skills:
+  - arrowvolley
+
+```
 
 ##### `- lastcollided{type=[ENTITYTYPE]||[TYPESARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Compare if one of the given types match with the last collided entity.

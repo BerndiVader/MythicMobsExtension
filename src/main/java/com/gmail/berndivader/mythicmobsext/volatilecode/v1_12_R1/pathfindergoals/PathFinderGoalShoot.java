@@ -77,7 +77,7 @@ public class PathFinderGoalShoot extends PathfinderGoal {
         if (bl2 != bl) {
             this.f = 0;
         }
-        this.f = bl2 ? ++this.f : --this.f;
+        this.f = bl2 ? ++this.f : this.f--;
         if (d2 > (double)this.d || this.f < 20) {
             this.a.getNavigation().a(entityLiving, this.b);
             this.i = -1;
