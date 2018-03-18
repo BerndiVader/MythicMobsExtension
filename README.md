@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 18.03.2018 *** added variable parsing to customrandomskill. See customrandomskill for details.
 ##### ** 12.03.2018 *** added skillcooldown condition. See skillcooldown for details.
 ##### ** 10.03.2018 *** moved chatlistener & clicklistener to mme intern mechanics. See chat & click listener for details.
 ##### ** 08.03.2018 *** added lastcollided conditions. See conditions for details.
@@ -893,13 +894,15 @@ set the targeter entity to perma owner of the activemob. Resistent against reloa
 	
 	
 ## advrandomskill mechanic:
+## customrandomskill mechanic:
 
 Use this mechanic to execute a random skill by chance and priority.
 	
-##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
+##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:[value]||[<variable>,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
 ##### `- customrandomskill{rrenewrandom=false(default);skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
 + This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
 + If renewrandom/newrandom/rnr is set to true a new random is created for the next entry else for all entries the same random is used.
++ Where 0.01 is 1% chance and 1 is 100% chance. If variables are used: 1 = 1% and 100 = 100% chance.
 	
 ##### `- advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged`
 + Same as above but if no chance match nothing will be executed.
