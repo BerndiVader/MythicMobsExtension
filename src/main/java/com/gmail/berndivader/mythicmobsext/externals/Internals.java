@@ -27,7 +27,7 @@ Listener {
    	public static int m,c,t,ml,cl,tl;
    	
    	static {
-   		filename=Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+   		filename=Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20"," ");
    		mechanics=new HashMap<>();
    		conditions=new HashMap<>();
    		targeters=new HashMap<>();

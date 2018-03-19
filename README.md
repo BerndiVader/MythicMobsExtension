@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 19.03.2018 *** fixed bug in classloader.
 ##### ** 18.03.2018 *** added variable parsing to customrandomskill. See customrandomskill for details.
 ##### ** 12.03.2018 *** added skillcooldown condition. See skillcooldown for details.
 ##### ** 10.03.2018 *** moved chatlistener & clicklistener to mme intern mechanics. See chat & click listener for details.
