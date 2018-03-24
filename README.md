@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 24.03.2018 *** added amir/activemobsinradius targeter. See targeters for details.
 ##### ** 19.03.2018 *** fixed bug in classloader.
 ##### ** 18.03.2018 *** added variable parsing to customrandomskill. See customrandomskill for details.
 ##### ** 12.03.2018 *** added skillcooldown condition. See skillcooldown for details.
@@ -1946,6 +1947,9 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@amir{radius=[VALUE];types=[ALL/ANY]||[STRING]||[ARRAY]}`
+Get all or specific mythicmobs in radius.
 
 ##### `@targetmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
 ##### `@triggermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
