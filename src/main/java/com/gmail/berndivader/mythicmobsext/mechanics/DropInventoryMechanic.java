@@ -93,6 +93,7 @@ ITargetedEntitySkill {
 	private ItemHolding holding;
 	private int pd;
 	private int p;
+	boolean c;
 	
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -127,6 +128,7 @@ ITargetedEntitySkill {
 		}
 		this.pd=mlc.getInteger(new String[] { "pickupdelay", "pd" }, 20);
 		this.p=mlc.getInteger(new String[] { "pieces", "amount", "a", "p" }, 1);
+		this.c=mlc.getBoolean(new String[] {"clear","nodrop","nd"},false);
 	}
 
 	@Override
@@ -158,7 +160,7 @@ ITargetedEntitySkill {
 						iis.addAll(Arrays.asList(e.getEquipment().getArmorContents()));
 					}
 				}
-				checkContentAndDrop(iis,entry,l,this.pd);
+				if (!c) checkContentAndDrop(iis,entry,l,this.pd);
 			}
 		}
 		return true;

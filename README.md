@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 02.04.2018 *** added clear / nodrop option to dropinventory mechanic. See dropinventory for details.
 ##### ** 24.03.2018 *** added amir/activemobsinradius targeter. See targeters for details.
 ##### ** 19.03.2018 *** fixed bug in classloader.
 ##### ** 18.03.2018 *** added variable parsing to customrandomskill. See customrandomskill for details.
@@ -667,10 +668,10 @@ This force all targeted players to see a black screen for 60 ticks. Use closeinv
 
 Force the target to drop an item from its storagte/equipment to the ground.
 
-##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER]} @trigger ~onInteract`
+##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER];nodrop=[BOOLEAN]} @trigger ~onInteract`
 
 Where in `item=""` all the item information is stored. `pickupdelay` = amount of ticks the item cannot be picked up again. `pieces` how many 
-pieces out of the inventory, regardless of itemstacks, are dropped.
+pieces out of the inventory, regardless of itemstacks, are dropped. Use `nodrop/clear/nd` to only clear the items.
 
 Examples:
 
