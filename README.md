@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 02.04.2018 *** added variables to amount for setmobhealth & setrandomlevel/setmoblevel mechanic. See mechanics for details.
 ##### ** 02.04.2018 *** added clear / nodrop option to dropinventory mechanic. See dropinventory for details.
 ##### ** 24.03.2018 *** added amir/activemobsinradius targeter. See targeters for details.
 ##### ** 19.03.2018 *** fixed bug in classloader.
@@ -721,20 +722,24 @@ This skill for example, will stop the death sequence when the mob is horizontal 
 
 ## setmobhealth mechanic:
 
-Set the mythicmobs mob health and maxhealth to a new amount. Random amount allowed. Ignore or allow level health modifier. Use set add or multiply
-the amount.
+Set the mythicmobs mob health and maxhealth to a new amount. Random amount & variables are allowed. Ignore or allow level health modifier. Use set add or multiply
+the amount, where SET is default.
 
-##### `- setmobhealth{health=2to5;ignoremodifier=true;set=+} ~onInteract`
+##### `- setmobhealth{health=2to5;ignoremodifier=true;set=ADD} ~onInteract`
 
 add a random value between 2 and 5 to the maxhealth.
 
-##### `- setmobhealth{health=10to20;ignoremodifier=true} ~onInteract`
+##### `- setmobhealth{health=10to20;ignoremodifier=true;set=SET} ~onInteract`
 
 set the maxhealth to random value between 10 and 20.
 
-##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=*} ~onInteract`
+##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=MULTIPLY} ~onInteract`
 
 multiply the maxhealth with a random value between 0.5 and 1.
+
+##### `- setmobhealth{health=<mob.meta.health>} ~onInteract`
+
+set the health of the mob to the amount stored in the mobs health metatag.
 
 	
 
@@ -1539,11 +1544,10 @@ grenadezombie:
 
 
 ## SetRandomLevelSkill:
-
-##### `- setrandomlevel{min=1;max=10;self=true}`
-+ `min=` lowest level
-+ `max=` highest level
-+ `self=` true = targetself / false = target any other targeted mob
+##### `- setrandomlevel{a=[RANGEDVALUE]||[VARIABLE];min=1;max=10}`
++ `min=` lowest level *deprecated*
++ `max=` highest level *deprecated*
++ `a=amount=` Ranged value or a number representing variable.
 		
 Example:
 

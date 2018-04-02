@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="setrandomlevel",author="BerndiVader")
+@ExternalAnnotation(name="setrandomlevel,setmoblevel",author="BerndiVader")
 public class SetMobLevelMechanic
 extends 
 SkillMechanic 
@@ -22,8 +22,8 @@ ITargetedEntitySkill {
 	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
+		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 	}
 
 	private void r(int i1, int i2) {
@@ -34,7 +34,7 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (Utils.mobmanager.isActiveMob(target)) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
-			am.setLevel(Utils.randomRangeInt(a));
+			am.setLevel(Utils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
 			return true;
 		}
 		return false;
