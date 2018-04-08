@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 08,04,2018 *** fixed nodrop option in dropinventory mechanic.
 ##### ** 02.04.2018 *** added variables to amount for setmobhealth & setrandomlevel/setmoblevel mechanic. See mechanics for details.
 ##### ** 02.04.2018 *** added clear / nodrop option to dropinventory mechanic. See dropinventory for details.
 ##### ** 24.03.2018 *** added amir/activemobsinradius targeter. See targeters for details.
