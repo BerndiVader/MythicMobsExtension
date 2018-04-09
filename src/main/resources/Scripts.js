@@ -8,5 +8,7 @@ var Bukkit = org.bukkit.Bukkit;
 var mythicmobs = Bukkit.getPluginManager().getPlugin("MythicMobs");
 var mythicmobsext = Bukkit.getPluginManager().getPlugin("MythicMobsExtension");
 var path=mythicmobsext.getDataFolder()+java.io.File.separator;
-
+var mme_eval=function(data) {
+	return eval(data);
+};
 load(path+"Includes.js");

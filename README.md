@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 09.04.2018 *** added math mechanic. See math mechanic for details.
 ##### ** 08,04,2018 *** fixed nodrop option in dropinventory mechanic.
 ##### ** 02.04.2018 *** added variables to amount for setmobhealth & setrandomlevel/setmoblevel mechanic. See mechanics for details.
 ##### ** 02.04.2018 *** added clear / nodrop option to dropinventory mechanic. See dropinventory for details.
@@ -362,6 +363,28 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## math
+
+`math{eval="[EXPRESSION]";store=[METAVAR]||[SCOREBOARDVAR]} @ANY_TARGETER`
+
+Evaluate the expression and store the result into a metatag or a scoreboard entry.
+
++ eval: Any valid math expression. You can use any variable present at runtime holding a number.
++ store: Use any meta or scoreboard variable to save the result.
+
+Example:
+
+```yaml
+baba:
+  Type: chicken
+  Health: 10
+  Skills:
+  - math{eval="(1+<mob.mhp>)/100*Math.PI)";store=<mob.meta.test>} @self ~onInteract
+```
+
 
 
 
