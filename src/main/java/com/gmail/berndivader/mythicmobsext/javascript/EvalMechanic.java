@@ -18,6 +18,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
@@ -82,6 +83,9 @@ ITargetedEntitySkill {
 				} else {
 					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2],"dummy").getScore(target instanceof Player?target.getName():target.getUniqueId().toString()).setScore((int)(s1));
 				}
+			} else if(parse[1].equals("stance")) {
+				ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
+				if (am!=null) am.setStance(Double.toString(s1));
 			}
 		} else if (parse[0].equals("score")){
 			Objective o1=Bukkit.getScoreboardManager().getMainScoreboard().getObjective(parse[1]);

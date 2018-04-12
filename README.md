@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 12.04.2018 *** added stance variable to math mechanic output.
 ##### ** 09.04.2018 *** added math mechanic. See math mechanic for details.
 ##### ** 08,04,2018 *** fixed nodrop option in dropinventory mechanic.
 ##### ** 02.04.2018 *** added variables to amount for setmobhealth & setrandomlevel/setmoblevel mechanic. See mechanics for details.
@@ -368,7 +369,7 @@ PlayEffectOnTarget:
 
 ## math
 
-`math{eval="[EXPRESSION]";store=[METAVAR]||[SCOREBOARDVAR]} @ANY_TARGETER`
+`math{eval="[EXPRESSION]";store=[METAVAR]||[SCOREBOARDVAR]||[STANCE]} @ANY_TARGETER`
 
 Evaluate the expression and store the result into a metatag or a scoreboard entry.
 
