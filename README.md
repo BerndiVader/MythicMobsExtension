@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 22.04.2018 *** added debug option to randomspeed.
 ##### ** 12.04.2018 *** added stance variable to math mechanic output.
 ##### ** 09.04.2018 *** added math mechanic. See math mechanic for details.
 ##### ** 08,04,2018 *** fixed nodrop option in dropinventory mechanic.

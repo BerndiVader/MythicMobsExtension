@@ -21,10 +21,12 @@ implements
 ITargetedEntitySkill,
 INoTargetSkill {
 	private String s1;
+	boolean bl1;
 
 	public SetSpeedMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		s1=mlc.getString(new String[] { "amount", "a" }, "0.2D").toLowerCase();
+		bl1=mlc.getBoolean("debug",false);
 	}
 
 	@Override
@@ -37,9 +39,15 @@ INoTargetSkill {
 		return d(target);
 	}
 	
-	private Boolean d(AbstractEntity target) {
+	private boolean d(AbstractEntity target) {
 		if (target.isLiving()) {
 			((LivingEntity)target.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(Utils.randomRangeDouble(s1));
+			LivingEntity l=(LivingEntity)target.getBukkitEntity();
+			if (bl1) {
+				System.out.println("randomspeed debug");
+				System.out.println("Value: "+l.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+				System.out.println("Base: "+l.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue());
+			}
 			return true;
 		}
 		return false;
