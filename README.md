@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 24.04.2018 *** added topthreatholder(tth) targeter. See topthreattargeter for details.
 ##### ** 22.04.2018 *** added debug option to randomspeed.
 ##### ** 12.04.2018 *** added stance variable to math mechanic output.
 ##### ** 09.04.2018 *** added math mechanic. See math mechanic for details.
@@ -1978,6 +1979,9 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@tth`
+Get the topthreatholder of the castermob.
 
 ##### `@amir{radius=[VALUE];types=[ALL/ANY]||[STRING]||[ARRAY]}`
 Get all or specific mythicmobs in radius.
