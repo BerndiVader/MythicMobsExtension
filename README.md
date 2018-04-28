@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 28.04.2018 *** improved renameentity mechanic. See renameentity mechanic for details.
 ##### ** 24.04.2018 *** added topthreatholder(tth) targeter. See topthreattargeter for details.
 ##### ** 22.04.2018 *** added debug option to randomspeed.
 ##### ** 12.04.2018 *** added stance variable to math mechanic output.
@@ -915,7 +916,7 @@ Same as the build-in disguise mechanic. But additional it parse every variable t
 
 ## renameentity mechanic:
     
-Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed. You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity.
+Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed. You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity. Use special chars like <&sp> or use doubleqoutes like "bla bla"
 	
 ##### `- renameentity{name=[PARSEDSTRING];visible=[BOOLEAN]}`
 	

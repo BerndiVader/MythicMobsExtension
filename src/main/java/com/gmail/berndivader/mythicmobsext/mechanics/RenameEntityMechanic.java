@@ -17,9 +17,12 @@ ITargetedEntitySkill {
 	String name;
 	boolean v;
 	public RenameEntityMechanic(String line, MythicLineConfig mlc) {
-
 		super(line,mlc);
-		this.name=mlc.getString(new String[] { "name", "n" }, "");
+		name=mlc.getString(new String[] { "name", "n" }, "");
+		if (name.charAt(0)=='"'&&name.charAt(name.length()-1)=='"') {
+			name=name.substring(1,name.length()-1);
+		}
+		name=SkillString.parseMessageSpecialChars(name);
 		this.v=mlc.getBoolean(new String[] { "visible", "v" }, false);
 	}
 
