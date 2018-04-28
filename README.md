@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 28.04.2018 *** added threattabletargeter(ttt). See threattabletargeter targeter for detials.
 ##### ** 28.04.2018 *** improved renameentity mechanic. See renameentity mechanic for details.
 ##### ** 24.04.2018 *** added topthreatholder(tth) targeter. See topthreattargeter for details.
 ##### ** 22.04.2018 *** added debug option to randomspeed.
@@ -1980,6 +1981,9 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@ttt{range=[RANGE];threat=[RANGE]}`
+Get all threattable entries. Where range is the place sorted by the threat amount. highest=first. threat option is for the threatamount itself.
 
 ##### `@tth`
 Get the topthreatholder of the castermob.

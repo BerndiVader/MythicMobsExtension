@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +22,10 @@ import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
 @ExternalAnnotation(name="ttt,threattabletargeter",author="BerndiVader")
-public class ThreatTableTargeter 
+public class ThreatTableTargeter 	
 extends 
 IEntitySelector {
-	RangedDouble r1;
+	RangedDouble r1,r2;
 	static Field f1;
 	
 	static {
@@ -38,7 +39,8 @@ IEntitySelector {
 	
 	public ThreatTableTargeter(MythicLineConfig mlc) {
 		super(mlc);
-		r1=new RangedDouble(mlc.getString("range","1"));
+		r1=new RangedDouble(mlc.getString("range",">0"));
+		r2=new RangedDouble(mlc.getString("threat",">0"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,6 +54,13 @@ IEntitySelector {
 				if ((tt=sort((ConcurrentHashMap<AbstractEntity,Double>)f1.get(am.getThreatTable())))==null) return targets;
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
+			}
+			Iterator<Map.Entry<AbstractEntity,Double>> it=tt.entrySet().iterator();
+			int i1=1;
+			while(it.hasNext()) {
+				Map.Entry<AbstractEntity,Double>p1=it.next();
+				if(r1.equals(i1)&&r2.equals(p1.getValue())) targets.add(p1.getKey());
+				i1++;
 			}
 		}
 		return targets;
