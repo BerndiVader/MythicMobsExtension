@@ -33,7 +33,7 @@ implements
 ITargetedEntitySkill {
 	static String str;
 	int period;
-	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase;
+	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite;
 	String storage;
 	String[]phrases;
 	RangedDouble radius;
@@ -60,6 +60,7 @@ ITargetedEntitySkill {
 		cancelMatch=mlc.getBoolean("cancelmatch",false);
 		cancelFalse=mlc.getBoolean("cancelfalse",false);
 		removephrase=mlc.getBoolean("removephrase",false);
+		infinite=mlc.getBoolean("infinite",false);
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
 		this.buffName=Optional.of("chatlistener");
@@ -118,7 +119,7 @@ ITargetedEntitySkill {
 		
         @Override
         public void run() {
-            this.ticksRemaining--;
+            if (!buff.infinite) this.ticksRemaining--;
             if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
                 this.terminate();
             }

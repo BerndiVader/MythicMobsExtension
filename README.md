@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 29.04.2018 *** added infinite option to chatlistener mechanic.
 ##### ** 28.04.2018 *** added threattabletargeter(ttt). See threattabletargeter targeter for detials.
 ##### ** 28.04.2018 *** improved renameentity mechanic. See renameentity mechanic for details.
 ##### ** 24.04.2018 *** added topthreatholder(tth) targeter. See topthreattargeter for details.
@@ -412,12 +413,13 @@ listener execute failskill. After a click, the maxdelay is set back. The result 
 
 ## chatlistener
 
-`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME]} @PLAYERTARGETERS`
+`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL]} @PLAYERTARGETERS`
 
 Use this skill to listen to the targeted players chat for period of ticks. If one of the phrases, or any if empty, match the matchskill is excuted, if not the falseskill is executed. Use breakonmatch and breakonfalse to cancel the skill if match or if no match. Radius is the range the player needs to be. This can be a ranged value like 2to5 or <10 that stuff. Use the inuseskill to tell others that the mob is already talking to someone else. To make the mob multitalking, set multi to true and the mob is able to talk to more than one player simultaneously. Optional, set the phrases under "" to have spaces enabled. Additional all avaible variables like <target.name> etc... can be used.
 
 + phrases: the words, phrases the mob should listen to.
 + period: how long the mob listen, in ticks.
++ infinite: true/false(default) if the listener should not use period counter.
 + radius: the radius the targeted player need to be to get an answer.
 + breakonmatch: stop the listener if one of the phrases match.
 + breakonfalse: stop the listener if the chat message dont fit any phrase.
@@ -1983,7 +1985,7 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 
 
 ##### `@ttt{range=[RANGE];threat=[RANGE]}`
-Get all threattable entries. Where range is the place sorted by the threat amount. highest=first. threat option is for the threatamount itself.
+Get all threattable entries. Where range is the threatrank sorted by the threat amount. highest=first. threat option is for the threatamount itself.
 
 ##### `@tth`
 Get the topthreatholder of the castermob.
