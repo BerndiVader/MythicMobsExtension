@@ -128,7 +128,7 @@ ITargetedEntitySkill {
         
 		@EventHandler
         public void chatListener(AsyncPlayerChatEvent e) {
-			if (buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
+			if (!buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
         	String s22=Utils.parseMobVariables(e.getMessage(),data,data.getCaster().getEntity(),p,null);
         	String s2=Utils.parseMobVariables(e.getMessage().toLowerCase(),data,data.getCaster().getEntity(),p,null);
