@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 29.04.2018 *** added ignoreTrigger argument to chatlistener mechanic.
 ##### ** 29.04.2018 *** added infinite option to chatlistener mechanic.
 ##### ** 28.04.2018 *** added threattabletargeter(ttt). See threattabletargeter targeter for detials.
 ##### ** 28.04.2018 *** improved renameentity mechanic. See renameentity mechanic for details.
@@ -413,7 +414,7 @@ listener execute failskill. After a click, the maxdelay is set back. The result 
 
 ## chatlistener
 
-`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL]} @PLAYERTARGETERS`
+`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL]} @PLAYERTARGETERS`
 
 Use this skill to listen to the targeted players chat for period of ticks. If one of the phrases, or any if empty, match the matchskill is excuted, if not the falseskill is executed. Use breakonmatch and breakonfalse to cancel the skill if match or if no match. Radius is the range the player needs to be. This can be a ranged value like 2to5 or <10 that stuff. Use the inuseskill to tell others that the mob is already talking to someone else. To make the mob multitalking, set multi to true and the mob is able to talk to more than one player simultaneously. Optional, set the phrases under "" to have spaces enabled. Additional all avaible variables like <target.name> etc... can be used.
 
@@ -431,6 +432,7 @@ Use this skill to listen to the targeted players chat for period of ticks. If on
 + removephrase: true/false(default) if the matched phrase should be removed from the message.
 + cancelmatch: true/false/default) cancel the message event if matched.
 + cancelfalse: true/false(default) cancel the message event if no match.
++ ignoretrigger: true(default)/false if false, only listen to the player that triggered the skill.
 
 Examples:
 

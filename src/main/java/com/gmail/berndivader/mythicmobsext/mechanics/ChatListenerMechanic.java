@@ -33,7 +33,7 @@ implements
 ITargetedEntitySkill {
 	static String str;
 	int period;
-	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite;
+	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger;
 	String storage;
 	String[]phrases;
 	RangedDouble radius;
@@ -60,6 +60,7 @@ ITargetedEntitySkill {
 		cancelMatch=mlc.getBoolean("cancelmatch",false);
 		cancelFalse=mlc.getBoolean("cancelfalse",false);
 		removephrase=mlc.getBoolean("removephrase",false);
+		ignoreTrigger=mlc.getBoolean("ignoretrigger",true);
 		infinite=mlc.getBoolean("infinite",false);
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
@@ -127,6 +128,7 @@ ITargetedEntitySkill {
         
 		@EventHandler
         public void chatListener(AsyncPlayerChatEvent e) {
+			if (buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
         	String s22=Utils.parseMobVariables(e.getMessage(),data,data.getCaster().getEntity(),p,null);
         	String s2=Utils.parseMobVariables(e.getMessage().toLowerCase(),data,data.getCaster().getEntity(),p,null);
