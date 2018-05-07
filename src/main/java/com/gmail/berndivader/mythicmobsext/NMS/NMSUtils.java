@@ -52,6 +52,7 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1334,6 +1335,16 @@ public class NMSUtils extends NMSUtil {
 		}
 		return null;
 	}
+	
+	public static void saveLivingNBT(Entity e) {
+		Object o1=getHandle(e);
+		Object o2=getEntityData(e);
+		try {
+			class_EntityLiving_writeNBTMethod.invoke(o1,o2);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+			e1.printStackTrace();
+		}
+	}
 
 	public static boolean setAbsAmount(Entity e, float f) {
 		try {
@@ -1403,5 +1414,31 @@ public class NMSUtils extends NMSUtil {
 		}
 		return v3;
 	}
+	
+    public static void setMeta(org.bukkit.inventory.ItemStack is,String s1,String s2) {
+    	Object o1=getTag(getHandle(is));
+    	if (o1==null) return;
+    	try {
+    		if (s2==null||s2.length()==0) {
+    			class_NBTTagCompound_removeMethod.invoke(o1);
+    		} else {
+    			class_NBTTagCompound_setStringMethod.invoke(o1,s1,s2);
+    		}
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    }
+    
+    public static String getMeta(org.bukkit.inventory.ItemStack is,String s1) {
+    	Object o1=getTag(getHandle(is));
+    	if (o1==null||!class_NBTTagCompound.isInstance(o1)) return null;
+    	String s2="";
+    	try {
+    		s2=(String)class_NBTTagCompound_getStringMethod.invoke(o1,s1);
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    	return s2;
+    }
 	
 }

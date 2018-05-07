@@ -46,7 +46,6 @@ INoTargetSkill {
 	}
 	
 	boolean setNbt(Entity e1,String s1) {
-		System.err.println(s1);
 		return Volatile.handler.addNBTTag(e1,s1);
 	}
 

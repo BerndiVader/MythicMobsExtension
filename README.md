@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 07.05.2018 *** added tags, mark, and give argument to dropmythicitem mechanic.
 ##### ** 29.04.2018 *** added ignoreTrigger argument to chatlistener mechanic.
 ##### ** 29.04.2018 *** added infinite option to chatlistener mechanic.
 ##### ** 28.04.2018 *** added threattabletargeter(ttt). See threattabletargeter targeter for detials.
@@ -1342,12 +1343,16 @@ Or use some variables in the destination targeter:
 	
 ## dropmythicitem skill:
 	
-Drop a mythicitem or a mythicdroptable.
+Drop a mythicitem or a mythicdroptable. Additional use nbt tags to mark the mythicitem.
 
 Options:
 + `mythicitem=item=itemtype=type=t=i=` Internal name of the mythic item or the mythic droptable.
 + `amount=a=` the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
 + `shuffle=true/false` if true the droptable itemlist will be shuffled by random.
++ `mark=true(default)/false` the item will be marked with the tag **MythicQuestItem** with value **internalItemname**
++ `tags=TAGNAME:VALUE` use this to add customtags to the items nbt. Ex: `tags=tagname:value,leetitem:true`
++ `stackable=true(default)/false` if false the item is not stackable.
++ `give=true/false(default)` the mechanic act as a give skill and put the item into the players inventory if a player targeter is present and if there is space in the inventory. Otherwise the item is spawned at the location.
 	
 `- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack`
 	

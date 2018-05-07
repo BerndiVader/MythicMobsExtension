@@ -36,9 +36,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
@@ -648,12 +648,6 @@ implements Handler,Listener {
 	    void handle(Player p,PacketPlayInBlockDig packet);
 	}
 	
-	public boolean setEntityData(Entity e, String ns) {
-		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();
-		
-		return true;
-	}
-	
 	@Override
 	public boolean getNBTValueOf(Entity e1, String s1,boolean b1) {
 		return getNBTValue(e1,s1);
@@ -662,23 +656,26 @@ implements Handler,Listener {
 	@Override
 	public boolean addNBTTag(Entity e1,String s) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
-		NBTTagCompound nbt1=null,nbt2=null,nbt3=null;
-		if ((nbt1=TFa(me))!=null) {
-			nbt3=nbt1.g();
+		NBTTagCompound nbt=null,nbt2=null,nbt3=null;
+		if ((nbt2=TFa(me))!=null) {
+			nbt3=nbt2.g();
 			try {
-				nbt2=MojangsonParser.parse(s);
+				nbt=MojangsonParser.parse(s);
 			}
 			catch (MojangsonParseException ex) {
-				System.err.println(ex.getLocalizedMessage());
+				System.err.println("Error setting NBT: "+ex.getLocalizedMessage());
 				return false;
 			}
-			UUID u=me.getUniqueID();
-			nbt1.a(nbt2);
-			me.a(u);
-			if(nbt3.equals(nbt1)) {
+			nbt2.a(nbt);
+			me.a(me.getUniqueID());
+			if(nbt2.equals(nbt3)) {
 				return false;
 			}
-			me.f(nbt1);
+			if (me instanceof EntityLiving) {
+				((EntityLiving)me).a(nbt2);
+			} else {
+				me.f(nbt2);
+			}
 			return true;
 		}
 		return false;
@@ -693,7 +690,7 @@ implements Handler,Listener {
 				nbt2=MojangsonParser.parse(s);
 			}
 			catch (MojangsonParseException ex) {
-				System.err.println(ex.getLocalizedMessage());
+				System.err.println("Error testing NBT: "+ex.getLocalizedMessage());
 				return false;
 			}
 			NBTBase nb1=null,nb2=null;
