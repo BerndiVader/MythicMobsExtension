@@ -168,7 +168,7 @@ ITargetedLocationSkill {
 		return this.cast(sdata);
 	}
 
-	private boolean handleConditions(SkillMetadata data) {
+	public boolean handleConditions(SkillMetadata data) {
 		boolean meet = true;
 		if (!this.casterConditions.isEmpty()) {
 			meet = this.checkConditions(data, this.casterConditions, false);
