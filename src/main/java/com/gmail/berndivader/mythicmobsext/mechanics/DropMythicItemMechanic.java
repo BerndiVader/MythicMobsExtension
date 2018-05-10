@@ -75,14 +75,16 @@ ITargetedLocationSkill {
 	}
 	
 	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
-		ActiveMob am=(ActiveMob)data.getCaster();
-		if (this.itemtype==null||am==null) return false;
+		ActiveMob am=data.getCaster() instanceof ActiveMob?(ActiveMob)data.getCaster():null;
+		if (this.itemtype==null) return false;
 		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,tag,tags,am,e1==null?data.getTrigger():e1);
 		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
-		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
-        Bukkit.getServer().getPluginManager().callEvent(e);
-		if (e.isCancelled()) return false;
-		drops=e.getDrops();
+		if (am!=null) {
+			MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
+	        Bukkit.getServer().getPluginManager().callEvent(e);
+			if (e.isCancelled()) return false;
+			drops=e.getDrops();
+		}
 		dropItems(drops,e1!=null?e1.getBukkitEntity().getLocation():BukkitAdapter.adapt(l1),e1!=null?e1.isPlayer()?(Player)e1.getBukkitEntity():null:null,give);
 		return true;
 	}

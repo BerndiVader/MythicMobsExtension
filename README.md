@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 10.05.2018 *** fixed issue while casting dropmythicitem with none mythicmobs entities.
 ##### ** 10.05.2018 *** added ignoreNPC to entitiesinradius condition.
 ##### ** 07.05.2018 *** added tags, mark, and give argument to dropmythicitem mechanic.
 ##### ** 29.04.2018 *** added ignoreTrigger argument to chatlistener mechanic.
