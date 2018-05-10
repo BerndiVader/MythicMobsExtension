@@ -33,6 +33,7 @@ dependencies {
     compileOnly files('./lib/rpgitem-reloaded-1.11-v.231.jar')
     compileOnly files('./lib/worldedit-bukkit-6.1.jar')
     compileOnly files('./lib/worldguard-6.2.jar')
+    compileOnly files('./lib/citizens-2.0.22-SNAPSHOT.jar')
 }
 
 processResources {

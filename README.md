@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 10.05.2018 *** added ignoreNPC to entitiesinradius condition.
 ##### ** 07.05.2018 *** added tags, mark, and give argument to dropmythicitem mechanic.
 ##### ** 29.04.2018 *** added ignoreTrigger argument to chatlistener mechanic.
 ##### ** 29.04.2018 *** added infinite option to chatlistener mechanic.
@@ -1834,16 +1835,16 @@ an entity as target. Like ~onTimer and such stuff.
 
 
 ##### `- isburning{range=[ranged_value];action=[boolean]}`
-By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
+By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range. Use npc=true/false to ignore citizens npcs.
 
-##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius. Use npc=true/false to ignore citizens npcs.
 
-##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius. Use npc=true/false to ignore citizens npcs.
 
-##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount players are in radius.
+##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount players are in radius. Use npc=true/false to ignore citizens npcs.
 
 *Example*
 
@@ -1855,8 +1856,8 @@ Check if amount players are in radius.
   - leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
   # true if there are more than 5 entities of the type list around.
   
-  - pir{amount=>0;radius=64}
-  # true if there is atleast 1 player in radius of 64 blocks.
+  - pir{amount=>0;radius=64;npc=false}
+  # true if there is atleast 1 player in radius of 64 blocks. plus ignore npcs.
   
   - eir{types=all;isb=true;amount=>0;radius=10}
   # true if there is atleast 1 other entity in radius of 10 blocks & not on
