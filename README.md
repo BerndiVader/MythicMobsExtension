@@ -10,6 +10,8 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 13.05.2018 *** added Quests support. See QuestsSupport for details.
+##### ** 13.05.2018 *** added sensitive argument to chatlistener mechanic.
 ##### ** 10.05.2018 *** fixed issue while casting dropmythicitem with none mythicmobs entities.
 ##### ** 10.05.2018 *** added ignoreNPC to entitiesinradius condition.
 ##### ** 07.05.2018 *** added tags, mark, and give argument to dropmythicitem mechanic.
@@ -281,6 +283,47 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 ##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
+# Quests Support:
+If you have quests installed you can use some conditions and mechanics within mythicmobs now. Use the ocnfig.yml to disable the support if you dont need it.
+
+## Mechanics:
+
+### takequest
+
+`takequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) take the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### completequest
+
+`completequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) complete the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+## Conditions:
+
+### activequest
+
+`activequest{quest="[ANY]||[QUESTNAME]||[LIST]";stage=[RANGEDVALUE]}`
+
+**Player only Conditions** Checks if the player has the quest running at the given stage.
+
++ quest: Any valid quest, ANY for any quest or a list like "Quest1,quest2,quest3" Use double quotes!
++ stage: the number of the stage. Can be ranged: >-1 or 2 or 1to20
+
+### completedquest
+
+`completedquest{quest="[QUESTNAME]"}`
+
+**Player only Conditions** Checks if the player has the given quest completed.
+
++ quest: Any valid quest. Use double quotes!
+
+
 
 # Custom Entities:
 
@@ -417,7 +460,7 @@ listener execute failskill. After a click, the maxdelay is set back. The result 
 
 ## chatlistener
 
-`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL]} @PLAYERTARGETERS`
+`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL];sensitive=[BOOL]} @PLAYERTARGETERS`
 
 Use this skill to listen to the targeted players chat for period of ticks. If one of the phrases, or any if empty, match the matchskill is excuted, if not the falseskill is executed. Use breakonmatch and breakonfalse to cancel the skill if match or if no match. Radius is the range the player needs to be. This can be a ranged value like 2to5 or <10 that stuff. Use the inuseskill to tell others that the mob is already talking to someone else. To make the mob multitalking, set multi to true and the mob is able to talk to more than one player simultaneously. Optional, set the phrases under "" to have spaces enabled. Additional all avaible variables like <target.name> etc... can be used.
 
@@ -436,6 +479,7 @@ Use this skill to listen to the targeted players chat for period of ticks. If on
 + cancelmatch: true/false/default) cancel the message event if matched.
 + cancelfalse: true/false(default) cancel the message event if no match.
 + ignoretrigger: true(default)/false if false, only listen to the player that triggered the skill.
++ sensitive: true(default)/false if false, ignore case sensitive in chatlistener.
 
 Examples:
 

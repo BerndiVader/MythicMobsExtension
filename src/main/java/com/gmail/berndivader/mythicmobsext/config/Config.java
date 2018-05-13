@@ -28,6 +28,7 @@ public class Config {
 	public static boolean h_displays;
 	public static boolean externals;
 	public static boolean javascript;
+	public static boolean quests;
 	final static YamlConfiguration config;
 
 	static {
@@ -94,6 +95,7 @@ public class Config {
 		h_displays = config.getBoolean(ConfigValue.H_DISPLAYS.getPath());
 		externals=config.getBoolean(ConfigValue.EXTERNALS.getPath());
 		javascript=config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
+		quests=config.getBoolean(ConfigValue.QUESTS.getPath());
 	}
 	
 }

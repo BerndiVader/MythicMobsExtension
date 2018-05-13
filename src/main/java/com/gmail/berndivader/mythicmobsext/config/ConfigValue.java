@@ -16,7 +16,8 @@ public enum ConfigValue {
 	MOBARENA("Configuration.Compatibility.MobArena", true),
 	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true),
 	EXTERNALS("Configuration.Externals",true),
-	JAVASCRIPT("Configuration.Javascript",true);
+	JAVASCRIPT("Configuration.Javascript",true),
+	QUESTS("Configuration.Quests",true);
 	private final String path;
 	private final Object value;
 

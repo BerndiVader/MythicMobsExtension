@@ -33,7 +33,7 @@ implements
 ITargetedEntitySkill {
 	static String str;
 	int period;
-	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger;
+	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger,sense;
 	String storage;
 	String[]phrases;
 	RangedDouble radius;
@@ -64,6 +64,7 @@ ITargetedEntitySkill {
 		infinite=mlc.getBoolean("infinite",false);
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
+		sense=mlc.getBoolean("sensitive",true);
 		this.buffName=Optional.of("chatlistener");
 		if ((s1=mlc.getString("matchskill"))!=null) matchSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("falseskill"))!=null) falseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -130,14 +131,18 @@ ITargetedEntitySkill {
         public void chatListener(AsyncPlayerChatEvent e) {
 			if (!buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
-        	String s22=Utils.parseMobVariables(e.getMessage(),data,data.getCaster().getEntity(),p,null);
-        	String s2=Utils.parseMobVariables(e.getMessage().toLowerCase(),data,data.getCaster().getEntity(),p,null);
+        	String s2,s22;
+        	String s222=e.getMessage();
+        	s2=s22=Utils.parseMobVariables(s222,data,data.getCaster().getEntity(),p,null);
+        	if (!sense) s2=s2.toLowerCase();
         	Skill sk=null;
         	if(ChatListenerMechanic.this.radius.equals(
         			(double)Math.sqrt(Utils.distance3D(this.data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),
         			e.getPlayer().getLocation().toVector())))) {
         		for(int i1=0;i1<phrases.length;i1++) {
-        			if ((bl1=s2.contains(Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null)))) {
+        			String s4=Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null);
+        			if (!sense) s4=s4.toLowerCase();
+        			if ((bl1=s2.contains(s4))) {
         				if (removephrase) s22=s22.replace(phrases[i1],"");
         				break;
         			}

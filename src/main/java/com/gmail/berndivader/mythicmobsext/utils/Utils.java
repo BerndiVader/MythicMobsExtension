@@ -229,7 +229,7 @@ public class Utils implements Listener {
 			onEntityDamageTaken(e, victim);
 		}
 	}
-
+	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void storeDamageCause(EntityDamageEvent e) {
 		Entity victim = e.getEntity();

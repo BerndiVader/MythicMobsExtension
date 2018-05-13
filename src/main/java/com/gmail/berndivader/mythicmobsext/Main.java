@@ -35,6 +35,7 @@ import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
+import com.gmail.berndivader.mythicmobsext.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Main extends JavaPlugin {
@@ -142,6 +143,10 @@ public class Main extends JavaPlugin {
 			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) {
 				Main.healthbarhandler=new HealthbarHandler(this);
 				logger.info("HolographicDisplays support enabled!");
+			}
+			if (Config.quests&&QuestsSupport.isPresent()) {
+				new QuestsSupport(this);
+				logger.info("Quests support enabled!");
 			}
 			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
 			if (Config.c_owners) {

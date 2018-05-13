@@ -28,9 +28,9 @@ ITargetedEntitySkill {
 	public RegexMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		regex=mlc.getString("regex",null);
-		format=mlc.getString("format",null).toLowerCase();
-		var=mlc.getString("var",null).toLowerCase();
-		if (!(var==null||(regex==null||regex!=null&&!regex.startsWith("\""))||format==null)) {
+		format=mlc.getString("format","").toLowerCase();
+		var=mlc.getString("var","").toLowerCase();
+		if (!(var.isEmpty()||(regex==null||regex!=null&&!regex.startsWith("\""))||format.isEmpty())) {
 			p1=Pattern.compile(regex);
 		} else {
 			Main.logger.warning("There is some misconfiguration in regex at "+line);
