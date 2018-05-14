@@ -10,7 +10,8 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
-##### ** 13.05.2018 +** fixed NaN in customdamage if power is 0.
+##### ** 13.05.2018 *** added failquest, nextstagequest, setstagequest to QuestsSupport.
+##### ** 13.05.2018 *** fixed NaN in customdamage if power is 0.
 ##### ** 13.05.2018 *** added Quests support. See QuestsSupport for details.
 ##### ** 13.05.2018 *** added sensitive argument to chatlistener mechanic.
 ##### ** 10.05.2018 *** fixed issue while casting dropmythicitem with none mythicmobs entities.
@@ -302,6 +303,30 @@ The targeted player(s) take the quest.
 `completequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
 
 The targeted player(s) complete the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### failquest
+
+`failquest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) fails the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### nextstagequest
+
+`nextstagequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) continues on the next stage of the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### setstagequest
+
+`setstagequest{quest="[QUESTNAME]";stage=[INTEGER]} @PLAYERTARGETER`
+
+The targeted player(s) continues on the given stage of the quest.
 
 + quest: Any valid quest. Use double quotes!
 

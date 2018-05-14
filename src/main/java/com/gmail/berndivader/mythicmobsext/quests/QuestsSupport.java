@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.quests;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -11,6 +13,8 @@ import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
+import me.blackvein.quests.Quest;
+import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
 
 public class QuestsSupport 
@@ -52,17 +56,27 @@ Listener {
 			e.register(new QuestRunningCondition(e.getConfig().getLine(),e.getConfig()));
 		} else if(s1.equals("completedquest")) {
 			e.register(new QuestCompleteCondition(e.getConfig().getLine(),e.getConfig()));
+		} else if(s1.equals("testrequirement")) {
+			e.register(new TestRequirementCondition(e.getConfig().getLine(),e.getConfig()));
 		}
 	}
 	
 	@EventHandler
 	public void onQuestMechanicsLoad(MythicMechanicLoadEvent e) {
 		String s1=e.getMechanicName().toLowerCase();
-		if (s1.equals("completequest")) {
-			e.register(new CompleteQuestMechanic(e.getContainer().getConfigLine(),e.getConfig()));
-		} else if(s1.equals("takequest")) {
-			e.register(new StartQuestMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+		if (s1.equals("completequest")||s1.equals("takequest")||s1.equals("failquest")) {
+			e.register(new QuestsMechanic(e.getContainer().getConfigLine(),e.getConfig()));
 		}
 	}
+	
+	static Quest getQuestFromCurrent(Quester quester, String questName) {
+		Iterator<Map.Entry<Quest,Integer>>entries=quester.currentQuests.entrySet().iterator();
+		while(entries.hasNext()) {
+			Quest quest=entries.next().getKey();
+			if((quest.getName().toLowerCase().equals(questName))) return quest;
+		}
+		return null;
+	}
+	
 
 }
