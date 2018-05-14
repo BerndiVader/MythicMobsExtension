@@ -276,13 +276,12 @@ public class Utils implements Listener {
 
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
-		if (debug)
-			Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
+		if (debug) Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
 		if (e.isCancelled()) return;
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
-		double df = round(md / e.getDamage(DamageModifier.BASE), 3);
+		double df = e.getDamage(DamageModifier.BASE)!=0?round(md / e.getDamage(DamageModifier.BASE), 3):0.0d;
 		if (debug) {
 			Main.logger.info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
 			Main.logger.info("Custom MythicDamage.: " + Double.toString(md));

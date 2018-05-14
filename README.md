@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 13.05.2018 +** fixed NaN in customdamage if power is 0.
 ##### ** 13.05.2018 *** added Quests support. See QuestsSupport for details.
 ##### ** 13.05.2018 *** added sensitive argument to chatlistener mechanic.
 ##### ** 10.05.2018 *** fixed issue while casting dropmythicitem with none mythicmobs entities.
