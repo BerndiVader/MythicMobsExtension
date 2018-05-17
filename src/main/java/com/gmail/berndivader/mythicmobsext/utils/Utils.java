@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,10 +30,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -130,11 +133,50 @@ public class Utils implements Listener {
 	}
 	
 	@EventHandler
+	public void fixDisplayNameChunkLoad(ChunkLoadEvent e) {
+		final Entity[]entities=e.getChunk().getEntities();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(int i1=0;i1<entities.length;i1++) {
+					Entity entity=entities[i1];
+					if(entity==null||!(entity instanceof LivingEntity)) continue;
+					fixName(entity);
+				}
+			}
+		}.runTaskLater(Main.getPlugin(),41);
+	}
+	
+	@EventHandler
+	public void fixDisplayNameEntitySpawn(EntitySpawnEvent e) {
+		final Entity entity=e.getEntity();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				fixName(entity);
+			}
+		}.runTaskLater(Main.getPlugin(),2L);
+	}
+	
+	private void fixName(Entity entity) {
+		if(mobmanager.isActiveMob(entity.getUniqueId())) {
+			MythicMob mm=mobmanager.getMythicMobInstance(entity).getType();
+			if(mm.getConfig().getBoolean("Options.FixDisplay",false)) {
+				entity.setCustomName("");
+				entity.setCustomNameVisible(false);
+			}
+		}
+	}
+	
+	@EventHandler
 	public void fixDisplayName(MythicReloadedEvent e) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				Iterator<MythicMob>it=mobmanager.getMobTypes().iterator();
+				Collection<MythicMob>mobs=new HashSet<MythicMob>();
+				mobs.addAll(mobmanager.getMobTypes());
+				mobs.addAll(mobmanager.getVanillaTypes());
+				Iterator<MythicMob>it=mobs.iterator();
 				while(it.hasNext()) {
 					MythicMob mm=it.next();
 					if(!mm.getConfig().getBoolean("Options.FixDisplay",false)) continue;
