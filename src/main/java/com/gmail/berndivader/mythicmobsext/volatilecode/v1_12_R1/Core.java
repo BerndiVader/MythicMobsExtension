@@ -284,6 +284,11 @@ implements Handler,Listener {
 		me.setHasPumpkin(false);
 	}
 	
+	public void advancementTest(Player player) {
+		
+	}
+	
+	
 	@Override
 	public int arrowsOnEntity(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();

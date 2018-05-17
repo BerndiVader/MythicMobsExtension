@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 17.05.2018 *** added fix for Unknown Displayname. See FixDisplay for details.
 ##### ** 13.05.2018 *** added failquest, nextstagequest, setstagequest to QuestsSupport.
 ##### ** 13.05.2018 *** fixed NaN in customdamage if power is 0.
 ##### ** 13.05.2018 *** added Quests support. See QuestsSupport for details.
@@ -283,6 +284,20 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 ##### *** 26.4.2017 *** fixed issues in customdamage. now that skill work how it should.
 ##### *** 23.4.2017 *** added customdamage mechanic as a temporary fix for damage mechanic.
 ##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
+
+
+# FixDisplay:
+If you dont like a mobtype to be called Unknown if it have no DisplayName use the Option `FixDisplay: true/false(default)` in mob.yaml:
+
+```yaml
+NoUnknown:
+  Type: zombie
+  Health: 2
+  Options:
+    FixDisplay: true
+  Skills:
+  - message{msg="Me died <mob.name>!"} @world ~onDeath
+``` 
 
 
 # Quests Support:

@@ -7,6 +7,8 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -15,6 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -54,6 +57,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -88,18 +92,31 @@ public class Utils implements Listener {
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
 	public static String scripts;
 	public static String str_PLUGINPATH;
+	public static HashSet<Advancement>advancements;
 	private static Handler handler;
+	private static Field displayName;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
 		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
+		advancements=new HashSet<>();
+		for(Iterator<Advancement>iter=Bukkit.getServer().advancementIterator();iter.hasNext();) {
+			Advancement adv=iter.next();
+			advancements.add(adv);
+		}
 		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
 	    } catch (Exception e) {
 	    	serverV=11;
 	    }
+		try {
+			displayName=MythicMob.class.getDeclaredField("displayName");
+			displayName.setAccessible(true);
+		} catch (NoSuchFieldException | SecurityException e) {
+			Main.logger.warning("There was an error accessing the displayName field "+e.getMessage());
+		}
 	}
 	
 	public Utils() {
@@ -109,6 +126,26 @@ public class Utils implements Listener {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
 		}
+		fixDisplayName(null);
+	}
+	
+	@EventHandler
+	public void fixDisplayName(MythicReloadedEvent e) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Iterator<MythicMob>it=mobmanager.getMobTypes().iterator();
+				while(it.hasNext()) {
+					MythicMob mm=it.next();
+					if(!mm.getConfig().getBoolean("Options.FixDisplay",false)) continue;
+					try {
+						displayName.set(mm,mm.getInternalName());
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}.runTaskLaterAsynchronously(Main.getPlugin(),1L);
 	}
 	
 	@EventHandler
@@ -189,6 +226,20 @@ public class Utils implements Listener {
 		if (e.getEntity().hasMetadata(Utils.mpNameVar)) {
 			e.setCancelled(true);
 		}
+	}
+
+	@EventHandler(priority=EventPriority.LOWEST)
+	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
+		if (e.getEntity() instanceof Player) return;
+		final String[]arr1=e.getEntity().getScoreboardTags().toArray(new String[e.getEntity().getScoreboardTags().size()]);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(int i1=0;i1<arr1.length;i1++) {
+					e.getEntity().removeScoreboardTag(arr1[i1]);
+				}
+			}
+		}.runTaskAsynchronously(Main.getPlugin());
 	}
 	
 	@EventHandler
@@ -918,6 +969,10 @@ public class Utils implements Listener {
 	public static boolean playerInMotion(Player p) {
 		Vec3D v3=Utils.pl.get(p.getUniqueId());
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
+	}
+	
+	public static Advancement getAdvancement(String name) {
+		return null;
 	}
 	
 }
