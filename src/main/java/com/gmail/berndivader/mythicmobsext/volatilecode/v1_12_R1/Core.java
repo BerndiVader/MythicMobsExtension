@@ -50,6 +50,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
@@ -448,6 +449,56 @@ implements Handler,Listener {
 				|| e.lastY!=e.locY 
 				|| e.lastZ!=e.locZ) return true;
         return false;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public void aiTargetSelector(LivingEntity entity,String uGoal,LivingEntity target) {
+		World w = entity.getWorld();
+        EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
+        EntityLiving tE = null;
+        if (target!=null) {
+        	tE = (EntityLiving)((CraftLivingEntity)entity).getHandle();
+        }
+        Field goalsField;
+        int i=0;
+        String goal=uGoal;
+        String data=null;
+        String data1=null;
+        String[] parse = uGoal.split(" ");
+        if (parse[0].matches("[0-9]*")) {
+        	i=Integer.parseInt(parse[0]);
+    		String[]cpy=new String[parse.length-1];
+    		System.arraycopy(parse,0,cpy,0,0);
+    		System.arraycopy(parse,1,cpy,0,parse.length-1);
+    		parse=cpy;
+        }
+      	if(parse.length>0) {
+       		goal=parse[0];
+       		if (parse.length>1) {
+       			data = parse[1];
+       		}
+       		if (parse.length>2) {
+       			data1 = parse[2];
+       		}
+        }
+		try {
+			goalsField=EntityInsentient.class.getDeclaredField("targetSelector");
+	        goalsField.setAccessible(true);
+	        PathfinderGoalSelector goals=(PathfinderGoalSelector)goalsField.get((Object)e);
+	        switch(goal) {
+	        case "otherteams":
+	        	goals.a(i,new PathfinderGoalOtherTeams((EntityCreature)e,EntityHuman.class,true));
+	        	break;
+	        default:
+	        	List<String>gList=new ArrayList<String>();
+	        	gList.add(uGoal);
+	        	Utils.mythicmobs.getVolatileCodeHandler().aiTargetSelectorHandler(entity, gList);
+	        }
+	        
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	@Override

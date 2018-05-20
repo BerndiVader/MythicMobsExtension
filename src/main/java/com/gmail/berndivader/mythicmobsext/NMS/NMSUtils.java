@@ -1415,6 +1415,28 @@ public class NMSUtils extends NMSUtil {
 		return v3;
 	}
 	
+	public static Object getField(String s1,Class<?>cl1,Object o1) {
+		Object o2=null;
+		try {
+			Field f1=cl1.getDeclaredField(s1);
+			f1.setAccessible(true);
+			o2=f1.get(o1);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return o2;
+	}
+	
+	public static void setField(String s1,Class<?>cl1,Object o1,Object o2) {
+        try {
+            Field f1=cl1.getDeclaredField(s1);
+            f1.setAccessible(true);
+			f1.set(o1,o2);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
     public static void setMeta(org.bukkit.inventory.ItemStack is,String s1,String s2) {
     	Object o1=getTag(getHandle(is));
     	if (o1==null) return;

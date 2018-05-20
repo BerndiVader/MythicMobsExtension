@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 19.05.2018 *** fixed NPE in dropmythicitem mechanic.
 ##### ** 17.05.2018 *** added fix for Unknown Displayname. See FixDisplay for details.
 ##### ** 13.05.2018 *** added failquest, nextstagequest, setstagequest to QuestsSupport.
 ##### ** 13.05.2018 *** fixed NaN in customdamage if power is 0.

@@ -132,6 +132,11 @@ public class Utils implements Listener {
 		fixDisplayName(null);
 	}
 	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void fixDisplayNameDeath(EntityDeathEvent e) {
+		fixName(e.getEntity());
+	}
+	
 	@EventHandler
 	public void fixDisplayNameChunkLoad(ChunkLoadEvent e) {
 		final Entity[]entities=e.getChunk().getEntities();
@@ -181,7 +186,8 @@ public class Utils implements Listener {
 					MythicMob mm=it.next();
 					if(!mm.getConfig().getBoolean("Options.FixDisplay",false)) continue;
 					try {
-						displayName.set(mm,mm.getInternalName());
+						String s1=mm.getInternalName();
+						displayName.set(mm,s1.substring(0,1)+s1.substring(1).toLowerCase());
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -1011,10 +1017,6 @@ public class Utils implements Listener {
 	public static boolean playerInMotion(Player p) {
 		Vec3D v3=Utils.pl.get(p.getUniqueId());
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
-	}
-	
-	public static Advancement getAdvancement(String name) {
-		return null;
 	}
 	
 }

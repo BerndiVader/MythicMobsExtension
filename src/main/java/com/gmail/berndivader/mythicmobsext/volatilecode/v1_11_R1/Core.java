@@ -663,4 +663,10 @@ Listener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target) {
+		// TODO Auto-generated method stub
+		
+	}
 }
