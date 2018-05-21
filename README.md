@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 20.05.2018 *** added PathfinderGoals doorsopen & doorsbreak.
 ##### ** 19.05.2018 *** fixed NPE in dropmythicitem mechanic.
 ##### ** 17.05.2018 *** added fix for Unknown Displayname. See FixDisplay for details.
 ##### ** 13.05.2018 *** added failquest, nextstagequest, setstagequest to QuestsSupport.
@@ -1074,6 +1075,22 @@ Some examples:
 ```
 		
 ### Pathfindergoals:
+
+*doorsbreak:*
+	
+##### `custompathfinder{goal="[goalpriority_value] doorsbreak [BOOLEAN]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 doorsbreak false"}`
++ Adds the ability to the mob to break doors and walk inside.
++ The boolean true/false(default) use the mobGriefing gamerule. default false.
+
+*doorsopen:*
+	
+##### `custompathfinder{goal="[goalpriority_value] doorsopen [BOOLEAN]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 doorsopen true"}`
++ Adds the ability to the mob to open doors and walk inside.
++ The boolean true/false(default) use the mobGriefing gamerule. default false.
 
 *notifyoncollide:*
 	

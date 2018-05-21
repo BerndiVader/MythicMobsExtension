@@ -47,6 +47,8 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicE
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorBreak;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorOpen;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
@@ -685,7 +687,22 @@ implements Handler,Listener {
 		        		}
 	            	}
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalReturnHome(e,speed,x,y,z,mR,tR,iT));
+	            	break;
 	        	}
+	        }
+	        case "doorsopen": {
+	        	if(e instanceof EntityInsentient) {
+	        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalDoorOpen(e,bl1));
+	        	}
+        		break;
+	        }
+	        case "doorsbreak": {
+	        	if(e instanceof EntityInsentient) {
+	        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalDoorBreak(e,bl1));
+	        	}
+        		break;
 	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
