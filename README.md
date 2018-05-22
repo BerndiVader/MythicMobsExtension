@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 21.05.2018 *** fixed PathfinderGoals doorsopen & doorsbreak not working on others than villagers & zombies.
 ##### ** 20.05.2018 *** added PathfinderGoals doorsopen & doorsbreak.
 ##### ** 19.05.2018 *** fixed NPE in dropmythicitem mechanic.
 ##### ** 17.05.2018 *** added fix for Unknown Displayname. See FixDisplay for details.

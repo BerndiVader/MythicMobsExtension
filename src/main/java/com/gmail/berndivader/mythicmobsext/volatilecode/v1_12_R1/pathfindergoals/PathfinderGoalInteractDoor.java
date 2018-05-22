@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import net.minecraft.server.v1_12_R1.Block;
 import net.minecraft.server.v1_12_R1.BlockDoor;
@@ -28,7 +27,7 @@ PathfinderGoal {
         this.a=e;
         this.bl1=bl1;
         if (!(e.getNavigation() instanceof Navigation)) Main.logger.warning("No navigation mob");
-        Volatile.handler.addNBTTag(this.a.getBukkitEntity(),"{CanBreakDoors:1b}");
+        ((Navigation)e.getNavigation()).a(true);
     }
 
     @Override
