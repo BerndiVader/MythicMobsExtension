@@ -17,14 +17,17 @@ extends
 SkillMechanic
 implements
 ITargetedEntitySkill {
+	boolean debug;
 
 	public ForceBowMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
+		this.debug=mlc.getBoolean("debug",false);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		Volatile.handler.forceBowDraw((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)entity.getBukkitEntity());
+		if (this.debug) System.err.println("Using forcebow");
+		Volatile.handler.forceBowDraw((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)entity.getBukkitEntity(),this.debug);
 		return false;
 	}
 }
