@@ -39,6 +39,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
@@ -951,7 +952,34 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public void cNav(LivingEntity e1) {
+        EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
+        NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationFlying(ei,ei.world));
+	}
+	
+	@Override
 	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
 		return null;
 	}
+	
+	@Override
+	public void forceBowDraw(LivingEntity e1, LivingEntity target) {
+        EntityLiving t=(EntityLiving)((CraftLivingEntity)e1).getHandle();
+        EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
+        if (ei instanceof IRangedEntity) {
+        	if (ei.isHandRaised()) {
+            	ei.cN();
+            	IRangedEntity ie=(IRangedEntity)ei;
+            	int i1=ei.cL();
+                ((IRangedEntity)ei).a(t, ItemBow.b(i1));
+        	} else {
+                ei.c(EnumHand.MAIN_HAND);
+        	}
+        	
+        }
+		
+	}
+	
+	
+	
 }

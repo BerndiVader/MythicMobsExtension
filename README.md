@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 30.05.2018 *** added forcebow mechanic.
 ##### ** 21.05.2018 *** fixed PathfinderGoals doorsopen & doorsbreak not working on others than villagers & zombies.
 ##### ** 20.05.2018 *** added PathfinderGoals doorsopen & doorsbreak.
 ##### ** 19.05.2018 *** fixed NPE in dropmythicitem mechanic.
@@ -460,6 +461,31 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## forcebow
+
+`forcebow @ENTITY_TARGETER`
+
+Caster have to be an Ranged Entity like a skeleton etc....
+
+Example:
+
+```yaml
+MythicMonkey:
+  Type: skeleton
+  Disguise:
+    Type: player
+    Skin: 'meeeh'
+    Player: Steve
+  AIGoalSelectors:
+  - 0 clear
+  Damage: 0.1
+  Skills:
+  - forcebow @trigger ~onInteract
+```
+
 
 
 

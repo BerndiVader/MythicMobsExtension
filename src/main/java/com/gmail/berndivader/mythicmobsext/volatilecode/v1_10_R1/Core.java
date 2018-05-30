@@ -686,4 +686,16 @@ Listener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void cNav(LivingEntity e1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forceBowDraw(LivingEntity e1, LivingEntity target) {
+		// TODO Auto-generated method stub
+		
+	}
 }

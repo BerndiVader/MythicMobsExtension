@@ -52,4 +52,6 @@ public interface Handler {
 	public Vec3D lastPosEntity(Entity bukkitEntity);
 	HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1);
 	void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target);
+	void cNav(LivingEntity e1);
+	void forceBowDraw(LivingEntity e1, LivingEntity target);
 }
