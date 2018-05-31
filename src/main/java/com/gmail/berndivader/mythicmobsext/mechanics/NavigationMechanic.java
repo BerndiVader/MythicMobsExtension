@@ -26,7 +26,6 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
-			System.err.println("execute");
 			LivingEntity e=(LivingEntity)target.getBukkitEntity();
 			Volatile.handler.cNav(e);
 		}

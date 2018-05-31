@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
+package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;

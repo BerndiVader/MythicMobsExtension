@@ -971,7 +971,6 @@ implements Handler,Listener {
         	if (ei.isHandRaised()) {
         		if (bl1) System.err.println("hand is raised draws bow");
             	ei.cN();
-            	IRangedEntity ie=(IRangedEntity)ei;
             	int i1=ei.cL();
                 ((IRangedEntity)ei).a(t, ItemBow.b(i1));
         	} else {

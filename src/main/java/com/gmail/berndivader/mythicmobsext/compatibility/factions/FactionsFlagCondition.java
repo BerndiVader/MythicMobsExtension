@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.factions;
+package com.gmail.berndivader.mythicmobsext.compatibility.factions;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;

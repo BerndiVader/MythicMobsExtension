@@ -81,35 +81,41 @@ Listener {
 				ClassLoader cl=URLClassLoader.newInstance(urls,this.getClass().getClassLoader());
 				JarFile jar=new JarFile(external);
 				Enumeration<JarEntry>e=jar.entries();
+				String cn1=new String("");
 				while(e.hasMoreElements()) {
-					JarEntry je=(JarEntry)e.nextElement();
-					String cn1=je.getName();
-					if(je.isDirectory()||!cn1.endsWith(".class")) continue;
-					cn1=cn1.substring(0,cn1.length()-6).replace("/",".");
-					Class<?>c1=Class.forName(cn1,true,cl);
-					if (c1==null) continue;
-					if (SkillMechanic.class.isAssignableFrom(c1)) {
-						Class<? extends SkillMechanic>extClass=c1.asSubclass(SkillMechanic.class);
-						SkillAnnotation skill=extClass.getAnnotation(SkillAnnotation.class);
-						if (skill!=null&&!mechanics.containsKey(skill.name())) {
-							mechanics.put(skill.name(),extClass);
+					try {
+						JarEntry je=(JarEntry)e.nextElement();
+						cn1=je.getName();
+						if(je.isDirectory()||!cn1.endsWith(".class")) continue;
+						cn1=cn1.substring(0,cn1.length()-6).replace("/",".");
+						Class<?>c1=Class.forName(cn1,true,cl);
+						if (c1==null) continue;
+						if (SkillMechanic.class.isAssignableFrom(c1)) {
+							Class<? extends SkillMechanic>extClass=c1.asSubclass(SkillMechanic.class);
+							SkillAnnotation skill=extClass.getAnnotation(SkillAnnotation.class);
+							if (skill!=null&&!mechanics.containsKey(skill.name())) {
+								mechanics.put(skill.name(),extClass);
+							}
+						} else if (SkillCondition.class.isAssignableFrom(c1)) {
+							Class<? extends SkillCondition>extClass=c1.asSubclass(SkillCondition.class);
+							ConditionAnnotation cond=extClass.getAnnotation(ConditionAnnotation.class);
+							if (cond!=null&&!conditions.containsKey(cond.name())) {
+								conditions.put(cond.name(),extClass);
+							}
+						} else if (SkillTargeter.class.isAssignableFrom(c1)) {
+							Class<? extends SkillTargeter>extClass=c1.asSubclass(SkillTargeter.class);
+							TargeterAnnotation tar=extClass.getAnnotation(TargeterAnnotation.class);
+							if (tar!=null&&!targeters.containsKey(tar.name())) {
+								targeters.put(tar.name(),extClass);
+							}
 						}
-					} else if (SkillCondition.class.isAssignableFrom(c1)) {
-						Class<? extends SkillCondition>extClass=c1.asSubclass(SkillCondition.class);
-						ConditionAnnotation cond=extClass.getAnnotation(ConditionAnnotation.class);
-						if (cond!=null&&!conditions.containsKey(cond.name())) {
-							conditions.put(cond.name(),extClass);
-						}
-					} else if (SkillTargeter.class.isAssignableFrom(c1)) {
-						Class<? extends SkillTargeter>extClass=c1.asSubclass(SkillTargeter.class);
-						TargeterAnnotation tar=extClass.getAnnotation(TargeterAnnotation.class);
-						if (tar!=null&&!targeters.containsKey(tar.name())) {
-							targeters.put(tar.name(),extClass);
-						}
+					} catch (Exception ex) {
+            			Main.logger.info("Unable to load "+cn1+" but continue.");
+            			continue;
 					}
 				}
 				jar.close();
-			} catch (IOException | ClassNotFoundException | SecurityException e) {
+			} catch (IOException | SecurityException e) {
 				e.printStackTrace();
 			}
 		}

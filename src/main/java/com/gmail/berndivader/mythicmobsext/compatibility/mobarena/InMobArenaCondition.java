@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
+package com.gmail.berndivader.mythicmobsext.compatibility.mobarena;
 
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 

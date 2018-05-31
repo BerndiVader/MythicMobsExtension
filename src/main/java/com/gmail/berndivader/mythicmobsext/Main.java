@@ -19,12 +19,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlags;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
+import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
+import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
+import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
+import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
+import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
+import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.factions.FactionsFlagConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.mobarena.MobArenaConditions;
-import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
@@ -33,9 +35,7 @@ import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
-import com.gmail.berndivader.mythicmobsext.conditions.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
-import com.gmail.berndivader.mythicmobsext.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Main extends JavaPlugin {
@@ -68,7 +68,6 @@ public class Main extends JavaPlugin {
 			logger.warning("******************************************************");
 			logger.warning("     This version of MythicMobsExtension is only");
 			logger.warning("     supported on server versions 1.10 to 1.12.");
-			logger.warning("     We cant garantie that it runs properly.");
 			logger.warning("******************************************************");
 		}
 
@@ -123,7 +122,7 @@ public class Main extends JavaPlugin {
 				logger.info("NaN patch applied!");
 			}
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				wgf = new WorldGuardFlags();
+				wgf=new WorldGuardFlags();
 				new WorldGuardFlag();
 				logger.info("Worldguard support enabled!");
 			}

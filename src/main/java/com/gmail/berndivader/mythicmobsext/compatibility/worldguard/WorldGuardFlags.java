@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
+package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
 import java.util.Arrays;
 import java.util.Set;

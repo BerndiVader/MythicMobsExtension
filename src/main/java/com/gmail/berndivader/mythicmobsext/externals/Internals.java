@@ -60,43 +60,48 @@ Listener {
 			    	if (jarEntry.getName().endsWith(".class")) {
 			    		String s1=jarEntry.getName();
 						String cn1=s1.substring(0,s1.length()-6).replace("/",".");
-			    		if (s1.startsWith("com/gmail/berndivader/mythicmobsext/mechanics")) {
-			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
-			    			Class<?>c1=entry.getValue();
-			    			ExternalAnnotation skill=entry.getKey();
-							if (skill!=null&&c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
-								String[]arr1=skill.name().split(",");
-								for(int i1=0;i1<arr1.length;i1++) {
-									if (!mechanics.containsKey(arr1[i1])) {
-										mechanics.put(arr1[i1],cn1);
+						try {
+				    		if (s1.startsWith("com/gmail/berndivader/mythicmobsext/mechanics")) {
+				    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+				    			Class<?>c1=entry.getValue();
+				    			ExternalAnnotation skill=entry.getKey();
+								if (skill!=null&&c1!=null&&SkillMechanic.class.isAssignableFrom(c1)) {
+									String[]arr1=skill.name().split(",");
+									for(int i1=0;i1<arr1.length;i1++) {
+										if (!mechanics.containsKey(arr1[i1])) {
+											mechanics.put(arr1[i1],cn1);
+										}
 									}
 								}
-							}
-		            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/conditions")) {
-			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
-			    			Class<?>c1=entry.getValue();
-			    			ExternalAnnotation anno=entry.getKey();
-							if (anno!=null&&c1!=null&&SkillCondition.class.isAssignableFrom(c1)) {
-								String[]arr1=anno.name().split(",");
-								for(int i1=0;i1<arr1.length;i1++) {
-									if (!conditions.containsKey(arr1[i1])) {
-										conditions.put(arr1[i1],cn1);
+			            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/conditions")) {
+				    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+				    			Class<?>c1=entry.getValue();
+				    			ExternalAnnotation anno=entry.getKey();
+								if (anno!=null&&c1!=null&&SkillCondition.class.isAssignableFrom(c1)) {
+									String[]arr1=anno.name().split(",");
+									for(int i1=0;i1<arr1.length;i1++) {
+										if (!conditions.containsKey(arr1[i1])) {
+											conditions.put(arr1[i1],cn1);
+										}
 									}
 								}
-							}
-		            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/targeters")) {
-			    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
-			    			Class<?>c1=entry.getValue();
-			    			ExternalAnnotation anno=entry.getKey();
-		            		if (anno!=null&c1!=null&&SkillTargeter.class.isAssignableFrom(c1)) {
-	            				String[]arr1=anno.name().split(",");
-	            				for(int i1=0;i1<arr1.length;i1++) {
-	            					if (!targeters.containsKey(arr1[i1])) {
-	            						targeters.put(arr1[i1],cn1);
-	            					}
-	            				}
-		            		}
-		            	}
+			            	} else if (s1.startsWith("com/gmail/berndivader/mythicmobsext/targeters")) {
+				    			SimpleEntry<ExternalAnnotation,Class<?>>entry=getClazz(cn1);
+				    			Class<?>c1=entry.getValue();
+				    			ExternalAnnotation anno=entry.getKey();
+			            		if (anno!=null&c1!=null&&SkillTargeter.class.isAssignableFrom(c1)) {
+		            				String[]arr1=anno.name().split(",");
+		            				for(int i1=0;i1<arr1.length;i1++) {
+		            					if (!targeters.containsKey(arr1[i1])) {
+		            						targeters.put(arr1[i1],cn1);
+		            					}
+		            				}
+			            		}
+			            	}
+	            		} catch (Exception ex) {
+	            			Main.logger.info("Unable to load "+cn1+" but continue.");
+	            			continue;
+	            		}
 			    	}
 			    }
 		        jarFile.close();

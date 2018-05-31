@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.quests;
+package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
 import org.bukkit.entity.Player;
 

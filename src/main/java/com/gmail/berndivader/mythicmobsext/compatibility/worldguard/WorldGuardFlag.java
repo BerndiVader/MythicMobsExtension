@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.worldguard;
+package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

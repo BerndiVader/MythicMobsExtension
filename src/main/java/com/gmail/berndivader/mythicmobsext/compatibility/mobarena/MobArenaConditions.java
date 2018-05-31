@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.conditions.mobarena;
+package com.gmail.berndivader.mythicmobsext.compatibility.mobarena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
