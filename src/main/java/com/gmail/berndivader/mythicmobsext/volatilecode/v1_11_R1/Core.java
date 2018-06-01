@@ -671,7 +671,7 @@ Listener {
 	}
 
 	@Override
-	public void cNav(LivingEntity e1) {
+	public void setMNc(LivingEntity e1,String s1) {
 		// TODO Auto-generated method stub
 		
 	}

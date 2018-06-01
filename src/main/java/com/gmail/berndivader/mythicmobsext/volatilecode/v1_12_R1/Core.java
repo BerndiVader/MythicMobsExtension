@@ -45,6 +45,8 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerVex;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
@@ -730,26 +732,23 @@ implements Handler,Listener {
 	@Override
 	public boolean addNBTTag(Entity e1,String s) {
 		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
-		NBTTagCompound nbt=null,nbt2=null,nbt3=null;
-		if ((nbt2=TFa(me))!=null) {
-			nbt3=nbt2.g();
+		NBTTagCompound nbt1=null,nbt2=null,nbt3=null;
+		if ((nbt1=TFa(me))!=null) {
+			nbt3=nbt1.g();
 			try {
-				nbt=MojangsonParser.parse(s);
+				nbt2=MojangsonParser.parse(s);
 			}
 			catch (MojangsonParseException ex) {
-				System.err.println("Error setting NBT: "+ex.getLocalizedMessage());
+				System.err.println(ex.getLocalizedMessage());
 				return false;
 			}
-			nbt2.a(nbt);
-			me.a(me.getUniqueID());
-			if(nbt2.equals(nbt3)) {
+			UUID u=me.getUniqueID();
+			nbt1.a(nbt2);
+			me.a(u);
+			if(nbt3.equals(nbt1)) {
 				return false;
 			}
-			if (me instanceof EntityLiving) {
-				((EntityLiving)me).a(nbt2);
-			} else {
-				me.f(nbt2);
-			}
+			me.f(nbt1);
 			return true;
 		}
 		return false;
@@ -764,7 +763,7 @@ implements Handler,Listener {
 				nbt2=MojangsonParser.parse(s);
 			}
 			catch (MojangsonParseException ex) {
-				System.err.println("Error testing NBT: "+ex.getLocalizedMessage());
+				System.err.println(ex.getLocalizedMessage());
 				return false;
 			}
 			NBTBase nb1=null,nb2=null;
@@ -880,7 +879,7 @@ implements Handler,Listener {
         }
         return b1.equals(b2);
     }
-	
+    
 	@Override
 	public boolean playerIsSleeping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
@@ -952,9 +951,22 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public void cNav(LivingEntity e1) {
+	public void setMNc(LivingEntity e1,String s1) {
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
-        NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationFlying(ei,ei.world));
+        switch (s1) {
+        	case "FLY":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationFlying(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerFly(ei));
+                break;
+        	case "VEX":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new Navigation(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerVex(ei));
+                break;
+        	case "WALK":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new Navigation(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerMove(ei));
+                break;
+        }
 	}
 	
 	@Override
@@ -971,8 +983,8 @@ implements Handler,Listener {
         	if (ei.isHandRaised()) {
         		if (bl1) System.err.println("hand is raised draws bow");
             	ei.cN();
-            	int i1=ei.cL();
-                ((IRangedEntity)ei).a(t, ItemBow.b(i1));
+//            	int i1=ei.cL();
+//                ((IRangedEntity)ei).a(t, ItemBow.b(i1));
         	} else {
         		if (bl1) System.err.println("hand not raised!");
                 ei.c(EnumHand.MAIN_HAND);
