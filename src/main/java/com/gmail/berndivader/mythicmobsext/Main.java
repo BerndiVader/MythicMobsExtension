@@ -155,7 +155,6 @@ public class Main extends JavaPlugin {
 			Main.healthbarhandler.removeSpeechBubbles();
 		}
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
-		if (Config.ncp&&NoCheatPlusSupport.isPresent()) NoCheatPlusSupport.zap();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;

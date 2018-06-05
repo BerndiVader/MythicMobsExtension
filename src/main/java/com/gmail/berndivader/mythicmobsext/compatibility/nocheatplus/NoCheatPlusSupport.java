@@ -7,12 +7,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
@@ -63,35 +63,11 @@ Listener {
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		c(e.getPlayer().getUniqueId());
+		NCPExemptionManager.unexempt(e.getPlayer());
 	}
 	@EventHandler
 	public void onPlayerWorld(PlayerChangedWorldEvent e) {
-		c(e.getPlayer().getUniqueId());
-	}
-	
-	static void c(UUID uuid) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (map.containsKey(uuid)) {
-					CheckType[]types=map.get(uuid).getValue();
-					for(int i1=0;i1<types.length;i1++) {
-						NCPExemptionManager.unexempt(uuid,types[i1]);
-					}
-					map.remove(uuid);
-				}
-			}
-		}.runTaskLater(Main.getPlugin(),55L);
-	}
-	
-	public static void zap() {
-		for(Map.Entry<UUID,SimpleImmutableEntry<Boolean,CheckType[]>>e1:map.entrySet()) {
-			UUID uuid=e1.getKey();
-			for(CheckType c1:e1.getValue().getValue()) {
-				NCPExemptionManager.unexempt(uuid,c1);
-			}
-		}
+		NCPExemptionManager.unexempt(e.getPlayer());
 	}
 	
 	public static CheckType[] inc(CheckType[]arr1,CheckType[]arr2) {
@@ -100,62 +76,15 @@ Listener {
 		System.arraycopy(arr2,0,arr,arr1.length,arr2.length);
 		return arr;
 	}
-	
-	public static CheckType[] dec(CheckType[]arr1,int i1) {
-		CheckType[]arr=new CheckType[arr1.length-1];
-		if (i1>=0) {
-			if(arr.length>0) {
-	            System.arraycopy(arr1,0,arr,0,i1);
-	            System.arraycopy(arr1,i1+1,arr,i1,arr.length-i1);								
-			} else {
-				arr=new CheckType[0];
-			}
-            return arr;
-		}
-		return arr1;
-	}
-	
-	public static void dec(UUID key,CheckType[]value) {
-		if(map.containsKey(key)) {
-			CheckType[]arr1=map.get(key).getValue();
-			for(int i1=0;i1<value.length;i1++) {
-				CheckType c1=value[i1];
-				for(int i2=0;i2<arr1.length;i2++) {
-					if(!NCPExemptionManager.isExempted(key,arr1[i2])) {
-						arr1=dec(arr1,i2);
-					} else {
-						if (c1.equals(arr1[i2])) {
-							NCPExemptionManager.unexempt(key,c1);
-							arr1=dec(arr1,i2);
-							break;
-						}
-					}
-				}
-			}
-			map.replace(key,new SimpleImmutableEntry<Boolean,CheckType[]>(map.get(key).getKey(),arr1));
+
+	public static void exempt(Player p,CheckType[]types) {
+		for(int i1=0;i1<types.length;i1++) {
+			NCPExemptionManager.exemptPermanently(p,types[i1]);
 		}
 	}
-	
-	public static void inc(UUID key,CheckType[]value,boolean bl2) {
-		if(map.containsKey(key)) {
-			CheckType[]arr1=map.get(key).getValue();
-			for(int i1=0;i1<value.length;i1++) {
-				CheckType c1=value[i1];
-				boolean bl1=true;
-				for(int i2=0;i2<arr1.length;i2++){
-					if(bl1=c1.equals(arr1[i2])) break;
-				}
-				if(!bl1) {
-					NCPExemptionManager.exemptPermanently(key,c1);
-					arr1=inc(arr1,new CheckType[]{c1});
-				}
-			}
-			map.replace(key,new SimpleImmutableEntry<Boolean,CheckType[]>(bl2,arr1));
-		} else {
-			for(CheckType c1:value) {
-				NCPExemptionManager.exemptPermanently(key,c1);
-			}
-			map.put(key,new SimpleImmutableEntry<Boolean,CheckType[]>(bl2,value));
+	public static void unexempt(Player p,CheckType[]types) {
+		for(int i1=0;i1<types.length;i1++) {
+			NCPExemptionManager.unexempt(p,types[i1]);
 		}
 	}
 	

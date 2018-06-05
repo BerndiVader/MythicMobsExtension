@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus;
 
+import org.bukkit.entity.Player;
+
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -18,7 +20,6 @@ implements
 INoTargetSkill,
 ITargetedEntitySkill {
 	CheckType[]types;
-	boolean resistent;
 
 	public ExemptPlayerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -38,16 +39,12 @@ ITargetedEntitySkill {
 				break;
 			}
 			types=NoCheatPlusSupport.inc(types,new CheckType[]{c1});
-			resistent=mlc.getBoolean(new String[] {"worldchangeresist","wcr","w"},false);
 		}
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
-		if(e.isPlayer()) {
-			NoCheatPlusSupport.inc(e.getUniqueId(),types,resistent);
-			return true;
-		}
+		NoCheatPlusSupport.exempt((Player)e.getBukkitEntity(),types);
 		return false;
 	}
 

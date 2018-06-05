@@ -21,10 +21,6 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity e) {
-		if(e.isPlayer()) {
-			NoCheatPlusSupport.dec(e.getUniqueId(),types);
-			return true;
-		}
 		return false;
 	}
 }
