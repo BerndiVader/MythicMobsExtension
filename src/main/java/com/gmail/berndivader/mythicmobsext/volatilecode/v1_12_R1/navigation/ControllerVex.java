@@ -7,7 +7,6 @@ import net.minecraft.server.v1_12_R1.MathHelper;
 public class ControllerVex
 extends 
 ControllerMove {
-	EntityInsentient monster;
 	public ControllerVex(EntityInsentient monster) {
 		super(monster);
 	}
@@ -16,11 +15,11 @@ ControllerMove {
     public void a() {
         if (this.h==ControllerMove.Operation.MOVE_TO) {
         	this.a.setNoGravity(true);
-            double d0=this.b-this.monster.locX;
-            double d1=this.c-this.monster.locY;
-            double d2=this.d-this.monster.locZ;
+            double d0=this.b-this.a.locX;
+            double d1=this.c-this.a.locY;
+            double d2=this.d-this.a.locZ;
             double d3=d0*d0+d1*d1+d2*d2;
-            if ((d3=(double)MathHelper.sqrt(d3))<this.monster.getBoundingBox().a()) {
+            if ((d3=(double)MathHelper.sqrt(d3))<this.a.getBoundingBox().a()) {
                 this.h=ControllerMove.Operation.WAIT;
                 a.motX*=0.5;
                 a.motY*=0.5;
@@ -34,7 +33,7 @@ ControllerMove {
                 } else {
                     double d4=a.getGoalTarget().locX-a.locX;
                     double d5=a.getGoalTarget().locZ-a.locZ;
-                    monster.aN=a.yaw=(-(float)MathHelper.c(d4,d5))*57.295776f;
+                    a.aN=a.yaw=(-(float)MathHelper.c(d4,d5))*57.295776f;
                 }
             }
         } else {

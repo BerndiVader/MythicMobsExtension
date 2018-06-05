@@ -29,6 +29,7 @@ public class Config {
 	public static boolean externals;
 	public static boolean javascript;
 	public static boolean quests;
+	public static boolean ncp;
 	final static YamlConfiguration config;
 
 	static {
@@ -96,6 +97,7 @@ public class Config {
 		externals=config.getBoolean(ConfigValue.EXTERNALS.getPath());
 		javascript=config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
 		quests=config.getBoolean(ConfigValue.QUESTS.getPath());
+		ncp=config.getBoolean(ConfigValue.NCP.getPath());
 	}
 	
 }

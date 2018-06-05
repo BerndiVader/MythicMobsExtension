@@ -57,6 +57,8 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -706,6 +708,12 @@ implements Handler,Listener {
 	        		goals.a(i,(PathfinderGoal)new PathfinderGoalDoorBreak(e,bl1));
 	        	}
         		break;
+	        }
+	        case "vexa":{
+	        	if (e instanceof EntityInsentient) goals.a(i,(PathfinderGoal)new PathfinderGoalVexA(e));
+	        }
+	        case "vexd":{
+	        	if (e instanceof EntityInsentient) goals.a(i,(PathfinderGoal)new PathfinderGoalVexD(e));
 	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();

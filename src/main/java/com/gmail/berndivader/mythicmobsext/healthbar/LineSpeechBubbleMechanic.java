@@ -83,4 +83,5 @@ ITargetedEntitySkill {
 		}
 		return false;
 	}
+
 }

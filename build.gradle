@@ -35,6 +35,7 @@ dependencies {
     compileOnly files('./lib/worldguard-6.2.jar')
     compileOnly files('./lib/citizens-2.0.22-SNAPSHOT.jar')
     compileOnly files('./lib/Quests-3.3.2.jar')
+    compileOnly files('./lib/NoCheatPlus.jar')
 }
 
 processResources {

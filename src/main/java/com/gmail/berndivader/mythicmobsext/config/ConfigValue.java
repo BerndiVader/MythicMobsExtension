@@ -17,7 +17,8 @@ public enum ConfigValue {
 	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true),
 	EXTERNALS("Configuration.Externals",true),
 	JAVASCRIPT("Configuration.Javascript",true),
-	QUESTS("Configuration.Quests",true);
+	QUESTS("Configuration.Quests",true),
+	NCP("Configuration.NPC",true);
 	private final String path;
 	private final Object value;
 

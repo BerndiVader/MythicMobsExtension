@@ -53,7 +53,7 @@ ITargetedLocationSkill {
 	public ItemProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
-		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pItem" }, "DIRT").toUpperCase();
+		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
 		this.tickInterval=2;

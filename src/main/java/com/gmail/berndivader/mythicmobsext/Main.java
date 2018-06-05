@@ -23,6 +23,7 @@ import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
 import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
+import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
@@ -64,15 +65,8 @@ public class Main extends JavaPlugin {
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
 		
-		if(Utils.serverV<10) {
-			logger.warning("******************************************************");
-			logger.warning("     This version of MythicMobsExtension is only");
-			logger.warning("     supported on server versions 1.10 to 1.12.");
-			logger.warning("******************************************************");
-		}
-
 		if (Config.update) {
-			String version = null;
+			String version=new String("");
 			PluginDescriptionFile pdf = getDescription();
 			try {
 				URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
@@ -109,50 +103,24 @@ public class Main extends JavaPlugin {
 				new JavaScript();
 				logger.info("enabled javascript!");
 			}
-			if (Config.m_players) {
-				Main.mythicplayers=new MythicPlayers(this);
-				logger.info("registered mythicplayers!");
-			}
-			if (Config.m_thiefs) {
-				thiefs=new Thiefs();
-				logger.info("registered thiefs!");
-			}
-			if (Config.nan) {
-				new NaNpatch();
-				logger.info("NaN patch applied!");
-			}
+			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
+			if (Config.m_thiefs) thiefs=new Thiefs();
+			if (Config.nan) new NaNpatch();
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
 				wgf=new WorldGuardFlags();
 				new WorldGuardFlag();
-				logger.info("Worldguard support enabled!");
 			}
 			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
 				fflags = new FactionsFlags();
 				new FactionsFlagConditions();
-				logger.info("Faction support enabled!");
 			}
-			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) {
-				logger.info("RPGItems support enabled!");
-				hasRpgItems = true;
-			}
-			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) {
-				new MobArenaConditions();
-				logger.info("MobArena support enabled!");
-			}
-			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) {
-				Main.healthbarhandler=new HealthbarHandler(this);
-				logger.info("HolographicDisplays support enabled!");
-			}
-			if (Config.quests&&QuestsSupport.isPresent()) {
-				new QuestsSupport(this);
-				logger.info("Quests support enabled!");
-			}
+			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) hasRpgItems = true;
+			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) new MobArenaConditions();
+			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) Main.healthbarhandler=new HealthbarHandler(this);
+			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
-			if (Config.c_owners) {
-				cachedOwnerHandler = new CachedOwnerHandler(plugin);
-				logger.info("CachedOwner support enabled!");
-			}
-			logger.info("External mechanics, conditions, targeters loaded!");
+			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
+			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			
 	        new BukkitRunnable() {
 				@Override
@@ -187,6 +155,7 @@ public class Main extends JavaPlugin {
 			Main.healthbarhandler.removeSpeechBubbles();
 		}
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
+		if (Config.ncp&&NoCheatPlusSupport.isPresent()) NoCheatPlusSupport.zap();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
 		Main.wgf = null;

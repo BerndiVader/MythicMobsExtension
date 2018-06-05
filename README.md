@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 05.06.2018 *** added NoCheatPlus support: exemptplayer, unexemptplayer mechanic & hasexemption condition.
 ##### ** 30.05.2018 *** added forcebow mechanic.
 ##### ** 21.05.2018 *** fixed PathfinderGoals doorsopen & doorsbreak not working on others than villagers & zombies.
 ##### ** 20.05.2018 *** added PathfinderGoals doorsopen & doorsbreak.
@@ -301,7 +302,33 @@ NoUnknown:
     FixDisplay: true
   Skills:
   - message{msg="Me died <mob.name>!"} @world ~onDeath
-``` 
+```
+
+
+# NoCheatPlus Support:
+if you have NCP installed you might have some problems with mythicmobs. This mechanics & condition helps you to fix that.
+
+## Mechanics:
+
+### exemptplayer
+
+`exemptplayer{types=[ARRAYLIST];worldchangeresist[BOOLEAN]} @PLAYERTARGETER`
+
+The targeted player(s) will have exemption to the given CheckTypes. Read [here](https://github.com/NoCheatPlus/NoCheatPlus/blob/master/NCPCore/src/main/java/fr/neatmonster/nocheatplus/checks/CheckType.java) for a complete CheckType list.
+
+### unexemptplayer
+
+`unexemptplayer{types=[ARRAYLIST]} @PLAYERTARGETER`
+
+Remove all given exemptions from the player(s).
+
+## Conditions:
+
+### hasexemption
+
+`hasexemption{types=[ARRAYLIST]}`
+
+True if all of the given CeckTypes are on the player.
 
 
 # Quests Support:
