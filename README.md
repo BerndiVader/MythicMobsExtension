@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 05.06.2018 *** added ncp attribute to customdamage. To support NoCheatPlus onfly with customdamage. See customdamage.
 ##### ** 05.06.2018 *** added NoCheatPlus support: exemptplayer, unexemptplayer mechanic & hasexemption condition.
 ##### ** 30.05.2018 *** added forcebow mechanic.
 ##### ** 21.05.2018 *** fixed PathfinderGoals doorsopen & doorsbreak not working on others than villagers & zombies.
@@ -1643,6 +1644,7 @@ Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www
 + `percentage=p=` false by default. If true it uses the amount as percent.
 + `pcur=pc=` false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
 + `rdbd=` if used the damage of the skill is reduced by blockdistance. Ex: rdbd=0.01 reduces the damage by 1% per block.
++ `ncp=` if true and NoCheatPlus is present, this option enables NCP support for that damage. Default is false.
 	
 
 	

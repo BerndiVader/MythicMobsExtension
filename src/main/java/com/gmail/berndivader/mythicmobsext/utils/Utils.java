@@ -46,6 +46,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
@@ -55,6 +56,8 @@ import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -93,6 +96,7 @@ public class Utils implements Listener {
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
 	public static String meta_MMEDIGGING="MMEDIGGING";
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
+	public static String meta_NCP="NCP";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -376,7 +380,10 @@ public class Utils implements Listener {
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
 		if (debug) Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
-		if (e.isCancelled()) return;
+		if (e.isCancelled()) {
+			if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()) NCPExemptionManager.unexempt((Player)e.getDamager());
+			return;
+		}
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
 		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
@@ -404,10 +411,14 @@ public class Utils implements Listener {
 			victim.damage(damage);
 		}
 		if (debug) Main.logger.info("Finaldamage amount after modifiers: "+Double.toString(damage));
+		if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()&&victim.hasMetadata(meta_NCP)) {
+			NCPExemptionManager.unexempt((Player)e.getDamager());
+			victim.removeMetadata(meta_NCP,Main.getPlugin());
+		}
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause) {
+			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -423,9 +434,12 @@ public class Utils implements Listener {
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage = rpgItemPlayerHit((Player) target, damage);
 		}
-		if (Double.isNaN(damage))
-			damage = 0.001D;
-		round(damage, 3);
+		if (am.getEntity().isPlayer()&&ncp&&NoCheatPlusSupport.isPresent()) {
+			NCPExemptionManager.exemptPermanently((Player)am.getEntity().getBukkitEntity(),CheckType.FIGHT);
+			target.setMetadata(meta_NCP,new FixedMetadataValue(Main.getPlugin(),true));
+		}
+		if (Double.isNaN(damage)) damage = 0.001D;
+		round(damage,3);
 		target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(), damage));
         target.damage(damage, source);
 		if (preventImmunity)

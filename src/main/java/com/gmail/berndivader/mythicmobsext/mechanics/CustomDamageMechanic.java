@@ -27,6 +27,7 @@ ITargetedEntitySkill {
 	boolean pcur;
 	boolean debug;
 	boolean rdbd;
+	boolean ncp;
 	double dbd;
 	DamageCause cause;
 	String amount;
@@ -57,6 +58,7 @@ ITargetedEntitySkill {
 				break;
 			}
 		}
+		ncp=mlc.getBoolean("ncp",false);
 		this.debug=mlc.getBoolean("debug",false);
 	}
 
@@ -75,7 +77,7 @@ ITargetedEntitySkill {
 			int dd=(int)Math.sqrt(Utils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(), t.getBukkitEntity().getLocation().toVector()));
 			dmg=rdbd?dmg-(dmg*(dd*dbd)):dmg+(dmg*(dd*dbd));
 		}
-		Utils.doDamage(data.getCaster(), t, dmg, this.ia, this.pk, this.pi, this.iabs, this.debug, this.cause);
+		Utils.doDamage(data.getCaster(),t,dmg,this.ia,this.pk,this.pi,this.iabs,this.debug,this.cause,this.ncp);
 		return true;
 	}
 }
