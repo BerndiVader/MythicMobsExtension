@@ -38,7 +38,7 @@ IEntityCondition {
 				types=new CheckType[]{c1};
 				break;
 			}
-			types=NoCheatPlusSupport.inc(types,new CheckType[]{c1});
+			types=NoCheatPlusSupport.mkarr(types,new CheckType[]{c1});
 		}
 	}
 

@@ -70,7 +70,7 @@ Listener {
 		NCPExemptionManager.unexempt(e.getPlayer());
 	}
 	
-	public static CheckType[] inc(CheckType[]arr1,CheckType[]arr2) {
+	public static CheckType[] mkarr(CheckType[]arr1,CheckType[]arr2) {
 		CheckType[]arr=new CheckType[arr1.length+arr2.length];
 		System.arraycopy(arr1,0,arr,0,arr1.length);
 		System.arraycopy(arr2,0,arr,arr1.length,arr2.length);

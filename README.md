@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 06.06.2018 *** added location attribute to entitygoggle.
 ##### ** 05.06.2018 *** added ncp attribute to customdamage. To support NoCheatPlus onfly with customdamage. See customdamage.
 ##### ** 05.06.2018 *** added NoCheatPlus support: exemptplayer, unexemptplayer mechanic & hasexemption condition.
 ##### ** 30.05.2018 *** added forcebow mechanic.
@@ -926,7 +927,10 @@ set the health of the mob to the amount stored in the mobs health metatag.
 
 Force the entity to goggle at the targeted entity for duration amount of ticks. Doesnt work too well if the entity have ai.
 
-##### `- entitygoggleat{dur=300} @trigger ~onDamaged`
+##### `- entitygoggleat{dur=300;location=X,Y,Z,WORLDNAME} @trigger ~onDamaged`
+
+`dur`: The amount of ticks the entity goggles. <br>
+`location`: If present the entity goggle at this location. Format: `location=X,Y,Z,WORLDNAME` 
 	
 
 
