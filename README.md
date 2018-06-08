@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 07.06.2018 *** added spawnreason condition.
 ##### ** 06.06.2018 *** added location attribute to entitygoggle.
 ##### ** 05.06.2018 *** added ncp attribute to customdamage. To support NoCheatPlus onfly with customdamage. See customdamage.
 ##### ** 05.06.2018 *** added NoCheatPlus support: exemptplayer, unexemptplayer mechanic & hasexemption condition.
@@ -1884,6 +1885,11 @@ cooldown2:
   - arrowvolley
 
 ```
+
+##### `- spawnreason{types=[SPAWNREASON]||[REASONARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare if the SpawnReason or one of the SpawnReasons match. <br>
+Requires a valid SpawnReason [SpawnReasons](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html)
++ types=type=t: Valid SpawnReason or an array of valid SpawnReasons. 
 
 ##### `- lastcollided{type=[ENTITYTYPE]||[TYPESARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Compare if one of the given types match with the last collided entity.

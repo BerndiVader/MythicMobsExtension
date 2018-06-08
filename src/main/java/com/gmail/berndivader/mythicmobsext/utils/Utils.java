@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,18 +23,17 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -63,7 +61,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -97,6 +94,7 @@ public class Utils implements Listener {
 	public static String meta_MMEDIGGING="MMEDIGGING";
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
 	public static String meta_NCP="NCP";
+	public static String meta_SPAWNREASON="SPAWNREASON";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -133,71 +131,11 @@ public class Utils implements Listener {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
 		}
-		fixDisplayName(null);
 	}
 	
-	@EventHandler(priority=EventPriority.MONITOR)
-	public void fixDisplayNameDeath(EntityDeathEvent e) {
-		fixName(e.getEntity());
-	}
-	
-	@EventHandler
-	public void fixDisplayNameChunkLoad(ChunkLoadEvent e) {
-		final Entity[]entities=e.getChunk().getEntities();
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				for(int i1=0;i1<entities.length;i1++) {
-					Entity entity=entities[i1];
-					if(entity==null||!(entity instanceof LivingEntity)) continue;
-					fixName(entity);
-				}
-			}
-		}.runTaskLater(Main.getPlugin(),41);
-	}
-	
-	@EventHandler
-	public void fixDisplayNameEntitySpawn(EntitySpawnEvent e) {
-		final Entity entity=e.getEntity();
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				fixName(entity);
-			}
-		}.runTaskLater(Main.getPlugin(),2L);
-	}
-	
-	private void fixName(Entity entity) {
-		if(mobmanager.isActiveMob(entity.getUniqueId())) {
-			MythicMob mm=mobmanager.getMythicMobInstance(entity).getType();
-			if(mm.getConfig().getBoolean("Options.FixDisplay",false)) {
-				entity.setCustomName("");
-				entity.setCustomNameVisible(false);
-			}
-		}
-	}
-	
-	@EventHandler
-	public void fixDisplayName(MythicReloadedEvent e) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Collection<MythicMob>mobs=new HashSet<MythicMob>();
-				mobs.addAll(mobmanager.getMobTypes());
-				mobs.addAll(mobmanager.getVanillaTypes());
-				Iterator<MythicMob>it=mobs.iterator();
-				while(it.hasNext()) {
-					MythicMob mm=it.next();
-					if(!mm.getConfig().getBoolean("Options.FixDisplay",false)) continue;
-					try {
-						String s1=mm.getInternalName();
-						displayName.set(mm,s1.substring(0,1)+s1.substring(1).toLowerCase());
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.runTaskLaterAsynchronously(Main.getPlugin(),1L);
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void tagSpawnReason(CreatureSpawnEvent e) {
+		if (!e.isCancelled()) e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	
 	@EventHandler
