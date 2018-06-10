@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 10.06.2018 *** fixed issue with crosshairlocation where player always looks south.
 ##### ** 07.06.2018 *** added spawnreason condition.
 ##### ** 06.06.2018 *** added location attribute to entitygoggle.
 ##### ** 05.06.2018 *** added ncp attribute to customdamage. To support NoCheatPlus onfly with customdamage. See customdamage.

@@ -35,7 +35,7 @@ ILocationSelector {
 		return targets;
 	}
 	
-    private Location getTargetedBlockLocation(Player p1, int i1) {
+    private static Location getTargetedBlockLocation(Player p1, int i1) {
         BlockIterator it1=new BlockIterator(p1,i1);
         Block b1=it1.next(),b2;
         while (it1.hasNext()) {
@@ -46,7 +46,13 @@ ILocationSelector {
             	break;
             }
         }
-        return b1.getLocation();
+        Location l=null;
+        if (b1!=null) {
+        	l=b1.getLocation().clone();
+        	l.setPitch(p1.getLocation().getPitch());
+        	l.setYaw(p1.getLocation().getYaw());
+        }
+        return l;
     }	
 
 }
