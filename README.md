@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 13.06.2018 *** fix for issue #51 setmoblevel
 ##### ** 10.06.2018 *** fixed issue with crosshairlocation where player always looks south.
 ##### ** 07.06.2018 *** added spawnreason condition.
 ##### ** 06.06.2018 *** added location attribute to entitygoggle.

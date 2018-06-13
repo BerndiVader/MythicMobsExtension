@@ -17,17 +17,18 @@ SkillMechanic
 implements 
 ITargetedEntitySkill {
 	private String a;
-	int min,max;
 
 	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE=true;
 		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
 		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 	}
 
-	private void r(int i1, int i2) {
-		if (min>-1&&max>-1&&max>=min) a=Integer.toString(min)+"to"+Integer.toString(max);
+	private void r(int min, int max) {
+		if (min>-1&&max>-1&&max>=min) {
+			a=Integer.toString(min)+"to"+Integer.toString(max);
+		}
 	}
 
 	@Override
