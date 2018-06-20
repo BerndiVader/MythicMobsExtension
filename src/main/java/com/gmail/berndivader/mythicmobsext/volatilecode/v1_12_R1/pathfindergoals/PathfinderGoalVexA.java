@@ -22,13 +22,13 @@ extends PathfinderGoal {
     	this.entity=monster;
         this.a(1);
     	this.a=(DataWatcherObject<Byte>)NMSUtils.getField("a",EntityInsentient.class,entity);
-    	System.err.println(a!=null);
+//    	System.err.println(a!=null);
     }
     
     @Override
     public boolean a() {
         boolean bl1=entity.getGoalTarget()!=null&&!entity.getControllerMove().b()&&Main.random.nextInt(7)==0?entity.h(entity.getGoalTarget())>4.0:false;
-        System.err.println("a:"+bl1);
+//        System.err.println("a:"+bl1);
         return bl1;
     }
     
@@ -36,14 +36,14 @@ extends PathfinderGoal {
     @Override
     public boolean b() {
         boolean bl1=entity.getControllerMove().b()&&this.c(1)&&entity.getGoalTarget()!=null&&entity.getGoalTarget().isAlive();
-        System.err.println("b:"+bl1);
+//        System.err.println("b:"+bl1);
         return bl1;
     }
 
     private boolean c(int i2) {
         byte b0 = entity.getDataWatcher().get(a).byteValue();
         boolean bl1=(b0&i2)!=0;
-        System.err.println("c:"+bl1);
+//        System.err.println("c:"+bl1);
         return bl1;
     }
 
@@ -52,7 +52,7 @@ extends PathfinderGoal {
         int j=flag?b0|i2:b0&~i2;
         entity.a(EnumHand.MAIN_HAND);
 //        entity.getDataWatcher().set(a,Byte.valueOf((byte)(j&255)));
-        System.err.println("aa:"+b0+":"+j);
+//        System.err.println("aa:"+b0+":"+j);
     }
     
     @Override
@@ -62,7 +62,7 @@ extends PathfinderGoal {
         entity.getControllerMove().a(vec3d.x, vec3d.y, vec3d.z, 1.0);
         a(1,true);
         entity.a(SoundEffects.ih, 1.0f, 1.0f);
-        System.err.println("cc");
+//        System.err.println("cc");
     }
 
     @Override
@@ -72,7 +72,7 @@ extends PathfinderGoal {
 
     @Override
     public void e() {
-        System.err.println("ee");
+//        System.err.println("ee");
         EntityLiving entityliving=entity.getGoalTarget();
         if (entity.getBoundingBox().c(entityliving.getBoundingBox())) {
             entity.B(entityliving);

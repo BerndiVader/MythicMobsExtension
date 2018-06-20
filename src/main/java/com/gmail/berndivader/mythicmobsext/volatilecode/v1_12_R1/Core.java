@@ -52,6 +52,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorBreak;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorOpen;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
@@ -60,6 +61,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.netty.channel.Channel;
@@ -650,6 +652,15 @@ implements Handler,Listener {
 	        	if (e instanceof EntityInsentient) {
 	        		int c=data!=null&&Utils.isNumeric(data)?Integer.parseInt(data):5;
                     goals.a(i,(PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
+	        	}
+	        	break;
+	        }
+	        case "notifygrow":
+	        case "grownotify": {
+	        	if(e instanceof EntityAgeable) {
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalEntityGrowNotify(e,data));
+	        	} else {
+	        		MythicMobs.error("No ageable entity");
 	        	}
 	        	break;
 	        }

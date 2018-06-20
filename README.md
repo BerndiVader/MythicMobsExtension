@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 20.06.2018 *** added notifygrow pathfindergoal. See pathfinders for details.
 ##### ** 13.06.2018 *** fix for issue #51 setmoblevel
 ##### ** 10.06.2018 *** fixed issue with crosshairlocation where player always looks south.
 ##### ** 07.06.2018 *** added spawnreason condition.
@@ -1137,6 +1138,13 @@ Some examples:
 ```
 		
 ### Pathfindergoals:
+
+*notifygrow:*
+	
+##### `custompathfinder{goal="[goalpriority_value] notifygrow [SIGNAL]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 notifygrow grow"}`
++ Adds the ability to the mob to send the signal defined if the mob grown up.
 
 *doorsbreak:*
 	
