@@ -681,4 +681,10 @@ Listener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void forceSpectate(Player player, Entity entity, boolean bl1) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -21,11 +21,13 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	private long d;
-	public static String str="mmSpectate"; 
+	public static String str="mmSpectate";
+	boolean forceDeath;
 
 	public ForceSpectateMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.d=(long)mlc.getInteger(new String[] {"duration","dur"},120);
+		this.forceDeath=mlc.getBoolean("forcedeath",false);
 	}
 
 	@Override
@@ -33,20 +35,20 @@ ITargetedEntitySkill {
 		if (target.isPlayer()
 				&&(target.getBukkitEntity().getEntityId()==data.getCaster().getEntity().getBukkitEntity().getEntityId())) {
 			Player p=(Player)target.getBukkitEntity();
-			Volatile.handler.forceSpectate(p,p);
+			Volatile.handler.forceSpectate(p,p,false);
 			target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 			return true;
 		} 
 		if (target.isPlayer()
 				&&!target.getBukkitEntity().hasMetadata(str)) {
 			Player p=(Player)target.getBukkitEntity();
-			Volatile.handler.forceSpectate(p,data.getCaster().getEntity().getBukkitEntity());
 			p.setMetadata(str, new FixedMetadataValue(Main.getPlugin(),str));
+			Volatile.handler.forceSpectate(p,data.getCaster().getEntity().getBukkitEntity(),this.forceDeath);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					if (p!=null&&p.isOnline()&&p.hasMetadata(str)) {
-						Volatile.handler.forceSpectate(p,p);
+						Volatile.handler.forceSpectate(p,p,false);
 						p.removeMetadata(str,Main.getPlugin());
 					}
 				}

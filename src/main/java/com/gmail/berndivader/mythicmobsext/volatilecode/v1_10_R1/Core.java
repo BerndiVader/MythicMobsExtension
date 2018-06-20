@@ -76,6 +76,7 @@ import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -84,6 +85,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
+import com.gmail.berndivader.mythicmobsext.mechanics.ForceSpectateMechanic;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -695,6 +697,12 @@ Listener {
 
 	@Override
 	public void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forceSpectate(Player player, Entity entity, boolean bl1) {
 		// TODO Auto-generated method stub
 		
 	}
