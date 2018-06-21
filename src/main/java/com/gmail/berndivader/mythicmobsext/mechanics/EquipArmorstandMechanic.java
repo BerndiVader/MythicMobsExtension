@@ -24,7 +24,7 @@ INoTargetSkill {
 		this.ASYNC_SAFE=false;
 		String[]parse=mlc.getString(new String[] { "item", "i" } ).split(":");
 		try {
-			this.material=Material.valueOf(parse[0]);
+			this.material=Material.valueOf(parse[0].toUpperCase());
 		} catch (Exception e) {
 			this.material=Material.DIRT;
 		}
@@ -35,22 +35,24 @@ INoTargetSkill {
 	public boolean cast(SkillMetadata data) {
 		if (data.getCaster().getEntity().getBukkitEntity() instanceof ArmorStand) {
 			ArmorStand as=(ArmorStand)data.getCaster().getEntity().getBukkitEntity();
-			ItemStack is=new ItemStack(this.material,1);
 			switch(slot){
 				case 0: {
-					as.setItemInHand(is);
+					as.setItemInHand(new ItemStack(this.material,1));
 					break;
 				} case 1: {
-					as.setBoots(is);
+					as.setBoots(new ItemStack(this.material,1));
 					break;
 				} case 2: {
-					as.setLeggings(is);
+					as.setLeggings(new ItemStack(this.material,1));
 					break;
 				} case 3: {
-					as.setChestplate(is);
+					as.setChestplate(new ItemStack(this.material,1));
 					break;
 				} case 4: {
-					as.setHelmet(is);
+					as.setHelmet(new ItemStack(this.material,1));
+					break;
+				} case 5: {
+					as.getEquipment().setItemInOffHand(new ItemStack(this.material,1));
 					break;
 				}
 			}

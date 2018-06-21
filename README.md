@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 21.06.2018 *** added offhand support for asequip.
 ##### ** 20.06.2018 *** added forcedeath option to forcespectate mechanic. See forcespectate for details.
 ##### ** 20.06.2018 *** added notifygrow pathfindergoal. See pathfinders for details.
 ##### ** 13.06.2018 *** fix for issue #51 setmoblevel

@@ -326,8 +326,8 @@ implements Handler,Listener {
 	@Override
     public void forceSpectate(Player player, Entity entity, boolean bl1) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
-        if (bl1) player.damage(2000);
+        me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
+        if (bl1) player.damage(65536);
     }
 	
     public void forceEntitySitting(Entity entity) {
