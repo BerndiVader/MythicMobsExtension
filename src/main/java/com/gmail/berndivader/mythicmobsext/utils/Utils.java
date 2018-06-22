@@ -30,7 +30,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -48,7 +47,6 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.mechanics.ForceSpectateMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
@@ -138,25 +136,6 @@ public class Utils implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void tagSpawnReason(CreatureSpawnEvent e) {
 		if (!e.isCancelled()) e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
-	}
-	
-	@EventHandler
-	public void forceRespawnSpectate(PlayerDeathEvent e) {
-		if (e.getEntity().hasMetadata(ForceSpectateMechanic.str)) {
-			Location l=e.getEntity().getLocation().clone();
-			e.setKeepInventory(true);
-			e.setKeepLevel(true);
-			e.getEntity().spigot().respawn();
-			e.getEntity().teleport(l);
-			e.setDeathMessage(null);
-			e.setDroppedExp(0);
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					e.getEntity().leaveVehicle();
-				}
-			}.runTaskLater(Main.getPlugin(),2L);
-		}
 	}
 	
 	@EventHandler

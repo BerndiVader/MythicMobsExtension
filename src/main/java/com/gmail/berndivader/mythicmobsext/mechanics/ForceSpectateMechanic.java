@@ -22,12 +22,12 @@ implements
 ITargetedEntitySkill {
 	private long d;
 	public static String str="mmSpectate";
-	boolean forceDeath;
+	boolean shaderOnly;
 
 	public ForceSpectateMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.d=(long)mlc.getInteger(new String[] {"duration","dur"},120);
-		this.forceDeath=mlc.getBoolean("forcedeath",false);
+		this.shaderOnly=mlc.getBoolean("shaderonly",false);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ ITargetedEntitySkill {
 				&&!target.getBukkitEntity().hasMetadata(str)) {
 			Player p=(Player)target.getBukkitEntity();
 			p.setMetadata(str, new FixedMetadataValue(Main.getPlugin(),str));
-			Volatile.handler.forceSpectate(p,data.getCaster().getEntity().getBukkitEntity(),this.forceDeath);
+			Volatile.handler.forceSpectate(p,data.getCaster().getEntity().getBukkitEntity(),this.shaderOnly);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
