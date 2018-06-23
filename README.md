@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 23.06.2018 *** added mythicitem support for asequip mechanic.
 ##### ** 22.06.2018 *** tweaked forcespectate now works properly.
 ##### ** 22.06.2018 *** maybe fix for mobsinradius issue on server start.
 ##### ** 21.06.2018 *** added offhand support for asequip.
@@ -1046,7 +1047,7 @@ Equip an armor stand with any Bukkit Material Type. Equp the head slot with any 
 	
 ##### `- asequip{item=DIAMOND_SWORD:4} ~onSpawn`
 
-If mobtype = armorstand equip diamond sword on head slot.
+If mobtype = armorstand equip diamond sword on head slot. Valid are any mythicitem names for bukkit materialtypes.
 
 
 

@@ -30,7 +30,7 @@ ITargetedEntitySkill {
 		this.ignoreYaw = mlc.getBoolean(new String[] { "ignoreyaw", "iy" }, false);
 		String parse = mlc.getString(new String[] { "display","text","t" },"$h");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
-			parse = parse.substring(1, parse.length()-1);
+			parse=parse.substring(1, parse.length()-1);
 		}
 		this.display = SkillString.parseMessageSpecialChars(parse);
 	}
