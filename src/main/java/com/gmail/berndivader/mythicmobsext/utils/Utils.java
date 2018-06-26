@@ -90,6 +90,7 @@ public class Utils implements Listener {
 	public static String meta_MYTHICDAMAGE="MythicDamage";
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
+	public static String meta_LASTDAMAGEAMOUNT="LastDamageAmount";
 	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
 	public static String meta_MMEDIGGING="MMEDIGGING";
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
@@ -273,6 +274,7 @@ public class Utils implements Listener {
 	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void storeDamageCause(EntityDamageEvent e) {
+		if(e.isCancelled()) return;
 		Entity victim = e.getEntity();
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
@@ -282,6 +284,7 @@ public class Utils implements Listener {
 			victim.removeMetadata(meta_LASTDAMAGER, Main.getPlugin());
 		}
 		victim.setMetadata(meta_LASTDAMAGECAUSE,new FixedMetadataValue(Main.getPlugin(), cause.toString()));
+		victim.setMetadata(meta_LASTDAMAGEAMOUNT,new FixedMetadataValue(Main.getPlugin(),e.getDamage()));
 	}
 	
 	@EventHandler

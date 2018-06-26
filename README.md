@@ -1901,6 +1901,12 @@ cooldown2:
 
 ```
 
+##### `- lastdamagecause{amount=[RANGED];cause=[SINGLE]||[LIST]||[ANY];damager=[SINGLE]||[LIST]||[ANY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare the DamageCause [DamageCause](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html) and the damager of EntityType EntityType](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html) with the damage amount within the ranged value. Note that the damage is NOT the final damage after all modifiers. There are also some related meta tags. `<mob.meta.LastDamager> <mob.meta.LastDamageCause> <mob.meta.DamageAmount>`
++ cause: Valid DamageCause. 
++ amount: Ranged amount.
++ damager: Valid EntityType.
+
 ##### `- spawnreason{types=[SPAWNREASON]||[REASONARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Compare if the SpawnReason or one of the SpawnReasons match. <br>
 Requires a valid SpawnReason [SpawnReasons](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html)
