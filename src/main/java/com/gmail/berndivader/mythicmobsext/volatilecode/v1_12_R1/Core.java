@@ -322,6 +322,18 @@ implements Handler,Listener {
 		}
 		me.setArrowCount(a);
 	}
+
+/*
+ * (non-Javadoc)
+ * @see com.gmail.berndivader.mythicmobsext.volatilecode.Handler#forceSpectate(org.bukkit.entity.Player, org.bukkit.entity.Entity, boolean)
+ * 
+	@Override
+    public void forceSpectate(Player player, Entity entity, boolean bl1) {
+		net.minecraft.server.v1_12_R1.EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
+        entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
+        if (bl1) entityPlayer.server.getPlayerList().moveToWorld(entityPlayer,entityPlayer.dimension,true,player.getLocation(),false);
+    }
+ */	
 	
 	@Override
     public void forceSpectate(Player player, Entity entity, boolean bl1) {
@@ -997,7 +1009,7 @@ implements Handler,Listener {
 	@Override
 	public void forceBowDraw(LivingEntity e1, LivingEntity target,boolean bl1) {
 		if (bl1) System.err.println("try to draw bow");
-        EntityLiving t=(EntityLiving)((CraftLivingEntity)e1).getHandle();
+//        EntityLiving t=(EntityLiving)((CraftLivingEntity)e1).getHandle();
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
         if (ei instanceof IRangedEntity) {
         	if (ei.isHandRaised()) {
@@ -1013,7 +1025,7 @@ implements Handler,Listener {
         }
 		
 	}
-
+	
 	@Override
 	public void forceSpectate(Player player, Entity entity) {
 		// TODO Auto-generated method stub

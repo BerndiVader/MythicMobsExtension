@@ -19,7 +19,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name="ttt,threattabletargeter",author="BerndiVader")
 public class ThreatTableTargeter 	

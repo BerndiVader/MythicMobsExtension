@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name="ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
 public class HasItemCondition 

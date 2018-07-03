@@ -69,7 +69,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
@@ -100,7 +100,6 @@ public class Utils implements Listener {
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
 	private static Handler handler;
-	private static Field displayName;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
@@ -117,12 +116,6 @@ public class Utils implements Listener {
 	    } catch (Exception e) {
 	    	serverV=11;
 	    }
-		try {
-			displayName=MythicMob.class.getDeclaredField("displayName");
-			displayName.setAccessible(true);
-		} catch (NoSuchFieldException | SecurityException e) {
-			Main.logger.warning("There was an error accessing the displayName field "+e.getMessage());
-		}
 	}
 	
 	public Utils() {

@@ -11,6 +11,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.utils.tasks.Scheduler;
@@ -23,7 +24,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
 
 @ExternalAnnotation(name="chatlistener",author="BerndiVader")
 public class ChatListenerMechanic 
@@ -33,7 +33,7 @@ implements
 ITargetedEntitySkill {
 	static String str;
 	int period;
-	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger,sense;
+	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger,sense,strict;
 	String storage;
 	String[]phrases;
 	RangedDouble radius;
@@ -62,6 +62,7 @@ ITargetedEntitySkill {
 		removephrase=mlc.getBoolean("removephrase",false);
 		ignoreTrigger=mlc.getBoolean("ignoretrigger",true);
 		infinite=mlc.getBoolean("infinite",false);
+		strict=mlc.getBoolean("strict",false);
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
 		sense=mlc.getBoolean("sensitive",true);
@@ -142,7 +143,7 @@ ITargetedEntitySkill {
         		for(int i1=0;i1<phrases.length;i1++) {
         			String s4=Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null);
         			if (!sense) s4=s4.toLowerCase();
-        			if ((bl1=s2.contains(s4))) {
+        			if(bl1=buff.strict?s2.equals(s4):s2.contains(s4)) {
         				if (removephrase) s22=s22.replace(phrases[i1],"");
         				break;
         			}

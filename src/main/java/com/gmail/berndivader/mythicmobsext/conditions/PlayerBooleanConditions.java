@@ -9,7 +9,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="crouching,running,disguised,sleeping,jumping",author="BerndiVader")
+@ExternalAnnotation(name="crouching,running,sleeping,jumping",author="BerndiVader")
 public class PlayerBooleanConditions
 extends
 AbstractCustomCondition 

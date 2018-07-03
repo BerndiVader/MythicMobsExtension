@@ -10,6 +10,8 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 02.07.2018 *** added targetnotcaster condition.
+##### ** 26.06.2018 *** fixed libsdisguise dependency.
 ##### ** 23.06.2018 *** added mythicitem support for asequip mechanic.
 ##### ** 22.06.2018 *** tweaked forcespectate now works properly.
 ##### ** 22.06.2018 *** maybe fix for mobsinradius issue on server start.
@@ -1862,6 +1864,8 @@ FleeButGotNothing:
 
 # Conditions
 
+##### `- targetnotcaster{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**TargetCondition** Check if the caster is not the target.
 
 ##### `- skillcooldown{skill=[SKILLNAME];id=[STRING];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 Check if the skill *skill* is on cooldown and if true store the remaining cooldown value into mob score <mob[target||trigger].score.[SKILLNAME+ID]>

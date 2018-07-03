@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
+import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguiseCompatibility;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
 import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
@@ -124,6 +125,7 @@ public class Main extends JavaPlugin {
 			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) Main.healthbarhandler=new HealthbarHandler(this);
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
+			if (disguisepresent) new LibsDisguiseCompatibility();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
 			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			
