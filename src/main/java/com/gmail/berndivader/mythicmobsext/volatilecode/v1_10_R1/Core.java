@@ -611,13 +611,13 @@ Listener {
 	    }
 	}
 	@Override
-	public float getItemCoolDown(Player p) {
+	public float getItemCoolDown(Player p,int i1) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public boolean setItemCooldown(Player p,int j) {
+	public boolean setItemCooldown(Player p,int j1,int i1) {
 		// TODO Auto-generated method stub
 		return false;
 	}

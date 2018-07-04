@@ -946,19 +946,19 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public float getItemCoolDown(Player p) {
+	public float getItemCoolDown(Player p,int i1) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        return eh.getCooldownTracker().a(eh.inventory.getItemInHand().getItem(),0.0f);
+        return eh.getCooldownTracker().a(i1==-1?eh.inventory.getItemInHand().getItem():eh.inventory.getItem(i1).getItem(),0.0f);
 	}
 
 	@Override
-	public boolean setItemCooldown(Player p,int j) {
+	public boolean setItemCooldown(Player p,int j1,int i1) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        net.minecraft.server.v1_12_R1.Item i=eh.inventory.getItemInHand().getItem();
+        net.minecraft.server.v1_12_R1.Item i=i1==-1?eh.inventory.getItemInHand().getItem():eh.inventory.getItem(i1).getItem();
         if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
         	eh.getCooldownTracker().cooldowns.remove(i);
         };
-       	eh.getCooldownTracker().a(i,j);
+       	eh.getCooldownTracker().a(i,j1);
 		return true;
 	}
 	

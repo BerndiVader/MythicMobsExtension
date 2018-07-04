@@ -39,8 +39,8 @@ public interface Handler {
 	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
 	boolean testForCondition(Entity e,String ns,char m);
-	float getItemCoolDown(Player p);
-	public boolean setItemCooldown(Player p,int j);
+	float getItemCoolDown(Player p,int i1);
+	public boolean setItemCooldown(Player p,int j1,int i1);
 	void setFieldOfViewPacketSend(Player player, float f1);
 	float getIndicatorPercentage(Player p);
 	Parrot spawnCustomParrot(Location l1,boolean b1);
