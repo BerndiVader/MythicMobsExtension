@@ -294,11 +294,6 @@ implements Handler,Listener {
 		me.setHasPumpkin(false);
 	}
 	
-	public void advancementTest(Player player) {
-		
-	}
-	
-	
 	@Override
 	public int arrowsOnEntity(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
@@ -1028,8 +1023,8 @@ implements Handler,Listener {
 	
 	@Override
 	public void forceSpectate(Player player, Entity entity) {
-		// TODO Auto-generated method stub
-		
+		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
+        ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
 	}
 	
 	

@@ -40,7 +40,7 @@ ITargetedEntitySkill {
 		this.time=mlc.getInteger(new String[] { "counter", "c","time" }, 200);
 		this.b1=mlc.getBoolean(new String[] { "animation", "anim", "a" }, true);  
 		this.b2=mlc.getBoolean(new String[] { "usecounter", "uc" }, true);
-		this.text=mlc.getString(new String[] { "display","text","t" }, "");
+		this.text=mlc.getString(new String[] { "display","text","t" }, " ");
 		if (text.startsWith("\"") && text.endsWith("\"")) {
 			this.text=text.substring(1,text.length()-1);
 		}

@@ -39,6 +39,8 @@ ITargetedEntitySkill {
 			} else {
 				this.oline=ol;
 			}
+		} else {
+			this.oline="";
 		}
 	}
 
