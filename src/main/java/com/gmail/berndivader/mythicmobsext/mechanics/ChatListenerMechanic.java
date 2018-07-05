@@ -40,6 +40,7 @@ ITargetedEntitySkill {
 	Optional<Skill>matchSkill=Optional.empty();
 	Optional<Skill>falseSkill=Optional.empty();
 	Optional<Skill>inuseSkill=Optional.empty();
+	Optional<Skill>endSkill=Optional.empty();
 	
 	static {
 		str="MME_CHATLISTENER";
@@ -70,6 +71,7 @@ ITargetedEntitySkill {
 		if ((s1=mlc.getString("matchskill"))!=null) matchSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("falseskill"))!=null) falseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("inuseskill"))!=null) inuseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
+		if ((s1=mlc.getString("endskill"))!=null) endSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 	}
 
 	@Override
@@ -124,6 +126,7 @@ ITargetedEntitySkill {
         public void run() {
             if (!buff.infinite) this.ticksRemaining--;
             if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
+            	if (endSkill.isPresent()) endSkill.get().execute(data.deepClone());
                 this.terminate();
             }
         }

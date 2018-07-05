@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 05.07.2018 *** added endskill to chatlistener.
 ##### ** 02.07.2018 *** added targetnotcaster condition.
 ##### ** 26.06.2018 *** fixed libsdisguise dependency.
 ##### ** 23.06.2018 *** added mythicitem support for asequip mechanic.
@@ -570,7 +571,7 @@ listener execute failskill. After a click, the maxdelay is set back. The result 
 
 ## chatlistener
 
-`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL];sensitive=[BOOL]} @PLAYERTARGETERS`
+`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];endskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL];sensitive=[BOOL]} @PLAYERTARGETERS`
 
 Use this skill to listen to the targeted players chat for period of ticks. If one of the phrases, or any if empty, match the matchskill is excuted, if not the falseskill is executed. Use breakonmatch and breakonfalse to cancel the skill if match or if no match. Radius is the range the player needs to be. This can be a ranged value like 2to5 or <10 that stuff. Use the inuseskill to tell others that the mob is already talking to someone else. To make the mob multitalking, set multi to true and the mob is able to talk to more than one player simultaneously. Optional, set the phrases under "" to have spaces enabled. Additional all avaible variables like <target.name> etc... can be used.
 
@@ -583,6 +584,7 @@ Use this skill to listen to the targeted players chat for period of ticks. If on
 + inuseskill: skill that is executed if the mob already listen to someone or if multi if the player is already in mobs attention.
 + matchskill: executed if match.
 + falseskill: executed if false.
++ endskill: executed on time out.
 + multi: true/false(default) if more then 1 player is able to talk simultaneously.
 + meta: the metatag name where the message should be stored. ex: `meta=<trigger.uuid>lastmessage`this set a metatag for the mob with the triggers uuid + lastmessage. the value of the tag is the message.
 + removephrase: true/false(default) if the matched phrase should be removed from the message.
