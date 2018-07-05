@@ -54,6 +54,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -1431,6 +1432,19 @@ public class NMSUtils extends NMSUtil {
         try {
             Field f1=cl1.getDeclaredField(s1);
             f1.setAccessible(true);
+			f1.set(o1,o2);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void setFinalField(String s1,Class<?>cl1,Object o1,Object o2) {
+        try {
+            Field f1=cl1.getDeclaredField(s1);
+            f1.setAccessible(true);
+            Field f2=Field.class.getDeclaredField("modifiers");
+            f2.setAccessible(true);
+            f2.setInt(f1,f2.getModifiers()&~Modifier.FINAL);
 			f1.set(o1,o2);
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();

@@ -238,7 +238,7 @@ public class Utils implements Listener {
 			}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onMythicCustomRPGItemDamage(EntityDamageByEntityEvent e) {
 		LivingEntity victim = null;
@@ -269,6 +269,10 @@ public class Utils implements Listener {
 	public void storeDamageCause(EntityDamageEvent e) {
 		if(e.isCancelled()) return;
 		Entity victim = e.getEntity();
+		if (victim!=null&&victim.hasMetadata(meta_MYTHICDAMAGE)) {
+			NMSUtils.setFinalField("cause",EntityDamageEvent.class,e,DamageCause.valueOf(victim.getMetadata("DamageCause").get(0).asString()));
+			victim.removeMetadata("DamageCause",Main.getPlugin());
+		}
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
 			Entity damager = Utils.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
@@ -320,7 +324,8 @@ public class Utils implements Listener {
 		}
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
-		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
+		boolean strict=victim.getMetadata("DamageStrict").get(0).asBoolean();
+		double md=strict?victim.getMetadata("DamageAmount").get(0).asDouble():e.getDamage();
 		double df = e.getDamage(DamageModifier.BASE)!=0?round(md / e.getDamage(DamageModifier.BASE), 3):0.0d;
 		if (debug) {
 			Main.logger.info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
@@ -343,6 +348,8 @@ public class Utils implements Listener {
 		if (victim.getMetadata("PreventKnockback").get(0).asBoolean()) {
 			e.setCancelled(true);
 			victim.damage(damage);
+		} else {
+			e.setDamage(damage);
 		}
 		if (debug) Main.logger.info("Finaldamage amount after modifiers: "+Double.toString(damage));
 		if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()&&victim.hasMetadata(meta_NCP)) {
@@ -352,7 +359,7 @@ public class Utils implements Listener {
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp) {
+			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -364,6 +371,8 @@ public class Utils implements Listener {
 		target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(), ignoreabs));
 		target.setMetadata(meta_MYTHICDAMAGE, new FixedMetadataValue(Main.getPlugin(), true));
 		target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(), debug));
+		target.setMetadata("DamageCause", new FixedMetadataValue(Main.getPlugin(),cause.toString()));
+		target.setMetadata("DamageStrict", new FixedMetadataValue(Main.getPlugin(),strict));
 		target.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), false));
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage = rpgItemPlayerHit((Player) target, damage);

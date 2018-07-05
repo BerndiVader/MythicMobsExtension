@@ -28,6 +28,7 @@ ITargetedEntitySkill {
 	boolean debug;
 	boolean rdbd;
 	boolean ncp;
+	boolean strict;
 	double dbd;
 	DamageCause cause;
 	String amount;
@@ -46,6 +47,7 @@ ITargetedEntitySkill {
 		this.ip = mlc.getBoolean(new String[] { "ignorepower", "ip" }, false);
 		this.p = mlc.getBoolean(new String[] { "percentage", "p" }, false);
 		this.uc = mlc.getBoolean(new String[] { "usecaster", "uc" }, false);
+		this.strict=mlc.getBoolean("strict",false);
 		this.pcur = mlc.getBoolean(new String[] { "percentcurrent", "pcur", "pc" }, false);
 		ca = mlc.getString(new String[] { "damagecause", "cause", "dc" }, "CUSTOM").toUpperCase();
 		dbd=-mlc.getDouble(new String[] { "reducedamagebydistance", "rdbd","damagebydistance","dbd" },0);
@@ -77,7 +79,7 @@ ITargetedEntitySkill {
 			int dd=(int)Math.sqrt(Utils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(), t.getBukkitEntity().getLocation().toVector()));
 			dmg=rdbd?dmg-(dmg*(dd*dbd)):dmg+(dmg*(dd*dbd));
 		}
-		Utils.doDamage(data.getCaster(),t,dmg,this.ia,this.pk,this.pi,this.iabs,this.debug,this.cause,this.ncp);
+		Utils.doDamage(data.getCaster(),t,dmg,this.ia,this.pk,this.pi,this.iabs,this.debug,this.cause,this.ncp,this.strict);
 		return true;
 	}
 }
