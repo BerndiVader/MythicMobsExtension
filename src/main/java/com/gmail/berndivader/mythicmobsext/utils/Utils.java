@@ -88,6 +88,7 @@ public class Utils implements Listener {
 	public static String meta_BOWTICKSTART="mmibowtick";
 	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
 	public static String meta_MYTHICDAMAGE="MythicDamage";
+	public static String meta_DAMAGECAUSE="DamageCause";
 	public static String meta_LASTDAMAGER="LastDamager";
 	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
 	public static String meta_LASTDAMAGEAMOUNT="LastDamageAmount";
@@ -269,9 +270,9 @@ public class Utils implements Listener {
 	public void storeDamageCause(EntityDamageEvent e) {
 		if(e.isCancelled()) return;
 		Entity victim = e.getEntity();
-		if (victim!=null&&victim.hasMetadata(meta_MYTHICDAMAGE)) {
-			NMSUtils.setFinalField("cause",EntityDamageEvent.class,e,DamageCause.valueOf(victim.getMetadata("DamageCause").get(0).asString()));
-			victim.removeMetadata("DamageCause",Main.getPlugin());
+		if (victim!=null&&victim.hasMetadata(meta_MYTHICDAMAGE)&&victim.hasMetadata(meta_DAMAGECAUSE)) {
+			NMSUtils.setFinalField("cause",EntityDamageEvent.class,e,DamageCause.valueOf(victim.getMetadata(meta_DAMAGECAUSE).get(0).asString()));
+			victim.removeMetadata(meta_DAMAGECAUSE,Main.getPlugin());
 		}
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
@@ -349,7 +350,7 @@ public class Utils implements Listener {
 			e.setCancelled(true);
 			victim.damage(damage);
 		} else {
-			e.setDamage(damage);
+			e.setDamage(victim.hasMetadata("DamageStrict")&&victim.getMetadata("DamageStrict").get(0).asBoolean()?victim.getMetadata("DamageAmount").get(0).asDouble():damage);
 		}
 		if (debug) Main.logger.info("Finaldamage amount after modifiers: "+Double.toString(damage));
 		if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()&&victim.hasMetadata(meta_NCP)) {
@@ -371,7 +372,7 @@ public class Utils implements Listener {
 		target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(), ignoreabs));
 		target.setMetadata(meta_MYTHICDAMAGE, new FixedMetadataValue(Main.getPlugin(), true));
 		target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(), debug));
-		target.setMetadata("DamageCause", new FixedMetadataValue(Main.getPlugin(),cause.toString()));
+		target.setMetadata(meta_DAMAGECAUSE, new FixedMetadataValue(Main.getPlugin(),cause.toString()));
 		target.setMetadata("DamageStrict", new FixedMetadataValue(Main.getPlugin(),strict));
 		target.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), false));
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
