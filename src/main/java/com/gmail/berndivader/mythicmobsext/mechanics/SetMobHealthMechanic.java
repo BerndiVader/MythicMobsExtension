@@ -38,7 +38,7 @@ ITargetedEntitySkill {
 			ActiveMob am=(ActiveMob)data.getCaster();
 			double h=20,mod=0;
 			h=Utils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
-			if (!b&&(data.getCaster() instanceof ActiveMob)) {
+			if (!b&&am!=null) {
 				mod=ConfigManager.defaultLevelModifierHealth.startsWith("+")
                 		? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))
                 		: (ConfigManager.defaultLevelModifierHealth.startsWith("*") 

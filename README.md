@@ -10,6 +10,7 @@ Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
 
 ### Changelog:
 
+##### ** 11.07.2018 *** added blockatcrosshair condition.
 ##### ** 05.07.2018 *** added endskill to chatlistener.
 ##### ** 02.07.2018 *** added targetnotcaster condition.
 ##### ** 26.06.2018 *** fixed libsdisguise dependency.
@@ -1867,6 +1868,11 @@ FleeButGotNothing:
 
 
 # Conditions
+
+##### `- blockatcrosshair{material=[ARRAY]||[MATERIALNAME];filter=[ARRAy]||[MATERIALNAME];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**PlayerOnly** Check the block material the player look at.
++ material: a single valid material type or a list.
++ filter: all materials that are ignored on the way to the max distance. Valid is a single entry or a list by valid material types.
 
 ##### `- targetnotcaster{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **TargetCondition** Check if the caster is not the target.
