@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -77,6 +78,12 @@ ITargetedLocationSkill {
 	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		ActiveMob am=data.getCaster() instanceof ActiveMob?(ActiveMob)data.getCaster():null;
 		if (this.itemtype==null) return false;
+		if(this.itemtype.toLowerCase().equals("exporb")) {
+			Location l=BukkitAdapter.adapt(l1);
+			ExperienceOrb orb=l.getWorld().spawn(l,ExperienceOrb.class);
+			orb.setExperience(Utils.randomRangeInt(amount));
+			return true;
+		}
 		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,tag,tags,am,e1==null?data.getTrigger():e1);
 		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
 		if (am!=null) {
