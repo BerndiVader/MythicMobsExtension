@@ -326,6 +326,18 @@ ITargetedLocationSkill {
 						return;
 					}
 					this.currentBounce -= this.bounceReduce;
+					if (EntityProjectile.this.onBounceSkill.isPresent()
+							&& EntityProjectile.this.onBounceSkill.get().isUsable(this.data)) {
+						SkillMetadata sData = this.data.deepClone();
+						sData.setCaster(this.am);
+						sData.setTrigger(sData.getCaster().getEntity());
+						AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
+						HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
+						targets.add(entity);
+						sData.setEntityTargets(targets);
+						sData.setOrigin(this.currentLocation);
+						EntityProjectile.this.onBounceSkill.get().execute(sData);
+					}
 					this.currentVelocity.setY(this.currentBounce / EntityProjectile.this.ticksPerSecond);
 				}
 				this.currentVelocity.setY(this.currentVelocity.getY()

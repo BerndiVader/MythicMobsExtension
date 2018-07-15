@@ -330,6 +330,14 @@ ITargetedLocationSkill {
 						return;
 					}
 					this.currentBounce -= this.bounceReduce;
+					if (BlockProjectile.this.onBounceSkill.isPresent()
+							&& BlockProjectile.this.onBounceSkill.get().isUsable(this.data)) {
+						SkillMetadata sData = this.data.deepClone();
+						sData.setCaster(this.am);
+						sData.setTrigger(sData.getCaster().getEntity());
+						sData.setOrigin(this.currentLocation);
+						BlockProjectile.this.onBounceSkill.get().execute(sData);
+					}
 					this.currentVelocity.setY(this.currentBounce / BlockProjectile.this.ticksPerSecond);
 				}
 				this.currentVelocity.setY(this.currentVelocity.getY()

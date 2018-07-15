@@ -40,7 +40,7 @@ IEntityCondition {
 			try {
 				filters.add(Material.valueOf(arr1[i1]));
 			} catch (Exception ex) {
-				//
+				Main.logger.warning(line+" value of "+arr1[i1]+" invalid!");
 			}
 		}
 	}
@@ -48,7 +48,6 @@ IEntityCondition {
 	@Override
 	public boolean check(AbstractEntity e) {
 		if(!e.isPlayer()) return false;
-		Material m1=((Player)e.getBukkitEntity()).getTargetBlock(filters,i1).getType();
-		return contains.contains(m1);
+		return contains.contains(((Player)e.getBukkitEntity()).getTargetBlock(filters,i1).getType());
 	}
 }
