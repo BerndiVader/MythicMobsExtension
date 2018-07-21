@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,34 +45,32 @@ IEntitySelector {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity>targets=new HashSet<>();
+		List<Entry<AbstractEntity,Double>>tt=null;
 		ActiveMob am=(ActiveMob)data.getCaster();
-		Map<AbstractEntity,Double>tt=null;
 		if (am!=null&&am.hasThreatTable()) {
 			try {
 				if ((tt=sort((ConcurrentHashMap<AbstractEntity,Double>)f1.get(am.getThreatTable())))==null) return targets;
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			Iterator<Map.Entry<AbstractEntity,Double>> it=tt.entrySet().iterator();
-			int i1=1;
-			while(it.hasNext()) {
-				Map.Entry<AbstractEntity,Double>p1=it.next();
-				if(r1.equals(i1)&&r2.equals(p1.getValue())) targets.add(p1.getKey());
-				i1++;
+			if(tt!=null) {
+				int i2=1;
+				for(int i1=tt.size();i1>=0;i1--) {
+					Entry<AbstractEntity,Double>p1=tt.get(i1);
+					System.err.println(p1.getValue());
+					if(r1.equals(i2)&&r2.equals(p1.getValue())) targets.add(p1.getKey());
+					i2++;
+				}
 			}
 		}
 		return targets;
 	}
 	
-	static <K,V extends Comparable<? super Double>>Map<AbstractEntity,Double>sort(Map<AbstractEntity,Double>tt) {
+	static List<Entry<AbstractEntity,Double>> sort(Map<AbstractEntity,Double>tt) {
 		List<Entry<AbstractEntity,Double>>l1=new ArrayList<>(tt.entrySet());
-		l1.sort(Entry.comparingByValue());
+		Collections.sort(l1,Entry.comparingByValue());
 		Collections.reverse(l1);
-		Map<AbstractEntity,Double>m1=new LinkedHashMap<>();
-		for (Entry<AbstractEntity,Double>e1:l1) {
-			m1.put(e1.getKey(),e1.getValue());
-		}
-		return m1;
+		return l1;
 	}
 	
 }

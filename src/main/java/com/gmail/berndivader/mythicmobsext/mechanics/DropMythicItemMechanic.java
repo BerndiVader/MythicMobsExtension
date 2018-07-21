@@ -75,24 +75,27 @@ ITargetedLocationSkill {
 		return a(data,etarget,null);
 	}
 	
-	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
-		ActiveMob am=data.getCaster() instanceof ActiveMob?(ActiveMob)data.getCaster():null;
+	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation al1) {
 		if (this.itemtype==null) return false;
+		ActiveMob am=data.getCaster() instanceof ActiveMob?(ActiveMob)data.getCaster():null;
+		Location l1=al1!=null?BukkitAdapter.adapt(al1):e1!=null?e1.getBukkitEntity().getLocation():null;
 		if(this.itemtype.toLowerCase().equals("exporb")) {
-			Location l=BukkitAdapter.adapt(l1);
-			ExperienceOrb orb=l.getWorld().spawn(l,ExperienceOrb.class);
-			orb.setExperience(Utils.randomRangeInt(amount));
-			return true;
+			int i1=Utils.randomRangeInt(amount);
+			if(i1>0) {
+				ExperienceOrb orb=l1.getWorld().spawn(l1,ExperienceOrb.class);
+				orb.setExperience(Utils.randomRangeInt(amount));
+			}
+		} else {
+			ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,tag,tags,am,e1==null?data.getTrigger():e1);
+			LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
+			if (am!=null) {
+				MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
+		        Bukkit.getServer().getPluginManager().callEvent(e);
+				if (e.isCancelled()) return false;
+				drops=e.getDrops();
+			}
+			dropItems(drops,l1,e1!=null?e1.isPlayer()?(Player)e1.getBukkitEntity():null:null,give);
 		}
-		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,tag,tags,am,e1==null?data.getTrigger():e1);
-		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
-		if (am!=null) {
-			MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
-	        Bukkit.getServer().getPluginManager().callEvent(e);
-			if (e.isCancelled()) return false;
-			drops=e.getDrops();
-		}
-		dropItems(drops,e1!=null?e1.getBukkitEntity().getLocation():BukkitAdapter.adapt(l1),e1!=null?e1.isPlayer()?(Player)e1.getBukkitEntity():null:null,give);
 		return true;
 	}
 

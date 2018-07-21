@@ -97,6 +97,7 @@ public class Utils implements Listener {
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
 	public static String meta_NCP="NCP";
 	public static String meta_SPAWNREASON="SPAWNREASON";
+	public static String meta_SETSPAWNREASON="SETSPAWNREASON";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -129,8 +130,9 @@ public class Utils implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void tagSpawnReason(CreatureSpawnEvent e) {
-		if (!e.isCancelled()) e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
+	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
+		if (e.isCancelled()) return;
+		e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	
 	@EventHandler
@@ -303,6 +305,8 @@ public class Utils implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p=e.getPlayer();
+		UUID uuid;
+		if(pl.containsKey(uuid=p.getUniqueId())) pl.remove(uuid);
 		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (p.hasMetadata(StunMechanic.str)) {
 			p.setGravity(true);

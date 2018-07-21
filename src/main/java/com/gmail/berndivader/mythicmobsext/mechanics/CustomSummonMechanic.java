@@ -1,7 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import org.bukkit.entity.Creature;
+import java.util.Optional;
 
+import org.bukkit.entity.Creature;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.metadata.FixedMetadataValue;
+
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -26,6 +31,7 @@ public class CustomSummonMechanic extends SkillMechanic
 	int noise,yNoise;
 	boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
 	double addx,addy,addz,inFrontBlocks;
+	Optional<SpawnReason> reason;
 
 	public CustomSummonMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -50,6 +56,12 @@ public class CustomSummonMechanic extends SkillMechanic
 		this.leashtocaster=mlc.getBoolean(new String[] {"leashtocaster","leash","lc"},false);
 		this.mm = Utils.mobmanager.getMythicMob(strType);
 		if (this.mm == null) this.me = MythicEntity.getMythicEntity(strType);
+		try {
+			this.reason=Optional.ofNullable(SpawnReason.valueOf(mlc.getString("reason","CUSTOM").toUpperCase()));
+		} catch (Exception ex) {
+			Main.logger.warning(skill+": invalid spawnreason! Ignore custom spawnreason.");
+			this.reason=Optional.empty();
+		}
 	}
 
 	@Override
@@ -81,6 +93,9 @@ public class CustomSummonMechanic extends SkillMechanic
 							||ams.getEntity()==null
 							||ams.getEntity().isDead())
 						continue;
+					if(reason.isPresent()) {
+						ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_SETSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason.get()));
+					}
 					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
 						Creature c=(Creature)ams.getEntity().getBukkitEntity();
 						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());

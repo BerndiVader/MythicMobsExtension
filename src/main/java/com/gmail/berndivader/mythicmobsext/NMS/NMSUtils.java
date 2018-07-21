@@ -340,6 +340,21 @@ public class NMSUtils extends NMSUtil {
 		}
 		return armorStand;
 	}
+	
+    public static Entity createEntity(Location location,EntityType entityType) {
+    	Entity bukkitEntity=null;
+    	try {
+    		Class<? extends Entity>entityClass=entityType.getEntityClass();
+    		Object newEntity=class_CraftWorld_createEntityMethod.invoke(location.getWorld(),location,entityClass);
+    		if (newEntity!=null) {
+    			bukkitEntity=getBukkitEntity(newEntity);
+    			if (bukkitEntity==null||!entityClass.isAssignableFrom(bukkitEntity.getClass())) return null;
+    		}
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    	return bukkitEntity;
+    }	
 
 	public static boolean addToWorld(World world, Entity entity, CreatureSpawnEvent.SpawnReason reason) {
 		try {
