@@ -97,7 +97,7 @@ public class Utils implements Listener {
 	public static String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
 	public static String meta_NCP="NCP";
 	public static String meta_SPAWNREASON="SPAWNREASON";
-	public static String meta_SETSPAWNREASON="SETSPAWNREASON";
+	public static String meta_CUSTOMSPAWNREASON="SETSPAWNREASON";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;

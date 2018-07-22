@@ -1,9 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.util.Optional;
-
 import org.bukkit.entity.Creature;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -31,7 +28,7 @@ public class CustomSummonMechanic extends SkillMechanic
 	int noise,yNoise;
 	boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
 	double addx,addy,addz,inFrontBlocks;
-	Optional<SpawnReason> reason;
+	String reason;
 
 	public CustomSummonMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -56,12 +53,7 @@ public class CustomSummonMechanic extends SkillMechanic
 		this.leashtocaster=mlc.getBoolean(new String[] {"leashtocaster","leash","lc"},false);
 		this.mm = Utils.mobmanager.getMythicMob(strType);
 		if (this.mm == null) this.me = MythicEntity.getMythicEntity(strType);
-		try {
-			this.reason=Optional.ofNullable(SpawnReason.valueOf(mlc.getString("reason","CUSTOM").toUpperCase()));
-		} catch (Exception ex) {
-			Main.logger.warning(skill+": invalid spawnreason! Ignore custom spawnreason.");
-			this.reason=Optional.empty();
-		}
+		this.reason=mlc.getString(new String[] {"customreason","custom","cr"},"CUSTOM").toUpperCase();
 	}
 
 	@Override
@@ -86,16 +78,10 @@ public class CustomSummonMechanic extends SkillMechanic
 		if (this.mm != null) {
 			if (this.noise > 0) {
 				for (int i=1;i<=amount;i++) {
-					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
-							this.mm.getMythicEntity().getHeight(), this.yUpOnly);
+					AbstractLocation l = MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.mm.getMythicEntity().getHeight(), this.yUpOnly);
 					ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
-					if (ams == null
-							||ams.getEntity()==null
-							||ams.getEntity().isDead())
-						continue;
-					if(reason.isPresent()) {
-						ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_SETSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason.get()));
-					}
+					if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
+					ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
 					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
 						Creature c=(Creature)ams.getEntity().getBukkitEntity();
 						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
@@ -132,13 +118,19 @@ public class CustomSummonMechanic extends SkillMechanic
 			} else {
 				for (int i = 1; i <= amount; ++i) {
 					ActiveMob ams = this.mm.spawn(target, data.getCaster().getLevel());
-					if (ams == null
-							||ams.getEntity()==null
-							||!ams.getEntity().getWorld().equals(data.getCaster().getEntity().getWorld())
-							||ams.getEntity().isDead())
-						continue;
+					if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
+					ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
+					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
+						Creature c=(Creature)ams.getEntity().getBukkitEntity();
+						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
+					}
 					if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
 					Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
+					if (this.tag!=null) {
+						String tt = SkillString.unparseMessageSpecialChars(this.tag);
+						tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
+						ams.getEntity().addScoreboardTag(tt);
+					}
 					if (this.setowner) {
 						ams.setOwner(data.getCaster().getEntity().getUniqueId());
 					}
