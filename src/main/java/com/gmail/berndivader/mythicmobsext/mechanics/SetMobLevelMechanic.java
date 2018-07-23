@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -16,12 +17,13 @@ extends
 SkillMechanic 
 implements 
 ITargetedEntitySkill {
-	private String a;
+	private String a,skill;
 
 	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=true;
+		this.ASYNC_SAFE=false;
 		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
+		this.skill=skill;
 		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 	}
 
@@ -35,7 +37,11 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (Utils.mobmanager.isActiveMob(target)) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
-			am.setLevel(Utils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
+			try {
+				am.setLevel(Utils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
+			} catch (NullPointerException ex) {
+				Main.logger.warning("Failed to set moblevel with "+skill+"!");
+			}
 			return true;
 		}
 		return false;
