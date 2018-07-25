@@ -4,6 +4,7 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.ConfigManager;
@@ -45,6 +46,7 @@ ITargetedEntitySkill {
                 		? h*Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1)) 
                 		: h*Double.valueOf(ConfigManager.defaultLevelModifierHealth));
             }
+			
 			if (am!=null&&am.getLevel()>1&&mod>0.0) h+=mod*(am.getLevel()-1);
 			LivingEntity e=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 			switch(m) {
@@ -60,7 +62,7 @@ ITargetedEntitySkill {
 			}
 			h=Math.ceil(h);
 			e.setMaxHealth(h);
-			if (b1) e.setHealth(h);
+			if (b1) e.setHealth(e.getMaxHealth());
 			return true;
 		} else {
 			return false;
