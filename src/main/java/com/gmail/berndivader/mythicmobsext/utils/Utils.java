@@ -107,17 +107,19 @@ public class Utils implements Listener {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
 		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
-		advancements=new HashSet<>();
-		for(Iterator<Advancement>iter=Bukkit.getServer().advancementIterator();iter.hasNext();) {
-			Advancement adv=iter.next();
-			advancements.add(adv);
-		}
-		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
 	    } catch (Exception e) {
 	    	serverV=11;
 	    }
+		if(Utils.serverV>11) {
+			advancements=new HashSet<>();
+			for(Iterator<Advancement>iter=Bukkit.getServer().advancementIterator();iter.hasNext();) {
+				Advancement adv=iter.next();
+				advancements.add(adv);
+			}
+		}
+		pl=new HashMap<>();
 	}
 	
 	public Utils() {

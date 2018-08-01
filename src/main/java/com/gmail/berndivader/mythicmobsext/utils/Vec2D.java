@@ -29,7 +29,7 @@ Cloneable {
 		return new Vec2D(this.x-v2.getX(),this.y-v2.getY());
 	}
 	public String toString() {
-		return "v2d"+x+","+y;
+		return "v2d@"+x+","+y;
 	}
 	public Vec2D clone() throws CloneNotSupportedException {
 		return (Vec2D)super.clone();

@@ -3,8 +3,14 @@ package com.gmail.berndivader.mythicmobsext.utils;
 public class MetaTagValue {
 	private Object value;
 	private ValueTypes valType;
+	boolean strict;
+	
+	public MetaTagValue(String value,String type) {
+		this(value,type,true);
+	}
 
-	public MetaTagValue(String value, String type) {
+	public MetaTagValue(String value, String type,boolean strict) {
+		this.strict=strict;
 		if (value==null||!MetaTagValue.containsType(type))
 			type=ValueTypes.DEFAULT.toString();
 		this.valType=ValueTypes.valueOf(type);
@@ -42,6 +48,10 @@ public class MetaTagValue {
 
 	public ValueTypes getType() {
 		return this.valType;
+	}
+	
+	public boolean isStrict() {
+		return this.strict;
 	}
 
 	private static boolean containsType(String type) {

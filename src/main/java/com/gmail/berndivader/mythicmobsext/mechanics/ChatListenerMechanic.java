@@ -43,7 +43,7 @@ ITargetedEntitySkill {
 	Optional<Skill>endSkill=Optional.empty();
 	
 	static {
-		str="MME_CHATLISTENER";
+		str="MME_CHAT";
 	}
 	
 	public ChatListenerMechanic(String skill, MythicLineConfig mlc) {
@@ -67,7 +67,7 @@ ITargetedEntitySkill {
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
 		sense=mlc.getBoolean("sensitive",true);
-		this.buffName=Optional.of("chatlistener");
+		this.buffName=Optional.of(mlc.getString("chatname","chatlistener"));
 		if ((s1=mlc.getString("matchskill"))!=null) matchSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("falseskill"))!=null) falseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("inuseskill"))!=null) inuseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -77,7 +77,7 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!arg1.isPlayer()) return false;
-		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str))||(!multi&&!arg0.getCaster().hasBuff(buffName.get()))) {
+		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.buffName))||(!multi&&!arg0.getCaster().hasBuff(buffName.get()))) {
 			try {
 				BuffTracker ff=new ChatListener(this,arg0,arg1);
 				Field f=ff.getClass().getSuperclass().getDeclaredField("task");
@@ -118,7 +118,7 @@ ITargetedEntitySkill {
 			this.hasEnded=false;
 			this.p=p;
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
-			p.getBukkitEntity().setMetadata(str,new FixedMetadataValue(Main.getPlugin(),true));
+			p.getBukkitEntity().setMetadata(str+this.buff.buffName,new FixedMetadataValue(Main.getPlugin(),true));
 			this.start();
 		}
 		
@@ -192,7 +192,7 @@ ITargetedEntitySkill {
                 this.hasEnded = true;
             }
         	HandlerList.unregisterAll(this);
-        	p.getBukkitEntity().removeMetadata(str,Main.getPlugin());
+        	p.getBukkitEntity().removeMetadata(str+this.buff.buffName,Main.getPlugin());
         	return task1.terminate();
         }
 	}

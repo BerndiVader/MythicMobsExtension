@@ -43,6 +43,7 @@ IEntityComparisonCondition {
 			for (String metaString:metaStrings) {
 				String parse[]=metaString.split(";");
 				String t=null,v=null,vt=null;
+				boolean strict=true;
 				for (String p:parse) {
 					if (p.startsWith("tag=")) {
 						t=p.substring(4);
@@ -53,10 +54,13 @@ IEntityComparisonCondition {
 					} else if (p.startsWith("type=")) {
 						vt=p.substring(5);
 						continue;
+					} else if (p.startsWith("strict=")) {
+						strict=Boolean.parseBoolean(p.substring(7).toUpperCase());
+						continue;
 					}
 				}
 				if (t!=null) {
-					MetaTagValue mtv=new MetaTagValue(v,vt);
+					MetaTagValue mtv=new MetaTagValue(v,vt,strict);
 					this.metatags.put(t,mtv);
 				}
 			}
@@ -65,8 +69,9 @@ IEntityComparisonCondition {
 			t=SkillString.parseMessageSpecialChars(mlc.getString("tag"));
 			v=SkillString.parseMessageSpecialChars(mlc.getString("value"));
 			vt=SkillString.parseMessageSpecialChars(mlc.getString("type"));
+			boolean strict=mlc.getBoolean("strict",true);
 			if (t!=null) {
-				MetaTagValue mtv=new MetaTagValue(v,vt);
+				MetaTagValue mtv=new MetaTagValue(v,vt,strict);
 				this.metatags.put(t,mtv);
 			}
 		}
@@ -93,13 +98,14 @@ IEntityComparisonCondition {
 	public boolean check(AbstractEntity caster, AbstractEntity ae) {
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(caster);
 		for (Map.Entry<String,MetaTagValue>e:metatags.entrySet()) {
+			boolean strict=e.getValue().isStrict();
 			String t=SkillString.parseMobVariables(e.getKey(),am,ae,null);
 			String vs=getMetaValString(e.getValue(),am,ae);
 			Entity target=this.compareToSelf?caster.getBukkitEntity():ae.getBukkitEntity();
 			if (target.hasMetadata(t)) {
 				if (e.getValue().getType().equals(ValueTypes.DEFAULT)) return true;
 				for (MetadataValue mv:target.getMetadata(t)) {
-					if (mv.asString().equals(vs)) return true;
+					if(strict?mv.asString().equals(vs):mv.asString().contains(vs)) return true;
 				}
 			}
 		}

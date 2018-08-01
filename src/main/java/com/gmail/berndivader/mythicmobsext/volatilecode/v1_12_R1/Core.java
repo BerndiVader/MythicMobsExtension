@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
@@ -152,12 +153,17 @@ implements Handler,Listener {
 							return;
 						}
 						@Override
-						public void handle(Player p, PacketPlayInSteerVehicle packet) {
+						public void handle(Player p, PacketPlayInBlockDig packet) {
+							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
 							return;
 						}
 						@Override
-						public void handle(Player p, PacketPlayInBlockDig packet) {
-							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
+						public void handle(Player p, PacketPlayInPosition packet) {
+							// TODO Auto-generated method stub
+							
+						}
+						@Override
+						public void handle(Player p, PacketPlayInSteerVehicle packet) {
 							return;
 						}
 				    }));
@@ -200,9 +206,6 @@ implements Handler,Listener {
 	    	@Override
 			protected void decode(ChannelHandlerContext chc,Packet packet,List<Object>out) throws Exception {
 	    		switch(packet.getClass().getSimpleName()) {
-	    		case "PacketPlayInSteerVehicle":
-	            	prh.handle(p,(PacketPlayInSteerVehicle)packet);
-	            	break;
 	    		case "PacketPlayInArmAnimation":
 	                prh.handle(p,(PacketPlayInArmAnimation)packet);
 	    			break;
@@ -317,18 +320,6 @@ implements Handler,Listener {
 		}
 		me.setArrowCount(a);
 	}
-
-/*
- * (non-Javadoc)
- * @see com.gmail.berndivader.mythicmobsext.volatilecode.Handler#forceSpectate(org.bukkit.entity.Player, org.bukkit.entity.Entity, boolean)
- * 
-	@Override
-    public void forceSpectate(Player player, Entity entity, boolean bl1) {
-		net.minecraft.server.v1_12_R1.EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
-        entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
-        if (bl1) entityPlayer.server.getPlayerList().moveToWorld(entityPlayer,entityPlayer.dimension,true,player.getLocation(),false);
-    }
- */	
 	
 	@Override
     public void forceSpectate(Player player, Entity entity, boolean bl1) {
@@ -746,7 +737,8 @@ implements Handler,Listener {
 	
 	interface PacketReceivingHandler {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p,PacketPlayInFlying packet);
+	    void handle(Player p,PacketPlayInPosition packet);
+		void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
 	    void handle(Player p,PacketPlayInBlockDig packet);
 	}
