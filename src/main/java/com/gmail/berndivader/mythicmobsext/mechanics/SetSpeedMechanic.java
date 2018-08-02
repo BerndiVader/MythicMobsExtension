@@ -25,7 +25,7 @@ INoTargetSkill {
 
 	public SetSpeedMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		s1=mlc.getString(new String[] { "amount", "a" }, "0.2D").toLowerCase();
+		s1=mlc.getString(new String[] { "amount", "a","range","r" }, "0.2D").toLowerCase();
 		bl1=mlc.getBoolean("debug",false);
 	}
 
