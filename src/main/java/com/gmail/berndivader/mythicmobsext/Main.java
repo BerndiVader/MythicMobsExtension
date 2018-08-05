@@ -122,7 +122,10 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) hasRpgItems = true;
 			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) new MobArenaConditions();
-			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) Main.healthbarhandler=new HealthbarHandler(this);
+			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) {
+				logger.info("using HolographicDisplays");
+				Main.healthbarhandler=new HealthbarHandler(this);
+			}
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
 			if (disguisepresent) new LibsDisguiseCompatibility();

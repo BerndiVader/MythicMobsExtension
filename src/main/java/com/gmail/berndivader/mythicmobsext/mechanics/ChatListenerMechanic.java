@@ -91,7 +91,7 @@ ITargetedEntitySkill {
 		if (inuseSkill.isPresent()) {
 			Skill sk=inuseSkill.get();
 			SkillMetadata sd=arg0.deepClone();
-			sk.execute(sd);
+			if(sk.isUsable(sd))sk.execute(sd);
 		}
 		return false;
 	}
@@ -126,7 +126,9 @@ ITargetedEntitySkill {
         public void run() {
             if (!buff.infinite) this.ticksRemaining--;
             if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
-            	if (endSkill.isPresent()) endSkill.get().execute(data.deepClone());
+            	if (endSkill.isPresent()) {
+            		if(endSkill.get().isUsable(data)) endSkill.get().execute(data.deepClone());
+            	}
                 this.terminate();
             }
         }
@@ -159,14 +161,14 @@ ITargetedEntitySkill {
         			}
         			if (matchSkill.isPresent()) {
         				sk=matchSkill.get();
-        				sk.execute(data.deepClone());
+        				if(sk.isUsable(data)) sk.execute(data.deepClone());
         			}
     				if (breakOnMatch) this.terminate();
         		} else {
         			if (cancelFalse) e.setCancelled(true);
         			if (falseSkill.isPresent()) {
         				sk=falseSkill.get();
-        				sk.execute(data.deepClone());
+        				if(sk.isUsable(data)) sk.execute(data.deepClone());
         			}
     				if (breakOnFalse) this.terminate();
         		}
