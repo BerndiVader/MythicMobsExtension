@@ -27,5 +27,4 @@ IEntityComparisonCondition {
 		}
 		return false;
 	}
-
 }

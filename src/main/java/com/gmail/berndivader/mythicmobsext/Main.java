@@ -37,7 +37,6 @@ import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
-import com.gmail.berndivader.mythicmobsext.nanpatch.NaNpatch;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Main extends JavaPlugin {
@@ -111,7 +110,6 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
 			if (Config.m_thiefs) thiefs=new Thiefs();
-			if (Config.nan) new NaNpatch();
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
 				wgf=new WorldGuardFlags();
 				new WorldGuardFlag();

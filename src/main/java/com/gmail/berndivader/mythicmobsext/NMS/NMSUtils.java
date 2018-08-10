@@ -225,7 +225,6 @@ public class NMSUtils extends NMSUtil {
 		case SUNSET: // Use same as 4x3
 
 			// 4x3
-		case DONKEYKONG:
 		case SKELETON:
 			if (facing == BlockFace.WEST)
 				return loc.getBlock().getLocation().add(0, 0, -1);
@@ -246,7 +245,6 @@ public class NMSUtils extends NMSUtil {
 		case FIGHTERS: // Use same as 4x4
 
 			// 4x4
-		case BURNINGSKULL:
 		case PIGSCENE:
 		case POINTER:
 			if (facing == BlockFace.WEST)

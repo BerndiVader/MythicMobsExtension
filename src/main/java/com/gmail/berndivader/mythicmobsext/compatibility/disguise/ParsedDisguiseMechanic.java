@@ -10,6 +10,10 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 
 public class ParsedDisguiseMechanic extends SkillMechanic
 implements
@@ -27,8 +31,15 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (CompatibilityManager.LibsDisguises != null) {
 			String d=SkillString.unparseMessageSpecialChars(this.disguise);
-			d=Utils.parseMobVariables(d,data,data.getCaster().getEntity(),target,null);
-			CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
+			switch(d.toUpperCase()) {
+			case "STEVE":
+			case "ALEX":
+				
+				break;
+			default:
+				d=Utils.parseMobVariables(d,data,data.getCaster().getEntity(),target,null);
+				CompatibilityManager.LibsDisguises.setDisguise((ActiveMob)data.getCaster(), d);
+			}
 			return true;
 		}
 		return false;
