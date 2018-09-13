@@ -8,7 +8,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="clearthreattarget",author="BerndiVader")
+@ExternalAnnotation(name="clearthreattarget,dropcombat",author="BerndiVader")
 public class ClearThreatTableMechanic
 extends 
 SkillMechanic
@@ -23,11 +23,10 @@ INoTargetSkill {
 	public boolean cast(SkillMetadata data) {
 		if (data.getCaster()instanceof ActiveMob) {
 			ActiveMob am=(ActiveMob)data.getCaster();
-			if (am.getThreatTable().size()>0) {
-				am.getThreatTable().clearTarget();
-				am.getThreatTable().getAllThreatTargets().clear();
+			if(am.hasThreatTable()) {
+				am.getThreatTable().dropCombat();
+				return true;
 			}
-			return true;
 		} 
 		return false;
 	}

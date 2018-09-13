@@ -125,6 +125,7 @@ ITargetedEntitySkill {
         @Override
         public void run() {
             if (!buff.infinite) this.ticksRemaining--;
+            
             if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
             	if (endSkill.isPresent()) {
             		if(endSkill.get().isUsable(data)) endSkill.get().execute(data.deepClone());
