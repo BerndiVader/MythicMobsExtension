@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="feed",author="BerndiVader")
+@ExternalAnnotation(name="mmefeed",author="BerndiVader")
 public class FeedMechanic 
 extends 
 SkillMechanic 
