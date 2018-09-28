@@ -810,7 +810,7 @@ implements Handler,Listener {
             	if (nb3.toString().toLowerCase().contains("id:\"ignore\"")) nb3=nb4;
             	if (!(bl1=nbtA(nb3,nb4,bl1))) break;
             }
-			break;
+			break;	
 		case NBT.TAG_COMPOUND:
             NBTTagCompound nbt1=(NBTTagCompound)nb1;
             NBTTagCompound nbt2=(NBTTagCompound)nb2;

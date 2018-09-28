@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -30,6 +32,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -131,6 +134,23 @@ public class Utils implements Listener {
 		}
 	}
 	
+	@EventHandler
+	public void creeperExplode(EntityExplodeEvent e) {
+		if(e.isCancelled()||(e.getEntityType()!=EntityType.CREEPER)) return;
+		if(mobmanager.isActiveMob(e.getEntity().getUniqueId())) {
+			ActiveMob am=mobmanager.getMythicMobInstance(e.getEntity());
+			if(am.getType().getConfig().getBoolean("BlocksOnFire",false)) {
+				int amount=am.getType().getConfig().getInt("BlocksOnFireAmount",10);
+				World w=e.getLocation().getWorld();
+				Location l=e.getLocation();
+				for(int i=0;i<amount;i++) {
+					FallingBlock fb=w.spawnFallingBlock(l,Material.FIRE,(byte)0);
+					fb.setVelocity(new Vector(UndoBlockListener.getRandomVel(-0.5, 0.5),UndoBlockListener.getRandomVel(0.1, 0.5),UndoBlockListener.getRandomVel(-0.5, 0.5)));
+				}
+			}
+		}
+	}
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
 		if (e.isCancelled()) return;
@@ -196,7 +216,9 @@ public class Utils implements Listener {
 			e.setCancelled(ts.getCancelled());
 		}
 	}
-
+	
+	
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
 		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {

@@ -9,8 +9,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+import io.lumine.xikage.mythicmobs.drops.DropTable;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 
 public class MythicMobsExtItemDropEvent 
 extends
@@ -18,19 +20,19 @@ Event
 implements
 Cancellable {
     private static final HandlerList handlers=new HandlerList();
-    private final ActiveMob am;
+    private final SkillCaster am;
     private final LivingEntity trigger;
-    private ArrayList<ItemStack>stack;
+    private DropTable stack;
     private boolean cancelled;
     
-    public MythicMobsExtItemDropEvent(ActiveMob am,LivingEntity trigger,ArrayList<ItemStack>stack) {
+    public MythicMobsExtItemDropEvent(SkillCaster am,LivingEntity trigger,DropTable dt) {
     	this.am=am;
     	this.trigger=trigger;
-    	this.stack=stack;
+    	this.stack=dt;
     	this.cancelled=false;
 	}
     
-    public ActiveMob getMob() {
+    public SkillCaster getMob() {
         return this.am;
     }
 
@@ -38,8 +40,8 @@ Cancellable {
         return this.am.getEntity().getBukkitEntity();
     }
 
-    public MythicMob getMobType() {
-        return this.am.getType();
+    public Entity getMobType() {
+        return this.am.getEntity().getBukkitEntity();
     }
 
     public int getMobLevel() {
@@ -50,11 +52,11 @@ Cancellable {
         return this.trigger;
     }
 
-    public ArrayList<ItemStack> getDrops() {
+    public DropTable getDrops() {
         return this.stack;
     }
 
-    public void setDrops(ArrayList<ItemStack>l1) {
+    public void setDrops(DropTable l1) {
         this.stack=l1;
     }    
 

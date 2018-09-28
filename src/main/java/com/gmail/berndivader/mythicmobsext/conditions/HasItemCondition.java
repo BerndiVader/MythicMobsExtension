@@ -87,7 +87,6 @@ IEntityCondition {
 			return this.matAny;
 		}
 	}
-
 	private String conditionLine;
 	private boolean is;
 	private LinkedHashSet<ItemHolding> holdinglist;
