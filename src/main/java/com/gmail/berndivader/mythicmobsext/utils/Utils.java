@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -145,7 +144,7 @@ public class Utils implements Listener {
 				Location l=e.getLocation();
 				for(int i=0;i<amount;i++) {
 					FallingBlock fb=w.spawnFallingBlock(l,Material.FIRE,(byte)0);
-					fb.setVelocity(new Vector(UndoBlockListener.getRandomVel(-0.5, 0.5),UndoBlockListener.getRandomVel(0.1, 0.5),UndoBlockListener.getRandomVel(-0.5, 0.5)));
+					fb.setVelocity(new Vector(UndoBlockListener.getRandomVel(-0.5, 0.5),UndoBlockListener.getRandomVel(0.3, 0.8),UndoBlockListener.getRandomVel(-0.5, 0.5)));
 				}
 			}
 		}
