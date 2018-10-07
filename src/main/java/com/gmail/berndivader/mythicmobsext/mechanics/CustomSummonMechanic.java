@@ -76,101 +76,54 @@ public class CustomSummonMechanic extends SkillMechanic
 		target.add(this.addx, this.addy, this.addz);
 		int amount=Utils.randomRangeInt(this.amount);
 		if (this.mm != null) {
-			if (this.noise > 0) {
-				for (int i=1;i<=amount;i++) {
-					AbstractLocation l = MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.mm.getMythicEntity().getHeight(), this.yUpOnly);
-					ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
-					if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
-					ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
-					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
-						Creature c=(Creature)ams.getEntity().getBukkitEntity();
-						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
-					}
-					if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
-					Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
-					if (this.tag!=null) {
-						String tt = SkillString.unparseMessageSpecialChars(this.tag);
-						tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
-						ams.getEntity().addScoreboardTag(tt);
-					}
-					if (this.setowner) {
-						ams.setOwner(data.getCaster().getEntity().getUniqueId());
-					}
-					if (data.getCaster() instanceof ActiveMob) {
-						ActiveMob am = (ActiveMob) data.getCaster();
- 						ams.setParent(am);
-						ams.setFaction(am.getFaction());
-						if (this.copyThreatTable) {
-							try {
-								ams.importThreatTable(am.getThreatTable().clone());
-								ams.getThreatTable().targetHighestThreat();
-							} catch (CloneNotSupportedException e1) {
-								e1.printStackTrace();
-							}
-							continue;
-						}
-						if (!this.inheritThreatTable)
-							continue;
-						ams.importThreatTable(am.getThreatTable());
-						ams.getThreatTable().targetHighestThreat();
-					}
+			for (int i=1;i<=amount;i++) {
+				AbstractLocation l=noise>0?MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.mm.getMythicEntity().getHeight(), this.yUpOnly):target;
+				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
+				if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
+				ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
+				if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
+					Creature c=(Creature)ams.getEntity().getBukkitEntity();
+					c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
 				}
-			} else {
-				for (int i = 1; i <= amount; ++i) {
-					ActiveMob ams = this.mm.spawn(target, data.getCaster().getLevel());
-					if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
-					ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
-					if (this.leashtocaster&&ams.getEntity().getBukkitEntity() instanceof Creature) {
-						Creature c=(Creature)ams.getEntity().getBukkitEntity();
-						c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
-					}
-					if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
-					Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
-					if (this.tag!=null) {
-						String tt = SkillString.unparseMessageSpecialChars(this.tag);
-						tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
-						ams.getEntity().addScoreboardTag(tt);
-					}
-					if (this.setowner) {
-						ams.setOwner(data.getCaster().getEntity().getUniqueId());
-					}
-					if (data.getCaster() instanceof ActiveMob) {
-						ActiveMob am = (ActiveMob) data.getCaster();
- 						ams.setParent(am);
-						ams.setFaction(am.getFaction());
-						if (this.copyThreatTable) {
-							try {
-								ams.importThreatTable(am.getThreatTable().clone());
-								ams.getThreatTable().targetHighestThreat();
-							} catch (CloneNotSupportedException e1) {
-								e1.printStackTrace();
-							}
-							continue;
+				if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
+				Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
+				if (this.tag!=null) {
+					String tt = SkillString.unparseMessageSpecialChars(this.tag);
+					tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
+					ams.getEntity().addScoreboardTag(tt);
+				}
+				if (this.setowner) {
+					ams.setOwner(data.getCaster().getEntity().getUniqueId());
+				}
+				if (data.getCaster() instanceof ActiveMob) {
+					ActiveMob am = (ActiveMob) data.getCaster();
+					ams.setParent(am);
+					ams.setFaction(am.getFaction());
+					if (this.copyThreatTable) {
+						try {
+							ams.importThreatTable(am.getThreatTable().clone());
+							ams.getThreatTable().targetHighestThreat();
+						} catch (CloneNotSupportedException e1) {
+							e1.printStackTrace();
 						}
-						if (!this.inheritThreatTable)
-							continue;
-						ams.importThreatTable(am.getThreatTable());
-						ams.getThreatTable().targetHighestThreat();
+						continue;
 					}
+					if (!this.inheritThreatTable)
+						continue;
+					ams.importThreatTable(am.getThreatTable());
+					ams.getThreatTable().targetHighestThreat();
 				}
 			}
 			return true;
 		}
-		if (this.me != null) {
-			if (this.noise > 0) {
-				for (int i = 1; i <= amount; ++i) {
-					AbstractLocation l = MobManager.findSafeSpawnLocation(target, (int) this.noise, (int) this.yNoise,
-							this.me.getHeight(), this.yUpOnly);
-					this.me.spawn(BukkitAdapter.adapt(l));
-				}
-			} else {
-				for (int i = 1; i <= amount; ++i) {
-					this.me.spawn(BukkitAdapter.adapt(target));
-				}
+		if (this.me!=null) {
+			for (int i = 1; i <= amount; ++i) {
+				AbstractLocation l=this.noise>0?MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.me.getHeight(),this.yUpOnly):target;
+				this.me.spawn(BukkitAdapter.adapt(l));
 			}
 			return true;
 		}
-		return true;
+		return false;
 	}
 	
 }

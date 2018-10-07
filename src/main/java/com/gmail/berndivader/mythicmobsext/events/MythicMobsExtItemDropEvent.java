@@ -1,17 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.events;
 
-import java.util.ArrayList;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
 
 import io.lumine.xikage.mythicmobs.drops.DropTable;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 
 public class MythicMobsExtItemDropEvent 

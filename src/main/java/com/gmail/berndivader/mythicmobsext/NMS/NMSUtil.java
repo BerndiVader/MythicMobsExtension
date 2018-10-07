@@ -1137,6 +1137,7 @@ public class NMSUtil {
     		o2=class_ItemStack_tagField.get(o1);
             if (o2==null) {
                 class_ItemStack_tagField.set(o1,class_NBTTagCompound.newInstance());
+                o2=class_ItemStack_tagField.get(o1);
             }
         } catch (Throwable ex) {
         	o2=null;
