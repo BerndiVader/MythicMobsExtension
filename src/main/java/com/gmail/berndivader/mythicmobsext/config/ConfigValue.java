@@ -18,7 +18,8 @@ public enum ConfigValue {
 	EXTERNALS("Configuration.Externals",true),
 	JAVASCRIPT("Configuration.Javascript",true),
 	QUESTS("Configuration.Quests",true),
-	NCP("Configuration.NPC",true);
+	NCP("Configuration.NPC",true),
+	PRE44SPAWN("Configuration.PRE44SPAWN",false);
 	private final String path;
 	private final Object value;
 
