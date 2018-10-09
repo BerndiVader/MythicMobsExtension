@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,6 +62,7 @@ ITargetedLocationSkill {
 	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+		castAtEntity(data,data.getTrigger());
 		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),null,target).split(",");
 		LootBag loot=makeLootBag(data,types,data.getTrigger(),tag,tags,this.stackable);
 		giveOrDrop(BukkitAdapter.adapt(target),null,loot,give,tag,stackable,tags,silent);
@@ -115,7 +118,8 @@ ITargetedLocationSkill {
  		return loot;
  	}
  	
- 	static ItemStack markItem(ItemStack is,boolean tag,boolean stackable,String[]tags) {
+ 	static ItemStack createItemStack(ItemStack is,boolean tag,boolean stackable,String[]tags) {
+ 		is=NMSUtil.makeReal(is);
 		if(tag) {
 			for(int i2=0;i2<tags.length;i2++) {
 				String[]arr2=tags[i2].split(":");
@@ -137,14 +141,20 @@ ITargetedLocationSkill {
         World w=l.getWorld();
         for (Drop drop:loot.getDrops()) {
             if (drop instanceof IItemDrop) {
-                ItemStack is=markItem(NMSUtil.makeReal(BukkitAdapter.adapt(((IItemDrop)drop).getDrop(loot.getMetadata()))),tag,stackable,tags);
+                ItemStack is=createItemStack(BukkitAdapter.adapt(((IItemDrop)drop).getDrop(loot.getMetadata())),tag,stackable,tags);
             	if(give&&isPresent&&player.getInventory().firstEmpty()>-1) {
                     player.getInventory().addItem(new ItemStack(is));
             	} else {
             		w.dropItem(l,is);
             	}
             } else if (drop instanceof ExperienceDrop) {
-                if(isPresent) player.giveExp((int)drop.getAmount());
+                if(isPresent&&give) {
+                	player.giveExp((int)drop.getAmount());
+                }else {
+                	ExperienceOrb exp=(ExperienceOrb)w.spawnEntity(l, EntityType.EXPERIENCE_ORB);
+                	exp.setExperience((int)drop.getAmount());
+                }
+                
             } else if (drop instanceof IIntangibleDrop) {
                 if(isPresent) ((IIntangibleDrop)drop).giveDrop(BukkitAdapter.adapt(player),loot.getMetadata());
             } 
