@@ -119,14 +119,15 @@ ITargetedLocationSkill {
  	}
  	
  	static ItemStack createItemStack(ItemStack is,boolean tag,boolean stackable,String[]tags) {
- 		is=NMSUtil.makeReal(is);
 		if(tag) {
+	 		is=NMSUtil.makeReal(is);
 			for(int i2=0;i2<tags.length;i2++) {
 				String[]arr2=tags[i2].split(":");
-				NMSUtils.setMeta(is,arr2[0],arr2.length==1?arr2[1]:is.getType().toString());
+				NMSUtils.setMeta(is,arr2[0],arr2.length>1?arr2[1]:is.getType().toString());
 			}
 		}
 		if(!stackable) {
+	 		is=NMSUtil.makeReal(is);
 			UUID uuid=UUID.randomUUID();
 			String most=Long.toString(uuid.getMostSignificantBits()),least=Long.toString(uuid.getLeastSignificantBits());
 			NMSUtils.setMeta(is,"RandomMost",most);
