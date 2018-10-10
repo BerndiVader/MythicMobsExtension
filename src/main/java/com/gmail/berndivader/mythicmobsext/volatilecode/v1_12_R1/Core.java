@@ -63,8 +63,6 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -78,6 +76,7 @@ implements Handler,Listener {
 	
 	private static HashMap<UUID,ChannelHandler>chl;
 	private static Field cField;
+	static int renderLength;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
@@ -113,6 +112,7 @@ implements Handler,Listener {
 	    	}
 	    }
 	    chl=new HashMap<>();
+	    renderLength=512;
 	}
 	
 	public Core() {
@@ -247,32 +247,32 @@ implements Handler,Listener {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsAsync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+	private void sendPlayerPacketsAsync(List<Player>players,Packet[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				while(it.hasNext()) {
-					AbstractPlayer ap=it.next();
-					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-					for(Packet p:pk) {
-						cp.getHandle().playerConnection.sendPacket(p);
+				for(int i1=0;i1<players.size();i1++) {
+					CraftPlayer cp=(CraftPlayer)players.get(i1);
+					for(int i2=0;i2<packets.length;i2++) {
+						cp.getHandle().playerConnection.sendPacket(packets[i2]);
 					}
+					
 				}
 			}
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsSync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+	private void sendPlayerPacketsSync(List<Player>players,Packet[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				while(it.hasNext()) {
-					AbstractPlayer ap=it.next();
-					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-					for(Packet p:pk) {
-						cp.getHandle().playerConnection.sendPacket(p);
+				for(int i1=0;i1<players.size();i1++) {
+					CraftPlayer cp=(CraftPlayer)players.get(i1);
+					for(int i2=0;i2<packets.length;i2++) {
+						cp.getHandle().playerConnection.sendPacket(packets[i2]);
 					}
+					
 				}
 			}
 		}.runTask(Main.getPlugin());
@@ -322,11 +322,89 @@ implements Handler,Listener {
 	}
 	
 	@Override
-    public void forceSpectate(Player player, Entity entity, boolean bl1) {
+    public void forceSpectate(Player player, Entity e, boolean bl1) {
+		LivingEntity entity=(LivingEntity)e;
 		net.minecraft.server.v1_12_R1.EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
-        entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
-        if (bl1) entityPlayer.server.getPlayerList().moveToWorld(entityPlayer,entityPlayer.dimension,true,player.getLocation(),false);
+		entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
+        if (bl1) {
+        	dupePlayer(entityPlayer,player.getLocation());
+        	entity.remove();
+        }
     }
+	
+	void dupePlayer(EntityPlayer entityplayer,Location location){
+        WorldServer worldServer=((CraftWorld)location.getWorld()).getHandle();
+        MinecraftServer minecraftServer=entityplayer.getWorld().getMinecraftServer();
+        PlayerList playerList=minecraftServer.getPlayerList();
+        
+        entityplayer.stopRiding();
+        entityplayer.x().getTracker().untrackPlayer(entityplayer);
+        entityplayer.x().getPlayerChunkMap().removePlayer(entityplayer);
+        
+        playerList.players.remove(entityplayer);
+		Map<String,EntityPlayer>ppn=(Map<String,EntityPlayer>)NMSUtils.getField("playersByName",playerList.getClass().getSuperclass(),playerList);
+        ppn.remove(entityplayer.getName());
+        NMSUtils.setFinalField("playersByName",playerList.getClass().getSuperclass(),playerList,ppn);
+        minecraftServer.getWorldServer(entityplayer.dimension).removeEntity(entityplayer);
+        EntityPlayer entityplayer1 = entityplayer;
+        org.bukkit.World fromWorld = entityplayer.getBukkitEntity().getWorld();
+        entityplayer.viewingCredits = false;
+        entityplayer1.playerConnection = entityplayer.playerConnection;
+        entityplayer1.copyFrom(entityplayer,true);
+        entityplayer1.h(entityplayer.getId());
+        entityplayer1.v(entityplayer);
+        entityplayer1.a(entityplayer.getMainHand());
+        for (String s : entityplayer.getScoreboardTags()) {
+            entityplayer1.addScoreboardTag(s);
+        }
+        location.setWorld(minecraftServer.getWorldServer(entityplayer.dimension).getWorld());
+        entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        worldServer.getChunkProviderServer().getChunkAt((int)entityplayer1.locX >> 4, (int)entityplayer1.locZ >> 4);
+        byte actualDimension = (byte)worldServer.getWorld().getEnvironment().getId();
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(actualDimension, worldServer.getDifficulty(), worldServer.getWorldData().getType(), entityplayer1.playerInteractManager.getGameMode()));
+        entityplayer1.spawnIn(worldServer);
+        entityplayer1.dead = false;
+        entityplayer1.playerConnection.teleport(new Location(worldServer.getWorld(), entityplayer1.locX, entityplayer1.locY, entityplayer1.locZ, entityplayer1.yaw, entityplayer1.pitch));
+        entityplayer1.setSneaking(false);
+        BlockPosition blockPosition1=worldServer.getSpawn();
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1));
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutExperience(entityplayer1.exp, entityplayer1.expTotal, entityplayer1.expLevel));
+        playerList.b(entityplayer1, worldServer);
+        playerList.f(entityplayer1);
+        if (!entityplayer.playerConnection.isDisconnected()) {
+        	worldServer.getPlayerChunkMap().addPlayer(entityplayer1);
+        	worldServer.addEntity(entityplayer1);
+            playerList.players.add(entityplayer1);
+            ppn=(Map<String,EntityPlayer>)NMSUtils.getField("playersByName",playerList.getClass().getSuperclass(),playerList);
+            ppn.put(entityplayer1.getName(), entityplayer1);
+            NMSUtils.setFinalField("playersByName",playerList.getClass().getSuperclass(),playerList,ppn);
+            Map<UUID,EntityPlayer>j=(Map<UUID,EntityPlayer>)NMSUtils.getField("j",playerList.getClass().getSuperclass(),playerList);
+            j.put(entityplayer1.getUniqueID(), entityplayer1);
+            NMSUtils.setFinalField("j",playerList.getClass().getSuperclass(),playerList,j);
+        }
+        entityplayer1.setHealth(entityplayer1.getHealth());
+        playerList.updateClient(entityplayer);
+        entityplayer.updateAbilities();
+        for (Object o1 : entityplayer.getEffects()) {
+            MobEffect mobEffect = (MobEffect)o1;
+            entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityEffect(entityplayer.getId(), mobEffect));
+        }
+        CriterionTriggers.u.a(entityplayer, ((CraftWorld)fromWorld).getHandle().worldProvider.getDimensionManager(), worldServer.worldProvider.getDimensionManager());
+        if (((CraftWorld)fromWorld).getHandle().worldProvider.getDimensionManager() == DimensionManager.NETHER && worldServer.worldProvider.getDimensionManager() == DimensionManager.OVERWORLD && entityplayer.Q() != null) {
+            CriterionTriggers.B.a(entityplayer, entityplayer.Q());
+        }
+        if (entityplayer.playerConnection.isDisconnected()) {
+            AdvancementDataPlayer advancementdataplayer;
+            playerList.playerFileData.save(entityplayer);
+            ServerStatisticManager serverstatisticmanager = entityplayer.getStatisticManager();
+            if (serverstatisticmanager != null) {
+                serverstatisticmanager.b();
+            }
+            if ((advancementdataplayer = entityplayer.getAdvancementData()) != null) {
+                advancementdataplayer.c();
+            }
+        }
+	}
 	
     public void forceEntitySitting(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
@@ -353,8 +431,7 @@ implements Handler,Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				sendPlayerPacketsAsync(Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator()
-						,Arrays.asList(new Packet[]{pd,ps}));
+				sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{pd,ps});
 			}
 		}.runTaskLaterAsynchronously(Main.getPlugin(),d);
 	}
@@ -396,8 +473,7 @@ implements Handler,Listener {
 		byte pa=(byte)((int)(p*256.0F/360.0F));
 		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
 		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{el,hr}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{el,hr});
 	}
 	
 	@Override
@@ -427,16 +503,14 @@ implements Handler,Listener {
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{packet}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{packet});
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{tp}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{tp});
 	}
 	
 	@Override
@@ -446,8 +520,7 @@ implements Handler,Listener {
 		double y1=cl.getY()-me.locY;
 		double z1=cl.getZ()-me.locZ;
 		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{vp}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{vp});
 	}
 
 	@Override
@@ -1015,7 +1088,5 @@ implements Handler,Listener {
 		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
 	}
-	
-	
 	
 }

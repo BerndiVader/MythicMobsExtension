@@ -768,6 +768,25 @@ public class Utils implements Listener {
     	return dx*dx+dz*dz+dy*dy;
     }
     
+    public static double distance3D(double x1,double y1,double z1,double x2,double y2,double z2) {
+    	return Math.pow(x1-x2,2d)+Math.pow(y1-y2,2d)+Math.pow(z1-z2,2d);
+    }
+    public static double distance2D(double x1,double z1,double x2,double z2) {
+    	return Math.pow(x1-x2,2d)+Math.pow(z1-z2,2d);
+    }
+    
+    public static List<Player> getPlayersInRange(Location l,double distance){
+    	List<Player>players=new ArrayList<Player>();
+    	List<Player>list1=l.getWorld().getPlayers();
+    	double x1=l.getBlockX(),y1=l.getBlockY(),z1=l.getBlockZ();
+    	for(int i1=0;i1<list1.size();i1++) {
+    		Player p=list1.get(i1);
+    		Location l1=p.getLocation();
+    		if(distance3D(x1,y1,z1,l1.getBlockX(),l1.getBlockY(),l1.getBlockZ())<=distance) players.add(p);
+    	}
+    	return players;
+    }
+    
     public static boolean isNumeric(String s) {
     	return s!=null?s.matches("[0-9]*"):false;
     }
