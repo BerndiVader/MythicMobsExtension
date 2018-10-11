@@ -1084,6 +1084,12 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public int getArmorStrength(LivingEntity e) {
+		EntityLiving e1=(EntityLiving)((CraftLivingEntity)e).getHandle();
+		return e1.getArmorStrength();
+	}
+	
+	@Override
 	public void forceSpectate(Player player, Entity entity) {
 		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));

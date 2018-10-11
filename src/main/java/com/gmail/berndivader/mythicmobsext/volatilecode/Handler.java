@@ -55,4 +55,5 @@ public interface Handler {
 	void setMNc(LivingEntity e1,String s1);
 	void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1);
 	void forceSpectate(Player player, Entity entity, boolean bl1);
+	int getArmorStrength(LivingEntity e);
 }

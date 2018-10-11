@@ -704,4 +704,10 @@ Listener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int getArmorStrength(LivingEntity e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
