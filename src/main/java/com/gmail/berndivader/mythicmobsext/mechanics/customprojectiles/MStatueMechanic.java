@@ -191,6 +191,7 @@ ITargetedLocationSkill {
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
                 MStatueMechanic.this.onStartSkill.get().execute(sData);
             }
+            this.oldLocation=this.currentLocation.clone();
             this.taskId=TaskManager.get().scheduleTask(this, 0, 1);
         }
 
