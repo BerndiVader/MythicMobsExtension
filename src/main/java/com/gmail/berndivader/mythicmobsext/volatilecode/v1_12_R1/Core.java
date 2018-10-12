@@ -1090,6 +1090,12 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public void changeResPack(Player p,String url,String hash) {
+		EntityPlayer player=((CraftPlayer)p).getHandle();
+		player.playerConnection.sendPacket(new PacketPlayOutResourcePackSend(url, hash));
+	}
+	
+	@Override
 	public void forceSpectate(Player player, Entity entity) {
 		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));

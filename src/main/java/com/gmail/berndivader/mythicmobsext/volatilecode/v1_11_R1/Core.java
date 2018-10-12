@@ -693,4 +693,10 @@ Listener {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void changeResPack(Player p, String url, String hash) {
+		// TODO Auto-generated method stub
+		
+	}
 }

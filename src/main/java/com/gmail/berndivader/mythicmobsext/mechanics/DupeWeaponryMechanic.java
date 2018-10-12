@@ -59,23 +59,23 @@ ITargetedEntitySkill {
 					if(removeFromTarget) t.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
 				}
 			}
-			if((what&3)==4) {
-				is=new ItemStack(t.getEquipment().getHelmet());
+			if((what&4)==4) {
+				is=t.getEquipment().getHelmet()!=null?new ItemStack(t.getEquipment().getHelmet()):new ItemStack(Material.AIR);
 				if(is.getType()!=Material.AIR||!ignoreAir) {
 					e.getEquipment().setHelmet(is);
 					if(removeFromTarget) t.getEquipment().setHelmet(new ItemStack(Material.AIR));
 				}
-				is=new ItemStack(t.getEquipment().getChestplate());
+				is=t.getEquipment().getChestplate()!=null?new ItemStack(t.getEquipment().getChestplate()):new ItemStack(Material.AIR);
 				if(is.getType()!=Material.AIR||!ignoreAir) {
 					e.getEquipment().setChestplate(is);
 					if(removeFromTarget) t.getEquipment().setChestplate(new ItemStack(Material.AIR));
 				}
-				is=new ItemStack(t.getEquipment().getLeggings());
+				is=t.getEquipment().getLeggings()!=null?new ItemStack(t.getEquipment().getLeggings()):new ItemStack(Material.AIR);
 				if(is.getType()!=Material.AIR||!ignoreAir) {
 					e.getEquipment().setLeggings(is);
 					if(removeFromTarget) t.getEquipment().setLeggings(new ItemStack(Material.AIR));
 				}
-				is=new ItemStack(t.getEquipment().getBoots());
+				is=t.getEquipment().getBoots()!=null?new ItemStack(t.getEquipment().getBoots()):new ItemStack(Material.AIR);
 				if(is.getType()!=Material.AIR||!ignoreAir) {
 					e.getEquipment().setBoots(is);
 					if(removeFromTarget) t.getEquipment().setBoots(new ItemStack(Material.AIR));

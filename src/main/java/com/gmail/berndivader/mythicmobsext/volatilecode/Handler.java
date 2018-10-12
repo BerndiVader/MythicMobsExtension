@@ -56,4 +56,5 @@ public interface Handler {
 	void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1);
 	void forceSpectate(Player player, Entity entity, boolean bl1);
 	int getArmorStrength(LivingEntity e);
+	void changeResPack(Player p, String url, String hash);
 }
