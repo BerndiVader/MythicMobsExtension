@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -103,6 +104,22 @@ public class Utils implements Listener {
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
+	
+	private static BlockFace[]axis={
+			BlockFace.NORTH,
+			BlockFace.EAST,
+			BlockFace.SOUTH,
+			BlockFace.WEST};
+	private static BlockFace[]radial={
+			BlockFace.NORTH,
+			BlockFace.NORTH_EAST,
+			BlockFace.EAST,
+			BlockFace.SOUTH_EAST,
+			BlockFace.SOUTH,
+			BlockFace.SOUTH_WEST,
+			BlockFace.WEST,
+			BlockFace.NORTH_WEST}; 
+
 	private static Handler handler;
 	
 	static {
@@ -1021,6 +1038,16 @@ public class Utils implements Listener {
 	public static boolean playerInMotion(Player p) {
 		Vec3D v3=Utils.pl.get(p.getUniqueId());
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
+	}
+	
+	public static BlockFace getBlockFacing(float y,boolean bl1) {
+		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
+	}
+	
+	public static void placePainting() {
+		Location l=null;
+		Painting p;
+		l.getWorld().spawn(l.getBlock().getRelative(BlockFace.EAST).getLocation(),Painting.class);
 	}
 	
 }
