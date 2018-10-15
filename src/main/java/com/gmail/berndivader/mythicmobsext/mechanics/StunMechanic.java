@@ -35,7 +35,7 @@ ITargetedEntitySkill {
 		this.f=mlc.getBoolean(new String[] { "facing", "face", "f" },false);
 		this.g=mlc.getBoolean(new String[] { "gravity", "g" },false);
 		this.ai=mlc.getBoolean(new String[] { "stopai", "ai" },false);
-		this.useDuration=mlc.getBoolean("useDuration",false);
+		this.useDuration=mlc.getBoolean("useDuration", true);
 	}
 
 	@Override
