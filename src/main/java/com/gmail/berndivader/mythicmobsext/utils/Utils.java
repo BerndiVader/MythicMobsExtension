@@ -1043,11 +1043,5 @@ public class Utils implements Listener {
 	public static BlockFace getBlockFacing(float y,boolean bl1) {
 		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
 	}
-	
-	public static void placePainting() {
-		Location l=null;
-		Painting p;
-		l.getWorld().spawn(l.getBlock().getRelative(BlockFace.EAST).getLocation(),Painting.class);
-	}
-	
+
 }
