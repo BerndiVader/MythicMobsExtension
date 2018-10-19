@@ -27,11 +27,12 @@ class
 NoCheatPlusSupport 
 implements 
 Listener {
+	static String pluginName="NoCheatPlus";
 	static Map<UUID,SimpleImmutableEntry<Boolean,CheckType[]>>map;
 	static Optional<NoCheatPlus>ncp;
 	
 	static {
-		if ((ncp=Optional.ofNullable((NoCheatPlus)Bukkit.getServer().getPluginManager().getPlugin("NoCheatPlus"))).isPresent()) map=new HashMap<>();
+		if ((ncp=Optional.ofNullable((NoCheatPlus)Bukkit.getServer().getPluginManager().getPlugin(pluginName))).isPresent()) map=new HashMap<>();
 	}	
 	
 	Plugin plugin;
@@ -39,6 +40,7 @@ Listener {
 	public NoCheatPlusSupport(Plugin plugin) {
 		this.plugin=plugin;
 		Main.pluginmanager.registerEvents(this,plugin);
+		Main.logger.info("using "+pluginName);
 	}
 	
 	public static boolean isPresent() {

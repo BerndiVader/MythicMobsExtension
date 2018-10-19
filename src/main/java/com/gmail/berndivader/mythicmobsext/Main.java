@@ -20,7 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
-import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguiseCompatibility;
+import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
 import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
@@ -54,7 +54,6 @@ public class Main extends JavaPlugin {
 	public static boolean slappyNewBorn = true;
 	private static MythicPlayers mythicplayers;
 	public static HashSet<Entity>entityCache=new HashSet<Entity>();
-	public static boolean disguisepresent;
 	public Thiefs thiefs;
 	
 	public Internals internals;
@@ -116,18 +115,24 @@ public class Main extends JavaPlugin {
 				new WorldGuardFlag();
 			}
 			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
+				logger.info("using Factions");
 				fflags = new FactionsFlags();
 				new FactionsFlagConditions();
 			}
-			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) hasRpgItems = true;
-			if (Config.mobarena&&pluginmanager.isPluginEnabled("MobArena")) new MobArenaConditions();
-			if (Config.h_displays&&pluginmanager.isPluginEnabled("HolographicDisplays")) {
+			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) {
+				hasRpgItems = true;
+				logger.info("using RPGItems");
+			}
+			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) {
+				new MobArenaConditions();
+				logger.info("using MobArena");
+			}
+			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) {
 				logger.info("using HolographicDisplays");
 				Main.healthbarhandler=new HealthbarHandler(this);
 			}
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
-			Main.disguisepresent=pluginmanager.isPluginEnabled("LibsDisguise");
-			if (disguisepresent) new LibsDisguiseCompatibility();
+			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
 			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			

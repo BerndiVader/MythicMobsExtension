@@ -9,6 +9,7 @@ import java.util.*;
 import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
 

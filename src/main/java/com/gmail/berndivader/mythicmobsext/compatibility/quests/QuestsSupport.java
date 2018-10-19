@@ -20,19 +20,21 @@ import me.blackvein.quests.Quests;
 public class QuestsSupport 
 implements
 Listener {
-	
+	static String pluginName="Quests";
 	private static QuestsSupport core;
 	private Plugin plugin;
 	private static Optional<Quests>quests;
 	
 	static {
-		quests=Optional.ofNullable((Quests)Bukkit.getServer().getPluginManager().getPlugin("Quests"));
+		quests=Optional.ofNullable((Quests)Bukkit.getServer().getPluginManager().getPlugin(pluginName));
 	}
 	
 	public QuestsSupport(Plugin plugin) {
 		core=this;
 		this.plugin=plugin;
 		Main.pluginmanager.registerEvents(this,plugin);
+		Main.logger.info("using "+pluginName);
+		
 	}
 
 	public static QuestsSupport inst() {

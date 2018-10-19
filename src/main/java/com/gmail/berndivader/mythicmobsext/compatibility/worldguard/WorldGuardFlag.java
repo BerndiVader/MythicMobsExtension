@@ -10,9 +10,11 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
 public class WorldGuardFlag implements Listener {
+	static String pluginName="WorldGuard";
 
 	public WorldGuardFlag() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Main.logger.info("using "+pluginName);
 	}
 
 	@EventHandler

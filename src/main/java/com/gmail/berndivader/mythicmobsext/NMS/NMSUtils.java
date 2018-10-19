@@ -2,6 +2,9 @@ package com.gmail.berndivader.mythicmobsext.NMS;
 
 import com.google.common.io.BaseEncoding;
 
+import net.minecraft.server.v1_12_R1.DataWatcher;
+import net.minecraft.server.v1_12_R1.DataWatcherObject;
+
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1464,6 +1467,37 @@ public class NMSUtils extends NMSUtil {
 		}
 	}
 	
+	public static void setField(Object instance,String name,Object value) {
+		if(instance==null) return;
+		Field field;
+		try {
+			field = instance.getClass().getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(instance, value);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static Object getField(Class<?> clazz, String name, Object instance) {
+		Object o1=null;
+		try {
+			Field field=clazz.getDeclaredField(name);
+			field.setAccessible(true);
+			o1=field.get(instance);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+			ex.printStackTrace();
+		}
+		return o1;
+	}
+	
+	public static Method getMethod(Class<?> clazz,String name){
+		for (Method m:clazz.getDeclaredMethods()){
+			if (m.getName().equals(name)) return m;
+		}
+		return null;
+	}	
+	
     public static void setMeta(org.bukkit.inventory.ItemStack is,String s1,String s2) {
     	Object o1=getTag(getHandle(is));
     	if (o1==null) return;
@@ -1489,5 +1523,4 @@ public class NMSUtils extends NMSUtil {
     	}
     	return s2;
     }
-	
 }

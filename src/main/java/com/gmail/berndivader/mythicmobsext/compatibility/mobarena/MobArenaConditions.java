@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.mobarena;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -10,9 +9,11 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
 public class MobArenaConditions implements Listener {
+	static String pluginName;
 
 	public MobArenaConditions() {
-		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		Main.pluginmanager.registerEvents(this, Main.getPlugin());
+		Main.logger.info("using "+pluginName);
 	}
 
 	@EventHandler
