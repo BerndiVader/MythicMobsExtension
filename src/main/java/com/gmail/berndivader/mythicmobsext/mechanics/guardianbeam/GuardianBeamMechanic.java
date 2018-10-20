@@ -51,11 +51,12 @@ ITargetedLocationSkill {
 
 	}
 	public boolean cast(SkillMetadata data, AbstractLocation l,Entity e) {
+		
 		final Entity caster=data.getCaster().getEntity().getBukkitEntity();
 		final Location end=BukkitAdapter.adapt(l);
 		
 		Vector foV=Utils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset);
-		final Beam beam=new Beam(caster.getLocation().add(foV).add(0,yOffset,0),end);
+		final Beam beam=new Beam(caster.getLocation().add(foV).add(0,yOffset,0),end.clone());
 		beam.start();
 		
 		new BukkitRunnable() {

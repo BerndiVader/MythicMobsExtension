@@ -110,7 +110,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
     }
@@ -121,7 +121,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
 	}
@@ -156,7 +156,8 @@ ITargetedLocationSkill {
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
-            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
+        	this.islocationtarget=target==null&&location!=null;
+            this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
             this.yOffset=BStatueMechanic.this.YOffset;
             this.sOffset=BStatueMechanic.this.sOffset;
             this.fOffset=BStatueMechanic.this.fOffset;

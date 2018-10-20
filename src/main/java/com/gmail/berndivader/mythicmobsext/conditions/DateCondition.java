@@ -20,7 +20,7 @@ ILocationCondition {
 	
 	public DateCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		dateTime=new SimpleDateFormat(mlc.getString("format","yyyyMMddHHmmss"));
+		dateTime=new SimpleDateFormat(mlc.getString("format","yyyyMMdd"));
 		range=new RangedDouble(mlc.getString("value",">0"));
 	}
 

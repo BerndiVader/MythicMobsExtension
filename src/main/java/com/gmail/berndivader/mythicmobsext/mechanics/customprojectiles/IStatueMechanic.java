@@ -109,7 +109,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
     }
@@ -120,7 +120,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
 	}
@@ -152,12 +152,12 @@ ITargetedLocationSkill {
         private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
+            this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
-            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
             this.yOffset=IStatueMechanic.this.YOffset;
             this.sOffset=IStatueMechanic.this.sOffset;
             this.fOffset=IStatueMechanic.this.fOffset;
