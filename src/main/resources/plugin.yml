@@ -2,4 +2,4 @@ name: MythicMobsExtension
 main: com.gmail.berndivader.mythicmobsext.Main
 version: ${version}
 softdepend: [RPGItems, LibsDisguise, MobArena, HolographicDisplays, WorldGuard, Factions, MassiveCore, Quests, NoCheatPlus]
-depend: [MythicMobs]
+depend: [MythicMobs, ProtocolLib]
