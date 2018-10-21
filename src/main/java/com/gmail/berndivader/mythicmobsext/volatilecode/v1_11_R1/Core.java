@@ -699,4 +699,16 @@ Listener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void forceShield(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clearActiveItem(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
 }

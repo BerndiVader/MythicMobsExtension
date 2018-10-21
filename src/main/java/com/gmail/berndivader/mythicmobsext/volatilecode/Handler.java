@@ -57,4 +57,6 @@ public interface Handler {
 	void forceSpectate(Player player, Entity entity, boolean bl1);
 	int getArmorStrength(LivingEntity e);
 	void changeResPack(Player p, String url, String hash);
+	void forceShield(Player player);
+	void clearActiveItem(Player player);
 }

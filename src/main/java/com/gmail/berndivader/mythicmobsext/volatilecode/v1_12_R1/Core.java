@@ -9,7 +9,6 @@ import java.util.*;
 import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
-import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
 
@@ -1100,6 +1099,18 @@ implements Handler,Listener {
 	public void forceSpectate(Player player, Entity entity) {
 		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
+	}
+	
+	@Override
+	public void clearActiveItem(Player player) {
+		EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
+        entityPlayer.clearActiveItem();
+	}
+
+	@Override
+	public void forceShield(Player player) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
