@@ -3,21 +3,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleUnaryOperator;
 
-@FunctionalInterface
-interface Expression {
-	double eval();
-}
-
 public class MathInterpreter {
 	private static final Map<String,DoubleUnaryOperator>functions=new HashMap<>();
 	Map<String,Double>variables=new HashMap<>();
 	
 	static {
 	    functions.put("sqrt",x->Math.sqrt(x));
-	    functions.put("sin",x->Math.sin(Math.toRadians(x)));
-	    functions.put("cos",x->Math.cos(Math.toRadians(x)));
-	    functions.put("tan",x->Math.tan(Math.toRadians(x)));
-	}	
+	    functions.put("sin",x->Math.sin(x));
+	    functions.put("cos",x->Math.cos(x));
+	    functions.put("tan",x->Math.tan(x));
+	    functions.put("rnd",x->Math.random()*x);
+	    functions.put("floor",x->Math.floor(x));
+	    functions.put("int",x->(int)x);
+	}
 
 	public static Expression parse(String str,Map<String,Double>variables) {
 		return new Object() {
@@ -63,6 +61,9 @@ public class MathInterpreter {
 					}else if(eat('/')){
 						Expression a=x,b=parseFactor();
 						x=(()->a.eval()/b.eval());
+					}else if(eat('%')){
+						Expression a=x,b=parseFactor();
+						x=(()->a.eval()%b.eval());
 					}else return x;
 				}
 			}
@@ -75,7 +76,7 @@ public class MathInterpreter {
 				}
 
 				Expression x;
-				int startPos = this.pos;
+				int startPos=this.pos;
 				if(eat('(')){ 
 					x=parseExpression();
 					eat(')');
@@ -92,12 +93,6 @@ public class MathInterpreter {
 			            x=()->func.applyAsDouble(arg.eval());
 			        }else x=()->variables.get(name);
 			    }else throw new RuntimeException("Unexpected: "+(char)ch);
-				if (eat('^')){ 
-					x=()->{
-						double d=parseFactor().eval();
-						return Math.pow(d,d);
-					};
-				}
 				return x;
 			}
 		}.parse();

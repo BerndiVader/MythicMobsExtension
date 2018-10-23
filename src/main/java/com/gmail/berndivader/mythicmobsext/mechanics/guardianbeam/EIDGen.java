@@ -27,9 +27,9 @@ package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
  *      crash, but I'm not 100% sure. Java would wrap the entity ids back to negative max value, which is likely to cause trouble.
  * @author Jaxon A Brown
  */
-class EIDGen {
+public class EIDGen {
     private static int lastIssuedEID = 2000000000;//2 billion
-    static int generateEID() {
+    public static int generateEID() {
         return lastIssuedEID++;
     }
 }

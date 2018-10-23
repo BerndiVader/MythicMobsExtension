@@ -46,6 +46,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityZombie;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerFly;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerVex;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
@@ -159,11 +160,15 @@ implements Handler,Listener {
 						}
 						@Override
 						public void handle(Player p, PacketPlayInPosition packet) {
-							// TODO Auto-generated method stub
-							
+							return;
 						}
 						@Override
 						public void handle(Player p, PacketPlayInSteerVehicle packet) {
+							return;
+						}
+						@Override
+						public void handle(Player p, PacketPlayInResourcePackStatus packet) {
+							p.setMetadata(Utils.meta_RESOURCEPACKSTATUS,new FixedMetadataValue(Main.getPlugin(),packet.status.name()));
 							return;
 						}
 				    }));
@@ -217,6 +222,9 @@ implements Handler,Listener {
 	    		case "PacketPlayInBlockDig":
 	    			prh.handle(p,(PacketPlayInBlockDig)packet);
 	    			break;
+	    		case "PacketPlayInResourcePackStatus":
+	    			prh.handle(p,(PacketPlayInResourcePackStatus)packet);
+	    			break;
 	    		}
 	    		out.add(packet);
 			}
@@ -244,6 +252,15 @@ implements Handler,Listener {
 		mep.setLocation(l1.getX(),l1.getY(),l1.getZ(),l1.getYaw(),l1.getPitch());
         world.addEntity(mep,SpawnReason.CUSTOM);
         return (Parrot)mep.getBukkitEntity();
+	}
+	
+	@Override
+	public LivingEntity spawnCustomZombie(Location location,boolean sunBurn) {
+		net.minecraft.server.v1_12_R1.World world=((CraftWorld)location.getWorld()).getHandle();
+		final MythicEntityZombie zombie=new MythicEntityZombie(world,sunBurn);
+		zombie.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		world.addEntity(zombie, SpawnReason.CUSTOM);
+		return (LivingEntity)zombie.getBukkitEntity();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -290,6 +307,14 @@ implements Handler,Listener {
 		arg1.walkSpeed=f1;
 		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
     }
+
+	@Override
+	public void playBlockBreak(int eid,Location location, int stage) {
+		BlockPosition blockPosition=new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		List<Player>players=Utils.getPlayersInRange(location, renderLength);
+		PacketPlayOutBlockBreakAnimation packet=new PacketPlayOutBlockBreakAnimation(eid,blockPosition,stage);
+		sendPlayerPacketsAsync(players, new Packet[] {packet});
+	}
 	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
@@ -810,7 +835,8 @@ implements Handler,Listener {
 	
 	interface PacketReceivingHandler {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p,PacketPlayInPosition packet);
+	    void handle(Player p, PacketPlayInResourcePackStatus packet);
+		void handle(Player p,PacketPlayInPosition packet);
 		void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
 	    void handle(Player p,PacketPlayInBlockDig packet);
@@ -1025,6 +1051,7 @@ implements Handler,Listener {
 	@Override
 	public void moveto(LivingEntity entity) {
 		net.minecraft.server.v1_12_R1.Entity e=((CraftLivingEntity)entity).getHandle();
+		EntityEvokerFangs ef;
 	}
 	
 	@Override

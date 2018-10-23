@@ -59,4 +59,6 @@ public interface Handler {
 	void changeResPack(Player p, String url, String hash);
 	void forceShield(Player player);
 	void clearActiveItem(Player player);
+	LivingEntity spawnCustomZombie(Location location,boolean sunBurn);
+	void playBlockBreak(int eid, Location location, int stage);
 }

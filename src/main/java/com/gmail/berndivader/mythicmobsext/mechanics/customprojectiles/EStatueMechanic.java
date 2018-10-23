@@ -184,6 +184,7 @@ ITargetedLocationSkill {
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setInvulnerable(true);
 			this.entity.setGravity(false);
+			this.entity.setSilent(true);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
 			if (this.entity instanceof LivingEntity) ((LivingEntity)this.entity).setAI(!EStatueMechanic.this.noAI);
 			vh.teleportEntityPacket(this.entity);

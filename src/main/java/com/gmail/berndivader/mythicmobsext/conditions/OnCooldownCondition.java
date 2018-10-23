@@ -28,6 +28,8 @@ IEntityCondition {
 	@Override
 	public boolean check(AbstractEntity e) {
 		if (e.isPlayer()) {
+			double cooldown=Volatile.handler.getItemCoolDown((Player)e.getBukkitEntity(),this.i1);
+			System.err.println(cooldown);
 			return r.equals((double)Volatile.handler.getItemCoolDown((Player)e.getBukkitEntity(),this.i1));
 		}
 		return false;

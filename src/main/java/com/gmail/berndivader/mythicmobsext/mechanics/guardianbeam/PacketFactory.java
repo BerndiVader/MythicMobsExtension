@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 
 /*
@@ -26,11 +25,9 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.accessors.Accessors;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.gmail.filoghost.holographicdisplays.bridge.protocollib.current.WrapperPlayServerMount;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 

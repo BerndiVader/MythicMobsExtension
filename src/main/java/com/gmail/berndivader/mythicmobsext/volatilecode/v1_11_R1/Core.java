@@ -69,6 +69,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -708,6 +709,18 @@ Listener {
 
 	@Override
 	public void clearActiveItem(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Zombie spawnCustomZombie(Location location,boolean sunBurn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void playBlockBreak(int eid, Location location, int stage) {
 		// TODO Auto-generated method stub
 		
 	}
