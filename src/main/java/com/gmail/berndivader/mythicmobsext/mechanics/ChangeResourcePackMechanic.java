@@ -1,7 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -29,7 +31,12 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
 		if(entity.isPlayer()) {
-			Volatile.handler.changeResPack((Player)entity.getBukkitEntity(),url,hash);
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					Volatile.handler.changeResPack((Player)entity.getBukkitEntity(),url,hash);
+				}
+			}.runTaskAsynchronously(Main.getPlugin());
 			return true;
 		}
 		return false;
