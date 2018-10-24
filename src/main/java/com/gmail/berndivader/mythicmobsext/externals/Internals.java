@@ -45,7 +45,12 @@ Listener {
 		}
 		
 		SimpleEntry<ExternalAnnotation,Class<?>> getClazz(String cn1) throws ClassNotFoundException{
-			Class<?>c1=Class.forName(cn1);
+			Class<?>c1=null;
+			try {
+				c1=Class.forName(cn1);
+			} catch (Exception e) {
+				return new SimpleEntry<>(null,null);
+			}
 			return new SimpleEntry<>(c1.getAnnotation(ExternalAnnotation.class),c1);
 		}
 		

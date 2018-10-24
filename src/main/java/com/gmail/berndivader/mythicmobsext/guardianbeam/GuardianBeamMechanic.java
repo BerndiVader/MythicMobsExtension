@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
+package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

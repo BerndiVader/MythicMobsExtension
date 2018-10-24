@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
+package com.gmail.berndivader.mythicmobsext.guardianbeam;
 /*
  *  The MIT License (MIT)
  *

@@ -32,6 +32,7 @@ import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
+import com.gmail.berndivader.mythicmobsext.guardianbeam.GuardianBeam;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
@@ -130,6 +131,10 @@ public class Main extends JavaPlugin {
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) {
 				logger.info("using HolographicDisplays");
 				Main.healthbarhandler=new HealthbarHandler(this);
+			}
+			if(pluginmanager.getPlugin("ProtocolLib").isEnabled()) {
+				new GuardianBeam(this);
+				logger.info("using ProtocolLib");
 			}
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();

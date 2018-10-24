@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
+package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
 /*
  *  The MIT License (MIT)
@@ -18,18 +18,44 @@ package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
  *  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+
 /**
- * The function of this class is a bit shaky. It is mostly to avoid use of NMS code to create a proper EID.
- * This class creates Entity IDs that are used by minecraft to identify entities in the protocol.
- * There are two ways to break the function of this class and risk server errors or client crashing:
- *  - A world with 2 billion entites at once might cause client crashes.
- *  - A user of this library creating 147,483,647 entities with this class would beak something. I think the server would
- *      crash, but I'm not 100% sure. Java would wrap the entity ids back to negative max value, which is likely to cause trouble.
+ * Wraps a packet container for convenience.
  * @author Jaxon A Brown
  */
-public class EIDGen {
-    private static int lastIssuedEID = 2000000000;//2 billion
-    public static int generateEID() {
-        return lastIssuedEID++;
+public class WrappedBeamPacket {
+    private final PacketContainer handle;
+
+    /**
+     * Wraps the packet.
+     * @param container packet to wrap.
+     */
+    public WrappedBeamPacket(PacketContainer container) {
+        this.handle = container;
+    }
+
+    /**
+     * Sends the packet to a lucky receiver!
+     * @param receiver player to send the packet to.
+     */
+    public void send(Player receiver) {
+        try {
+            ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
+        } catch(InvocationTargetException ex) {
+            throw new RuntimeException("Failed to send beam packet to player.", ex);
+        }
+    }
+
+    /**
+     * Get the packet container.
+     * @return ProtocolLib packet container.
+     */
+    public PacketContainer getHandle() {
+        return this.handle;
     }
 }

@@ -1,10 +1,9 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
+package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

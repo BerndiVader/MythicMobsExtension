@@ -1,4 +1,4 @@
-package com.gmail.berndivader.mythicmobsext.mechanics.guardianbeam;
+package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
