@@ -71,7 +71,8 @@ INoTargetSkill
 				Volatile.handler.playBlockBreak(entity.getEntityId(),block.getLocation(),stage);
 				delta_x=Main.random.nextDouble();
 				delta_z=Main.random.nextDouble();
-				new ParticleMaker.ParticlePacket(particle_name, 0, 0, 0, 0, particle_amount, true).sendAsync(particle_location.clone().add(delta_x,0.1,delta_z),512);
+				new ParticleMaker.ParticlePacket(particle_name, 0, 0, 0, 0, particle_amount, true).sendAsync(particle_location.add(delta_x,0.1,delta_z),512);
+				particle_location.subtract(delta_x,0.1,delta_z);
 				if(stage>9) {
 					NMSUtils.setInvulnerable(entity,invulnerable);
 					entity.setGravity(gravity);
