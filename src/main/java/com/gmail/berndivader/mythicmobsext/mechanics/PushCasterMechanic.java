@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -15,7 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="push",author="BerndiVader")
+@ExternalAnnotation(name="push,pushto",author="BerndiVader")
 public 
 class 
 PushCasterMechanic 
@@ -27,12 +28,16 @@ ITargetedLocationSkill
 {
 	
 	float speed;
+	boolean debug;
 	
 	public PushCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		
 		this.speed=mlc.getFloat("speed",1.0f);
+		this.debug=mlc.getBoolean("debug",false);
+		
+		if(debug) System.err.println("Push mechanic loaded with skill line: "+skill);
 	}
 
 	@Override
@@ -47,6 +52,9 @@ ITargetedLocationSkill
 		Vector mod=dest.toVector().subtract(caster.getLocation().toVector());
 		mod.normalize().multiply(speed);
 		caster.setVelocity(caster.getVelocity().add(mod));
+		if(debug) {
+			System.err.println("Push mechanic executed.\nWith mod vector "+mod.toString());
+		}
 		return true;
 	}
 	
