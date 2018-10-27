@@ -2,10 +2,12 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -27,14 +29,15 @@ ITargetedEntitySkill,
 ITargetedLocationSkill
 {
 	
-	float speed;
-	boolean debug;
+	float s;
+	boolean debug,exact;
 	
 	public PushCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
 		
-		this.speed=mlc.getFloat("speed",1.0f);
+		this.s=mlc.getFloat("speed",1.0f);
+		this.exact=mlc.getBoolean("exact",false);
 		this.debug=mlc.getBoolean("debug",false);
 		
 		if(debug) System.err.println("Push mechanic loaded with skill line: "+skill);
@@ -47,13 +50,38 @@ ITargetedLocationSkill
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation l) {
-		Location dest=BukkitAdapter.adapt(l);
-		Entity caster=data.getCaster().getEntity().getBukkitEntity();
-		Vector mod=dest.toVector().subtract(caster.getLocation().toVector());
-		mod.normalize().multiply(speed);
-		caster.setVelocity(caster.getVelocity().add(mod));
-		if(debug) {
-			System.err.println("Push mechanic executed.\nWith mod vector "+mod.toString());
+		final Location dest=BukkitAdapter.adapt(l);
+		final Entity caster=data.getCaster().getEntity().getBukkitEntity();
+		final Vector final_distance_sq=dest.toVector().subtract(caster.getLocation().toVector()).normalize();
+		final double speed=this.exact?1:this.s;
+		final double final_length=dest.toVector().subtract(caster.getLocation().toVector()).length();
+		final int time=(int)((final_length)/speed);
+		
+		if(exact) {
+			new BukkitRunnable() {
+				int ticks=0;
+				@Override
+				public void run() {
+					ticks++;
+					Vector delta_distance=dest.toVector().subtract(caster.getLocation().toVector());
+					double delta_length=delta_distance.length();
+					double delta=MathUtils.clamp(MathUtils.lerp(0d,delta_length,delta_length/final_length),true);
+					Vector mod_delta=final_distance_sq.multiply(delta);
+					caster.setVelocity(mod_delta);
+					if(debug) {
+						System.err.println("Push mechanic executed.\nWith mod vector "+delta_distance.toString());
+					}
+					if(ticks>=time) {
+						this.cancel();
+					}
+				}
+			}.runTaskTimer(Main.getPlugin(),1l,1l);
+		} else {
+			Vector mod_delta=final_distance_sq.multiply(speed);
+			caster.setVelocity(caster.getVelocity().add(mod_delta));
+			if(debug) {
+				System.err.println("Push mechanic executed.\nWith mod vector "+mod_delta.toString());
+			}
 		}
 		return true;
 	}

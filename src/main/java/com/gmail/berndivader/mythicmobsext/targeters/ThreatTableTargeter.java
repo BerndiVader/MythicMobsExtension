@@ -16,13 +16,12 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name="ttt,threattabletargeter",author="BerndiVader")
 public class ThreatTableTargeter 	
 extends 
-IEntitySelector {
+ISelectorEntity {
 	RangedDouble r1,r2;
 	static Field f1;
 	

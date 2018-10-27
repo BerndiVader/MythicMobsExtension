@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.utils.math;
 
-import org.bukkit.util.Vector;
-
 /**
  * Various math utility methods.
  */
@@ -88,6 +86,10 @@ public final class MathUtils {
         return Math.sin(Math.toRadians(degrees));
     }
     
+    public static double lerp(double point1,double point2,double alpha) {
+        return point1+alpha*(point2-point1);
+    }
+    
     public static float smoothstep(float f,boolean clamp) {
     	float ff = f*f*(3.0f-2.0f*f);
     	return clamp(ff,clamp);
@@ -96,4 +98,22 @@ public final class MathUtils {
     public static float clamp(float y, boolean clamp) {
     	return clamp?y<0?0:y>1?1:y:y;
     } 
+    
+    public static double clamp(double y, boolean clamp) {
+    	return clamp?y<0?0:y>1?1:y:y;
+    } 
+    
+    public static float normalize(float value,float min,float max) {
+        float delta=value-min,delta_1=max-min;
+        return delta/delta_1;
+    }
+    public static double normalize(double value,double min,double max) {
+    	double delta=value-min,delta_1=max-min;
+        return delta/delta_1;
+    }
+    
+    public static double scale(double value,double min,double max) {
+        return value/(max-min)+min;
+    }    
+    
 }
