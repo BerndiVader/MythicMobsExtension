@@ -61,4 +61,8 @@ public interface Handler {
 	void clearActiveItem(Player player);
 	LivingEntity spawnCustomZombie(Location location,boolean sunBurn);
 	void playBlockBreak(int eid, Location location, int stage);
+	void playAnimationPacket(LivingEntity e, int id);
+	void playAnimationPacket(LivingEntity e, Integer[] ints);
+	void sendPlayerToSleep(Player player);
+	public void extinguish(LivingEntity e);
 }

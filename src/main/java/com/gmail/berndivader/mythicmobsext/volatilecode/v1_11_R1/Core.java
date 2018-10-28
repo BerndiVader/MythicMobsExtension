@@ -724,4 +724,28 @@ Listener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void playAnimationPacket(LivingEntity e, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playAnimationPacket(LivingEntity e, Integer[] ints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendPlayerToSleep(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void extinguish(LivingEntity e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

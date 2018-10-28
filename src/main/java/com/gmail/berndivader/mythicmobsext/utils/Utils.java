@@ -102,6 +102,7 @@ public class Utils implements Listener {
 	public static final String meta_SPAWNREASON="SPAWNREASON";
 	public static final String meta_CUSTOMSPAWNREASON="SETSPAWNREASON";
 	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
+	public static final String meta_NOSUNBURN="MMENOSUN";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -1072,6 +1073,5 @@ public class Utils implements Listener {
 		System.arraycopy(arr2,0,arr,i1,1);
 		return arr;
     }
-	
 
 }

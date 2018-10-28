@@ -25,6 +25,7 @@ import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagCo
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
 import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
+import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.ProtocolLibSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
@@ -132,9 +133,9 @@ public class Main extends JavaPlugin {
 				logger.info("using HolographicDisplays");
 				Main.healthbarhandler=new HealthbarHandler(this);
 			}
-			if(pluginmanager.getPlugin("ProtocolLib").isEnabled()) {
+			if(ProtocolLibSupport.isPresent()) {
 				new GuardianBeam(this);
-				logger.info("using ProtocolLib");
+				new ProtocolLibSupport(this);
 			}
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();

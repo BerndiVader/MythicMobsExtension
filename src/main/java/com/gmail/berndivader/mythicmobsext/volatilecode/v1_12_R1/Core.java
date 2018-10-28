@@ -1,8 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -41,7 +38,6 @@ import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -64,19 +60,12 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.MessageToMessageDecoder;
 
 public class Core 
 implements Handler,Listener {
 	
 	private static WorldBorder wb;
 	
-	private static HashMap<UUID,ChannelHandler>chl;
-	private static Field cField;
 	static int renderLength;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
@@ -105,14 +94,6 @@ implements Handler,Listener {
         wb.setCenter(999999,999999);
         wb.setSize(1);
         wb.setWarningDistance(1);
-	    for(Field f:NetworkManager.class.getDeclaredFields()) {
-	    	if(f.getType().isAssignableFrom(Channel.class)) {
-	    		cField=f;
-	    		cField.setAccessible(true);
-	    		break;
-	    	}
-	    }
-	    chl=new HashMap<>();
 	    renderLength=512;
 	}
 	
@@ -128,121 +109,21 @@ implements Handler,Listener {
 	}
 	
 	@EventHandler
-	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
-		final Player player=e.getPlayer();
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				try {
-				    chl.put(player.getUniqueId(),channelPlayerInProzess(player,new PacketReceivingHandler() {
-				    	@Override
-				        public void handle(Player p, PacketPlayInArmAnimation packet) {
-				        	float f1=getIndicatorPercentage(p);
-				        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
-				            return;
-				        }
-						@Override
-						public void handle(Player p,PacketPlayInFlying packet) {
-							net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-							com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
-							double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
-							v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-									?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-									:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-							Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInBlockDig packet) {
-							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInPosition packet) {
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInSteerVehicle packet) {
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInResourcePackStatus packet) {
-							p.setMetadata(Utils.meta_RESOURCEPACKSTATUS,new FixedMetadataValue(Main.getPlugin(),packet.status.name()));
-							return;
-						}
-				    }));
-				} catch (NoSuchElementException ex) {
-					Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
-					try {
-					    PrintWriter pw=new PrintWriter(new File(Main.getPlugin().getDataFolder()+File.separator+"channelerror.txt"));
-					    ex.printStackTrace(pw);
-					    pw.close();			
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		}.runTaskLater(Main.getPlugin(),1l);
+	public static void join(PlayerJoinEvent e) {
+		PacketReader packet_reader=new PacketReader(e.getPlayer());
+		packet_reader.inject();
+		PacketReader.readers.put(e.getPlayer().getUniqueId(),packet_reader);
 	}
-
+	
 	@EventHandler
-	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
-		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
-		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
-		Utils.pl.remove(e.getPlayer().getUniqueId());
-		chl.remove(e.getPlayer().getUniqueId());
+	public static void quit(PlayerQuitEvent e) {
+		UUID uuid=e.getPlayer().getUniqueId();
+		PacketReader packet_reader=PacketReader.readers.get(uuid);
+		if(packet_reader!=null) {
+			packet_reader.uninject();
+			PacketReader.readers.remove(uuid);
+		}
 	}
-	
-	private boolean closeChannelListener(Player p,ChannelHandler ch) {
-	    try {
-	        ChannelPipeline pipe=gnc(p).pipeline();
-	        pipe.remove(ch);
-	        return true;
-	    } catch(Exception e) {
-	        return false;
-	    }
-	}
-	
-	public ChannelHandler channelPlayerInProzess(final Player p, final PacketReceivingHandler prh) {
-	    ChannelPipeline pipe=gnc(p).pipeline();
-	    @SuppressWarnings("rawtypes")
-		ChannelHandler ch=new MessageToMessageDecoder<Packet>() {
-	    	@Override
-			protected void decode(ChannelHandlerContext chc,Packet packet,List<Object>out) throws Exception {
-	    		switch(packet.getClass().getSimpleName()) {
-	    		case "PacketPlayInArmAnimation":
-	                prh.handle(p,(PacketPlayInArmAnimation)packet);
-	    			break;
-	    		case "PacketPlayInPosition":
-	    		case "PacketPlayInPositionLook":
-	    		case "PacketPlayInLook":
-	    			prh.handle(p,(PacketPlayInFlying)packet);
-	    			break;
-	    		case "PacketPlayInBlockDig":
-	    			prh.handle(p,(PacketPlayInBlockDig)packet);
-	    			break;
-	    		case "PacketPlayInResourcePackStatus":
-	    			prh.handle(p,(PacketPlayInResourcePackStatus)packet);
-	    			break;
-	    		}
-	    		out.add(packet);
-			}
-	    };
-	    pipe.addAfter("decoder","listener",ch);
-	    return ch;
-	}	
-	
-	private Channel gnc(Player p) {
-	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
-	    Channel c=null;
-	    try {
-	        c=(Channel)cField.get(nm);
-	    } catch (IllegalArgumentException|IllegalAccessException e) {
-	        e.printStackTrace();
-	    }
-	    return c;
-	}	
 	
 	@Override
 	public Parrot spawnCustomParrot(Location l1, boolean b1) {
@@ -263,8 +144,7 @@ implements Handler,Listener {
 		return (LivingEntity)zombie.getBukkitEntity();
 	}
 
-	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsAsync(List<Player>players,Packet[]packets) {
+	private void sendPlayerPacketsAsync(List<Player>players,Packet<?>[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -279,8 +159,7 @@ implements Handler,Listener {
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsSync(List<Player>players,Packet[]packets) {
+	private void sendPlayerPacketsSync(List<Player>players,Packet<?>[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -1133,11 +1012,36 @@ implements Handler,Listener {
 		EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
         entityPlayer.clearActiveItem();
 	}
+	
+	@Override	
+	public void playAnimationPacket(LivingEntity e,Integer[] ints) {
+		EntityLiving living=(EntityLiving)((CraftLivingEntity)e).getHandle();
+		PacketPlayOutAnimation[]packets=new PacketPlayOutAnimation[ints.length];
+		for(int j=0;j<ints.length;j++) {
+			packets[j]=new PacketPlayOutAnimation(living,ints[j]);
+		}
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),packets);
+	}
 
+	@Override
+	public void playAnimationPacket(LivingEntity e, int id) {
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),new PacketPlayOutAnimation[] {new PacketPlayOutAnimation((EntityLiving)((CraftLivingEntity)e).getHandle(),id) });
+	}
+
+	@Override
+	public void sendPlayerToSleep(Player player) {
+		// TODO Auto-generated method stub
+	}
+	
 	@Override
 	public void forceShield(Player player) {
 		// TODO Auto-generated method stub
-		
 	}
-	
+
+	@Override
+	public void extinguish(LivingEntity e) {
+		net.minecraft.server.v1_12_R1.Entity entity=((CraftLivingEntity)e).getHandle();
+		NMSUtils.setField("fireProof",net.minecraft.server.v1_12_R1.Entity.class,entity,true);
+	}
+
 }
