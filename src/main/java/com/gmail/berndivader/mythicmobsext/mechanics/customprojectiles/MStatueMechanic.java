@@ -62,7 +62,8 @@ ITargetedLocationSkill {
     		hitTarget,
     		hitPlayers,
     		hitNonPlayers,
-    		hitTargetOnly;
+    		hitTargetOnly,
+    		invunerable;
 
     public MStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -89,6 +90,7 @@ ITargetedLocationSkill {
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.facedir=mlc.getBoolean("facedir",false);
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -130,7 +132,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,invulnerable;
         private SkillMetadata data;
         private ActiveMob am;
         private SkillCaster caster;
@@ -161,6 +163,7 @@ ITargetedLocationSkill {
             this.yOffset=MStatueMechanic.this.YOffset;
             this.sOffset=MStatueMechanic.this.sOffset;
             this.fOffset=MStatueMechanic.this.fOffset;
+            this.invulnerable=MStatueMechanic.this.invunerable;
             this.count=0;
             if (MStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -179,7 +182,7 @@ ITargetedLocationSkill {
             Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.entity.setInvulnerable(true);
+			this.entity.setInvulnerable(this.invulnerable);
 			this.entity.setGravity(false);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
 			vh.teleportEntityPacket(this.entity);

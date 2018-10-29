@@ -62,7 +62,8 @@ ITargetedLocationSkill {
     		hitNonPlayers=false,
     		hitTargetOnly=false,
     		noAI=true,
-    		facedir=false;
+    		facedir=false,
+    		invunerable;
 
     public EStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -91,6 +92,7 @@ ITargetedLocationSkill {
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.noAI=mlc.getBoolean("noai",true);
         this.facedir=mlc.getBoolean("facedir",false);
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -132,7 +134,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir,invulnerable;
         private SkillMetadata data;
         private Entity entity,target;
         private SkillCaster caster;
@@ -165,6 +167,7 @@ ITargetedLocationSkill {
             this.sOffset=EStatueMechanic.this.sOffset;
             this.fOffset=EStatueMechanic.this.fOffset;
             this.facedir=EStatueMechanic.this.facedir;
+            this.invulnerable=EStatueMechanic.this.invunerable;
             this.count=0;
             if (EStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -182,7 +185,7 @@ ITargetedLocationSkill {
             Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.entity.setInvulnerable(true);
+			this.entity.setInvulnerable(this.invulnerable);
 			this.entity.setGravity(false);
 			this.entity.setSilent(true);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
