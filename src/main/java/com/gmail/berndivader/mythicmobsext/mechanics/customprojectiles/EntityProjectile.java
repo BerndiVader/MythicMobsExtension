@@ -207,7 +207,6 @@ ITargetedLocationSkill {
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					EntityType.valueOf(customItemName));
-			Main.entityCache.add(this.pEntity);
 			this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));

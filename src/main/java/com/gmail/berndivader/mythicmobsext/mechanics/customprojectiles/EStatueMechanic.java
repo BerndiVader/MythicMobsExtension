@@ -186,7 +186,6 @@ ITargetedLocationSkill {
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
             this.entity=this.currentLocation.getWorld().spawnEntity(this.currentLocation,EStatueMechanic.this.material);
-            Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setInvulnerable(this.invulnerable);

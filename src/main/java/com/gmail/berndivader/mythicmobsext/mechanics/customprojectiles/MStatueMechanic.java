@@ -184,7 +184,6 @@ ITargetedLocationSkill {
             this.am=MStatueMechanic.this.material.spawn(BukkitAdapter.adapt(this.currentLocation),0);
             this.entity=this.am.getEntity().getBukkitEntity();
             this.am.setOwner(this.caster.getEntity().getUniqueId());
-            Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setInvulnerable(this.invulnerable);

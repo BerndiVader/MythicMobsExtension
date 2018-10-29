@@ -45,6 +45,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicE
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityZombie;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerFly;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.NavigationClimb;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
@@ -962,6 +963,10 @@ implements Handler,Listener {
                 break;
         	case "WALK":
                 NMSUtils.setField("navigation",EntityInsentient.class,ei,new Navigation(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerMove(ei));
+                break;
+        	case "CLIMB":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationClimb(ei,ei.world));
                 NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerMove(ei));
                 break;
         }

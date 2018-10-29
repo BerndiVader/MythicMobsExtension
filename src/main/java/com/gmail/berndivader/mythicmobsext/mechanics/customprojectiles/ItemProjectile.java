@@ -231,7 +231,6 @@ ITargetedLocationSkill {
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
-			Main.entityCache.add(this.pItem);
 			this.pItem.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pItem.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));

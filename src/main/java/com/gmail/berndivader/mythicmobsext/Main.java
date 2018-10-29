@@ -18,7 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
@@ -55,7 +54,6 @@ public class Main extends JavaPlugin {
 	public static PluginManager pluginmanager;
 	public static boolean slappyNewBorn = true;
 	private static MythicPlayers mythicplayers;
-	public static HashSet<Entity>entityCache=new HashSet<Entity>();
 	public Thiefs thiefs;
 	
 	public Internals internals;
@@ -150,28 +148,11 @@ public class Main extends JavaPlugin {
 					Utils.mythicmobs.getRandomSpawningManager().reload();
 				}
 			}.runTask(this);
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					for (Iterator<Entity>it=Main.entityCache.iterator();it.hasNext();) {
-						Entity entity=it.next();
-						if (entity!=null) {
-							if (NMSUtils.getEntity(entity.getWorld(),entity.getUniqueId())==null) it.remove();
-						} else {
-							it.remove();
-						}
-					}
-				}
-			}.runTaskTimerAsynchronously(this,600L,600L);
 		}
 	}
 
 	@Override
 	public void onDisable() {
-		for(Iterator<Entity>a=entityCache.iterator();a.hasNext();) {
-			Entity e=null;
-			if ((e=a.next())!=null) e.remove();
-		}
 		if (healthbarhandler!=null) {
 			Main.healthbarhandler.removeHealthbars();
 			Main.healthbarhandler.removeSpeechBubbles();

@@ -82,7 +82,6 @@ ITargetedLocationSkill {
 			grenade.setMetadata("noblkdmg", new FixedMetadataValue(this.plugin, this.breakBlocks));
 			grenade.setMetadata("undotnt", new FixedMetadataValue(this.plugin, this.undotnt));
 			grenade.setMetadata("ueffect", new FixedMetadataValue(this.plugin, this.ueffect));
-			Main.entityCache.add(grenade);
 		}
 		return true;
 	}
