@@ -61,7 +61,9 @@ ITargetedLocationSkill {
     boolean hitTarget=true,
     		hitPlayers=false,
     		hitNonPlayers=false,
-    		hitTargetOnly=false;
+    		hitTargetOnly=false,
+			invunerable,
+			lifetime;
 
     public IStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -88,6 +90,9 @@ ITargetedLocationSkill {
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, false);
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+        
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -129,7 +134,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,lifetime;
         private SkillMetadata data;
         private Item item;
         private SkillCaster caster;
@@ -161,6 +166,7 @@ ITargetedLocationSkill {
             this.yOffset=IStatueMechanic.this.YOffset;
             this.sOffset=IStatueMechanic.this.sOffset;
             this.fOffset=IStatueMechanic.this.fOffset;
+            this.lifetime=IStatueMechanic.this.lifetime;
             this.count=0;
             if (IStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -265,7 +271,7 @@ ITargetedLocationSkill {
     			this.item.setVelocity(this.vEmpty);
     			NMSUtils.setLocation(this.item,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.guardianbeam;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -18,6 +19,7 @@ Listener
 		Main.pluginmanager.registerEvents(this, plugin);
 	}
 	
+	@EventHandler
 	public void registerMechanics(MythicMechanicLoadEvent e) {
 		String mechanic=e.getMechanicName().toLowerCase();
 		

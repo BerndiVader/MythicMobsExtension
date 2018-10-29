@@ -63,7 +63,8 @@ ITargetedLocationSkill {
     		hitPlayers,
     		hitNonPlayers,
     		hitTargetOnly,
-    		invunerable;
+    		invunerable,
+    		lifetime;
 
     public MStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -91,6 +92,8 @@ ITargetedLocationSkill {
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.facedir=mlc.getBoolean("facedir",false);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+        
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -132,7 +135,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget,invulnerable;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,invulnerable,lifetime;
         private SkillMetadata data;
         private ActiveMob am;
         private SkillCaster caster;
@@ -164,6 +167,7 @@ ITargetedLocationSkill {
             this.sOffset=MStatueMechanic.this.sOffset;
             this.fOffset=MStatueMechanic.this.fOffset;
             this.invulnerable=MStatueMechanic.this.invunerable;
+            this.lifetime=MStatueMechanic.this.lifetime;
             this.count=0;
             if (MStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -179,6 +183,7 @@ ITargetedLocationSkill {
             this.immune=new HashMap<LivingEntity,Long>();
             this.am=MStatueMechanic.this.material.spawn(BukkitAdapter.adapt(this.currentLocation),0);
             this.entity=this.am.getEntity().getBukkitEntity();
+            this.am.setOwner(this.caster.getEntity().getUniqueId());
             Main.entityCache.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -285,7 +290,7 @@ ITargetedLocationSkill {
             			currentLocation.getYaw(),
             			this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 

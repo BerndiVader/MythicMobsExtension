@@ -37,7 +37,6 @@ ITargetedLocationSkill {
 		forwardOffset=mlc.getDouble("forward",1);
 		sideOffset=mlc.getDouble("side",0);
 		yOffset=mlc.getDouble("yoffset",1);
-		
 	}
 
 	@Override

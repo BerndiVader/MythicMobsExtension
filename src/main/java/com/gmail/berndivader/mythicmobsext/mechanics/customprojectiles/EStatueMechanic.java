@@ -63,7 +63,8 @@ ITargetedLocationSkill {
     		hitTargetOnly=false,
     		noAI=true,
     		facedir=false,
-    		invunerable;
+    		invunerable,
+    		lifetime;
 
     public EStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -93,7 +94,9 @@ ITargetedLocationSkill {
         this.noAI=mlc.getBoolean("noai",true);
         this.facedir=mlc.getBoolean("facedir",false);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
-		if (this.onTickSkillName != null) {
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+
+        if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
 		if (this.onHitSkillName != null) {
@@ -134,7 +137,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir,invulnerable;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir,invulnerable,lifetime;
         private SkillMetadata data;
         private Entity entity,target;
         private SkillCaster caster;
@@ -168,6 +171,7 @@ ITargetedLocationSkill {
             this.fOffset=EStatueMechanic.this.fOffset;
             this.facedir=EStatueMechanic.this.facedir;
             this.invulnerable=EStatueMechanic.this.invunerable;
+            this.lifetime=EStatueMechanic.this.lifetime;
             this.count=0;
             if (EStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -291,7 +295,7 @@ ITargetedLocationSkill {
             			currentLocation.getYaw(),
             			this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 
