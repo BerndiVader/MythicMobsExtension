@@ -16,18 +16,23 @@ public class BloodyScreenMechanic
 extends 
 SkillMechanic 
 implements
-ITargetedEntitySkill {
+ITargetedEntitySkill 
+{
 	boolean bl1;
+	int density;
+	
 
 	public BloodyScreenMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		bl1=mlc.getBoolean("play",true);
+		density=mlc.getInteger("density",1);
+		
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity var2) {
 		if(var2.isPlayer()) {
-			Volatile.handler.setWBWB((Player)var2.getBukkitEntity(),this.bl1);
+			Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),this.density,this.bl1);
 		}
 		return true;
 	}

@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -182,6 +183,7 @@ ITargetedLocationSkill {
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
             this.block=this.currentLocation.getWorld().spawnFallingBlock(this.currentLocation,BStatueMechanic.this.material,(byte)0);
+            EntityCacheHandler.add(this.block);
 			this.block.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.block.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.block.setInvulnerable(true);

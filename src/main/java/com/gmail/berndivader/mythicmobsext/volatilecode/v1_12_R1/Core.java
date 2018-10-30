@@ -65,8 +65,6 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 public class Core 
 implements Handler,Listener {
 	
-	private static WorldBorder wb;
-	
 	static int renderLength;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
@@ -90,11 +88,6 @@ implements Handler,Listener {
 					}));
 	
 	static {
-        wb=new WorldBorder();
-        wb.world=MinecraftServer.getServer().getWorldServer(1);
-        wb.setCenter(999999,999999);
-        wb.setSize(1);
-        wb.setWarningDistance(1);
 	    renderLength=512;
 	}
 	
@@ -930,17 +923,22 @@ implements Handler,Listener {
 	
 	@Override
 	public void moveto(LivingEntity entity) {
-		net.minecraft.server.v1_12_R1.Entity e=((CraftLivingEntity)entity).getHandle();
-		EntityEvokerFangs ef;
+		// empty 
 	}
 	
 	@Override
-	public void setWBWB(Player p,boolean bl1) {
+	public void setWorldborder(Player p,int density,boolean play) {
 		EntityPlayer ep=((CraftPlayer)p).getHandle();
-		WorldBorder wb=ep.world.getWorldBorder();
-		if (bl1) wb=Core.wb;
-  		PacketPlayOutWorldBorder ppw=new PacketPlayOutWorldBorder(wb,EnumWorldBorderAction.INITIALIZE);
-   		ep.playerConnection.sendPacket(ppw);
+		WorldBorder border=ep.world.getWorldBorder();
+		if(play) {
+			border=new WorldBorder();
+			border.world=ep.world.getWorldBorder().world;
+	        border.setCenter(99999,99999);
+	        border.setSize(1);
+	        border.setWarningDistance(density);
+		}
+   		ep.playerConnection.sendPacket(new PacketPlayOutWorldBorder(border,EnumWorldBorderAction.INITIALIZE));
+   		border=null;
 	}
 
 	@Override
@@ -1047,6 +1045,18 @@ implements Handler,Listener {
 	public void extinguish(LivingEntity e) {
 		net.minecraft.server.v1_12_R1.Entity entity=((CraftLivingEntity)e).getHandle();
 		NMSUtils.setField("fireProof",net.minecraft.server.v1_12_R1.Entity.class,entity,true);
+	}
+	
+	@Override
+	public Vec3D getAimBowTargetPosition(Player bukkit_player,LivingEntity bukkit_target) {
+		EntityLiving target=(EntityLiving)((CraftLivingEntity)bukkit_target).getHandle();
+		EntityPlayer player=((CraftPlayer)bukkit_player).getHandle();
+
+		double delta_x=target.locX+(target.locX-target.lastX)*5f-player.locX;
+		double delta_y=target.locY+(target.locY-target.lastY)*5f+target.getHeadHeight()-0.15f-player.locY-player.getHeadHeight();
+		double delta_z=target.locZ+(target.locZ-target.lastZ)*5f-player.locZ;
+		
+		return new Vec3D(delta_x,delta_y,delta_z);
 	}
 
 }

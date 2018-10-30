@@ -46,7 +46,6 @@ public interface Handler {
 	Parrot spawnCustomParrot(Location l1,boolean b1);
 	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
 	void moveto(LivingEntity entity);
-	void setWBWB(Player p, boolean bl1);
 	boolean addNBTTag(Entity e1, String s);
 	@Deprecated
 	public Vec3D lastPosEntity(Entity bukkitEntity);
@@ -65,4 +64,6 @@ public interface Handler {
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
 	void sendPlayerToSleep(Player player);
 	public void extinguish(LivingEntity e);
+	void setWorldborder(Player p, int density, boolean play);
+	Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target);
 }

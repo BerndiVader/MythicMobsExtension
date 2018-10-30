@@ -6,12 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,6 +35,7 @@ import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Pre44MobSpawnEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -45,6 +43,7 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
+	public static EntityCacheHandler entityCacheHandler;
 	public static Random random;
 	public static Integer wgVer;
 	public static WorldGuardFlags wgf;
@@ -139,8 +138,9 @@ public class Main extends JavaPlugin {
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
 			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
-			
 			if (Config.pre44spawn) new Pre44MobSpawnEvent();
+			
+			entityCacheHandler=new EntityCacheHandler();
 			
 	        new BukkitRunnable() {
 				@Override
@@ -153,6 +153,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		if(entityCacheHandler!=null) entityCacheHandler.stop();
 		if (healthbarhandler!=null) {
 			Main.healthbarhandler.removeHealthbars();
 			Main.healthbarhandler.removeSpeechBubbles();

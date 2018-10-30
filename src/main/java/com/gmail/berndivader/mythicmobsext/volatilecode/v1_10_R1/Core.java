@@ -656,15 +656,6 @@ Listener {
 	}
 
 	@Override
-	public void setWBWB(Player p,boolean bl1) {
-		EntityPlayer ep=((CraftPlayer)p).getHandle();
-		WorldBorder wb=ep.world.getWorldBorder();
-		if (bl1) wb=Core.wb;
-  		PacketPlayOutWorldBorder ppw=new PacketPlayOutWorldBorder(wb,EnumWorldBorderAction.INITIALIZE);
-   		ep.playerConnection.sendPacket(ppw);
-	}
-
-	@Override
 	public boolean addNBTTag(Entity e1, String s) {
 		// TODO Auto-generated method stub
 		return false;
@@ -764,5 +755,17 @@ Listener {
 	public void extinguish(LivingEntity e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setWorldborder(Player p, int density, boolean play) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

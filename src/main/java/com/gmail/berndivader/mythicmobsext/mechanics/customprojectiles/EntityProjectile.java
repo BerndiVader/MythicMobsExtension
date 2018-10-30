@@ -19,6 +19,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -207,6 +208,7 @@ ITargetedLocationSkill {
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					EntityType.valueOf(customItemName));
+			EntityCacheHandler.add(this.pEntity);
 			this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));

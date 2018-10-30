@@ -20,6 +20,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -231,6 +232,7 @@ ITargetedLocationSkill {
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
+			EntityCacheHandler.add(this.pItem);
 			this.pItem.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pItem.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
