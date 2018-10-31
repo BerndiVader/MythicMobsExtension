@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.utils.math;
 
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+
 /**
  * Various math utility methods.
  */
@@ -114,6 +116,6 @@ public final class MathUtils {
     
     public static double scale(double value,double min,double max) {
         return value/(max-min)+min;
-    }    
+    }
     
 }

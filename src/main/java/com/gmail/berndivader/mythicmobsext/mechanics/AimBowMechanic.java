@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -59,7 +58,7 @@ ITargetedEntitySkill
 						} else {
 							float velocity=Utils.getBowTension(player);
 							if(velocity>0.1f) {
-								Vec3D target_position=Volatile.handler.getAimBowTargetPosition(player,target);
+								Vec3D target_position=Volatile.handler.getPredictedMotion(player,target,5.0f);
 								double x=target_position.getX();
 								double y=target_position.getY();
 								double z=target_position.getZ();

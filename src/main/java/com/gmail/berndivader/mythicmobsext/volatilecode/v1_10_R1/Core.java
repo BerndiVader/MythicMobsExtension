@@ -768,4 +768,10 @@ Listener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -2,9 +2,6 @@ package com.gmail.berndivader.mythicmobsext.NMS;
 
 import com.google.common.io.BaseEncoding;
 
-import net.minecraft.server.v1_12_R1.DataWatcher;
-import net.minecraft.server.v1_12_R1.DataWatcherObject;
-
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

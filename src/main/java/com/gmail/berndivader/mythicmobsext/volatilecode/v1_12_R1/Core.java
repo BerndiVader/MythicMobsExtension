@@ -1049,12 +1049,17 @@ implements Handler,Listener {
 	
 	@Override
 	public Vec3D getAimBowTargetPosition(Player bukkit_player,LivingEntity bukkit_target) {
+		return new Vec3D(0,0,0);
+	}
+	
+	@Override
+	public Vec3D getPredictedMotion(Player bukkit_player,LivingEntity bukkit_target,float delta) {
 		EntityLiving target=(EntityLiving)((CraftLivingEntity)bukkit_target).getHandle();
 		EntityPlayer player=((CraftPlayer)bukkit_player).getHandle();
-
-		double delta_x=target.locX+(target.locX-target.lastX)*5f-player.locX;
-		double delta_y=target.locY+(target.locY-target.lastY)*5f+target.getHeadHeight()-0.15f-player.locY-player.getHeadHeight();
-		double delta_z=target.locZ+(target.locZ-target.lastZ)*5f-player.locZ;
+		
+		double delta_x=target.locX+(target.locX-target.lastX)*delta-player.locX;
+		double delta_y=target.locY+(target.locY-target.lastY)*delta+target.getHeadHeight()-0.15f-player.locY-player.getHeadHeight();
+		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-player.locZ;
 		
 		return new Vec3D(delta_x,delta_y,delta_z);
 	}
