@@ -933,9 +933,15 @@ implements Handler,Listener {
 		if(play) {
 			border=new WorldBorder();
 			border.world=ep.world.getWorldBorder().world;
-	        border.setCenter(99999,99999);
-	        border.setSize(1);
-	        border.setWarningDistance(density);
+			if(density==0) {
+				border.setCenter(0,0);
+				border.setSize(Integer.MAX_VALUE);
+				border.setWarningDistance(Integer.MAX_VALUE);
+			} else {
+		        border.setCenter(99999,99999);
+		        border.setSize(1);
+		        border.setWarningDistance(1);
+			}
 		}
    		ep.playerConnection.sendPacket(new PacketPlayOutWorldBorder(border,EnumWorldBorderAction.INITIALIZE));
    		border=null;

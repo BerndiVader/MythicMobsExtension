@@ -37,7 +37,7 @@ ITargetedEntitySkill {
 	static String str;
 	int maxDelay;
 	String metaString;
-	boolean actionbar;
+	boolean actionbar,crouch;
 	Optional<Skill>matchSkill=Optional.empty();
 	Optional<Skill>clickSkill=Optional.empty();
 	Optional<Skill>startSkill=Optional.empty();
@@ -58,6 +58,7 @@ ITargetedEntitySkill {
 		if ((s1=mlc.getString("failskill"))!=null) failSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		maxDelay=mlc.getInteger("maxdelay",10);
 		actionbar=mlc.getBoolean("actionbar",true);
+		crouch=mlc.getBoolean("crouch",true);
 		metaString=mlc.getString("meta","actionstring");
 	}
 
@@ -89,7 +90,7 @@ ITargetedEntitySkill {
         Scheduler.Task task1;
         public int ticksRemaining;
         String actionString;
-        boolean hasEnded,finish;
+        boolean hasEnded,finish,crouch;
         Player p;
         
 		public ClickTracker(ClickListenerMechanic buff,SkillMetadata data,Player p) {
@@ -99,6 +100,7 @@ ITargetedEntitySkill {
             this.ticksRemaining=buff.maxDelay;
 			this.data.setCallingEvent(this);
 			this.hasEnded=finish=false;
+			this.crouch=ClickListenerMechanic.this.crouch;
 			this.p=p;
 			this.actionString="";
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
@@ -116,6 +118,7 @@ ITargetedEntitySkill {
             this.ticksRemaining--;
             if (finish) {
             	p.setMetadata(metaString,new FixedMetadataValue(Main.getPlugin(),actionString));
+            	
             	if (matchSkill.isPresent()) {
         			Skill sk=matchSkill.get();
         			SkillMetadata sd=data.deepClone();
@@ -155,6 +158,7 @@ ITargetedEntitySkill {
 		
 		@EventHandler(priority=EventPriority.LOWEST)
 		public void shiftListener(PlayerToggleSneakEvent e) {
+			if(!crouch) return;
 			if (e.getPlayer()==p) {
 				e.setCancelled(true);
 				finish=true;

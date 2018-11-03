@@ -1,7 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -18,21 +21,40 @@ SkillMechanic
 implements
 ITargetedEntitySkill 
 {
-	boolean bl1;
-	int density;
-	
+	static String str="mme_bloodyscreen";
+	boolean bl1,max_alpha;
+	int timer;
 
 	public BloodyScreenMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		bl1=mlc.getBoolean("play",true);
-		density=mlc.getInteger("density",1);
-		
+		timer=mlc.getInteger("timer",-1);
+		max_alpha=false;
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity var2) {
 		if(var2.isPlayer()) {
-			Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),this.density,this.bl1);
+			final Player player=(Player)var2.getBukkitEntity();
+			if(timer==-1) {
+				if(!this.bl1) player.removeMetadata(str, Main.getPlugin());
+				Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),this.max_alpha?1:0,this.bl1);
+			} else {
+				if(!player.hasMetadata(str)) {
+					player.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
+					Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),this.max_alpha?1:0,true);
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							if(player!=null&&player.isOnline()&&player.hasMetadata(str)) {
+								player.removeMetadata(str,Main.getPlugin());
+								Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),1,false);
+							}
+						}
+					}.runTaskLater(Main.getPlugin(),timer);
+				}
+
+			}
 		}
 		return true;
 	}
