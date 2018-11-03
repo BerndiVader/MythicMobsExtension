@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -23,6 +24,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -64,7 +66,9 @@ ITargetedLocationSkill
     		hitNonPlayers,
 			invunerable,
 			lifetime,
-			stopGround;
+			stopGround,
+			gravity,
+			stopBlock;
     
 
     public ItemThrowProjectile(String skill, MythicLineConfig mlc) {
@@ -93,6 +97,8 @@ ITargetedLocationSkill
         this.hitPlayers = mlc.getBoolean(new String[] {"hitplayers","hp"}, true);
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, true);
         this.stopGround=mlc.getBoolean(new String[] {"stopground","sg"},true);
+        this.stopBlock=mlc.getBoolean("stopblock",false);
+        this.gravity=mlc.getBoolean("gravity",true);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
         this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
     }
@@ -178,6 +184,7 @@ ITargetedLocationSkill
 			this.item.setInvulnerable(true);
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
+			this.item.setGravity(ItemThrowProjectile.this.gravity);
             if (ItemThrowProjectile.this.onStartSkill.isPresent()
             		&&ItemThrowProjectile.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();
@@ -202,8 +209,12 @@ ITargetedLocationSkill
                 return;
             }
             
-            this.currentLocation=this.item.getLocation();
-            
+            if(ItemThrowProjectile.this.stopBlock) {
+            	Vec2D vec=Utils.lookAtVec(this.currentLocation,this.currentLocation.clone().add(item.getVelocity()));
+            	BlockFace face=Utils.getBlockFacing((float)vec.getX(),true);
+            	System.err.println(this.currentLocation.getBlock().getRelative(face, 1));
+            }
+
             if (this.dur>ItemThrowProjectile.this.tickInterval) {
                 HitBox hitBox = new HitBox(this.currentLocation,ItemThrowProjectile.this.hitRadius,ItemThrowProjectile.this.verticalHitRadius);
                 ListIterator<Entity>lit1=item.getNearbyEntities(1,1,1).listIterator();
@@ -249,6 +260,7 @@ ITargetedLocationSkill
             }
 			if(this.lifetime) this.count++;
 			this.dur++;
+            this.currentLocation=this.item.getLocation();
         }
 
         public void doHit(HashSet<AbstractEntity> targets) {

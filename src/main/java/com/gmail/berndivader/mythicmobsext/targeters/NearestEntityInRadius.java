@@ -23,7 +23,8 @@ extends
 ISelectorEntity
 {
 	String[]ml;
-	boolean all=false;
+	boolean all=false,origin;
+	byte source_type;
 	double r;
 	
 	public NearestEntityInRadius(MythicLineConfig mlc) {
@@ -33,6 +34,7 @@ ISelectorEntity
 			this.all=true;
 		}
 		this.r=Math.pow(mlc.getDouble(new String[] { "radius", "r" },32),2d);
+		this.origin=mlc.getBoolean("origin",false);
 	}
 
 	@Override
@@ -41,7 +43,7 @@ ISelectorEntity
 		Entity nearest=null;
 		UUID id=data.getCaster().getEntity().getUniqueId();
 		HashSet<AbstractEntity>targets=new HashSet<>();
-		Location l=BukkitAdapter.adapt(data.getCaster().getLocation());
+		Location l=BukkitAdapter.adapt(origin?data.getOrigin():data.getCaster().getLocation());
 		double nearest_distance=0d;
 		for (Iterator<LivingEntity> it=l.getWorld().getLivingEntities().iterator();it.hasNext();) {
 			Entity e=it.next();

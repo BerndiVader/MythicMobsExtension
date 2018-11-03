@@ -1053,6 +1053,13 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public boolean velocityChanged(Entity bukkit_entity) {
+		// TODO Auto-generated method stub
+		
+		return false;
+	}
+	
+	@Override
 	public Vec3D getPredictedMotion(Player bukkit_player,LivingEntity bukkit_target,float delta) {
 		EntityLiving target=(EntityLiving)((CraftLivingEntity)bukkit_target).getHandle();
 		EntityPlayer player=((CraftPlayer)bukkit_player).getHandle();

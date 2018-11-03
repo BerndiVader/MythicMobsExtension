@@ -757,4 +757,10 @@ Listener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean velocityChanged(Entity bukkit_entity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

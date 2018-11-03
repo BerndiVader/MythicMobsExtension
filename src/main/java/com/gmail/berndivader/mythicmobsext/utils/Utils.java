@@ -108,19 +108,19 @@ public class Utils implements Listener {
 	public static HashSet<Advancement>advancements;
 	
 	private static BlockFace[]axis={
-			BlockFace.NORTH,
-			BlockFace.EAST,
 			BlockFace.SOUTH,
-			BlockFace.WEST};
-	private static BlockFace[]radial={
+			BlockFace.WEST,
 			BlockFace.NORTH,
-			BlockFace.NORTH_EAST,
-			BlockFace.EAST,
-			BlockFace.SOUTH_EAST,
+			BlockFace.EAST};
+	private static BlockFace[]radial={
 			BlockFace.SOUTH,
 			BlockFace.SOUTH_WEST,
 			BlockFace.WEST,
-			BlockFace.NORTH_WEST}; 
+			BlockFace.NORTH_WEST,
+			BlockFace.NORTH,
+			BlockFace.NORTH_EAST,
+			BlockFace.EAST,
+			BlockFace.SOUTH_EAST}; 
 
 	private static Handler handler;
 	
@@ -650,9 +650,8 @@ public class Utils implements Listener {
 		yaw = -yaw * 180f / (float) Math.PI;
 		return yaw;
 	}
-	public static Vec2D lookAtVec(Location loc, Location lookat) {
-		loc=loc.clone();
-		lookat=lookat.clone();
+	
+	public static Vec2D lookAtVec(Vector loc, Vector lookat) {
 		float yaw=0.0F;
 		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
 		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
@@ -667,6 +666,26 @@ public class Utils implements Listener {
 			yaw=(float)Math.PI;
 		}
 		float pitch=(float)-Math.atan(dy/dxz);
+		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
+	}
+	
+	public static Vec2D lookAtVec(Location loc, Location lookat) {
+		loc=loc.clone();
+		lookat=lookat.clone();
+		float yaw=0.0f,pitch=yaw;
+		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
+		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
+		if (dx!=0) {
+			if(dx<0) {
+				yaw=(float)(1.5*Math.PI);
+			} else {
+				yaw=(float)(0.5*Math.PI);
+			}
+			yaw=yaw-(float)Math.atan(dz/dx);
+		} else if (dz<0) {
+			yaw=(float)Math.PI;
+		}
+		pitch=(float)-Math.atan(dy/dxz);
 		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
 	}
 
@@ -732,48 +751,6 @@ public class Utils implements Listener {
 		float bX = (float) (vec.getY() * sinpitch + vec.getX() * cospitch);
 		float bY = (float) (vec.getY() * cospitch - vec.getX() * sinpitch);
 		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
-	}
-
-	public static Vector calculateVelocity(Double speed, Location originLocation, Location destination) {
-		double g = 20;
-		double v = speed;
-		Vector relative = destination.clone().subtract(originLocation).toVector();
-		double testAng = launchAngle(originLocation, destination.toVector(), v, relative.getY(), g);
-		double hangTime = hangtime(testAng, v, relative.getY(), g);
-		Vector to = destination.clone().add(originLocation.clone().multiply(hangTime)).toVector();
-		relative = to.clone().subtract(originLocation.toVector());
-		Double dist = Math.sqrt(relative.getX() * relative.getX() + relative.getZ() * relative.getZ());
-		if (dist == 0) {
-			dist = 0.1d;
-		}
-		testAng = launchAngle(originLocation, to, v, relative.getY(), g);
-		relative.setY(Math.tan(testAng) * dist);
-		relative = relative.normalize();
-		v = v + (1.188 * Math.pow(hangTime, 2));
-		return relative.multiply(v / 20.0d);
-	}
-
-	public static double launchAngle(Location from, Vector to, double v, double elev, double g) {
-		Vector victor = from.toVector().subtract(to);
-		Double dist = Math.sqrt(Math.pow(victor.getX(), 2) + Math.pow(victor.getZ(), 2));
-		double v2 = Math.pow(v, 2);
-		double v4 = Math.pow(v, 4);
-		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
-		if (v4 < derp) {
-			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
-		}
-		else {
-			return Math.atan((v2 - Math.sqrt(v4 - derp)) / (g * dist));
-		}
-	}
-
-	public static double hangtime(double launchAngle, double v, double elev, double g) {
-		double a = v * Math.sin(launchAngle);
-		double b = -2*g*elev;
-		if(Math.pow(a, 2) + b < 0){
-			return 0;
-		}
-		return (a + Math.sqrt(Math.pow(a, 2) + b)) / g;
 	}
 
     public static double distance2D(Vector f, Vector t) {
