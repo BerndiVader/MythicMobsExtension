@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.MetadataValue;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -29,6 +31,7 @@ IEntitySelector {
     private boolean targetMonsters = true;
     private boolean targetWaterMobs = true;
     private boolean targetFlyingMobs = true;
+    private boolean targetRider=true;
     private boolean targetSameFaction = true;
     private boolean sort_by_distance,nearest;
     private List<String> ignoreTypes = null;
@@ -69,6 +72,7 @@ IEntitySelector {
             if (target.contains("creatures")) {
                 this.targetCreatures = true;
             }
+            if (target.contains("rider")) this.targetRider=true;
         }
         if (ignore != null) {
             if (ignore.contains("player")) {
@@ -95,6 +99,9 @@ IEntitySelector {
             if (ignore.contains("faction")) {
                 this.targetSameFaction = false;
             }
+            if (ignore.contains("rider")) {
+            	this.targetRider=false;
+            }
             
         }
         if (ignoreTypes != null) {
@@ -112,6 +119,7 @@ IEntitySelector {
         this.targetSameFaction = mlc.getBoolean("targetsamefaction", this.targetSameFaction);
         this.sort_by_distance=mlc.getBoolean("sortbydistance",false);
         this.nearest=mlc.getBoolean("nearest");
+        this.targetRider=mlc.getBoolean("targetrider",this.targetRider);
 	}
 	
 	@Override
@@ -172,6 +180,9 @@ IEntitySelector {
 				if(nearest==null||caster_location.distance(e.getBukkitEntity().getLocation())<caster_location.distance(nearest.getBukkitEntity().getLocation())) {
 					nearest=e;
 				}
+			}
+			if(!this.targetRider) {
+				if(e.getBukkitEntity().getVehicle()==data.getCaster().getEntity().getBukkitEntity()) it.remove();
 			}
         }
         if(this.nearest&&nearest!=null) {
