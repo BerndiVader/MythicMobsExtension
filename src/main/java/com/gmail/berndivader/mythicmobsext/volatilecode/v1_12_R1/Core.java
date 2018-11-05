@@ -66,6 +66,7 @@ public class Core
 implements Handler,Listener {
 	
 	static int renderLength;
+	static String nms_path;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
@@ -89,6 +90,7 @@ implements Handler,Listener {
 	
 	static {
 	    renderLength=512;
+	    nms_path="net.minecraft.server.v1_12_R1";
 	}
 	
 	public Core() {
@@ -690,6 +692,21 @@ implements Handler,Listener {
 	        	}
         		break;
 	        }
+	        case "avoidtarget":
+	        case "avoidentity":
+	        	if(data==null||data.isEmpty()) return;
+                float distance=16f;
+                double speed=1.2d;
+	        	MinecraftKey key=new MinecraftKey(data);
+	        	if(EntityTypes.a().contains(key)) {
+	        		if(data1!=null) {
+	        			String[]arr1=data1.split(",");
+	        			if(arr1.length>0) distance=Float.parseFloat(arr1[0]);
+	        			if(arr1.length>1) speed=Double.parseDouble(arr1[1]);
+	        		}
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalAvoidTarget<>((EntityCreature)e,EntityTypes.b.get(key),distance,1d,speed));
+	        	}
+	        	break;
 	        case "vexa":{
 	        	if (e instanceof EntityInsentient) goals.a(i,(PathfinderGoal)new PathfinderGoalVexA(e));
 	        }
