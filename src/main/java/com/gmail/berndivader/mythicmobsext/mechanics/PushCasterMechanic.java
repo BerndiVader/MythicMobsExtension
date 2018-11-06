@@ -30,7 +30,7 @@ ITargetedLocationSkill
 {
 	
 	float s;
-	boolean debug,exact;
+	boolean debug,exact,set;
 	
 	public PushCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -39,6 +39,7 @@ ITargetedLocationSkill
 		this.s=mlc.getFloat("speed",1.0f);
 		this.exact=mlc.getBoolean("exact",false);
 		this.debug=mlc.getBoolean("debug",false);
+		this.set=mlc.getBoolean("set",false);
 		
 		if(debug) System.err.println("Push mechanic loaded with skill line: "+skill);
 	}
@@ -78,7 +79,7 @@ ITargetedLocationSkill
 			}.runTaskTimer(Main.getPlugin(),1l,1l);
 		} else {
 			Vector mod_delta=final_distance_sq.multiply(speed);
-			caster.setVelocity(caster.getVelocity().add(mod_delta));
+			caster.setVelocity(set?mod_delta:caster.getVelocity().add(mod_delta));
 			if(debug) {
 				System.err.println("Push mechanic executed.\nWith mod vector "+mod_delta.toString());
 			}

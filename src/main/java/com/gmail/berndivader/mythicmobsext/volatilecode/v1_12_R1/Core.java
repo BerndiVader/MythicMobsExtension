@@ -1077,9 +1077,8 @@ implements Handler,Listener {
 	
 	@Override
 	public boolean velocityChanged(Entity bukkit_entity) {
-		// TODO Auto-generated method stub
-		
-		return false;
+		net.minecraft.server.v1_12_R1.Entity entity=((CraftEntity)bukkit_entity).getHandle();
+        return entity.world.a(entity.getBoundingBox().grow(0.001,0.001,0.001));
 	}
 	
 	@Override

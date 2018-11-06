@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -24,7 +23,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -210,9 +209,12 @@ ITargetedLocationSkill
             }
             
             if(ItemThrowProjectile.this.stopBlock) {
-            	Vec2D vec=Utils.lookAtVec(this.currentLocation,this.currentLocation.clone().add(item.getVelocity()));
-            	BlockFace face=Utils.getBlockFacing((float)vec.getX(),true);
-            	System.err.println(this.currentLocation.getBlock().getRelative(face, 1));
+//            	Vec2D vec=Utils.lookAtVec(this.currentLocation,this.currentLocation.clone().add(item.getVelocity()));
+//            	BlockFace face=Utils.getBlockFacing((float)vec.getX(),true);
+            	if(Volatile.handler.velocityChanged(item)) {
+            		this.stop();
+            		return;
+            	}
             }
 
             if (this.dur>ItemThrowProjectile.this.tickInterval) {
