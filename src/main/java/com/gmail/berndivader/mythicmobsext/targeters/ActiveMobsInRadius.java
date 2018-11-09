@@ -36,7 +36,6 @@ ISelectorEntity
 		}
 		this.a=new RangedDouble(mlc.getString(new String[] { "amount","a" }, "0"),false);
 		this.r=Math.pow(mlc.getDouble(new String[] { "radius", "r" },5),2d);
-		
 	}
 
 	@Override

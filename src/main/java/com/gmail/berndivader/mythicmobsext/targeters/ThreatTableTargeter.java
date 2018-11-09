@@ -56,7 +56,6 @@ ISelectorEntity {
 				int i2=1;
 				for(int i1=tt.size();i1>=0;i1--) {
 					Entry<AbstractEntity,Double>p1=tt.get(i1);
-					System.err.println(p1.getValue());
 					if(r1.equals(i2)&&r2.equals(p1.getValue())) targets.add(p1.getKey());
 					i2++;
 				}

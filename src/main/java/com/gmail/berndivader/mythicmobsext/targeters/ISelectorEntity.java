@@ -1,13 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.MetadataValue;
+
+import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSort;
+import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSortPair;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -189,5 +191,26 @@ IEntitySelector {
         	data.getEntityTargets().clear();
         	data.getEntityTargets().add(nearest);
         }
+        if(this.sort_by_distance&&data.getEntityTargets().size()>0) {
+        	HashSet<AbstractEntity>targets=data.getEntityTargets();
+        	Location source=data.getCaster().getEntity().getBukkitEntity().getLocation();
+        	QuickSortPair[]pairs=new QuickSortPair[targets.size()];
+        	Iterator<AbstractEntity>it1=targets.iterator();
+        	int size1=targets.size();
+        	for(int i1=0;i1<size1;i1++) {
+        		AbstractEntity e=it1.next();
+        		double distance=source.distance(e.getBukkitEntity().getLocation());
+        		pairs[i1]=new QuickSortPair(distance,e);
+        	}
+        	pairs=QuickSort.sort(pairs,0,pairs.length-1);
+        	HashSet<AbstractEntity>sorted_targets=new HashSet<>();
+        	for(int i1=0;i1<size1;i1++) {
+        		System.err.println(((AbstractEntity)pairs[i1].object).getUniqueId());
+        		sorted_targets.add((AbstractEntity)pairs[i1].object);
+        	}
+        	data.setEntityTargets(sorted_targets);
+        }
+        
 	}
+	
 }

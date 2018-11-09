@@ -1022,33 +1022,5 @@ public class Utils implements Listener {
 	public static BlockFace getBlockFacing(float y,boolean bl1) {
 		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
 	}
-	
-    public static Object[] bubble_sort(Double[]dist1,Object[]arr1,int n1) {
-    	for (int i1=0;i1<n1;i1++) {
-    		for (int j1=1;j1<(n1-i1);j1++) {
-    			if (dist1[j1-1]>dist1[j1]) {
-    				arr1=(Object[])swp_array_entry(j1,j1-1,arr1);
-    				dist1=(Double[])swp_array_entry(j1,j1-1,dist1);
-    			}
-    		}
-    	}
-    	return arr1;
-    }
-    
-    private static Object[] swp_array_entry(int i1,int j1,Object[]arr1) {
-    	Object s1=arr1[i1];
-    	arr1[i1]=arr1[j1];
-    	arr1[j1]=s1;
-    	return arr1;
-    }
-    
-    public static Double[] add_to_array(Double[] arr1,double d2) {
-    	int i1=arr1.length;
-		Double[]arr2=new Double[]{d2};
-		Double[]arr=new Double[i1+1];
-		System.arraycopy(arr1,0,arr,0,i1);
-		System.arraycopy(arr2,0,arr,i1,1);
-		return arr;
-    }
 
 }
