@@ -41,6 +41,7 @@ PacketReceivingHandler
 
 			@Override
 			protected void decode(ChannelHandlerContext context, Packet<?> packet, List<Object> packets) throws Exception {
+//				System.err. (packet.getClass().getSimpleName());
 				switch(packet.getClass().getSimpleName().toLowerCase()) {
 				case "PacketPlayInArmAnimation":
 					packet=handle((PacketPlayInArmAnimation)packet);

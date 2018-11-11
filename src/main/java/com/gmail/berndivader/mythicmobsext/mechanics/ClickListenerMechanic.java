@@ -108,7 +108,7 @@ ITargetedEntitySkill {
         	if (startSkill.isPresent()) {
     			Skill sk=startSkill.get();
     			SkillMetadata sd=data.deepClone();
-    			sk.execute(sd);
+    			if (sk.isUsable(sd)) sk.execute(sd);
         	}
 			this.start();
 		}
@@ -122,7 +122,7 @@ ITargetedEntitySkill {
             	if (matchSkill.isPresent()) {
         			Skill sk=matchSkill.get();
         			SkillMetadata sd=data.deepClone();
-        			sk.execute(sd);
+        			if(sk.isUsable(sd)) sk.execute(sd);
             	}
     			this.terminate();
             }
@@ -130,7 +130,7 @@ ITargetedEntitySkill {
             	if (failSkill.isPresent()) {
         			Skill sk=failSkill.get();
         			SkillMetadata sd=data.deepClone();
-        			sk.execute(sd);
+        			if (sk.isUsable(sd)) sk.execute(sd);
             	}
                 this.terminate();
             }
@@ -149,7 +149,7 @@ ITargetedEntitySkill {
             	if (clickSkill.isPresent()) {
         			Skill sk=clickSkill.get();
         			SkillMetadata sd=data.deepClone();
-        			sk.execute(sd);
+        			if (sk.isUsable(sd)) sk.execute(sd);
             	}
 				if (actionbar) NMSUtils.sendActionBar(p,actionString);
 				ticksRemaining=buff.maxDelay;
