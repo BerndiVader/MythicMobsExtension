@@ -205,7 +205,6 @@ IEntitySelector {
         	pairs=QuickSort.sort(pairs,0,pairs.length-1);
         	HashSet<AbstractEntity>sorted_targets=new HashSet<>();
         	for(int i1=0;i1<size1;i1++) {
-        		System.err.println(((AbstractEntity)pairs[i1].object).getUniqueId());
         		sorted_targets.add((AbstractEntity)pairs[i1].object);
         	}
         	data.setEntityTargets(sorted_targets);

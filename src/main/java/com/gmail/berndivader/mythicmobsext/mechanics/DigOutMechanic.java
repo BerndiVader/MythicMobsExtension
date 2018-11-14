@@ -11,12 +11,12 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.compatibilitylib.ParticleMaker;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ParticleMaker;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -56,7 +56,8 @@ INoTargetSkill
 		Block block=location.getBlock().getRelative(BlockFace.DOWN);
 		if(block.isLiquid()||block.getType()==Material.AIR) return false;
 		
-		final String particle_name="blockcrack_"+block.getTypeId()+"_"+block.getData();
+		final String particle_name="blockcrack_"+block.getType().getId()+"_"+block.getData();
+		System.err.println(particle_name);
 		
 		boolean gravity=entity.hasGravity();
 		boolean invulnerable=entity.isInvulnerable();

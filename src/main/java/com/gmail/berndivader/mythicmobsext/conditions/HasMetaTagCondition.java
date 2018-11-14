@@ -20,7 +20,6 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 @ExternalAnnotation(name="hasmeta,hasmetasimple",author="BerndiVader")
@@ -29,9 +28,7 @@ extends
 AbstractCustomCondition
 implements
 ILocationCondition,
-IEntityComparisonCondition,
-IEntityCondition
-{
+IEntityComparisonCondition {
 	protected HashMap<String,MetaTagValue> metatags = new HashMap<>();
 	protected boolean compareToSelf;
 
@@ -125,11 +122,6 @@ IEntityCondition
 			vs=((Double)v.getValue()).toString();
 		}
 		return vs;
-	}
-
-	@Override
-	public boolean check(AbstractEntity var1) {
-		return check(var1,var1);
 	}
 
 }

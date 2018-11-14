@@ -12,11 +12,9 @@ import net.minecraft.server.v1_12_R1.PathfinderGoal;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -97,7 +95,6 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
         		(int) Math.floor(this.entity.locZ + bdz));
     }
     
-    @SuppressWarnings("deprecation")
 	private void attemptBreakBlock(Block block) {
         Material type = block.getType();
         if (!this.isBreaking
@@ -113,13 +110,8 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
             	new BukkitRunnable() {
 					@Override
 					public void run() {
-		                EntityChangeBlockEvent event = new EntityChangeBlockEvent(PathfinderGoalBreakBlocks.this.entity.getBukkitEntity(), block, Material.AIR, (byte) 0);
-		                Main.getPlugin().getServer().getPluginManager().callEvent(event);
-		                if (!event.isCancelled()) {
-		                    PathfinderGoalBreakBlocks.this.entity.world.getWorld().playSound(location, Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, Math.min(Main.random.nextFloat() + 0.2f, 1.0f), 1.0f);
-	                        block.breakNaturally();
-	                        PathfinderGoalBreakBlocks.this.isBreaking=false;
-		                }
+                        block.breakNaturally();
+                        PathfinderGoalBreakBlocks.this.isBreaking=false;
 					}
 				}.runTaskLaterAsynchronously(Main.getPlugin(), 20L);
             }

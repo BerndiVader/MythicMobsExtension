@@ -68,4 +68,5 @@ public interface Handler {
 	Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target);
 	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
+	int currentServerTick();
 }

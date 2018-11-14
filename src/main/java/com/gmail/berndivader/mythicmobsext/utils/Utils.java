@@ -34,7 +34,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -48,13 +47,11 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
-import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
@@ -63,15 +60,12 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 import think.rpgitems.item.ItemManager;
@@ -122,8 +116,6 @@ public class Utils implements Listener {
 			BlockFace.EAST,
 			BlockFace.SOUTH_EAST}; 
 
-	private static Handler handler;
-	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
@@ -144,12 +136,8 @@ public class Utils implements Listener {
 	}
 	
 	public Utils() {
-		handler=Volatile.handler;
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
-		if (Utils.serverV>11) {
-			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
-			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
-		}
+		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 	}
 	
 	@EventHandler
@@ -179,7 +167,7 @@ public class Utils implements Listener {
 	public void storeBowTensionEvent(PlayerInteractEvent e) {
 		final Player p=e.getPlayer();
 		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
-			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(Main.getPlugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
+			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(Main.getPlugin(),Volatile.handler.currentServerTick()));
 			new BukkitRunnable() {
 				float f1;
 				@Override
@@ -195,36 +183,6 @@ public class Utils implements Listener {
 	}
 	
 	@EventHandler
-	public void replaceParrotsEvent(MythicMobSpawnEvent e) {
-		if (e.isCancelled()||!Config.m_parrot) return;
-		if (e.getEntity() instanceof Parrot) {
-			MythicMob mm=e.getMobType();
-			LivingEntity p=handler.spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
-	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
-	        final ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
-	        mythicmobs.getMobManager().registerActiveMob(am);
-	        mm.applyMobOptions(am,am.getLevel());
-	        mm.applyMobVolatileOptions(am);
-	        new TriggeredSkillAP(SkillTrigger.SPAWN,am,null);
-	        final Entity entity=e.getEntity();
-	        new BukkitRunnable() {
-				@Override
-				public void run() {
-					ActiveMob am1=null;
-					if ((am1=mythicmobs.getMobManager().getMythicMobInstance(entity))!=null) {
-						MythicSpawner ms=null;
-						if ((ms=am1.getSpawner())!=null) {
-							am.setSpawner(ms);
-							if (!ms.getAssociatedMobs().contains(am.getUniqueId())) ms.trackMob(am);
-						};
-						am1.getEntity().remove();
-					}
-				}
-			}.runTaskLater(Main.getPlugin(),1l);
-		}
-	}
-
-	@EventHandler
 	public void onProjectileLaunch(ProjectileLaunchEvent e) {
 		if (e.isCancelled()||!(e.getEntity().getShooter() instanceof Entity)) return;
 		final Entity s=(Entity)e.getEntity().getShooter();
@@ -232,21 +190,6 @@ public class Utils implements Listener {
 		if (am!=null) {
 			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
 			e.setCancelled(ts.getCancelled());
-		}
-	}
-	
-	
-	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
-		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {
-			final Player p=e.getPlayer();
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					p.getOpenInventory().close();
-				}
-			}.runTaskLater(MythicMobs.inst(), 1L);
 		}
 	}
 	

@@ -13,7 +13,6 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -121,14 +120,14 @@ ITargetedLocationSkill {
  	static ItemStack createItemStack(ItemStack i,boolean tag,boolean stackable,String[]tags) {
  		ItemStack is=new ItemStack(i);
 		if(tag) {
-	 		is=new ItemStack(NMSUtil.makeReal(i));
+	 		is=new ItemStack(NMSUtils.makeReal(i));
 			for(int i2=0;i2<tags.length;i2++) {
 				String[]arr2=tags[i2].split(":");
 				NMSUtils.setMeta(is,arr2[0],arr2.length>1?arr2[1]:is.getType().toString());
 			}
 		}
 		if(!stackable) {
-	 		is=new ItemStack(NMSUtil.makeReal(is));
+	 		is=new ItemStack(NMSUtils.makeReal(is));
 			UUID uuid=UUID.randomUUID();
 			String most=Long.toString(uuid.getMostSignificantBits()),least=Long.toString(uuid.getLeastSignificantBits());
 			NMSUtils.setMeta(is,"RandomMost",most);

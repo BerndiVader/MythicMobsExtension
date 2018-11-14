@@ -21,7 +21,6 @@ public class WorldGuardFlags {
 	private WorldGuardPlugin worldguard = (WorldGuardPlugin) Main.pluginmanager.getPlugin("WorldGuard");
 	private FlagRegistry fr = worldguard.getFlagRegistry();
 
-	@SuppressWarnings("deprecation")
 	public boolean checkRegionStateFlagAtLocation(Location l, String f) {
 		Flag<?> flag = DefaultFlag.fuzzyMatchFlag(fr, f);
 		if (!(flag instanceof StateFlag))
@@ -33,7 +32,6 @@ public class WorldGuardFlags {
 		return rs.allows((StateFlag) flag);
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean checkRegionDenySpawnFlagAtLocation(Location l, String[] entitylist) {
 		EntityType chkType;
 		RegionManager rm = this.worldguard.getRegionManager(l.getWorld());

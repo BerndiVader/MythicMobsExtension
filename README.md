@@ -1,11 +1,11 @@
-# MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.320-SNAPSHOT for MythicMobs 4.4.0 and Spigot 1.12.2 or 1.13.2 and higher
 
 
 #### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki)
+#### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
 Click [Snapshot](http://mc.hackerzlair.org:8080) for the lastest builds.
 Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
-#### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 
 ### Changelog:

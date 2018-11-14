@@ -8,6 +8,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,7 +37,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
@@ -594,7 +594,7 @@ implements Handler,Listener {
 	        			}
 	        		}
 	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
-						Entity ee = NMSUtil.getEntity(w, uuid);
+						Entity ee = NMSUtils.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
 	        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
 	        			}
@@ -1092,5 +1092,10 @@ implements Handler,Listener {
 		
 		return new Vec3D(delta_x,delta_y,delta_z);
 	}
+	
+	@Override
+	public int currentServerTick() {
+		return MinecraftServer.currentTick;
+	}	
 
 }

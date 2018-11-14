@@ -25,6 +25,7 @@ import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.ProtocolLib
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
+import com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
@@ -63,6 +64,7 @@ public class Main extends JavaPlugin {
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
+		NMSUtils.initialize();
 		
 		if (Config.update) {
 			new BukkitRunnable() {
@@ -110,8 +112,12 @@ public class Main extends JavaPlugin {
 			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
 			if (Config.m_thiefs) thiefs=new Thiefs();
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				wgf=new WorldGuardFlags();
-				new WorldGuardFlag();
+				if(Utils.serverV<12) {
+					wgf=new WorldGuardFlags();
+					new WorldGuardFlag();
+				} else {
+					logger.warning("Worldguard for 1.13.x not supported yet!");
+				}
 			}
 			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
 				logger.info("using Factions");

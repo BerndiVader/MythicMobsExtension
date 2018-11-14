@@ -10,7 +10,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -19,7 +18,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
-import net.citizensnpcs.api.CitizensAPI;
 
 @ExternalAnnotation(name="entitiesinradius,eir,leir,livingentitiesinradius,pir,playersinradius",author="BerndiVader")
 public class EntitiesInRadiusCondition
@@ -29,7 +27,7 @@ implements
 ILocationCondition {
 	private RangedDouble a;
 	private double r;
-	private boolean all=false,is,useCitizens,ignoreNPC;
+	private boolean all=false,is,ignoreNPC;
 	private char c;
 	private List<String>mList=new ArrayList<String>();
 
@@ -44,7 +42,6 @@ ILocationCondition {
 		this.is=mlc.getBoolean(new String[] {"ignoresameblock","isb"},false);
 		this.ignoreNPC=mlc.getBoolean(new String[] {"ignorenpc","npc"},false);
 		mList=Arrays.asList(t);
-		useCitizens=Main.pluginmanager.getPlugin("Citizens")!=null;
 	}
 
 	@Override
@@ -70,7 +67,7 @@ ILocationCondition {
 		for(Iterator<Entity>i1=l.getWorld().getEntitiesByClasses(clazz).iterator();i1.hasNext();) {
 			Entity e=i1.next();
 			if (!this.all && !mList.contains(e.getType().toString().toUpperCase())) continue;
-			if (ignoreNPC&&useCitizens&&CitizensAPI.getNPCRegistry().isNPC(e)) continue;
+			if (ignoreNPC&&e.hasMetadata("NPC")) continue;
 			Location el=e.getLocation();
 			if (l.getWorld()!=el.getWorld()) continue;
 			if (is&&Utils.cmpLocByBlock(el,l)) continue;
