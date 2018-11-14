@@ -26,7 +26,7 @@ ITargetedEntitySkill {
 	private int duration;
 	private boolean f;
 	private boolean g;
-	private boolean ai;
+	private boolean ai,useDuration;
 
 	public StunMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -35,6 +35,7 @@ ITargetedEntitySkill {
 		this.f=mlc.getBoolean(new String[] { "facing", "face", "f" },false);
 		this.g=mlc.getBoolean(new String[] { "gravity", "g" },false);
 		this.ai=mlc.getBoolean(new String[] { "stopai", "ai" },false);
+		this.useDuration=mlc.getBoolean("useDuration", true);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ ITargetedEntitySkill {
 					if (gravity) y=t.getLocation().getY();
 					Volatile.handler.forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing,gravity);
 				}
-				count++;
+				if(useDuration) count++;
 			}
 		}.runTaskTimer(Main.getPlugin(), 1L,1L);
 		return true;

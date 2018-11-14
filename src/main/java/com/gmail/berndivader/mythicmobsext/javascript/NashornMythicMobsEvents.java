@@ -37,8 +37,11 @@ Listener {
 	
 	@EventHandler
 	public void onMechanicLoadEvent(MythicMechanicLoadEvent e) {
-		if (e.getMechanicName().toLowerCase().equals("jsmechanic")) {
+		String s1=e.getMechanicName().toLowerCase();
+		if (s1.equals("jsmechanic")) {
 			e.register(new JavascriptMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+		} else if (s1.equals("math")) {
+			e.register(new EvalMechanic(e.getContainer().getConfigLine(),e.getConfig()));
 		}
 	}
 	

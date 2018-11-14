@@ -17,9 +17,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -61,7 +62,9 @@ ITargetedLocationSkill {
     boolean hitTarget=true,
     		hitPlayers=false,
     		hitNonPlayers=false,
-    		hitTargetOnly=false;
+    		hitTargetOnly=false,
+			invunerable,
+			lifetime;
 
     public IStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -88,6 +91,9 @@ ITargetedLocationSkill {
         this.hitNonPlayers = mlc.getBoolean(new String[] {"hitnonplayers","hnp"}, false);
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+        
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -109,7 +115,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
     }
@@ -120,7 +126,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
 	}
@@ -129,7 +135,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,lifetime;
         private SkillMetadata data;
         private Item item;
         private SkillCaster caster;
@@ -152,15 +158,16 @@ ITargetedLocationSkill {
         private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
+            this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
-            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
             this.yOffset=IStatueMechanic.this.YOffset;
             this.sOffset=IStatueMechanic.this.sOffset;
             this.fOffset=IStatueMechanic.this.fOffset;
+            this.lifetime=IStatueMechanic.this.lifetime;
             this.count=0;
             if (IStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -175,7 +182,7 @@ ITargetedLocationSkill {
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
             this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.material));
-            Main.entityCache.add(this.item);
+            EntityCacheHandler.add(this.item);
 			this.item.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.item.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.item.setInvulnerable(true);
@@ -199,13 +206,9 @@ ITargetedLocationSkill {
             if (this.cancelled) {
                 return;
             }
-            if(this.count>IStatueMechanic.this.duration) {
+            if(this.count>IStatueMechanic.this.duration||item==null||owner==null||owner.isDead()) {
                 this.stop();
                 return;
-            }
-            if (this.item==null) {
-            	this.stop();
-            	return;
             }
             this.oldLocation=this.currentLocation.clone();
             if (!this.islocationtarget) this.currentLocation=this.owner.getLocation().add(0d,this.yOffset,0d);
@@ -251,8 +254,10 @@ ITargetedLocationSkill {
             if (!this.islocationtarget) {
         		double x = this.currentLocation.getX();
         		double z = this.currentLocation.getZ();
+    			Location l=this.owner.getLocation();
+    			l.setPitch(0f);
     			Vector soV=Utils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=Utils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
+    			Vector foV=Utils.getFrontBackOffsetVector(l.getDirection(),this.fOffset);
     			x+=soV.getX()+foV.getX();
     			z+=soV.getZ()+foV.getZ();
     			this.currentLocation.setX(x);
@@ -263,7 +268,7 @@ ITargetedLocationSkill {
     			this.item.setVelocity(this.vEmpty);
     			NMSUtils.setLocation(this.item,this.currentLocation.getX(),this.currentLocation.getY(),this.currentLocation.getZ(),this.currentLocation.getYaw(), this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 

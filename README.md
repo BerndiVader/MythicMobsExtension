@@ -1,15 +1,63 @@
-# MythicMobsExtension v1.240 for MythicMobs 4.1 and Spigot 1.10.2 or higher
+# MythicMobsExtension v1.241-SNAPSHOT for MythicMobs 4.1 and Spigot 1.10.2 or higher
 
-### Wiki:
-https://github.com/BerndiVader/MythicMobsExtension/wiki
 
-Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not yet in the wiki.
-Click [here](http://mc.hackerzlair.org:8080) for the lastest builds
-Click [here](http://mc.hackerzlair.org/repo) for the repos
+#### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki)
+Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
+Click [Snapshot](http://mc.hackerzlair.org:8080) for the lastest builds.
+Click [Repositories](http://mc.hackerzlair.org/repo) for the repos.
+#### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
-## Click [here](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
 
 ### Changelog:
+
+##### ** 11.07.2018 *** added blockatcrosshair condition.
+##### ** 05.07.2018 *** added endskill to chatlistener.
+##### ** 02.07.2018 *** added targetnotcaster condition.
+##### ** 26.06.2018 *** fixed libsdisguise dependency.
+##### ** 23.06.2018 *** added mythicitem support for asequip mechanic.
+##### ** 22.06.2018 *** tweaked forcespectate now works properly.
+##### ** 22.06.2018 *** maybe fix for mobsinradius issue on server start.
+##### ** 21.06.2018 *** added offhand support for asequip.
+##### ** 20.06.2018 *** added forcedeath option to forcespectate mechanic. See forcespectate for details.
+##### ** 20.06.2018 *** added notifygrow pathfindergoal. See pathfinders for details.
+##### ** 13.06.2018 *** fix for issue #51 setmoblevel
+##### ** 10.06.2018 *** fixed issue with crosshairlocation where player always looks south.
+##### ** 07.06.2018 *** added spawnreason condition.
+##### ** 06.06.2018 *** added location attribute to entitygoggle.
+##### ** 05.06.2018 *** added ncp attribute to customdamage. To support NoCheatPlus onfly with customdamage. See customdamage.
+##### ** 05.06.2018 *** added NoCheatPlus support: exemptplayer, unexemptplayer mechanic & hasexemption condition.
+##### ** 30.05.2018 *** added forcebow mechanic.
+##### ** 21.05.2018 *** fixed PathfinderGoals doorsopen & doorsbreak not working on others than villagers & zombies.
+##### ** 20.05.2018 *** added PathfinderGoals doorsopen & doorsbreak.
+##### ** 19.05.2018 *** fixed NPE in dropmythicitem mechanic.
+##### ** 17.05.2018 *** added fix for Unknown Displayname. See FixDisplay for details.
+##### ** 13.05.2018 *** added failquest, nextstagequest, setstagequest to QuestsSupport.
+##### ** 13.05.2018 *** fixed NaN in customdamage if power is 0.
+##### ** 13.05.2018 *** added Quests support. See QuestsSupport for details.
+##### ** 13.05.2018 *** added sensitive argument to chatlistener mechanic.
+##### ** 10.05.2018 *** fixed issue while casting dropmythicitem with none mythicmobs entities.
+##### ** 10.05.2018 *** added ignoreNPC to entitiesinradius condition.
+##### ** 07.05.2018 *** added tags, mark, and give argument to dropmythicitem mechanic.
+##### ** 29.04.2018 *** added ignoreTrigger argument to chatlistener mechanic.
+##### ** 29.04.2018 *** added infinite option to chatlistener mechanic.
+##### ** 28.04.2018 *** added threattabletargeter(ttt). See threattabletargeter targeter for detials.
+##### ** 28.04.2018 *** improved renameentity mechanic. See renameentity mechanic for details.
+##### ** 24.04.2018 *** added topthreatholder(tth) targeter. See topthreattargeter for details.
+##### ** 22.04.2018 *** added debug option to randomspeed.
+##### ** 12.04.2018 *** added stance variable to math mechanic output.
+##### ** 09.04.2018 *** added math mechanic. See math mechanic for details.
+##### ** 08,04,2018 *** fixed nodrop option in dropinventory mechanic.
+##### ** 02.04.2018 *** added variables to amount for setmobhealth & setrandomlevel/setmoblevel mechanic. See mechanics for details.
+##### ** 02.04.2018 *** added clear / nodrop option to dropinventory mechanic. See dropinventory for details.
+##### ** 24.03.2018 *** added amir/activemobsinradius targeter. See targeters for details.
+##### ** 19.03.2018 *** fixed bug in classloader.
+##### ** 18.03.2018 *** added variable parsing to customrandomskill. See customrandomskill for details.
+##### ** 12.03.2018 *** added skillcooldown condition. See skillcooldown for details.
+##### ** 10.03.2018 *** moved chatlistener & clicklistener to mme intern mechanics. See chat & click listener for details.
+##### ** 08.03.2018 *** added lastcollided conditions. See conditions for details.
+##### ** 08.03.2018 *** added notifyoncollide pathfindergoal. See pathfindergoals for details.
+##### ** 27.02.2018 *** added mmemessage mechanic. See mmemessage for details.
+##### ** 25.02.2018 *** added MME var support to all notable mechanics.
 ##### ** 21.02.2018 *** added mining condition. See conditions for details.
 ##### ** 21.02.2018 *** fixed exception if default javascript files missing.
 ##### ** 21.02.2018 *** added externals & javascript to config.
@@ -258,6 +306,111 @@ Click [here](http://mc.hackerzlair.org/repo) for the repos
 ##### *** 7.4.2017 **** fixed random bug in damagearmor and added support for negative values. Because of that changed ranged syntax from "1-2" to "1to2"
 
 
+# FixDisplay:
+If you dont like a mobtype to be called Unknown if it have no DisplayName use the Option `FixDisplay: true/false(default)` in mob.yaml:
+
+```yaml
+NoUnknown:
+  Type: zombie
+  Health: 2
+  Options:
+    FixDisplay: true
+  Skills:
+  - message{msg="Me died <mob.name>!"} @world ~onDeath
+```
+
+
+# NoCheatPlus Support:
+if you have NCP installed you might have some problems with mythicmobs. This mechanics & condition helps you to fix that.
+
+## Mechanics:
+
+### exemptplayer
+
+`exemptplayer{types=[ARRAYLIST];worldchangeresist[BOOLEAN]} @PLAYERTARGETER`
+
+The targeted player(s) will have exemption to the given CheckTypes. Read [here](https://github.com/NoCheatPlus/NoCheatPlus/blob/master/NCPCore/src/main/java/fr/neatmonster/nocheatplus/checks/CheckType.java) for a complete CheckType list.
+
+### unexemptplayer
+
+`unexemptplayer{types=[ARRAYLIST]} @PLAYERTARGETER`
+
+Remove all given exemptions from the player(s).
+
+## Conditions:
+
+### hasexemption
+
+`hasexemption{types=[ARRAYLIST]}`
+
+True if all of the given CeckTypes are on the player.
+
+
+# Quests Support:
+If you have quests installed you can use some conditions and mechanics within mythicmobs now. Use the ocnfig.yml to disable the support if you dont need it.
+
+## Mechanics:
+
+### takequest
+
+`takequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) take the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### completequest
+
+`completequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) complete the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### failquest
+
+`failquest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) fails the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### nextstagequest
+
+`nextstagequest{quest="[QUESTNAME]"} @PLAYERTARGETER`
+
+The targeted player(s) continues on the next stage of the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+### setstagequest
+
+`setstagequest{quest="[QUESTNAME]";stage=[INTEGER]} @PLAYERTARGETER`
+
+The targeted player(s) continues on the given stage of the quest.
+
++ quest: Any valid quest. Use double quotes!
+
+## Conditions:
+
+### activequest
+
+`activequest{quest="[ANY]||[QUESTNAME]||[LIST]";stage=[RANGEDVALUE]}`
+
+**Player only Conditions** Checks if the player has the quest running at the given stage.
+
++ quest: Any valid quest, ANY for any quest or a list like "Quest1,quest2,quest3" Use double quotes!
++ stage: the number of the stage. Can be ranged: >-1 or 2 or 1to20
+
+### completedquest
+
+`completedquest{quest="[QUESTNAME]"}`
+
+**Player only Conditions** Checks if the player has the given quest completed.
+
++ quest: Any valid quest. Use double quotes!
+
+
 
 # Custom Entities:
 
@@ -350,6 +503,155 @@ PlayEffectOnTarget:
   - settarget
   - particlesphere{particle=flame;amount=10;radius=1} @target
 ```
+
+
+
+## forcebow
+
+`forcebow @ENTITY_TARGETER`
+
+Caster have to be an Ranged Entity like a skeleton etc....
+
+Example:
+
+```yaml
+MythicMonkey:
+  Type: skeleton
+  Disguise:
+    Type: player
+    Skin: 'meeeh'
+    Player: Steve
+  AIGoalSelectors:
+  - 0 clear
+  Damage: 0.1
+  Skills:
+  - forcebow @trigger ~onInteract
+```
+
+
+
+
+## math
+
+`math{eval="[EXPRESSION]";store=[METAVAR]||[SCOREBOARDVAR]||[STANCE]} @ANY_TARGETER`
+
+Evaluate the expression and store the result into a metatag or a scoreboard entry.
+
++ eval: Any valid math expression. You can use any variable present at runtime holding a number.
++ store: Use any meta or scoreboard variable to save the result.
+
+Example:
+
+```yaml
+baba:
+  Type: chicken
+  Health: 10
+  Skills:
+  - math{eval="(1+<mob.mhp>)/100*Math.PI)";store=<mob.meta.test>} @self ~onInteract
+```
+
+
+
+
+## clicklistener
+
+`clicklistener{maxdelay=[VALUE];actionbar=[BOOL];meta=[STRING];startskill=[SKILL];clickskill=[SKILL];finishskill=[SKILL];failskill=[SKILL]} @PLAYERTARGETERS`
+
+Use this mechanic to log the players left + right clicks. The player need to finish the listener with crouch. If the player dont click inside the maxdelay the
+listener execute failskill. After a click, the maxdelay is set back. The result string is stored into meta. Default metaname is "actionstring".
+
++ maxdelay: the max time in ticks between the clicks. set back to maxdelay after each click.
++ actionbar: true/false(default) the clicks should be shown in actionbar.
++ meta: the metatag where the clickstring is stored. default tag is "actionstring".
++ startskill: skill executed at start of the listener.
++ clickskill: skill for each click.
++ finishskill: skill executed after crouch is pressed.
++ failskill: skill if maxdealay ran out without crouch beeing used.
+
+
+
+## chatlistener
+
+`chatlistener{phrases="[STRING]"||"[ARRAY]";period=[VALUE];radius=[RANGEDVALUE];breakonmatch=[BOOL];breakonfalse=[BOOL];inuseskill=[SKILLNAME];matchskill=[SKILLNAME];falseskill=[SKILLNAME];endskill=[SKILLNAME];multi=[BOOL];meta=[TAGNAME];infinite=[BOOL];ignoretrigger=[BOOL];sensitive=[BOOL]} @PLAYERTARGETERS`
+
+Use this skill to listen to the targeted players chat for period of ticks. If one of the phrases, or any if empty, match the matchskill is excuted, if not the falseskill is executed. Use breakonmatch and breakonfalse to cancel the skill if match or if no match. Radius is the range the player needs to be. This can be a ranged value like 2to5 or <10 that stuff. Use the inuseskill to tell others that the mob is already talking to someone else. To make the mob multitalking, set multi to true and the mob is able to talk to more than one player simultaneously. Optional, set the phrases under "" to have spaces enabled. Additional all avaible variables like <target.name> etc... can be used.
+
++ phrases: the words, phrases the mob should listen to.
++ period: how long the mob listen, in ticks.
++ infinite: true/false(default) if the listener should not use period counter.
++ radius: the radius the targeted player need to be to get an answer.
++ breakonmatch: stop the listener if one of the phrases match.
++ breakonfalse: stop the listener if the chat message dont fit any phrase.
++ inuseskill: skill that is executed if the mob already listen to someone or if multi if the player is already in mobs attention.
++ matchskill: executed if match.
++ falseskill: executed if false.
++ endskill: executed on time out.
++ multi: true/false(default) if more then 1 player is able to talk simultaneously.
++ meta: the metatag name where the message should be stored. ex: `meta=<trigger.uuid>lastmessage`this set a metatag for the mob with the triggers uuid + lastmessage. the value of the tag is the message.
++ removephrase: true/false(default) if the matched phrase should be removed from the message.
++ cancelmatch: true/false/default) cancel the message event if matched.
++ cancelfalse: true/false(default) cancel the message event if no match.
++ ignoretrigger: true(default)/false if false, only listen to the player that triggered the skill.
++ sensitive: true(default)/false if false, ignore case sensitive in chatlistener.
+
+Examples:
+
+```yaml
+
+#skill yaml
+match:
+  Skills:
+  - message{msg="You entered the right password!"} @trigger
+false:
+  Skills:
+  - message{msg="Wrong password!"} @trigger
+inuse:
+  Skills:
+  - message{msg="Im busy right now"} @trigger
+  
+#mob yaml
+ChatMonkey:
+  Type: zombie
+  Health: 10
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - chatlistener{multi=false;phrases="supersecretpassword";period=240;inuseskill=inuse;matchskill=match;falseskill=false} @trigger ~onInteract
+  
+#mob yaml
+ChatMonkey1:
+  Type: zombie
+  Health: 10
+  AIGoalSelectors:
+  - 0 clear
+  Skills:
+  - chatlistener{multi=true;meta=blabla<target.uuid>;phrases="help me,hilf mir";period=240;inuseskill=inuse;matchskill=match;falseskill=false} @trigger ~onInteract
+  
+
+#skill yaml
+match:
+  Skills:
+  - pstance{s="You said: <mob.meta.blabla<trigger.uuid>>"} @self
+  - message{msg="<mob.stance>"} @trigger
+  - message{msg="Watch out for creepers, they are mean!"} @trigger
+false:
+  Skills:
+  - message{msg="Sorry, i dont understand."} @trigger
+inuse:
+  Skills:
+  - message{msg="You already have my attention!"} @trigger
+  
+```
+
+
+
+## mmemessage / custommessage / sendmessage mechanic:
+
+Send a message parsed with MM & MME variables.
+
+##### `- sendmessage{msg="Owner <mob.meta.owner>"} @world`
+
+Where msg/m is is the message inside double quotes.
 
 
 
@@ -560,10 +862,10 @@ This force all targeted players to see a black screen for 60 ticks. Use closeinv
 
 Force the target to drop an item from its storagte/equipment to the ground.
 
-##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER]} @trigger ~onInteract`
+##### `- dropinventory{item="material=[MATERIAL_TYPE]||ANY,amount=[NUMBER],lore=[TEXT],where=[HAND][OFFHAND][ARMOR][INVENTORY]";pickupdelay=[TICKS];pieces=[NUMBER];nodrop=[BOOLEAN]} @trigger ~onInteract`
 
 Where in `item=""` all the item information is stored. `pickupdelay` = amount of ticks the item cannot be picked up again. `pieces` how many 
-pieces out of the inventory, regardless of itemstacks, are dropped.
+pieces out of the inventory, regardless of itemstacks, are dropped. Use `nodrop/clear/nd` to only clear the items.
 
 Examples:
 
@@ -613,20 +915,24 @@ This skill for example, will stop the death sequence when the mob is horizontal 
 
 ## setmobhealth mechanic:
 
-Set the mythicmobs mob health and maxhealth to a new amount. Random amount allowed. Ignore or allow level health modifier. Use set add or multiply
-the amount.
+Set the mythicmobs mob health and maxhealth to a new amount. Random amount & variables are allowed. Ignore or allow level health modifier. Use set add or multiply
+the amount, where SET is default.
 
-##### `- setmobhealth{health=2to5;ignoremodifier=true;set=+} ~onInteract`
+##### `- setmobhealth{health=2to5;ignoremodifier=true;set=ADD} ~onInteract`
 
 add a random value between 2 and 5 to the maxhealth.
 
-##### `- setmobhealth{health=10to20;ignoremodifier=true} ~onInteract`
+##### `- setmobhealth{health=10to20;ignoremodifier=true;set=SET} ~onInteract`
 
 set the maxhealth to random value between 10 and 20.
 
-##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=*} ~onInteract`
+##### `- setmobhealth{health=0.5to1;ignoremodifier=true;set=MULTIPLY} ~onInteract`
 
 multiply the maxhealth with a random value between 0.5 and 1.
+
+##### `- setmobhealth{health=<mob.meta.health>} ~onInteract`
+
+set the health of the mob to the amount stored in the mobs health metatag.
 
 	
 
@@ -635,7 +941,10 @@ multiply the maxhealth with a random value between 0.5 and 1.
 
 Force the entity to goggle at the targeted entity for duration amount of ticks. Doesnt work too well if the entity have ai.
 
-##### `- entitygoggleat{dur=300} @trigger ~onDamaged`
+##### `- entitygoggleat{dur=300;location=X,Y,Z,WORLDNAME} @trigger ~onDamaged`
+
+`dur`: The amount of ticks the entity goggles. <br>
+`location`: If present the entity goggle at this location. Format: `location=X,Y,Z,WORLDNAME` 
 	
 
 
@@ -743,7 +1052,7 @@ Equip an armor stand with any Bukkit Material Type. Equp the head slot with any 
 	
 ##### `- asequip{item=DIAMOND_SWORD:4} ~onSpawn`
 
-If mobtype = armorstand equip diamond sword on head slot.
+If mobtype = armorstand equip diamond sword on head slot. Valid are any mythicitem names for bukkit materialtypes.
 
 
 
@@ -775,7 +1084,7 @@ Same as the build-in disguise mechanic. But additional it parse every variable t
 
 ## renameentity mechanic:
     
-Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed. You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity.
+Rename the targeted entity. Only works on living entities and do not work for players. Use name option for the new name. The mob variables are parsed. You can use all the variables (http://www.mythicmobs.net/manual/doku.php/skills/stringvariables) avaible at runtime. Set visible to true or false if the name should be displayed without hover the entity. Use special chars like <&sp> or use doubleqoutes like "bla bla"
 	
 ##### `- renameentity{name=[PARSEDSTRING];visible=[BOOLEAN]}`
 	
@@ -789,13 +1098,15 @@ set the targeter entity to perma owner of the activemob. Resistent against reloa
 	
 	
 ## advrandomskill mechanic:
+## customrandomskill mechanic:
 
 Use this mechanic to execute a random skill by chance and priority.
 	
-##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
+##### `- advrandomskill{renewrandom=true;skills=priorityrandomskill1:[value]||[<variable>,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
 ##### `- customrandomskill{rrenewrandom=false(default);skills=priorityrandomskill1:0.1,priorityrandomskill2:0.2,priorityrandomskill3:1} ~onDamaged`
 + This check if rnd match first skill, if yes skill is executed, if not check for the next skill. If none matched yet the last entry with a chance of 1 will always be executed.
 + If renewrandom/newrandom/rnr is set to true a new random is created for the next entry else for all entries the same random is used.
++ Where 0.01 is 1% chance and 1 is 100% chance. If variables are used: 1 = 1% and 100 = 100% chance.
 	
 ##### `- advrandomskill{skills=priorityrandomskill1:0.5,priorityrandomskill2:0.3,priorityrandomskill3:0.2} ~onDamaged`
 + Same as above but if no chance match nothing will be executed.
@@ -837,6 +1148,38 @@ Some examples:
 ```
 		
 ### Pathfindergoals:
+
+*notifygrow:*
+	
+##### `custompathfinder{goal="[goalpriority_value] notifygrow [SIGNAL]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 notifygrow grow"}`
++ Adds the ability to the mob to send the signal defined if the mob grown up.
+
+*doorsbreak:*
+	
+##### `custompathfinder{goal="[goalpriority_value] doorsbreak [BOOLEAN]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 doorsbreak false"}`
++ Adds the ability to the mob to break doors and walk inside.
++ The boolean true/false(default) use the mobGriefing gamerule. default false.
+
+*doorsopen:*
+	
+##### `custompathfinder{goal="[goalpriority_value] doorsopen [BOOLEAN]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="1 doorsopen true"}`
++ Adds the ability to the mob to open doors and walk inside.
++ The boolean true/false(default) use the mobGriefing gamerule. default false.
+
+*notifyoncollide:*
+	
+##### `custompathfinder{goal="[goalpriority_value] notifyoncollide [delay]"}`
+	
++ Syntax in custompathfinder: `- custompathfinder{goal="notifyoncollide 20"}`
++ Adds the ability to the mob to trigger onBlock if the mob collides with another entity. The trigger of the onBlock is 
+the collided entity.
++ Additional the goal also creates its own event called **OnEntityCollideEvent** useful for externals or js mechanics.
 
 *jumpoffvehicle:*
 	
@@ -902,7 +1245,6 @@ SpawnEvent:
 		
 *breakblocks:*
 
-
 ##### `advaipathfinder{goal="[goalpriority_value] breakblocks [materialtype_array] [blockbreakchance_value]"}`
 	
 + Syntax in advaipathfinder: `- advaipathfinder{goal="1 breakblocks grass,dirt,stone 50"}`
@@ -910,7 +1252,6 @@ SpawnEvent:
 + The entity have a chance of 50% to break the block. Possible chances 0-100;
 
 *returnhome:*
-
 
 ##### `advaipathfinder{goal="[goalpriority_value] returnhome [speed_value] [x],[y],[z],[travel_radius],[tp_radius],[boolean_ignoretarget]"}`
 	
@@ -1187,12 +1528,16 @@ Or use some variables in the destination targeter:
 	
 ## dropmythicitem skill:
 	
-Drop a mythicitem or a mythicdroptable.
+Drop a mythicitem or a mythicdroptable. Additional use nbt tags to mark the mythicitem.
 
 Options:
 + `mythicitem=item=itemtype=type=t=i=` Internal name of the mythic item or the mythic droptable.
 + `amount=a=` the amount of the that will be dropped if a mythic item, the amount of droptable creation if a droptable.
 + `shuffle=true/false` if true the droptable itemlist will be shuffled by random.
++ `mark=true(default)/false` the item will be marked with the tag **MythicQuestItem** with value **internalItemname**
++ `tags=TAGNAME:VALUE` use this to add customtags to the items nbt. Ex: `tags=tagname:value,leetitem:true`
++ `stackable=true(default)/false` if false the item is not stackable.
++ `give=true/false(default)` the mechanic act as a give skill and put the item into the players inventory if a player targeter is present and if there is space in the inventory. Otherwise the item is spawned at the location.
 	
 `- dropmythicitem{item=MythicItem;a=1} @pir{r=20} ~onAttack`
 	
@@ -1324,6 +1669,9 @@ Use this mechanic for a temporary mythicmobs damage mechanic fix. See http://www
 + `percentage=p=` false by default. If true it uses the amount as percent.
 + `pcur=pc=` false by fault. Need that percentage=true. If pc is true is use the percent of current health if false it use percent dmg of maxhealth.
 + `rdbd=` if used the damage of the skill is reduced by blockdistance. Ex: rdbd=0.01 reduces the damage by 1% per block.
++ `ncp=` if true and NoCheatPlus is present, this option enables NCP support for that damage. Default is false.
++ `strict=` default false. if true the straight amount of damge is applied.
++ `cause=` if defined, this cause is used. default is custom.
 	
 
 	
@@ -1422,11 +1770,10 @@ grenadezombie:
 
 
 ## SetRandomLevelSkill:
-
-##### `- setrandomlevel{min=1;max=10;self=true}`
-+ `min=` lowest level
-+ `max=` highest level
-+ `self=` true = targetself / false = target any other targeted mob
+##### `- setrandomlevel{a=[RANGEDVALUE]||[VARIABLE];min=1;max=10}`
++ `min=` lowest level *deprecated*
++ `max=` highest level *deprecated*
++ `a=amount=` Ranged value or a number representing variable.
 		
 Example:
 
@@ -1522,6 +1869,67 @@ FleeButGotNothing:
 
 # Conditions
 
+##### `- blockatcrosshair{material=[ARRAY]||[MATERIALNAME];filter=[ARRAy]||[MATERIALNAME];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**PlayerOnly** Check the block material the player look at.
++ material: a single valid material type or a list.
++ filter: all materials that are ignored on the way to the max distance. Valid is a single entry or a list by valid material types.
+
+##### `- targetnotcaster{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+**TargetCondition** Check if the caster is not the target.
+
+##### `- skillcooldown{skill=[SKILLNAME];id=[STRING];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Check if the skill *skill* is on cooldown and if true store the remaining cooldown value into mob score <mob[target||trigger].score.[SKILLNAME+ID]>
+and into metatag [SKILLNAME+ID].
++ skill: name of the skill to check.
++ id: the id for the metatag
+
+Example:
+
+```yaml
+
+#mob:
+MythicPlayer:
+  Type: player
+  Health: 20
+  Options:
+    Persistent: true
+  Skills:
+  - castif{c="skillcooldown{skill=cooldown1;id=SKILL};action=true";meet=cd_show1;else=cooldown1} @self ~onUse
+  - castif{c="skillcooldown{skill=cooldown2;id=SKILL};action=true";meet=cd_show2;else=cooldown2} @self ~onRightClick
+
+#skill:
+cd_show1:
+  Skills:
+  - actionmessage{m="skill1 cooldown <target.score.cooldown1SKILL>"} @self
+cooldown1:
+  Cooldown: 10
+  Skills:
+  - lightning
+cd_show2:
+  Skills:
+  - actionmessage{m="skill2 cooldown <target.score.cooldown2SKILL>"} @self
+cooldown2:
+  Cooldown: 10
+  Skills:
+  - arrowvolley
+
+```
+
+##### `- lastdamagecause{amount=[RANGED];cause=[SINGLE]||[LIST]||[ANY];damager=[SINGLE]||[LIST]||[ANY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare the DamageCause [DamageCause](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html) and the damager of EntityType EntityType](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html) with the damage amount within the ranged value. Note that the damage is NOT the final damage after all modifiers. There are also some related meta tags. `<mob.meta.LastDamager> <mob.meta.LastDamageCause> <mob.meta.DamageAmount>`
++ cause: Valid DamageCause. 
++ amount: Ranged amount.
++ damager: Valid EntityType.
+
+##### `- spawnreason{types=[SPAWNREASON]||[REASONARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare if the SpawnReason or one of the SpawnReasons match. <br>
+Requires a valid SpawnReason [SpawnReasons](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html)
++ types=type=t: Valid SpawnReason or an array of valid SpawnReasons. 
+
+##### `- lastcollided{type=[ENTITYTYPE]||[TYPESARRAY];action=[BOOL]||[CAST]||[CASTINSTEAD]}`
+Compare if one of the given types match with the last collided entity.
+Requires a valid bukkit [EntityType](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html)
++ types=type=t: valid entitytype or an array of valid types. 
 
 ##### `- mining{action=[BOOL]||[CAST]||[CASTINSTEAD]}`
 **Player only condition** Check if the player is digging into a block. Aliases ismining, digging, isdigging.
@@ -1632,16 +2040,16 @@ an entity as target. Like ~onTimer and such stuff.
 
 
 ##### `- isburning{range=[ranged_value];action=[boolean]}`
-By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range.
+By default (without range option) checks if the entity is burning or not. If range is given, return true if the burning ticks match the range. Use npc=true/false to ignore citizens npcs.
 
-##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+##### `- eir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius. Use npc=true/false to ignore citizens npcs.
 
-##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius.
+##### `- leir{isb=[BOOLEAN];types=[ALL]||[SINGLETEXT]||[ARRAY];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount living entities of type "ALL" or "ENTITYTYPE" or "ENTITYTYPES" are in radius. Use npc=true/false to ignore citizens npcs.
 
-##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];action=[boolean]}`
-Check if amount players are in radius.
+##### `- pir{isb=[BOOLEAN];amount=[RANGEDVALUE];radius=[VALUE];npc=[BOOLEAN];action=[boolean]}`
+Check if amount players are in radius. Use npc=true/false to ignore citizens npcs.
 
 *Example*
 
@@ -1653,8 +2061,8 @@ Check if amount players are in radius.
   - leir{types=ZOMBIE,SKELETON,CREEPER;amount=>5;radius=20}
   # true if there are more than 5 entities of the type list around.
   
-  - pir{amount=>0;radius=64}
-  # true if there is atleast 1 player in radius of 64 blocks.
+  - pir{amount=>0;radius=64;npc=false}
+  # true if there is atleast 1 player in radius of 64 blocks. plus ignore npcs.
   
   - eir{types=all;isb=true;amount=>0;radius=10}
   # true if there is atleast 1 other entity in radius of 10 blocks & not on
@@ -1788,6 +2196,15 @@ If cs (compareself) = true the TargetCondition check if the target's uuid is in 
 #### If you want to use the customtargeters, you need atleast MythicMobs 4.3 or if you only have the lastest release, you need a patched 4.2. Place this jar in your pluginsfolder and restart your server. It will patch all the necessary things in MythicMobs to use CustomTargeters. https://github.com/BerndiVader/MythicMobsPatcher
 
 
+
+##### `@ttt{range=[RANGE];threat=[RANGE]}`
+Get all threattable entries. Where range is the threatrank sorted by the threat amount. highest=first. threat option is for the threatamount itself.
+
+##### `@tth`
+Get the topthreatholder of the castermob.
+
+##### `@amir{radius=[VALUE];types=[ALL/ANY]||[STRING]||[ARRAY]}`
+Get all or specific mythicmobs in radius.
 
 ##### `@targetmotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`
 ##### `@triggermotion{length=[VALUE];yoffset=[VALUE];ignorey=[BOOL]}`

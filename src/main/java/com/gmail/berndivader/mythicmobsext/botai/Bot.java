@@ -27,7 +27,6 @@ public class Bot {
         public Thought think(Thought thought) throws Exception {
             vars1.put("input",thought.getText());
             String s1=Utils.request("https://www.pandorabots.com/pandora/talk-xml",null,null,vars1);
-            System.err.println("s1:"+s1);
             Thought t1=new Thought();
             t1.setText(Utils.xPathSearch(s1,"//result/that/text()"));
             return t1;

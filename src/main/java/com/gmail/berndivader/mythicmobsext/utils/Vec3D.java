@@ -37,7 +37,7 @@ Cloneable {
 		return new Vec3D(this.x-v3.getX(),this.y-v3.getY(),this.z-v3.getZ());
 	}
 	public String toString() {
-		return "("+x+", "+y+", "+z+")";
+		return "v3d@"+x+","+y+","+z;
 	}
 	public Vec3D clone() throws CloneNotSupportedException {
 		return (Vec3D)super.clone();

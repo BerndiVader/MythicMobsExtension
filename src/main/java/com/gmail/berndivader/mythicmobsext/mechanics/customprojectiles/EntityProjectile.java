@@ -15,10 +15,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -207,7 +208,7 @@ ITargetedLocationSkill {
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pEntity = this.pLocation.getWorld().spawnEntity(this.pLocation.add(0.0d, this.pVOff, 0.0d),
 					EntityType.valueOf(customItemName));
-			Main.entityCache.add(this.pEntity);
+			EntityCacheHandler.add(this.pEntity);
 			this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -326,6 +327,18 @@ ITargetedLocationSkill {
 						return;
 					}
 					this.currentBounce -= this.bounceReduce;
+					if (EntityProjectile.this.onBounceSkill.isPresent()
+							&& EntityProjectile.this.onBounceSkill.get().isUsable(this.data)) {
+						SkillMetadata sData = this.data.deepClone();
+						sData.setCaster(this.am);
+						sData.setTrigger(sData.getCaster().getEntity());
+						AbstractEntity entity = BukkitAdapter.adapt(this.pEntity);
+						HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
+						targets.add(entity);
+						sData.setEntityTargets(targets);
+						sData.setOrigin(this.currentLocation);
+						EntityProjectile.this.onBounceSkill.get().execute(sData);
+					}
 					this.currentVelocity.setY(this.currentBounce / EntityProjectile.this.ticksPerSecond);
 				}
 				this.currentVelocity.setY(this.currentVelocity.getY()

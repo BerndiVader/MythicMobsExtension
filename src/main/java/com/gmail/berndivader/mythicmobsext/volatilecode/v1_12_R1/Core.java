@@ -1,12 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.*;
 
 import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
@@ -36,36 +34,39 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCondition;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityZombie;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.navigation.NavigationClimb;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathFinderGoalShoot;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalAttack;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorBreak;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalDoorOpen;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
 
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.MessageToMessageDecoder;
+import io.lumine.xikage.mythicmobs.MythicMobs;
 
 public class Core 
 implements Handler,Listener {
 	
-	private static WorldBorder wb;
-	
-	private static HashMap<UUID,ChannelHandler>chl;
-	private static Field cField;
+	static int renderLength;
+	static String nms_path;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
@@ -88,19 +89,8 @@ implements Handler,Listener {
 					}));
 	
 	static {
-        wb=new WorldBorder();
-        wb.world=MinecraftServer.getServer().getWorldServer(1);
-        wb.setCenter(999999,999999);
-        wb.setSize(1);
-        wb.setWarningDistance(1);
-	    for(Field f:NetworkManager.class.getDeclaredFields()) {
-	    	if(f.getType().isAssignableFrom(Channel.class)) {
-	    		cField=f;
-	    		cField.setAccessible(true);
-	    		break;
-	    	}
-	    }
-	    chl=new HashMap<>();
+	    renderLength=512;
+	    nms_path="net.minecraft.server.v1_12_R1";
 	}
 	
 	public Core() {
@@ -115,112 +105,21 @@ implements Handler,Listener {
 	}
 	
 	@EventHandler
-	public void onJoinRegisterChannelListener(PlayerJoinEvent e) {
-		Utils.pl.put(e.getPlayer().getUniqueId(),new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0d,0d,0d));
-		final Player player=e.getPlayer();
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				try {
-				    chl.put(player.getUniqueId(),channelPlayerInProzess(player,new PacketReceivingHandler() {
-				    	@Override
-				        public void handle(Player p, PacketPlayInArmAnimation packet) {
-				        	float f1=getIndicatorPercentage(p);
-				        	p.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
-				            return;
-				        }
-						@Override
-						public void handle(Player p,PacketPlayInFlying packet) {
-							net.minecraft.server.v1_12_R1.EntityPlayer me=((CraftPlayer)p).getHandle();
-							com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(me.locX,me.locY,me.locZ);
-							double dx=packet.a(me.locX),dy=packet.b(me.locY),dz=packet.c(me.locZ);
-							v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-									?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-									:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-							Utils.pl.get(p.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInSteerVehicle packet) {
-							return;
-						}
-						@Override
-						public void handle(Player p, PacketPlayInBlockDig packet) {
-							p.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.c().name()));
-							return;
-						}
-				    }));
-				} catch (NoSuchElementException ex) {
-					Main.logger.warning("Error while register Channellistener for player " + e.getPlayer().getName());
-					try {
-					    PrintWriter pw=new PrintWriter(new File(Main.getPlugin().getDataFolder()+File.separator+"channelerror.txt"));
-					    ex.printStackTrace(pw);
-					    pw.close();			
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		}.runTaskLater(Main.getPlugin(),1l);
+	public static void join(PlayerJoinEvent e) {
+		PacketReader packet_reader=new PacketReader(e.getPlayer());
+		packet_reader.inject();
+		PacketReader.readers.put(e.getPlayer().getUniqueId(),packet_reader);
 	}
-
+	
 	@EventHandler
-	public void onLeaveUnregisterChannelListener(PlayerQuitEvent e) {
-		ChannelHandler ch=chl.get(e.getPlayer().getUniqueId());
-		if (ch!=null) closeChannelListener(e.getPlayer(),ch);
-		Utils.pl.remove(e.getPlayer().getUniqueId());
-		chl.remove(e.getPlayer().getUniqueId());
+	public static void quit(PlayerQuitEvent e) {
+		UUID uuid=e.getPlayer().getUniqueId();
+		PacketReader packet_reader=PacketReader.readers.get(uuid);
+		if(packet_reader!=null) {
+			packet_reader.uninject();
+			PacketReader.readers.remove(uuid);
+		}
 	}
-	
-	private boolean closeChannelListener(Player p,ChannelHandler ch) {
-	    try {
-	        ChannelPipeline pipe=gnc(p).pipeline();
-	        pipe.remove(ch);
-	        return true;
-	    } catch(Exception e) {
-	        return false;
-	    }
-	}
-	
-	public ChannelHandler channelPlayerInProzess(final Player p, final PacketReceivingHandler prh) {
-	    ChannelPipeline pipe=gnc(p).pipeline();
-	    @SuppressWarnings("rawtypes")
-		ChannelHandler ch=new MessageToMessageDecoder<Packet>() {
-	    	@Override
-			protected void decode(ChannelHandlerContext chc,Packet packet,List<Object>out) throws Exception {
-	    		switch(packet.getClass().getSimpleName()) {
-	    		case "PacketPlayInSteerVehicle":
-	            	prh.handle(p,(PacketPlayInSteerVehicle)packet);
-	            	break;
-	    		case "PacketPlayInArmAnimation":
-	                prh.handle(p,(PacketPlayInArmAnimation)packet);
-	    			break;
-	    		case "PacketPlayInPosition":
-	    		case "PacketPlayInPositionLook":
-	    		case "PacketPlayInLook":
-	    			prh.handle(p,(PacketPlayInFlying)packet);
-	    			break;
-	    		case "PacketPlayInBlockDig":
-	    			prh.handle(p,(PacketPlayInBlockDig)packet);
-	    			break;
-	    		}
-	    		out.add(packet);
-			}
-	    };
-	    pipe.addAfter("decoder","listener",ch);
-	    return ch;
-	}	
-	
-	private Channel gnc(Player p) {
-	    NetworkManager nm=((CraftPlayer)p).getHandle().playerConnection.networkManager;
-	    Channel c=null;
-	    try {
-	        c=(Channel)cField.get(nm);
-	    } catch (IllegalArgumentException|IllegalAccessException e) {
-	        e.printStackTrace();
-	    }
-	    return c;
-	}	
 	
 	@Override
 	public Parrot spawnCustomParrot(Location l1, boolean b1) {
@@ -231,34 +130,41 @@ implements Handler,Listener {
         world.addEntity(mep,SpawnReason.CUSTOM);
         return (Parrot)mep.getBukkitEntity();
 	}
+	
+	@Override
+	public LivingEntity spawnCustomZombie(Location location,boolean sunBurn) {
+		net.minecraft.server.v1_12_R1.World world=((CraftWorld)location.getWorld()).getHandle();
+		final MythicEntityZombie zombie=new MythicEntityZombie(world,sunBurn);
+		zombie.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		world.addEntity(zombie, SpawnReason.CUSTOM);
+		return (LivingEntity)zombie.getBukkitEntity();
+	}
 
-	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsAsync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+	private void sendPlayerPacketsAsync(List<Player>players,Packet<?>[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				while(it.hasNext()) {
-					AbstractPlayer ap=it.next();
-					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-					for(Packet p:pk) {
-						cp.getHandle().playerConnection.sendPacket(p);
+				for(int i1=0;i1<players.size();i1++) {
+					CraftPlayer cp=(CraftPlayer)players.get(i1);
+					for(int i2=0;i2<packets.length;i2++) {
+						cp.getHandle().playerConnection.sendPacket(packets[i2]);
 					}
+					
 				}
 			}
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private void sendPlayerPacketsSync(Iterator<AbstractPlayer>it,List<Packet>pk) {
+	private void sendPlayerPacketsSync(List<Player>players,Packet<?>[]packets) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				while(it.hasNext()) {
-					AbstractPlayer ap=it.next();
-					CraftPlayer cp = (CraftPlayer)BukkitAdapter.adapt(ap);
-					for(Packet p:pk) {
-						cp.getHandle().playerConnection.sendPacket(p);
+				for(int i1=0;i1<players.size();i1++) {
+					CraftPlayer cp=(CraftPlayer)players.get(i1);
+					for(int i2=0;i2<packets.length;i2++) {
+						cp.getHandle().playerConnection.sendPacket(packets[i2]);
 					}
+					
 				}
 			}
 		}.runTask(Main.getPlugin());
@@ -276,6 +182,14 @@ implements Handler,Listener {
 		arg1.walkSpeed=f1;
 		me.playerConnection.sendPacket(new PacketPlayOutAbilities(arg1));
     }
+
+	@Override
+	public void playBlockBreak(int eid,Location location, int stage) {
+		BlockPosition blockPosition=new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		List<Player>players=Utils.getPlayersInRange(location, renderLength);
+		PacketPlayOutBlockBreakAnimation packet=new PacketPlayOutBlockBreakAnimation(eid,blockPosition,stage);
+		sendPlayerPacketsAsync(players, new Packet[] {packet});
+	}
 	
 	@Override
 	public void removeSnowmanHead(Entity entity) {
@@ -308,10 +222,89 @@ implements Handler,Listener {
 	}
 	
 	@Override
-    public void forceSpectate(Player player, Entity entity) {
-		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)player).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
+    public void forceSpectate(Player player, Entity e, boolean bl1) {
+		LivingEntity entity=(LivingEntity)e;
+		net.minecraft.server.v1_12_R1.EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
+		entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity)entity).getHandle()));
+        if (bl1) {
+        	dupePlayer(entityPlayer,player.getLocation());
+        	entity.remove();
+        }
     }
+	
+	void dupePlayer(EntityPlayer entityplayer,Location location){
+        WorldServer worldServer=((CraftWorld)location.getWorld()).getHandle();
+        MinecraftServer minecraftServer=entityplayer.getWorld().getMinecraftServer();
+        PlayerList playerList=minecraftServer.getPlayerList();
+        
+        entityplayer.stopRiding();
+        entityplayer.x().getTracker().untrackPlayer(entityplayer);
+        entityplayer.x().getPlayerChunkMap().removePlayer(entityplayer);
+        
+        playerList.players.remove(entityplayer);
+		Map<String,EntityPlayer>ppn=(Map<String,EntityPlayer>)NMSUtils.getField("playersByName",playerList.getClass().getSuperclass(),playerList);
+        ppn.remove(entityplayer.getName());
+        NMSUtils.setFinalField("playersByName",playerList.getClass().getSuperclass(),playerList,ppn);
+        minecraftServer.getWorldServer(entityplayer.dimension).removeEntity(entityplayer);
+        EntityPlayer entityplayer1 = entityplayer;
+        org.bukkit.World fromWorld = entityplayer.getBukkitEntity().getWorld();
+        entityplayer.viewingCredits = false;
+        entityplayer1.playerConnection = entityplayer.playerConnection;
+        entityplayer1.copyFrom(entityplayer,true);
+        entityplayer1.h(entityplayer.getId());
+        entityplayer1.v(entityplayer);
+        entityplayer1.a(entityplayer.getMainHand());
+        for (String s : entityplayer.getScoreboardTags()) {
+            entityplayer1.addScoreboardTag(s);
+        }
+        location.setWorld(minecraftServer.getWorldServer(entityplayer.dimension).getWorld());
+        entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        worldServer.getChunkProviderServer().getChunkAt((int)entityplayer1.locX >> 4, (int)entityplayer1.locZ >> 4);
+        byte actualDimension = (byte)worldServer.getWorld().getEnvironment().getId();
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(actualDimension, worldServer.getDifficulty(), worldServer.getWorldData().getType(), entityplayer1.playerInteractManager.getGameMode()));
+        entityplayer1.spawnIn(worldServer);
+        entityplayer1.dead = false;
+        entityplayer1.playerConnection.teleport(new Location(worldServer.getWorld(), entityplayer1.locX, entityplayer1.locY, entityplayer1.locZ, entityplayer1.yaw, entityplayer1.pitch));
+        entityplayer1.setSneaking(false);
+        BlockPosition blockPosition1=worldServer.getSpawn();
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1));
+        entityplayer1.playerConnection.sendPacket(new PacketPlayOutExperience(entityplayer1.exp, entityplayer1.expTotal, entityplayer1.expLevel));
+        playerList.b(entityplayer1, worldServer);
+        playerList.f(entityplayer1);
+        if (!entityplayer.playerConnection.isDisconnected()) {
+        	worldServer.getPlayerChunkMap().addPlayer(entityplayer1);
+        	worldServer.addEntity(entityplayer1);
+            playerList.players.add(entityplayer1);
+            ppn=(Map<String,EntityPlayer>)NMSUtils.getField("playersByName",playerList.getClass().getSuperclass(),playerList);
+            ppn.put(entityplayer1.getName(), entityplayer1);
+            NMSUtils.setFinalField("playersByName",playerList.getClass().getSuperclass(),playerList,ppn);
+            Map<UUID,EntityPlayer>j=(Map<UUID,EntityPlayer>)NMSUtils.getField("j",playerList.getClass().getSuperclass(),playerList);
+            j.put(entityplayer1.getUniqueID(), entityplayer1);
+            NMSUtils.setFinalField("j",playerList.getClass().getSuperclass(),playerList,j);
+        }
+        entityplayer1.setHealth(entityplayer1.getHealth());
+        playerList.updateClient(entityplayer);
+        entityplayer.updateAbilities();
+        for (Object o1 : entityplayer.getEffects()) {
+            MobEffect mobEffect = (MobEffect)o1;
+            entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityEffect(entityplayer.getId(), mobEffect));
+        }
+        CriterionTriggers.u.a(entityplayer, ((CraftWorld)fromWorld).getHandle().worldProvider.getDimensionManager(), worldServer.worldProvider.getDimensionManager());
+        if (((CraftWorld)fromWorld).getHandle().worldProvider.getDimensionManager() == DimensionManager.NETHER && worldServer.worldProvider.getDimensionManager() == DimensionManager.OVERWORLD && entityplayer.Q() != null) {
+            CriterionTriggers.B.a(entityplayer, entityplayer.Q());
+        }
+        if (entityplayer.playerConnection.isDisconnected()) {
+            AdvancementDataPlayer advancementdataplayer;
+            playerList.playerFileData.save(entityplayer);
+            ServerStatisticManager serverstatisticmanager = entityplayer.getStatisticManager();
+            if (serverstatisticmanager != null) {
+                serverstatisticmanager.b();
+            }
+            if ((advancementdataplayer = entityplayer.getAdvancementData()) != null) {
+                advancementdataplayer.c();
+            }
+        }
+	}
 	
     public void forceEntitySitting(Entity entity) {
 		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
@@ -338,8 +331,7 @@ implements Handler,Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				sendPlayerPacketsAsync(Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator()
-						,Arrays.asList(new Packet[]{pd,ps}));
+				sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{pd,ps});
 			}
 		}.runTaskLaterAsynchronously(Main.getPlugin(),d);
 	}
@@ -381,8 +373,7 @@ implements Handler,Listener {
 		byte pa=(byte)((int)(p*256.0F/360.0F));
 		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
 		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{el,hr}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{el,hr});
 	}
 	
 	@Override
@@ -412,16 +403,14 @@ implements Handler,Listener {
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{packet}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{packet});
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{tp}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{tp});
 	}
 	
 	@Override
@@ -431,8 +420,7 @@ implements Handler,Listener {
 		double y1=cl.getY()-me.locY;
 		double z1=cl.getZ()-me.locZ;
 		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
-		Iterator<AbstractPlayer> it=Utils.mythicmobs.getEntityManager().getPlayersInRangeSq(BukkitAdapter.adapt(entity.getLocation()),8192).iterator();
-		sendPlayerPacketsAsync(it,Arrays.asList(new Packet[]{vp}));
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{vp});
 	}
 
 	@Override
@@ -442,6 +430,56 @@ implements Handler,Listener {
 				|| e.lastY!=e.locY 
 				|| e.lastZ!=e.locZ) return true;
         return false;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public void aiTargetSelector(LivingEntity entity,String uGoal,LivingEntity target) {
+		World w = entity.getWorld();
+        EntityInsentient e = (EntityInsentient)((CraftLivingEntity)entity).getHandle();
+        EntityLiving tE = null;
+        if (target!=null) {
+        	tE = (EntityLiving)((CraftLivingEntity)entity).getHandle();
+        }
+        Field goalsField;
+        int i=0;
+        String goal=uGoal;
+        String data=null;
+        String data1=null;
+        String[] parse = uGoal.split(" ");
+        if (parse[0].matches("[0-9]*")) {
+        	i=Integer.parseInt(parse[0]);
+    		String[]cpy=new String[parse.length-1];
+    		System.arraycopy(parse,0,cpy,0,0);
+    		System.arraycopy(parse,1,cpy,0,parse.length-1);
+    		parse=cpy;
+        }
+      	if(parse.length>0) {
+       		goal=parse[0];
+       		if (parse.length>1) {
+       			data = parse[1];
+       		}
+       		if (parse.length>2) {
+       			data1 = parse[2];
+       		}
+        }
+		try {
+			goalsField=EntityInsentient.class.getDeclaredField("targetSelector");
+	        goalsField.setAccessible(true);
+	        PathfinderGoalSelector goals=(PathfinderGoalSelector)goalsField.get((Object)e);
+	        switch(goal) {
+	        case "otherteams":
+	        	goals.a(i,new PathfinderGoalOtherTeams((EntityCreature)e,EntityHuman.class,true));
+	        	break;
+	        default:
+	        	List<String>gList=new ArrayList<String>();
+	        	gList.add(uGoal);
+	        	Utils.mythicmobs.getVolatileCodeHandler().aiTargetSelectorHandler(entity, gList);
+	        }
+	        
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -459,16 +497,20 @@ implements Handler,Listener {
         String data1=null;
         String[] parse = uGoal.split(" ");
         if (parse[0].matches("[0-9]*")) {
-        	i = Integer.parseInt(parse[0]);
-        	if (parse.length>1) {
-        		goal = parse[1];
-        		if (parse.length>2) {
-        			data = parse[2];
-        		}
-        		if (parse.length>3) {
-        			data1 = parse[3];
-        		}
-        	}
+        	i=Integer.parseInt(parse[0]);
+    		String[]cpy=new String[parse.length-1];
+    		System.arraycopy(parse,0,cpy,0,0);
+    		System.arraycopy(parse,1,cpy,0,parse.length-1);
+    		parse=cpy;
+        }
+      	if(parse.length>0) {
+       		goal=parse[0];
+       		if (parse.length>1) {
+       			data = parse[1];
+       		}
+       		if (parse.length>2) {
+       			data1 = parse[2];
+       		}
         }
 		try {
 			goalsField = EntityInsentient.class.getDeclaredField("goalSelector");
@@ -578,6 +620,22 @@ implements Handler,Listener {
 	        	}
 	        	break;
 	        }
+	        case "notifycollide": {
+	        	if (e instanceof EntityInsentient) {
+	        		int c=data!=null&&Utils.isNumeric(data)?Integer.parseInt(data):5;
+                    goals.a(i,(PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
+	        	}
+	        	break;
+	        }
+	        case "notifygrow":
+	        case "grownotify": {
+	        	if(e instanceof EntityAgeable) {
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalEntityGrowNotify(e,data));
+	        	} else {
+	        		MythicMobs.error("No ageable entity");
+	        	}
+	        	break;
+	        }
 	        case "returnhome": {
 	        	if (e instanceof EntityCreature) {
 	        		double speed = 1.0d;
@@ -617,7 +675,43 @@ implements Handler,Listener {
 		        		}
 	            	}
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalReturnHome(e,speed,x,y,z,mR,tR,iT));
+	            	break;
 	        	}
+	        }
+	        case "doorsopen": {
+	        	if(e instanceof EntityInsentient) {
+	        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalDoorOpen(e,bl1));
+	        	}
+        		break;
+	        }
+	        case "doorsbreak": {
+	        	if(e instanceof EntityInsentient) {
+	        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalDoorBreak(e,bl1));
+	        	}
+        		break;
+	        }
+	        case "avoidtarget":
+	        case "avoidentity":
+	        	if(data==null||data.isEmpty()) return;
+                float distance=16f;
+                double speed=1.2d;
+	        	MinecraftKey key=new MinecraftKey(data);
+	        	if(EntityTypes.a().contains(key)) {
+	        		if(data1!=null) {
+	        			String[]arr1=data1.split(",");
+	        			if(arr1.length>0) distance=Float.parseFloat(arr1[0]);
+	        			if(arr1.length>1) speed=Double.parseDouble(arr1[1]);
+	        		}
+	        		goals.a(i,(PathfinderGoal)new PathfinderGoalAvoidTarget<>((EntityCreature)e,EntityTypes.b.get(key),distance,1d,speed));
+	        	}
+	        	break;
+	        case "vexa":{
+	        	if (e instanceof EntityInsentient) goals.a(i,(PathfinderGoal)new PathfinderGoalVexA(e));
+	        }
+	        case "vexd":{
+	        	if (e instanceof EntityInsentient) goals.a(i,(PathfinderGoal)new PathfinderGoalVexD(e));
 	        }
 	        default: {
 	        	List<String>gList=new ArrayList<String>();
@@ -631,15 +725,11 @@ implements Handler,Listener {
 	
 	interface PacketReceivingHandler {
 	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p,PacketPlayInFlying packet);
+	    void handle(Player p, PacketPlayInResourcePackStatus packet);
+		void handle(Player p,PacketPlayInPosition packet);
+		void handle(Player p,PacketPlayInFlying packet);
 	    void handle(Player p,PacketPlayInSteerVehicle packet);
 	    void handle(Player p,PacketPlayInBlockDig packet);
-	}
-	
-	public boolean setEntityData(Entity e, String ns) {
-		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e).getHandle();
-		
-		return true;
 	}
 	
 	@Override
@@ -709,7 +799,7 @@ implements Handler,Listener {
             	if (nb3.toString().toLowerCase().contains("id:\"ignore\"")) nb3=nb4;
             	if (!(bl1=nbtA(nb3,nb4,bl1))) break;
             }
-			break;
+			break;	
 		case NBT.TAG_COMPOUND:
             NBTTagCompound nbt1=(NBTTagCompound)nb1;
             NBTTagCompound nbt2=(NBTTagCompound)nb2;
@@ -797,7 +887,7 @@ implements Handler,Listener {
         }
         return b1.equals(b2);
     }
-	
+    
 	@Override
 	public boolean playerIsSleeping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
@@ -832,34 +922,46 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public float getItemCoolDown(Player p) {
+	public float getItemCoolDown(Player p,int i1) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        return eh.getCooldownTracker().a(eh.inventory.getItemInHand().getItem(),0.0f);
+        return eh.getCooldownTracker().a(i1==-1?eh.inventory.getItemInHand().getItem():eh.inventory.getItem(i1).getItem(),0.0f);
 	}
 
 	@Override
-	public boolean setItemCooldown(Player p,int j) {
+	public boolean setItemCooldown(Player p,int j1,int i1) {
         EntityHuman eh=((CraftHumanEntity)p).getHandle();
-        net.minecraft.server.v1_12_R1.Item i=eh.inventory.getItemInHand().getItem();
+        net.minecraft.server.v1_12_R1.Item i=i1==-1?eh.inventory.getItemInHand().getItem():eh.inventory.getItem(i1).getItem();
         if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
         	eh.getCooldownTracker().cooldowns.remove(i);
         };
-       	eh.getCooldownTracker().a(i,j);
+       	eh.getCooldownTracker().a(i,j1);
 		return true;
 	}
 	
 	@Override
 	public void moveto(LivingEntity entity) {
-		net.minecraft.server.v1_12_R1.Entity e=((CraftLivingEntity)entity).getHandle();
+		// empty 
 	}
 	
 	@Override
-	public void setWBWB(Player p,boolean bl1) {
+	public void setWorldborder(Player p,int density,boolean play) {
 		EntityPlayer ep=((CraftPlayer)p).getHandle();
-		WorldBorder wb=ep.world.getWorldBorder();
-		if (bl1) wb=Core.wb;
-  		PacketPlayOutWorldBorder ppw=new PacketPlayOutWorldBorder(wb,EnumWorldBorderAction.INITIALIZE);
-   		ep.playerConnection.sendPacket(ppw);
+		WorldBorder border=ep.world.getWorldBorder();
+		if(play) {
+			border=new WorldBorder();
+			border.world=ep.world.getWorldBorder().world;
+			if(density==0) {
+				border.setCenter(0,0);
+				border.setSize(Integer.MAX_VALUE);
+				border.setWarningDistance(Integer.MAX_VALUE);
+			} else {
+		        border.setCenter(99999,99999);
+		        border.setSize(1);
+		        border.setWarningDistance(1);
+			}
+		}
+   		ep.playerConnection.sendPacket(new PacketPlayOutWorldBorder(border,EnumWorldBorderAction.INITIALIZE));
+   		border=null;
 	}
 
 	@Override
@@ -869,7 +971,126 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public void setMNc(LivingEntity e1,String s1) {
+        EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
+        switch (s1) {
+        	case "FLY":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationFlying(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerFly(ei));
+                break;
+        	case "VEX":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new Navigation(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerVex(ei));
+                break;
+        	case "WALK":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new Navigation(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerMove(ei));
+                break;
+        	case "CLIMB":
+                NMSUtils.setField("navigation",EntityInsentient.class,ei,new NavigationClimb(ei,ei.world));
+                NMSUtils.setField("moveController",EntityInsentient.class,ei,new ControllerMove(ei));
+                break;
+        }
+	}
+	
+	@Override
 	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
 		return null;
 	}
+	
+	@Override
+	public void forceBowDraw(LivingEntity e1, LivingEntity target,boolean bl1) {
+		if (bl1) System.err.println("try to draw bow");
+        EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
+        if (ei instanceof IRangedEntity) {
+        	if (ei.isHandRaised()) {
+        		if (bl1) System.err.println("hand is raised draws bow");
+            	ei.cN();
+        	} else {
+        		if (bl1) System.err.println("hand not raised!");
+                ei.c(EnumHand.MAIN_HAND);
+        	}
+        	
+        }
+		
+	}
+	
+	@Override
+	public int getArmorStrength(LivingEntity e) {
+		EntityLiving e1=(EntityLiving)((CraftLivingEntity)e).getHandle();
+		return e1.getArmorStrength();
+	}
+	
+	@Override
+	public void changeResPack(Player p,String url,String hash) {
+		EntityPlayer player=((CraftPlayer)p).getHandle();
+		player.playerConnection.sendPacket(new PacketPlayOutResourcePackSend(url, hash));
+	}
+	
+	@Override
+	public void forceSpectate(Player player, Entity entity) {
+		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
+        ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
+	}
+	
+	@Override
+	public void clearActiveItem(Player player) {
+		EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
+        entityPlayer.clearActiveItem();
+	}
+	
+	@Override	
+	public void playAnimationPacket(LivingEntity e,Integer[] ints) {
+		EntityLiving living=(EntityLiving)((CraftLivingEntity)e).getHandle();
+		PacketPlayOutAnimation[]packets=new PacketPlayOutAnimation[ints.length];
+		for(int j=0;j<ints.length;j++) {
+			packets[j]=new PacketPlayOutAnimation(living,ints[j]);
+		}
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),packets);
+	}
+
+	@Override
+	public void playAnimationPacket(LivingEntity e, int id) {
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),new PacketPlayOutAnimation[] {new PacketPlayOutAnimation((EntityLiving)((CraftLivingEntity)e).getHandle(),id) });
+	}
+
+	@Override
+	public void sendPlayerToSleep(Player player) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void forceShield(Player player) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void extinguish(LivingEntity e) {
+		net.minecraft.server.v1_12_R1.Entity entity=((CraftLivingEntity)e).getHandle();
+		NMSUtils.setField("fireProof",net.minecraft.server.v1_12_R1.Entity.class,entity,true);
+	}
+	
+	@Override
+	public Vec3D getAimBowTargetPosition(Player bukkit_player,LivingEntity bukkit_target) {
+		return new Vec3D(0,0,0);
+	}
+	
+	@Override
+	public boolean velocityChanged(Entity bukkit_entity) {
+		net.minecraft.server.v1_12_R1.Entity entity=((CraftEntity)bukkit_entity).getHandle();
+        return entity.world.a(entity.getBoundingBox().grow(0.001,0.001,0.001));
+	}
+	
+	@Override
+	public Vec3D getPredictedMotion(Player bukkit_player,LivingEntity bukkit_target,float delta) {
+		EntityLiving target=(EntityLiving)((CraftLivingEntity)bukkit_target).getHandle();
+		EntityPlayer player=((CraftPlayer)bukkit_player).getHandle();
+		
+		double delta_x=target.locX+(target.locX-target.lastX)*delta-player.locX;
+		double delta_y=target.locY+(target.locY-target.lastY)*delta+target.getHeadHeight()-0.15f-player.locY-player.getHeadHeight();
+		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-player.locZ;
+		
+		return new Vec3D(delta_x,delta_y,delta_z);
+	}
+
 }

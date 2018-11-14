@@ -3,9 +3,13 @@ package com.gmail.berndivader.MythicPlayers;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import com.gmail.berndivader.mythicmobsext.Main;
+
 import io.lumine.xikage.mythicmobs.MythicMobs;
 
 public class MythicPlayers {
+	
+	static String pluginName="MythicPlayers";
 
 	public static MythicMobs mythicmobs;
 	private Plugin plugin;
@@ -21,6 +25,7 @@ public class MythicPlayers {
 			this.plugin.getServer().getPluginManager().registerEvents(new MythicPlayerMythicMobsLoadEvent(),
 					this.plugin);
 		}
+		Main.logger.info("using "+pluginName);
 	}
 
 	public static MythicPlayers inst() {

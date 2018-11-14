@@ -10,6 +10,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -82,7 +83,7 @@ ITargetedLocationSkill {
 			grenade.setMetadata("noblkdmg", new FixedMetadataValue(this.plugin, this.breakBlocks));
 			grenade.setMetadata("undotnt", new FixedMetadataValue(this.plugin, this.undotnt));
 			grenade.setMetadata("ueffect", new FixedMetadataValue(this.plugin, this.ueffect));
-			Main.entityCache.add(grenade);
+			EntityCacheHandler.add(grenade);
 		}
 		return true;
 	}

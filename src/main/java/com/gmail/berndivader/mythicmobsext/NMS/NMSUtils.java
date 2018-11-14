@@ -52,7 +52,9 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -223,7 +225,6 @@ public class NMSUtils extends NMSUtil {
 		case SUNSET: // Use same as 4x3
 
 			// 4x3
-		case DONKEYKONG:
 		case SKELETON:
 			if (facing == BlockFace.WEST)
 				return loc.getBlock().getLocation().add(0, 0, -1);
@@ -244,7 +245,6 @@ public class NMSUtils extends NMSUtil {
 		case FIGHTERS: // Use same as 4x4
 
 			// 4x4
-		case BURNINGSKULL:
 		case PIGSCENE:
 		case POINTER:
 			if (facing == BlockFace.WEST)
@@ -338,6 +338,21 @@ public class NMSUtils extends NMSUtil {
 		}
 		return armorStand;
 	}
+	
+    public static Entity createEntity(Location location,EntityType entityType) {
+    	Entity bukkitEntity=null;
+    	try {
+    		Class<? extends Entity>entityClass=entityType.getEntityClass();
+    		Object newEntity=class_CraftWorld_createEntityMethod.invoke(location.getWorld(),location,entityClass);
+    		if (newEntity!=null) {
+    			bukkitEntity=getBukkitEntity(newEntity);
+    			if (bukkitEntity==null||!entityClass.isAssignableFrom(bukkitEntity.getClass())) return null;
+    		}
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    	return bukkitEntity;
+    }	
 
 	public static boolean addToWorld(World world, Entity entity, CreatureSpawnEvent.SpawnReason reason) {
 		try {
@@ -1334,6 +1349,16 @@ public class NMSUtils extends NMSUtil {
 		}
 		return null;
 	}
+	
+	public static void saveLivingNBT(Entity e) {
+		Object o1=getHandle(e);
+		Object o2=getEntityData(e);
+		try {
+			class_EntityLiving_writeNBTMethod.invoke(o1,o2);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+			e1.printStackTrace();
+		}
+	}
 
 	public static boolean setAbsAmount(Entity e, float f) {
 		try {
@@ -1404,4 +1429,95 @@ public class NMSUtils extends NMSUtil {
 		return v3;
 	}
 	
+	public static Object getField(String s1,Class<?>cl1,Object o1) {
+		Object o2=null;
+		try {
+			Field f1=cl1.getDeclaredField(s1);
+			f1.setAccessible(true);
+			o2=f1.get(o1);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return o2;
+	}
+	
+	public static void setField(String s1,Class<?>cl1,Object o1,Object o2) {
+        try {
+            Field f1=cl1.getDeclaredField(s1);
+            f1.setAccessible(true);
+			f1.set(o1,o2);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void setFinalField(String s1,Class<?>cl1,Object o1,Object o2) {
+        try {
+            Field f1=cl1.getDeclaredField(s1);
+            f1.setAccessible(true);
+            Field f2=Field.class.getDeclaredField("modifiers");
+            f2.setAccessible(true);
+            f2.setInt(f1,f2.getModifiers()&~Modifier.FINAL);
+			f1.set(o1,o2);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void setField(Object instance,String name,Object value) {
+		if(instance==null) return;
+		Field field;
+		try {
+			field = instance.getClass().getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(instance, value);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static Object getField(Class<?> clazz, String name, Object instance) {
+		Object o1=null;
+		try {
+			Field field=clazz.getDeclaredField(name);
+			field.setAccessible(true);
+			o1=field.get(instance);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+			ex.printStackTrace();
+		}
+		return o1;
+	}
+	
+	public static Method getMethod(Class<?> clazz,String name){
+		for (Method m:clazz.getDeclaredMethods()){
+			if (m.getName().equals(name)) return m;
+		}
+		return null;
+	}	
+	
+    public static void setMeta(org.bukkit.inventory.ItemStack is,String s1,String s2) {
+    	Object o1=getTag(getHandle(is));
+    	if (o1==null) return;
+    	try {
+    		if (s2==null||s2.length()==0) {
+    			class_NBTTagCompound_removeMethod.invoke(o1);
+    		} else {
+    			class_NBTTagCompound_setStringMethod.invoke(o1,s1,s2);
+    		}
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    }
+    
+    public static String getMeta(org.bukkit.inventory.ItemStack is,String s1) {
+    	Object o1=getTag(getHandle(is));
+    	if (o1==null||!class_NBTTagCompound.isInstance(o1)) return null;
+    	String s2="";
+    	try {
+    		s2=(String)class_NBTTagCompound_getStringMethod.invoke(o1,s1);
+    	} catch (Throwable ex) {
+    		ex.printStackTrace();
+    	}
+    	return s2;
+    }
 }

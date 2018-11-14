@@ -5,14 +5,12 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.ParticleMaker;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -70,24 +68,7 @@ ITargetedLocationSkill {
 		Location l2 = sl.clone().add(0.0, this.yOffset, 0.0);
 		for (int i = 0; i < c; ++i) {
 			l2.add(v);
-			if (this.directional) {
-				this.playDirectionalParticleEffect(sl, l, l2);
-				continue;
-			}
 			this.playParticleEffect(sl, l2);
 		}
 	}
-
-	protected void playDirectionalParticleEffect(Location origin, Location target, Location spawn) {
-		Vector direction = this.directionReversed ? origin.toVector().subtract(target.clone().toVector()).normalize()
-				: target.toVector().subtract(origin.clone().toVector()).normalize();
-		for (int i = 0; i < this.amount; ++i) {
-			Location ln = spawn.clone().add(0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0,
-					this.vSpread + MythicMobs.r.nextDouble() * this.vSpread * 2.0,
-					0.0f - this.hSpread + MythicMobs.r.nextDouble() * this.hSpread * 2.0);
-			new ParticleMaker.ParticlePacket(this.strParticle, direction, this.pSpeed, this.amount, true).send(ln,
-					this.viewDistance);
-		}
-	}
-
 }

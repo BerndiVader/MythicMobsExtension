@@ -93,6 +93,7 @@ ITargetedEntitySkill {
 	private ItemHolding holding;
 	private int pd;
 	private int p;
+	boolean c;
 	
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -127,6 +128,7 @@ ITargetedEntitySkill {
 		}
 		this.pd=mlc.getInteger(new String[] { "pickupdelay", "pd" }, 20);
 		this.p=mlc.getInteger(new String[] { "pieces", "amount", "a", "p" }, 1);
+		this.c=mlc.getBoolean(new String[] {"clear","nodrop","nd"},false);
 	}
 
 	@Override
@@ -158,53 +160,44 @@ ITargetedEntitySkill {
 						iis.addAll(Arrays.asList(e.getEquipment().getArmorContents()));
 					}
 				}
-				checkContentAndDrop(iis,entry,l,this.pd);
+				checkContentAndDrop(iis,entry,l,this.pd,c);
 			}
 		}
 		return true;
 	}
 	
-	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd) {
+	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd,boolean c) {
 		Collections.shuffle(i);
+		String ll;
 		for(ListIterator<ItemStack>it=i.listIterator();it.hasNext();) {
 			ItemStack is = it.next();
 			if (is==null||is.getType().equals(Material.AIR)) continue;
 			int a=is.getAmount()<entry.amount?is.getAmount():entry.amount;
 			if (entry.isMaterialAny() || entry.material.equals(is.getType())) {
-				if (entry.lore.equals("ANY")) {
-					ItemStack ti=is.clone();
-					ti.setAmount(a);
-					Item di=l.getWorld().dropItem(l,ti);
-					di.setPickupDelay(pd);
-					if (is.getAmount()<=entry.amount) {
-						is.setAmount(0);
-						is.setType(Material.AIR);
-					} else {
-						is.setAmount(is.getAmount()-a);
-					}
-					return true;
-				}
+				if (entry.lore.equals("ANY")) return spawnItem(is,entry,l,pd,a,c);
 				if (is.hasItemMeta() && is.getItemMeta().hasLore()) {
 					for(Iterator<String>it1=is.getItemMeta().getLore().iterator();it1.hasNext();) {
-						String ll=it1.next();
-						if (ll.contains(entry.lore)) {
-							ItemStack ti=is.clone();
-							ti.setAmount(a);
-							Item di=l.getWorld().dropItem(l,ti);
-							di.setPickupDelay(pd);
-							if (is.getAmount()<=entry.amount) {
-								is.setAmount(0);
-								is.setType(Material.AIR);
-							} else {
-								is.setAmount(is.getAmount()-a);
-							}
-							return true;
-						}
-					}
+						if ((ll=it1.next()).contains(entry.lore)) return spawnItem(is,entry,l,pd,a,c); 					}
 				}
 
 			}
 		}
 		return false;
+	}
+	
+	static boolean spawnItem(ItemStack is,ItemHolding entry,Location l,int pd,int a,boolean c) {
+		ItemStack ti=is.clone();
+		ti.setAmount(a);
+		if (!c) {
+			Item di=l.getWorld().dropItem(l,ti);
+			di.setPickupDelay(pd);
+		}
+		if (is.getAmount()<=entry.amount) {
+			is.setAmount(0);
+			is.setType(Material.AIR);
+		} else {
+			is.setAmount(is.getAmount()-a);
+		}
+		return true;
 	}
 }

@@ -34,7 +34,7 @@ INoTargetSkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
-		String f=SkillString.parseMobVariables(this.faction,data.getCaster(),target,data.getTrigger());
+		String f=Utils.parseMobVariables(this.faction,data,data.getCaster().getEntity(),target,null);
 		if (am!=null) am.setFaction(f);
 		return true;
 	}

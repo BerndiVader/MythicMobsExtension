@@ -1,28 +1,36 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.berndivader.mythicmobsext.events.MythicMobsExtItemDropEvent;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.drops.DropManager;
-import io.lumine.xikage.mythicmobs.drops.MythicDropTable;
+import io.lumine.xikage.mythicmobs.drops.Drop;
+import io.lumine.xikage.mythicmobs.drops.DropMetadata;
+import io.lumine.xikage.mythicmobs.drops.IIntangibleDrop;
+import io.lumine.xikage.mythicmobs.drops.IItemDrop;
+import io.lumine.xikage.mythicmobs.drops.IMessagingDrop;
+import io.lumine.xikage.mythicmobs.drops.IMultiDrop;
+import io.lumine.xikage.mythicmobs.drops.InvalidDrop;
+import io.lumine.xikage.mythicmobs.drops.LootBag;
+import io.lumine.xikage.mythicmobs.drops.droppables.ExperienceDrop;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
@@ -35,73 +43,132 @@ SkillMechanic
 implements 
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
-	private String itemtype;
-	private String dropname;
-	private String amount;
-	private boolean stackable;
-	private boolean shuffle;
-
-	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
+	String[]tags;
+	String str_types;
+	String dropname;
+	boolean tag,give,stackable,silent;
+	String amount;
+	
+ 	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.itemtype=mlc.getString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },null);
-		this.dropname=mlc.getString(new String[] { "dropname", "customname", "name", "n" },null);
-		this.amount=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
+		this.str_types=mlc.getString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },"");
+		this.tags=mlc.getString(new String[] {"tags","tag"},"").split(",");
+		this.silent=mlc.getBoolean("silent",false);
+		this.tag=tags[0].length()>0;
+		this.give=mlc.getBoolean("give",false);
 		this.stackable=mlc.getBoolean(new String[] { "stackable", "sa" },true);
-		this.shuffle=mlc.getBoolean(new String[] { "shuffle", "s" },false);
 	}
 	
 	@Override
-	public boolean castAtLocation(SkillMetadata data, AbstractLocation ltarget) {
-		return a(data,null,ltarget);
-	}
-
-	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity etarget) {
-		return a(data,etarget,null);
-	}
-	
-	private boolean a(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
-		ActiveMob am=(ActiveMob)data.getCaster();
-		if (this.itemtype==null||am==null) return false;
-		ArrayList<ItemStack>drops=createItemStack(this.itemtype,this.dropname,Utils.randomRangeInt(amount),this.stackable,this.shuffle,am,e1==null?data.getTrigger():e1);
-		LivingEntity trigger=data.getTrigger()==null?null:(LivingEntity)data.getTrigger().getBukkitEntity();
-		MythicMobsExtItemDropEvent e=new MythicMobsExtItemDropEvent(am,trigger,drops);
-        Bukkit.getServer().getPluginManager().callEvent(e);
-		if (e.isCancelled()) return false;
-		drops=e.getDrops();
-		dropItems(drops,e1!=null?e1.getBukkitEntity().getLocation():BukkitAdapter.adapt(l1));
+	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+		castAtEntity(data,data.getTrigger());
+		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),null,target).split(",");
+		LootBag loot=makeLootBag(data,types,data.getTrigger(),tag,tags,this.stackable);
+		giveOrDrop(BukkitAdapter.adapt(target),null,loot,give,tag,stackable,tags,silent);
 		return true;
 	}
-
-	private static ArrayList<ItemStack> createItemStack(String itemtype, String dropname, int amount, boolean stackable, boolean bl1,
-			ActiveMob dropper, AbstractEntity trigger) {
-		DropManager dropmanager=Utils.mythicmobs.getDropManager();
-		Optional<MythicDropTable>maybeDropTable=dropmanager.getDropTable(itemtype);
-		ArrayList<ItemStack>loot=new ArrayList<>();
-		MythicDropTable dt;
-		if (maybeDropTable.isPresent()) {
-			dt=maybeDropTable.get();
-		} else {
-			List<String>droplist=new ArrayList<>();
-			droplist.add(itemtype);
-			dt=new MythicDropTable(droplist,null,null,null,null);
-		}
-		if (bl1) Collections.shuffle(dt.strDropItems);
-		for (int a=0;a<amount;a++) {
-			dt.parseTable(dropper,trigger);
-			for (ItemStack is:dt.getDrops()) {
-				if (dropname!=null) is.getItemMeta().setDisplayName(dropname);
-				loot.add(is);
+	
+ 	@Override
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),target,null).split(",");
+ 		LootBag loot=makeLootBag(data,types,target,tag,tags,this.stackable);
+ 		if(target.isPlayer()) {
+ 			Player player=(Player)target.getBukkitEntity();
+ 			if(player.isOnline()) giveOrDrop(player.getLocation(),player,loot,give,tag,stackable,tags,silent);
+ 		} else {
+ 			giveOrDrop(target.getBukkitEntity().getLocation(),null,loot,give,tag,stackable,tags,silent);
+ 		}
+ 		return true;
+	}
+ 	
+ 	private static LootBag makeLootBag(SkillMetadata data,String[]types,AbstractEntity target,boolean tag,String[]tags,boolean stackable) {
+ 		LootBag loot=new LootBag(new DropMetadata(data.getCaster(),target));
+		Map<Class,Drop>intangibleDrops=new HashMap<Class,Drop>();
+		List<Drop>itemDrops=new ArrayList<Drop>();
+		
+		for(int i1=0;i1<types.length;i1++) {
+			String item=types[i1].replaceAll(":"," ");
+			String arr1[]=item.split(" ");
+			Drop drop=Drop.getDrop(item);
+			if(drop instanceof InvalidDrop) continue;
+			
+			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);
+			drop.setAmount(amount);
+			
+			if(drop instanceof IItemDrop) {
+				itemDrops.add(drop);
+			} else if(drop instanceof IMultiDrop) {
+				LootBag loot1=((IMultiDrop)drop).get(new DropMetadata(data.getCaster(),target));
+				for(Drop d1:loot1.getDrops()) {
+					if(d1 instanceof IItemDrop) {
+						itemDrops.add(d1);
+					} else {
+						intangibleDrops.merge(d1.getClass(),d1,(o,n)->o.addAmount(n));
+					}
+				}
+			} else {
+				intangibleDrops.merge(drop.getClass(),drop,(o,n)->o.addAmount(n));
 			}
 		}
-		return loot;
-	}
-
-	private static void dropItems(ArrayList<ItemStack> drops, Location l) {
-		World w=l.getWorld();
-		for (ItemStack is:drops) {
-			if (is!=null&&is.getType()!=Material.AIR) w.dropItem(l,is);
+		
+		loot.setLootTable(itemDrops);
+		loot.setLootTableIntangible(intangibleDrops);
+		
+ 		return loot;
+ 	}
+ 	
+ 	static ItemStack createItemStack(ItemStack i,boolean tag,boolean stackable,String[]tags) {
+ 		ItemStack is=new ItemStack(i);
+		if(tag) {
+	 		is=new ItemStack(NMSUtil.makeReal(i));
+			for(int i2=0;i2<tags.length;i2++) {
+				String[]arr2=tags[i2].split(":");
+				NMSUtils.setMeta(is,arr2[0],arr2.length>1?arr2[1]:is.getType().toString());
+			}
 		}
-	}
+		if(!stackable) {
+	 		is=new ItemStack(NMSUtil.makeReal(is));
+			UUID uuid=UUID.randomUUID();
+			String most=Long.toString(uuid.getMostSignificantBits()),least=Long.toString(uuid.getLeastSignificantBits());
+			NMSUtils.setMeta(is,"RandomMost",most);
+			NMSUtils.setMeta(is,"RandomLeast",least);
+		}
+		return is;
+ 	}
+ 	
+    static void giveOrDrop(Location l,Player player,LootBag loot,boolean give,boolean tag,boolean stackable,String[]tags,boolean silent) {
+    	boolean isPresent=player!=null;
+        HashMap<IMessagingDrop,Double>msgDrops=new HashMap<IMessagingDrop,Double>();
+        World w=l.getWorld();
+        for (Drop drop:loot.getDrops()) {
+            if (drop instanceof IItemDrop) {
+                ItemStack is=createItemStack(BukkitAdapter.adapt(((IItemDrop)drop).getDrop(loot.getMetadata())),tag,stackable,tags);
+            	if(give&&isPresent&&player.getInventory().firstEmpty()>-1) {
+                    player.getInventory().addItem(new ItemStack(is));
+            	} else {
+            		w.dropItem(l,is);
+            	}
+            } else if (drop instanceof ExperienceDrop) {
+                if(isPresent&&give) {
+                	player.giveExp((int)drop.getAmount());
+                }else {
+                	ExperienceOrb exp=(ExperienceOrb)w.spawnEntity(l, EntityType.EXPERIENCE_ORB);
+                	exp.setExperience((int)drop.getAmount());
+                }
+                
+            } else if (drop instanceof IIntangibleDrop) {
+                if(isPresent) ((IIntangibleDrop)drop).giveDrop(BukkitAdapter.adapt(player),loot.getMetadata());
+            } 
+            if(drop instanceof IMessagingDrop) {
+            	msgDrops.merge((IMessagingDrop)drop,drop.getAmount(),(n,o)->n+o);
+            }
+        }
+        if (isPresent&&!silent&&msgDrops.size()>0) {
+            for (Map.Entry<IMessagingDrop,Double>entry:msgDrops.entrySet()) {
+                player.sendMessage(((IMessagingDrop)entry.getKey()).getRewardMessage(loot.getMetadata(),(Double)entry.getValue()));
+            }
+        }
+    }
+ 	
 }

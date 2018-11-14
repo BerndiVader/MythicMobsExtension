@@ -22,6 +22,8 @@ IEntityCondition {
 		this.c=mlc.getString(new String[]{"vc","c"},"");
 		if (c.startsWith("\"")&&c.endsWith("\"")) {
 			this.c=SkillString.parseMessageSpecialChars(this.c.substring(1,this.c.length()-1));
+		} else {
+			this.c=c.replaceAll("\\(","{").replaceAll("\\)","}");
 		}
 	}
 

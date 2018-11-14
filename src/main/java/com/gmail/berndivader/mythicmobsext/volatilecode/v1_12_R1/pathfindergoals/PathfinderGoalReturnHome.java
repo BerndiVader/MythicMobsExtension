@@ -97,7 +97,7 @@ public class PathfinderGoalReturnHome extends PathfinderGoal {
 	
 	public void e() {
 		d.getControllerLook().a(v.x,v.y,v.z,10.0F,d.N());
-		if (--h<=0) {
+		if (h--<=0) {
 			h=10;
 			if (!g.a(v.x,v.y,v.z,f)
 					&& (!d.isLeashed()) && (!d.isPassenger())

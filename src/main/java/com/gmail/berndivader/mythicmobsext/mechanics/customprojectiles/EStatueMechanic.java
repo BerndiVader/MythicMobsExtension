@@ -15,9 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -62,7 +63,9 @@ ITargetedLocationSkill {
     		hitNonPlayers=false,
     		hitTargetOnly=false,
     		noAI=true,
-    		facedir=false;
+    		facedir=false,
+    		invunerable,
+    		lifetime;
 
     public EStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -91,7 +94,10 @@ ITargetedLocationSkill {
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.noAI=mlc.getBoolean("noai",true);
         this.facedir=mlc.getBoolean("facedir",false);
-		if (this.onTickSkillName != null) {
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+
+        if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
 		if (this.onHitSkillName != null) {
@@ -112,7 +118,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
     }
@@ -123,7 +129,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
 	}
@@ -132,7 +138,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,facedir,invulnerable,lifetime;
         private SkillMetadata data;
         private Entity entity,target;
         private SkillCaster caster;
@@ -158,13 +164,15 @@ ITargetedLocationSkill {
             this.data = data;
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
-            this.target=target.getBukkitEntity();
+            this.target=islocationtarget?null:target.getBukkitEntity();
             this.owner=this.caster.getEntity().getBukkitEntity();
-            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
+            this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
             this.yOffset=EStatueMechanic.this.YOffset;
             this.sOffset=EStatueMechanic.this.sOffset;
             this.fOffset=EStatueMechanic.this.fOffset;
             this.facedir=EStatueMechanic.this.facedir;
+            this.invulnerable=EStatueMechanic.this.invunerable;
+            this.lifetime=EStatueMechanic.this.lifetime;
             this.count=0;
             if (EStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -179,11 +187,12 @@ ITargetedLocationSkill {
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
             this.entity=this.currentLocation.getWorld().spawnEntity(this.currentLocation,EStatueMechanic.this.material);
-            Main.entityCache.add(this.entity);
+            EntityCacheHandler.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.entity.setInvulnerable(true);
+			this.entity.setInvulnerable(this.invulnerable);
 			this.entity.setGravity(false);
+			this.entity.setSilent(true);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
 			if (this.entity instanceof LivingEntity) ((LivingEntity)this.entity).setAI(!EStatueMechanic.this.noAI);
 			vh.teleportEntityPacket(this.entity);
@@ -265,6 +274,8 @@ ITargetedLocationSkill {
             if (!this.islocationtarget) {
             	double x = this.currentLocation.getX();
             	double z = this.currentLocation.getZ();
+    			Location l=this.owner.getLocation();
+    			l.setPitch(0f);
             	Vector soV=Utils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
             	Vector foV=Utils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
             	x+=soV.getX()+foV.getX();
@@ -285,7 +296,7 @@ ITargetedLocationSkill {
             			currentLocation.getYaw(),
             			this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 

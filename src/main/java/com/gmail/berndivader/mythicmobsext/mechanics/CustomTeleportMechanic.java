@@ -31,7 +31,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
@@ -96,8 +95,7 @@ ITargetedLocationSkill {
 	private boolean doMechanic(SkillMetadata data, Object target) {
 		String targeter = this.stargeter;
 		if (target.getClass().equals(BukkitEntity.class)||target.getClass().equals(BukkitPlayer.class)) {
-			targeter = SkillString.parseMobVariables(this.stargeter, data.getCaster(), (AbstractEntity) target,
-					data.getTrigger());
+			targeter=Utils.parseMobVariables(this.stargeter,data,data.getCaster().getEntity(),(AbstractEntity)target,null);
 			this.entityTarget = (AbstractEntity) target;
 			this.startLocation = ((AbstractEntity) target).getLocation();
 		} else {

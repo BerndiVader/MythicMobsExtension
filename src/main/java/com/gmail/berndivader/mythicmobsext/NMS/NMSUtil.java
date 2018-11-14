@@ -1131,15 +1131,19 @@ public class NMSUtil {
         return null;
     }
 
-    public static Object getTag(Object mcItemStack) {
-        Object tag = null;
-        try {
-            tag = class_ItemStack_tagField.get(mcItemStack);
+    protected static Object getTag(Object o1) {
+    	Object o2;
+    	try {
+    		o2=class_ItemStack_tagField.get(o1);
+            if (o2==null) {
+                class_ItemStack_tagField.set(o1,class_NBTTagCompound.newInstance());
+                o2=class_ItemStack_tagField.get(o1);
+            }
         } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-        return tag;
-    }
+        	o2=null;
+    	}
+    	return o2;
+    }    
 
     protected static Object getNMSCopy(ItemStack stack) {
         Object nms = null;

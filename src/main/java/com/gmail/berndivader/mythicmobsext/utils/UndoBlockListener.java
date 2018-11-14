@@ -86,12 +86,11 @@ public class UndoBlockListener implements Listener {
 			}
 			Collections.shuffle(blocks);
 			new BukkitRunnable() {
-				int i=-1;
+				int i=0;
 				@Override
 				@SuppressWarnings("deprecation")
 				public void run() {
 					if (i<blocks.size()) {
-						i++;
 						BlockState bs = blocks.get(i);
 						bs.getBlock().setType(bs.getType());
 						bs.getBlock().setData(bs.getBlock().getData());
@@ -102,6 +101,7 @@ public class UndoBlockListener implements Listener {
 						blocks.clear();
 						this.cancel();
 					}
+					i++;
 				}
 			}.runTaskTimer(Main.getPlugin(),utime,1);
 		}

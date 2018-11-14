@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
@@ -62,7 +63,9 @@ ITargetedLocationSkill {
     		hitTarget,
     		hitPlayers,
     		hitNonPlayers,
-    		hitTargetOnly;
+    		hitTargetOnly,
+    		invunerable,
+    		lifetime;
 
     public MStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -89,6 +92,9 @@ ITargetedLocationSkill {
         this.hitTarget = mlc.getBoolean(new String[] {"hittarget","ht"}, true);
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.facedir=mlc.getBoolean("facedir",false);
+        this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+        
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
 		}
@@ -110,7 +116,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
     }
@@ -121,7 +127,7 @@ ITargetedLocationSkill {
             return true;
         }
         catch (Exception ex) {
-        	System.err.println(ex.getMessage());
+        	ex.printStackTrace();
             return false;
         }
 	}
@@ -130,7 +136,7 @@ ITargetedLocationSkill {
     implements IParentSkill,
     Runnable {
     	private Handler vh;
-        private boolean cancelled,useOffset,iYaw,islocationtarget;
+        private boolean cancelled,useOffset,iYaw,islocationtarget,invulnerable,lifetime;
         private SkillMetadata data;
         private ActiveMob am;
         private SkillCaster caster;
@@ -152,15 +158,17 @@ ITargetedLocationSkill {
         private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
+            this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
             this.caster = data.getCaster();
             this.owner=this.caster.getEntity().getBukkitEntity();
-            this.currentLocation=this.caster.getEntity().getBukkitEntity().getLocation();
             this.yOffset=MStatueMechanic.this.YOffset;
             this.sOffset=MStatueMechanic.this.sOffset;
             this.fOffset=MStatueMechanic.this.fOffset;
+            this.invulnerable=MStatueMechanic.this.invunerable;
+            this.lifetime=MStatueMechanic.this.lifetime;
             this.count=0;
             if (MStatueMechanic.this.YOffset != 0.0f) {
                 this.currentLocation.setY(this.currentLocation.getY()+this.yOffset);
@@ -176,10 +184,11 @@ ITargetedLocationSkill {
             this.immune=new HashMap<LivingEntity,Long>();
             this.am=MStatueMechanic.this.material.spawn(BukkitAdapter.adapt(this.currentLocation),0);
             this.entity=this.am.getEntity().getBukkitEntity();
-            Main.entityCache.add(this.entity);
+            this.am.setOwner(this.caster.getEntity().getUniqueId());
+            EntityCacheHandler.add(this.entity);
 			this.entity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.entity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
-			this.entity.setInvulnerable(true);
+			this.entity.setInvulnerable(this.invulnerable);
 			this.entity.setGravity(false);
 			this.entity.setTicksLived(Integer.MAX_VALUE);
 			vh.teleportEntityPacket(this.entity);
@@ -191,6 +200,7 @@ ITargetedLocationSkill {
                 sData.setOrigin(BukkitAdapter.adapt(this.currentLocation.clone()));
                 MStatueMechanic.this.onStartSkill.get().execute(sData);
             }
+            this.oldLocation=this.currentLocation.clone();
             this.taskId=TaskManager.get().scheduleTask(this, 0, 1);
         }
 
@@ -259,6 +269,8 @@ ITargetedLocationSkill {
             if (!this.islocationtarget) {
             	double x = this.currentLocation.getX();
             	double z = this.currentLocation.getZ();
+    			Location l=this.owner.getLocation();
+    			l.setPitch(0f);
             	Vector soV=Utils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
             	Vector foV=Utils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
             	x+=soV.getX()+foV.getX();
@@ -279,7 +291,7 @@ ITargetedLocationSkill {
             			currentLocation.getYaw(),
             			this.currentLocation.getPitch());
             }
-			this.count++;
+			if(this.lifetime) this.count++;
 			this.dur++;
         }
 

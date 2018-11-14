@@ -7,6 +7,8 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -15,17 +17,22 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,6 +47,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
@@ -49,6 +57,8 @@ import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -62,7 +72,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
@@ -73,32 +83,64 @@ public class Utils implements Listener {
 	public static MobManager mobmanager;
 	public static int serverV;
 	public static HashMap<UUID,Vec3D>pl;
-	public static String signal_AISHOOT="AISHOOT";
-	public static String signal_AIHIT="AIHIT";
-	public static String meta_WALKSPEED="MMEXTWALKSPEED";
+	public static final String signal_AISHOOT="AISHOOT";
+	public static final String signal_AIHIT="AIHIT";
+	public static final String meta_WALKSPEED="MMEXTWALKSPEED";
 	public static final String mpNameVar = "mythicprojectile";
 	public static final String noTargetVar = "nottargetable";
-	public static String meta_BOWTICKSTART="mmibowtick";
-	public static String meta_BOWTENSIONLAST="mmibowtensionlast";
-	public static String meta_MYTHICDAMAGE="MythicDamage";
-	public static String meta_LASTDAMAGER="LastDamager";
-	public static String meta_LASTDAMAGECAUSE="LastDamageCause";
-	public static String meta_MMRPGITEMDMG="mmrpgitemdmg";
-	public static String meta_MMEDIGGING="MMEDIGGING";
+	public static final String meta_BOWTICKSTART="mmibowtick";
+	public static final String meta_BOWTENSIONLAST="mmibowtensionlast";
+	public static final String meta_MYTHICDAMAGE="MythicDamage";
+	public static final String meta_DAMAGECAUSE="DamageCause";
+	public static final String meta_LASTDAMAGER="LastDamager";
+	public static final String meta_LASTDAMAGECAUSE="LastDamageCause";
+	public static final String meta_LASTDAMAGEAMOUNT="LastDamageAmount";
+	public static final String meta_MMRPGITEMDMG="mmrpgitemdmg";
+	public static final String meta_MMEDIGGING="MMEDIGGING";
+	public static final String meta_LASTCOLLIDETYPE="MMELASTCOLLIDE";
+	public static final String meta_NCP="NCP";
+	public static final String meta_SPAWNREASON="SPAWNREASON";
+	public static final String meta_CUSTOMSPAWNREASON="SETSPAWNREASON";
+	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
+	public static final String meta_NOSUNBURN="MMENOSUN";
 	public static String scripts;
 	public static String str_PLUGINPATH;
+	public static HashSet<Advancement>advancements;
+	
+	private static BlockFace[]axis={
+			BlockFace.SOUTH,
+			BlockFace.WEST,
+			BlockFace.NORTH,
+			BlockFace.EAST};
+	private static BlockFace[]radial={
+			BlockFace.SOUTH,
+			BlockFace.SOUTH_WEST,
+			BlockFace.WEST,
+			BlockFace.NORTH_WEST,
+			BlockFace.NORTH,
+			BlockFace.NORTH_EAST,
+			BlockFace.EAST,
+			BlockFace.SOUTH_EAST}; 
+
 	private static Handler handler;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
 		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
-		pl=new HashMap<>();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
 	    } catch (Exception e) {
 	    	serverV=11;
 	    }
+		if(Utils.serverV>11) {
+			advancements=new HashSet<>();
+			for(Iterator<Advancement>iter=Bukkit.getServer().advancementIterator();iter.hasNext();) {
+				Advancement adv=iter.next();
+				advancements.add(adv);
+			}
+		}
+		pl=new HashMap<>();
 	}
 	
 	public Utils() {
@@ -108,6 +150,29 @@ public class Utils implements Listener {
 			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
 			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
 		}
+	}
+	
+	@EventHandler
+	public void creeperExplode(EntityExplodeEvent e) {
+		if(e.isCancelled()||(e.getEntityType()!=EntityType.CREEPER)) return;
+		if(mobmanager.isActiveMob(e.getEntity().getUniqueId())) {
+			ActiveMob am=mobmanager.getMythicMobInstance(e.getEntity());
+			if(am.getType().getConfig().getBoolean("BlocksOnFire",false)) {
+				int amount=am.getType().getConfig().getInt("BlocksOnFireAmount",10);
+				World w=e.getLocation().getWorld();
+				Location l=e.getLocation();
+				for(int i=0;i<amount;i++) {
+					FallingBlock fb=w.spawnFallingBlock(l,Material.FIRE,(byte)0);
+					fb.setVelocity(new Vector(UndoBlockListener.getRandomVel(-0.5, 0.5),UndoBlockListener.getRandomVel(0.3, 0.8),UndoBlockListener.getRandomVel(-0.5, 0.5)));
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
+		if (e.isCancelled()) return;
+		e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	
 	@EventHandler
@@ -169,7 +234,9 @@ public class Utils implements Listener {
 			e.setCancelled(ts.getCancelled());
 		}
 	}
-
+	
+	
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
 		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {
@@ -189,6 +256,20 @@ public class Utils implements Listener {
 			e.setCancelled(true);
 		}
 	}
+
+	@EventHandler(priority=EventPriority.LOWEST)
+	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
+		if (e.getEntity() instanceof Player) return;
+		final String[]arr1=e.getEntity().getScoreboardTags().toArray(new String[e.getEntity().getScoreboardTags().size()]);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(int i1=0;i1<arr1.length;i1++) {
+					e.getEntity().removeScoreboardTag(arr1[i1]);
+				}
+			}
+		}.runTaskAsynchronously(Main.getPlugin());
+	}
 	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
@@ -202,7 +283,7 @@ public class Utils implements Listener {
 			}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onMythicCustomRPGItemDamage(EntityDamageByEntityEvent e) {
 		LivingEntity victim = null;
@@ -228,10 +309,15 @@ public class Utils implements Listener {
 			onEntityDamageTaken(e, victim);
 		}
 	}
-
+	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void storeDamageCause(EntityDamageEvent e) {
+		if(e.isCancelled()) return;
 		Entity victim = e.getEntity();
+		if (victim!=null&&victim.hasMetadata(meta_MYTHICDAMAGE)&&victim.hasMetadata(meta_DAMAGECAUSE)) {
+			NMSUtils.setFinalField("cause",EntityDamageEvent.class,e,DamageCause.valueOf(victim.getMetadata(meta_DAMAGECAUSE).get(0).asString()));
+			victim.removeMetadata(meta_DAMAGECAUSE,Main.getPlugin());
+		}
 		DamageCause cause = e.getCause();
 		if (e instanceof EntityDamageByEntityEvent) {
 			Entity damager = Utils.getAttacker(((EntityDamageByEntityEvent) e).getDamager());
@@ -240,6 +326,7 @@ public class Utils implements Listener {
 			victim.removeMetadata(meta_LASTDAMAGER, Main.getPlugin());
 		}
 		victim.setMetadata(meta_LASTDAMAGECAUSE,new FixedMetadataValue(Main.getPlugin(), cause.toString()));
+		victim.setMetadata(meta_LASTDAMAGEAMOUNT,new FixedMetadataValue(Main.getPlugin(),e.getDamage()));
 	}
 	
 	@EventHandler
@@ -260,6 +347,8 @@ public class Utils implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p=e.getPlayer();
+		UUID uuid;
+		if(pl.containsKey(uuid=p.getUniqueId())) pl.remove(uuid);
 		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (p.hasMetadata(StunMechanic.str)) {
 			p.setGravity(true);
@@ -275,13 +364,16 @@ public class Utils implements Listener {
 
 	private static void onEntityDamageTaken(EntityDamageByEntityEvent e, LivingEntity victim) {
 		boolean debug = victim.getMetadata("mmcdDebug").get(0).asBoolean();
-		if (debug)
-			Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
-		if (e.isCancelled()) return;
+		if (debug) Main.logger.info("CustomDamageMechanic cancelled? " + Boolean.toString(e.isCancelled()));
+		if (e.isCancelled()) {
+			if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()) NCPExemptionManager.unexempt((Player)e.getDamager());
+			return;
+		}
 		boolean ignoreArmor = victim.getMetadata("IgnoreArmor").get(0).asBoolean();
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
-		double md = victim.getMetadata("DamageAmount").get(0).asDouble();
-		double df = round(md / e.getDamage(DamageModifier.BASE), 3);
+		boolean strict=victim.getMetadata("DamageStrict").get(0).asBoolean();
+		double md=strict?victim.getMetadata("DamageAmount").get(0).asDouble():e.getDamage();
+		double df = e.getDamage(DamageModifier.BASE)!=0?round(md / e.getDamage(DamageModifier.BASE), 3):0.0d;
 		if (debug) {
 			Main.logger.info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
 			Main.logger.info("Custom MythicDamage.: " + Double.toString(md));
@@ -303,12 +395,18 @@ public class Utils implements Listener {
 		if (victim.getMetadata("PreventKnockback").get(0).asBoolean()) {
 			e.setCancelled(true);
 			victim.damage(damage);
+		} else {
+			e.setDamage(victim.hasMetadata("DamageStrict")&&victim.getMetadata("DamageStrict").get(0).asBoolean()?victim.getMetadata("DamageAmount").get(0).asDouble():damage);
 		}
 		if (debug) Main.logger.info("Finaldamage amount after modifiers: "+Double.toString(damage));
+		if (e.getDamager().getType()==EntityType.PLAYER&&NoCheatPlusSupport.isPresent()&&victim.hasMetadata(meta_NCP)) {
+			NCPExemptionManager.unexempt((Player)e.getDamager());
+			victim.removeMetadata(meta_NCP,Main.getPlugin());
+		}
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause) {
+			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -320,13 +418,18 @@ public class Utils implements Listener {
 		target.setMetadata("IgnoreAbs", new FixedMetadataValue(Main.getPlugin(), ignoreabs));
 		target.setMetadata(meta_MYTHICDAMAGE, new FixedMetadataValue(Main.getPlugin(), true));
 		target.setMetadata("mmcdDebug", new FixedMetadataValue(Main.getPlugin(), debug));
+		target.setMetadata(meta_DAMAGECAUSE, new FixedMetadataValue(Main.getPlugin(),cause.toString()));
+		target.setMetadata("DamageStrict", new FixedMetadataValue(Main.getPlugin(),strict));
 		target.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), false));
 		if (!ignorearmor && Main.hasRpgItems && target instanceof Player) {
 			damage = rpgItemPlayerHit((Player) target, damage);
 		}
-		if (Double.isNaN(damage))
-			damage = 0.001D;
-		round(damage, 3);
+		if (am.getEntity().isPlayer()&&ncp&&NoCheatPlusSupport.isPresent()) {
+			NCPExemptionManager.exemptPermanently((Player)am.getEntity().getBukkitEntity(),CheckType.FIGHT);
+			target.setMetadata(meta_NCP,new FixedMetadataValue(Main.getPlugin(),true));
+		}
+		if (Double.isNaN(damage)) damage = 0.001D;
+		round(damage,3);
 		target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(), damage));
         target.damage(damage, source);
 		if (preventImmunity)
@@ -508,7 +611,7 @@ public class Utils implements Listener {
 		d.multiply(o);
 		return d;
 	}
-
+	
 	@Deprecated
 	public static Vector getSideOffsetVector(float vYa, double hO, boolean iy) {
 		double y = 0d;
@@ -547,9 +650,8 @@ public class Utils implements Listener {
 		yaw = -yaw * 180f / (float) Math.PI;
 		return yaw;
 	}
-	public static Vec2D lookAtVec(Location loc, Location lookat) {
-		loc=loc.clone();
-		lookat=lookat.clone();
+	
+	public static Vec2D lookAtVec(Vector loc, Vector lookat) {
 		float yaw=0.0F;
 		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
 		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
@@ -564,6 +666,26 @@ public class Utils implements Listener {
 			yaw=(float)Math.PI;
 		}
 		float pitch=(float)-Math.atan(dy/dxz);
+		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
+	}
+	
+	public static Vec2D lookAtVec(Location loc, Location lookat) {
+		loc=loc.clone();
+		lookat=lookat.clone();
+		float yaw=0.0f,pitch=yaw;
+		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
+		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
+		if (dx!=0) {
+			if(dx<0) {
+				yaw=(float)(1.5*Math.PI);
+			} else {
+				yaw=(float)(0.5*Math.PI);
+			}
+			yaw=yaw-(float)Math.atan(dz/dx);
+		} else if (dz<0) {
+			yaw=(float)Math.PI;
+		}
+		pitch=(float)-Math.atan(dy/dxz);
 		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
 	}
 
@@ -631,48 +753,6 @@ public class Utils implements Listener {
 		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
 	}
 
-	public static Vector calculateVelocity(Double speed, Location originLocation, Location destination) {
-		double g = 20;
-		double v = speed;
-		Vector relative = destination.clone().subtract(originLocation).toVector();
-		double testAng = launchAngle(originLocation, destination.toVector(), v, relative.getY(), g);
-		double hangTime = hangtime(testAng, v, relative.getY(), g);
-		Vector to = destination.clone().add(originLocation.clone().multiply(hangTime)).toVector();
-		relative = to.clone().subtract(originLocation.toVector());
-		Double dist = Math.sqrt(relative.getX() * relative.getX() + relative.getZ() * relative.getZ());
-		if (dist == 0) {
-			dist = 0.1d;
-		}
-		testAng = launchAngle(originLocation, to, v, relative.getY(), g);
-		relative.setY(Math.tan(testAng) * dist);
-		relative = relative.normalize();
-		v = v + (1.188 * Math.pow(hangTime, 2));
-		return relative.multiply(v / 20.0d);
-	}
-
-	public static double launchAngle(Location from, Vector to, double v, double elev, double g) {
-		Vector victor = from.toVector().subtract(to);
-		Double dist = Math.sqrt(Math.pow(victor.getX(), 2) + Math.pow(victor.getZ(), 2));
-		double v2 = Math.pow(v, 2);
-		double v4 = Math.pow(v, 4);
-		double derp = g * (g * Math.pow(dist, 2) + 2 * elev * v2);
-		if (v4 < derp) {
-			return Math.atan((2 * g * elev + v2) / (2 * g * elev + 2 * v2));
-		}
-		else {
-			return Math.atan((v2 - Math.sqrt(v4 - derp)) / (g * dist));
-		}
-	}
-
-	public static double hangtime(double launchAngle, double v, double elev, double g) {
-		double a = v * Math.sin(launchAngle);
-		double b = -2*g*elev;
-		if(Math.pow(a, 2) + b < 0){
-			return 0;
-		}
-		return (a + Math.sqrt(Math.pow(a, 2) + b)) / g;
-	}
-
     public static double distance2D(Vector f, Vector t) {
         double dx = t.getBlockX() - f.getBlockX();
         double dz = t.getBlockZ() - f.getBlockZ();
@@ -682,6 +762,25 @@ public class Utils implements Listener {
     public static double distance3D(Vector f,Vector t) {
     	double dx=t.getBlockX()-f.getBlockX(),dy=t.getBlockY()-f.getBlockY(),dz=t.getBlockZ()-f.getBlockZ();
     	return dx*dx+dz*dz+dy*dy;
+    }
+    
+    public static double distance3D(double x1,double y1,double z1,double x2,double y2,double z2) {
+    	return Math.pow(x1-x2,2d)+Math.pow(y1-y2,2d)+Math.pow(z1-z2,2d);
+    }
+    public static double distance2D(double x1,double z1,double x2,double z2) {
+    	return Math.pow(x1-x2,2d)+Math.pow(z1-z2,2d);
+    }
+    
+    public static List<Player> getPlayersInRange(Location l,double distance){
+    	List<Player>players=new ArrayList<Player>();
+    	List<Player>list1=l.getWorld().getPlayers();
+    	double x1=l.getBlockX(),y1=l.getBlockY(),z1=l.getBlockZ();
+    	for(int i1=0;i1<list1.size();i1++) {
+    		Player p=list1.get(i1);
+    		Location l1=p.getLocation();
+    		if(distance3D(x1,y1,z1,l1.getBlockX(),l1.getBlockY(),l1.getBlockZ())<=distance) players.add(p);
+    	}
+    	return players;
     }
     
     public static boolean isNumeric(String s) {
@@ -920,4 +1019,8 @@ public class Utils implements Listener {
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
 	}
 	
+	public static BlockFace getBlockFacing(float y,boolean bl1) {
+		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
+	}
+
 }

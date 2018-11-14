@@ -17,23 +17,28 @@ extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private int j;
-
+	int j1;
+	int i1;
 	public SetItemCooldownMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		j(mlc.getInteger(new String[] { "ticks", "t" }, 0));
+		j(mlc.getInteger(new String[] { "ticks","t" }, 0));
+		i(mlc.getInteger(new String[] { "slot", "s" }, -1));
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
 			Player p=(Player)target.getBukkitEntity();
-			return Volatile.handler.setItemCooldown(p,j);
+			return Volatile.handler.setItemCooldown(p,j1,i1);
 		}
 		return false;
 	}
 
-	private void j(int j1) {
-		this.j=j1;
+	void j(int j) {
+		this.j1=j;
+	}
+	
+	void i(int j) {
+		this.i1=j;
 	}
 }

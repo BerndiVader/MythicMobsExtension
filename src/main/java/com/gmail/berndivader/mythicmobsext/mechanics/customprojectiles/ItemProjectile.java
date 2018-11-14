@@ -20,6 +20,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
+import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -53,7 +54,7 @@ ITargetedLocationSkill {
 	public ItemProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
-		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pItem" }, "DIRT").toUpperCase();
+		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
 		this.tickInterval=2;
@@ -231,7 +232,7 @@ ITargetedLocationSkill {
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
-			Main.entityCache.add(this.pItem);
+			EntityCacheHandler.add(this.pItem);
 			this.pItem.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
 				this.pItem.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
@@ -324,6 +325,14 @@ ITargetedLocationSkill {
 						return;
 					}
 					this.currentBounce -= this.bounceReduce;
+					if (ItemProjectile.this.onBounceSkill.isPresent()
+							&& ItemProjectile.this.onBounceSkill.get().isUsable(this.data)) {
+						SkillMetadata sData = this.data.deepClone();
+						sData.setCaster(this.am);
+						sData.setTrigger(sData.getCaster().getEntity());
+						sData.setOrigin(this.currentLocation);
+						ItemProjectile.this.onBounceSkill.get().execute(sData);
+					}
 					this.currentVelocity.setY(this.currentBounce / ItemProjectile.this.ticksPerSecond);
 				}
 				this.currentVelocity.setY(this.currentVelocity.getY()

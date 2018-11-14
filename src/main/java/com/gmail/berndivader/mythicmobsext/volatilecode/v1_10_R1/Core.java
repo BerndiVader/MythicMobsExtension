@@ -74,6 +74,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -611,13 +612,13 @@ Listener {
 	    }
 	}
 	@Override
-	public float getItemCoolDown(Player p) {
+	public float getItemCoolDown(Player p,int i1) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public boolean setItemCooldown(Player p,int j) {
+	public boolean setItemCooldown(Player p,int j1,int i1) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -655,15 +656,6 @@ Listener {
 	}
 
 	@Override
-	public void setWBWB(Player p,boolean bl1) {
-		EntityPlayer ep=((CraftPlayer)p).getHandle();
-		WorldBorder wb=ep.world.getWorldBorder();
-		if (bl1) wb=Core.wb;
-  		PacketPlayOutWorldBorder ppw=new PacketPlayOutWorldBorder(wb,EnumWorldBorderAction.INITIALIZE);
-   		ep.playerConnection.sendPacket(ppw);
-	}
-
-	@Override
 	public boolean addNBTTag(Entity e1, String s) {
 		// TODO Auto-generated method stub
 		return false;
@@ -679,5 +671,113 @@ Listener {
 	public HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMNc(LivingEntity e1,String s1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forceSpectate(Player player, Entity entity, boolean bl1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getArmorStrength(LivingEntity e) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void changeResPack(Player p, String url, String hash) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void forceShield(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clearActiveItem(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Zombie spawnCustomZombie(Location location,boolean sunBurn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void playBlockBreak(int eid, Location location, int stage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playAnimationPacket(LivingEntity e, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playAnimationPacket(LivingEntity e, Integer[] ints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendPlayerToSleep(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void extinguish(LivingEntity e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setWorldborder(Player p, int density, boolean play) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean velocityChanged(Entity bukkit_entity) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

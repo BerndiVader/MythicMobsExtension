@@ -29,10 +29,15 @@ dependencies {
     compileOnly files('./lib/LibsDisguises.jar')
     compileOnly files('./lib/MassiveCore.jar')
     compileOnly files('./lib/MobArena.jar')
-    compileOnly files('./lib/MythicMobs-4.3.2.jar')
+    compileOnly files('./lib/MythicMobs-4.4.0.jar')
     compileOnly files('./lib/rpgitem-reloaded-1.11-v.231.jar')
     compileOnly files('./lib/worldedit-bukkit-6.1.jar')
     compileOnly files('./lib/worldguard-6.2.jar')
+    compileOnly files('./lib/citizens-2.0.22-SNAPSHOT.jar')
+    compileOnly files('./lib/Quests-3.3.2.jar')
+    compileOnly files('./lib/NoCheatPlus.jar')
+    compileOnly files('./lib/ProtocolLib.jar')
+    
 }
 
 processResources {

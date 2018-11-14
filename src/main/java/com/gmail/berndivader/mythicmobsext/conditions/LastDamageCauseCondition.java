@@ -8,6 +8,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name="lastdamagecause",author="BerndiVader")
 public class LastDamageCauseCondition 
@@ -16,20 +17,24 @@ AbstractCustomCondition
 implements 
 IEntityCondition {
 	private String[] attackers,causes;
+	RangedDouble amount;
 
 	public LastDamageCauseCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.attackers=mlc.getString(new String[] { "attacker", "damager" }, "any").toUpperCase().split(",");
 		this.causes=mlc.getString(new String[] { "cause", "c" }, "any").toUpperCase().split(",");
+		this.amount=new RangedDouble(mlc.getString("amount",">0"));
 	}
 	
 	@Override
 	public boolean check(AbstractEntity ae) {
 		boolean match=false;
 		String damager=null,cause=null;
+		double amount=-1337;
 		Entity entity=ae.getBukkitEntity();
 		if (entity.hasMetadata(Utils.meta_LASTDAMAGER)) damager=entity.getMetadata(Utils.meta_LASTDAMAGER).get(0).asString().toUpperCase();
 		if (entity.hasMetadata(Utils.meta_LASTDAMAGECAUSE)) cause=entity.getMetadata(Utils.meta_LASTDAMAGECAUSE).get(0).asString().toUpperCase();
+		if (entity.hasMetadata(Utils.meta_LASTDAMAGEAMOUNT)) amount=entity.getMetadata(Utils.meta_LASTDAMAGEAMOUNT).get(0).asDouble();
 		if (damager!=null&&!attackers[0].equals("ANY")) {
 			for(String s1:attackers) {
 				if(s1.equals(damager)) {
@@ -49,6 +54,6 @@ IEntityCondition {
 				}
 			}
 		}
-		return match;
+		return match&&(amount==-1337||this.amount.equals(amount));
 	}
 }

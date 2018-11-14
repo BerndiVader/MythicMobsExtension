@@ -40,7 +40,7 @@ ITargetedEntitySkill {
 		this.iarr=i();
 	}
 	
-	private static int[]i() {
+	static int[]i() {
 		int[]arr1=new int[41];
 		for(int j1=0;j1<41;j1++) {
 			arr1[j1]=j1;

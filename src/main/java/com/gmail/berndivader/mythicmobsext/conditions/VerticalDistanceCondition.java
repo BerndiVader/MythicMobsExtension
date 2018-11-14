@@ -5,7 +5,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
-import io.lumine.xikage.mythicmobs.util.types.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 @ExternalAnnotation(name="vdistance",author="BerndiVader")
 public class VerticalDistanceCondition

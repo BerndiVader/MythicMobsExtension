@@ -37,7 +37,9 @@ IEntityComparisonCondition {
 		EntityDamageByEntityEvent event = 
 				new EntityDamageByEntityEvent(source.getBukkitEntity(),target.getBukkitEntity(), this.cause, 1);
         Bukkit.getPluginManager().callEvent(event);
-        return !event.isCancelled();
+        boolean bl1=!event.isCancelled();
+        event.setCancelled(true);
+        return bl1;
 	}
 
 }
