@@ -7,20 +7,27 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class WorldGuardDenySpawnFlagCondition 
+public
+class 
+WorldGuardFlagCondition 
 extends 
 AbstractCustomCondition 
-implements 
+implements
 ILocationCondition {
-	private String entities;
+	
+	String flag_name;
+	String args;
 
-	public WorldGuardDenySpawnFlagCondition(String line, MythicLineConfig mlc) {
-		super(line,mlc);
-		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie").toUpperCase();
+	public WorldGuardFlagCondition(String line, MythicLineConfig mlc) {
+		super(line, mlc);
+		
+		flag_name=mlc.getString("flag","mob-spawning");
+		args=mlc.getString("args","");
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return WorldGuardUtils.checkRegionDenySpawnFlagAtLocation(BukkitAdapter.adapt(location), entities);
+		return WorldGuardUtils.checkFlagAtLocation(BukkitAdapter.adapt(location),flag_name,args);
 	}
+
 }

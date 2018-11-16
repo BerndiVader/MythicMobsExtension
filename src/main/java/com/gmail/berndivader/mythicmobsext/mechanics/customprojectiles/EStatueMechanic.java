@@ -114,7 +114,7 @@ ITargetedLocationSkill {
     @Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
         try {
-            new StatueTracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -125,7 +125,7 @@ ITargetedLocationSkill {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
         try {
-            new StatueTracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -134,7 +134,7 @@ ITargetedLocationSkill {
         }
 	}
 
-    private class StatueTracker
+    private class ProjectileRunner
     implements IParentSkill,
     Runnable {
     	private Handler vh;
@@ -150,14 +150,14 @@ ITargetedLocationSkill {
         private double sOffset,fOffset,yOffset;
         private int count,dur;
         
-        public StatueTracker(SkillMetadata data, AbstractEntity target) {
+        public ProjectileRunner(SkillMetadata data, AbstractEntity target) {
         	this(data,target,null);
         }
-        public StatueTracker(SkillMetadata data, AbstractLocation target) {
+        public ProjectileRunner(SkillMetadata data, AbstractLocation target) {
         	this(data,null,target);
         }
 
-        private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
+        private ProjectileRunner(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
             this.cancelled = false;

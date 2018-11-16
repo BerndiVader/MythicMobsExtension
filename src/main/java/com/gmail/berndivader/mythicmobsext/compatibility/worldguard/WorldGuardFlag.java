@@ -9,7 +9,11 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
-public class WorldGuardFlag implements Listener {
+public 
+class
+WorldGuardFlag
+implements 
+Listener {
 	static String pluginName="WorldGuard";
 
 	public WorldGuardFlag() {
@@ -25,6 +29,8 @@ public class WorldGuardFlag implements Listener {
 		} else if (e.getConditionName().toLowerCase().equals("wgdenyspawnflag")) {
 			SkillCondition c = new WorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(c);
+		} else if(e.getConditionName().toLowerCase().equals("worldguardflag")) {
+			e.register(new WorldGuardFlagCondition(e.getConditionName(),e.getConfig()));
 		}
 	}
 }

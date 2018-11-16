@@ -24,7 +24,6 @@ import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlus
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.ProtocolLibSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
-import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
@@ -47,7 +46,6 @@ public class Main extends JavaPlugin {
 	public static EntityCacheHandler entityCacheHandler;
 	public static Random random;
 	public static Integer wgVer;
-	public static WorldGuardFlags wgf;
 	public static FactionsFlags fflags;
 	public static boolean hasRpgItems = false;
 	public static Logger logger;
@@ -112,8 +110,7 @@ public class Main extends JavaPlugin {
 			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
 			if (Config.m_thiefs) thiefs=new Thiefs();
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				if(Utils.serverV<12) {
-					wgf=new WorldGuardFlags();
+				if(Utils.serverV<13) {
 					new WorldGuardFlag();
 				} else {
 					logger.warning("Worldguard for 1.13.x not supported yet!");
@@ -167,7 +164,6 @@ public class Main extends JavaPlugin {
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
-		Main.wgf = null;
 		Main.fflags = null;
 		pluginmanager.disablePlugin(this);
 	}

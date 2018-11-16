@@ -56,7 +56,7 @@ ITargetedLocationSkill {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
-			new ProjectileTracker(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
+			new ProjectileRunner(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
 			this.mythicmobs.handleException(ex);
@@ -69,7 +69,7 @@ ITargetedLocationSkill {
 		return this.castAtLocation(data, target.getLocation().add(0.0, target.getEyeHeight() / 2.0, 0.0));
 	}
 
-	public class ProjectileTracker implements IParentSkill, Runnable {
+	public class ProjectileRunner implements IParentSkill, Runnable {
 		private SkillMetadata data;
 		private boolean cancelled;
 		private SkillCaster am;
@@ -94,7 +94,7 @@ ITargetedLocationSkill {
 		private boolean pFaceDir, targetable, eyedir;
 		private float currentBounce, bounceReduce;
 
-		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
+		public ProjectileRunner(SkillMetadata data, String customItemName, AbstractLocation target) {
 
 			float noise;
 			this.cancelled = false;
