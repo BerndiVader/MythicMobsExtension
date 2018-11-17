@@ -36,7 +36,7 @@ IEntityComparisonCondition {
 		super(line, mlc);
 		this.compareToSelf=mlc.getBoolean(new String[] { "compareself", "cs" }, false);
 		if (!line.toLowerCase().startsWith("hasmetasimple")) {
-			String ms = mlc.getString(new String[] { "metalist", "list", "l" });
+			String ms = mlc.getString(new String[] { "metalist","meta","list", "l" });
 			if (ms.startsWith("\"")&&ms.endsWith("\"")) ms=ms.substring(1,ms.length()-1);
 			ms = SkillString.parseMessageSpecialChars(ms);
 			String metaStrings[]=ms.split("\\|\\|");

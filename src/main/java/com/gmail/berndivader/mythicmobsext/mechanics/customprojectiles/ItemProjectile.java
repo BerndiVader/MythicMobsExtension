@@ -230,6 +230,7 @@ ITargetedLocationSkill {
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
+			i.setDurability(ItemProjectile.this.durability);
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
 			EntityCacheHandler.add(this.pItem);
@@ -240,7 +241,6 @@ ITargetedLocationSkill {
 			this.pItem.setInvulnerable(true);
 			this.pItem.setGravity(false);
 			this.pItem.setPickupDelay(Integer.MAX_VALUE);
-			this.pItem.getItemStack().setDurability(ItemProjectile.this.durability);
 			Volatile.handler.setItemMotion(this.pItem,l, null);
 			Volatile.handler.teleportEntityPacket(this.pItem);
 			Volatile.handler.changeHitBox((Entity)this.pItem,0,0,0);
@@ -274,6 +274,7 @@ ITargetedLocationSkill {
 			}
 			this.oldLocation=this.currentLocation.clone();
 			this.currentLocation.add(this.currentVelocity);
+		
 			if (ItemProjectile.this.hugSurface) {
 				if (this.currentLocation.getBlockX() != this.currentX
 						|| this.currentLocation.getBlockZ() != this.currentZ) {
