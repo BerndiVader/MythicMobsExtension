@@ -86,6 +86,7 @@ import java.util.logging.Level;
  * official release.
  */
 public class CompatibilityUtils extends NMSUtils {
+
     public static boolean USE_MAGIC_DAMAGE = true;
     public static int BLOCK_BREAK_RANGE = 64;
     public static boolean isDamaging = false;

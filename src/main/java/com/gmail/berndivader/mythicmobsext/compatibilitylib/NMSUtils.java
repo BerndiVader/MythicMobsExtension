@@ -67,24 +67,6 @@ public class NMSUtils {
     protected static int WITHER_SKULL_TYPE = 66;
     protected static int FIREWORK_TYPE = 76;
     
-
-    /*
-     * MME Block Start
-     */
-    protected static Field class_Entity_lastXField;
-    protected static Field class_Entity_lastYField;
-    protected static Field class_Entity_lastZField;
-    protected static Field class_Entity_lastPitchField;
-    protected static Field class_Entity_lastYawField;
-    protected static Field class_MinecraftServer_currentTickField;
-    
-    protected static Method class_Entity_getFlagMethod;
-    
-    /*
-     * MME block End
-     */
-    
-
     protected static Class<?> class_Block;
     protected static Class<?> class_ItemStack;
     protected static Class<?> class_NBTBase;
@@ -583,32 +565,6 @@ public class NMSUtils {
             // 1.13 Support
             Class<?> class_MinecraftKey = null;
             Class<?> class_Vec3D = null;
-            
-            
-            /*
-             * MME Block Start
-             */
-            
-            class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
-            class_Entity_lastXField.setAccessible(true);
-            class_Entity_lastYField = class_Entity.getDeclaredField("lastY");
-            class_Entity_lastYField.setAccessible(true);
-            class_Entity_lastZField = class_Entity.getDeclaredField("lastZ");
-            class_Entity_lastZField.setAccessible(true);
-            class_Entity_lastPitchField = class_Entity.getDeclaredField("lastPitch");
-            class_Entity_lastPitchField.setAccessible(true);
-            class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
-            class_Entity_lastYawField.setAccessible(true);
-            
-            class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
-            class_MinecraftServer_currentTickField.setAccessible(true);
-            
-            class_Entity_getFlagMethod=class_Entity.getMethod("getFlag",Integer.TYPE);
-            
-            /*
-             * MME Block End
-             */
-            
             
             
             try {

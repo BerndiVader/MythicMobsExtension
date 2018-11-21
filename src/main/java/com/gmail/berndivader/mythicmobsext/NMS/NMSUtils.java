@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.NMS;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.bukkit.Server;
@@ -16,6 +17,39 @@ NMSUtils
 extends
 CompatibilityUtils
 {
+    protected static Field class_Entity_lastXField;
+    protected static Field class_Entity_lastYField;
+    protected static Field class_Entity_lastZField;
+    protected static Field class_Entity_lastPitchField;
+    protected static Field class_Entity_lastYawField;
+    protected static Field class_MinecraftServer_currentTickField;
+    
+    protected static Method class_Entity_getFlagMethod;
+    
+	public static boolean initialize() {
+		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
+        try {
+			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
+	        class_Entity_lastXField.setAccessible(true);
+	        class_Entity_lastYField = class_Entity.getDeclaredField("lastY");
+	        class_Entity_lastYField.setAccessible(true);
+	        class_Entity_lastZField = class_Entity.getDeclaredField("lastZ");
+	        class_Entity_lastZField.setAccessible(true);
+	        class_Entity_lastPitchField = class_Entity.getDeclaredField("lastPitch");
+	        class_Entity_lastPitchField.setAccessible(true);
+	        class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
+	        class_Entity_lastYawField.setAccessible(true);
+	        
+	        class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
+	        class_MinecraftServer_currentTickField.setAccessible(true);
+	        
+	        class_Entity_getFlagMethod=class_Entity.getMethod("getFlag",Integer.TYPE);
+		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return bool;
+	}
+	
 	/**
 	 * @param e - entity
 	 * @return motion vector - {@link Vec3D}

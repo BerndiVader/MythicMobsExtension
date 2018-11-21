@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.utils.math;
 
-import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-
 /**
  * Various math utility methods.
  */
