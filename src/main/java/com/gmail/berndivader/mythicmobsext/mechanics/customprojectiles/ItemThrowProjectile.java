@@ -100,7 +100,7 @@ ITargetedLocationSkill
         this.stopBlock=mlc.getBoolean("stopblock",false);
         this.gravity=mlc.getBoolean("gravity",true);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
-        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MAX_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
         this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
     }
 
@@ -186,7 +186,7 @@ ITargetedLocationSkill
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
 			this.item.setGravity(ItemThrowProjectile.this.gravity);
-			this.item.getItemStack().setDurability(ItemThrowProjectile.this.durability);
+			if(durability>Short.MIN_VALUE) this.item.getItemStack().setDurability(ItemThrowProjectile.this.durability);
             if (ItemThrowProjectile.this.onStartSkill.isPresent()
             		&&ItemThrowProjectile.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();

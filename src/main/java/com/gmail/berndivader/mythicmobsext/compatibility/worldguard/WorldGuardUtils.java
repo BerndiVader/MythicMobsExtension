@@ -3,11 +3,8 @@ package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -20,13 +17,11 @@ public
 class
 WorldGuardUtils 
 {
-	static WorldGuardPlugin worldguard;
 	static FlagRegistry flag_registery;
 	static String global_name="__global__";
 	
 	static {
-		worldguard=(WorldGuardPlugin)Main.pluginmanager.getPlugin("WorldGuard");
-		flag_registery=worldguard.getFlagRegistry();
+		flag_registery=(FlagRegistry)Reflections.getFlagRegistry();
 	}
 	
 	/**
@@ -37,8 +32,8 @@ WorldGuardUtils
 	 */
 	public static boolean checkFlagAtLocation(Location location, String flag_name, String args) {
 		Flag<?>flag=flag_registery.get(flag_name);
-		Set<ProtectedRegion>regions=worldguard.getRegionContainer().get(location.getWorld()).getApplicableRegions(new Vector(location.getX(),location.getY(),location.getZ())).getRegions();
-		if(regions.size()==0) regions.add(worldguard.getRegionContainer().get(location.getWorld()).getRegion(global_name));
+		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vector(location.getX(),location.getY(),location.getZ()));
+		if(regions.size()==0) regions.add((ProtectedRegion)Reflections.getRegion(location.getWorld(), global_name));
 		boolean bl1=false;
 		switch(flag.getClass().getSimpleName()) {
 			case"StateFlag":
@@ -50,17 +45,14 @@ WorldGuardUtils
 			case"SetFlag":
 				switch(((SetFlag<?>)flag).getType().getClass().getSimpleName()) {
 					case"EntityTypeFlag":
-						EntityType bukkit_entity_type;
 						for(ProtectedRegion region:regions) {
-							Set<EntityType>entitytypes=(Set<EntityType>)region.getFlag(flag);
+							Set<Object>entitytypes=(Set<Object>)region.getFlag(flag);
 							if (entitytypes==null) continue;
-							for(String type:args.split(",")) {
-								try {
-									bukkit_entity_type=EntityType.valueOf(type);
-								} catch (Exception ex) {
-									continue;
+							for(Object o1:entitytypes) {
+								String arr[]=args.split(",");
+								for(int i1=0;i1<arr.length;i1++) {
+									if(arr[i1].equals(Reflections.class_EntityType_getName(o1))) return true;
 								}
-								if (bukkit_entity_type!=null&&entitytypes.contains(bukkit_entity_type)) return true;
 							}
 						}
 						break;

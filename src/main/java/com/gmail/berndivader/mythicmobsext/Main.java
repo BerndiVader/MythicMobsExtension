@@ -110,11 +110,7 @@ public class Main extends JavaPlugin {
 			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
 			if (Config.m_thiefs) thiefs=new Thiefs();
 			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				if(Utils.serverV<13) {
-					new WorldGuardFlag();
-				} else {
-					logger.warning("Worldguard for 1.13.x not supported yet!");
-				}
+				new WorldGuardFlag();
 			}
 			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
 				logger.info("using Factions");

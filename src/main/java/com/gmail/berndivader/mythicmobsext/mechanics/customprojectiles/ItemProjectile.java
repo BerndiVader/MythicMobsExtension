@@ -61,7 +61,7 @@ ITargetedLocationSkill {
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
 		this.tickInterval=2;
 		this.ticksPerSecond=20.0f/this.tickInterval;
-        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MAX_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
 	}
 
 	@Override
@@ -230,7 +230,7 @@ ITargetedLocationSkill {
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
-			i.setDurability(ItemProjectile.this.durability);
+			if(durability>Short.MIN_VALUE) i.setDurability(ItemProjectile.this.durability);
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
 			EntityCacheHandler.add(this.pItem);

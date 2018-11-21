@@ -95,7 +95,7 @@ ITargetedLocationSkill {
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
         this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
-        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MAX_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
         
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
@@ -192,7 +192,7 @@ ITargetedLocationSkill {
 			this.item.setGravity(false);
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
-			this.item.getItemStack().setDurability(IStatueMechanic.this.durability);
+			if(durability>Short.MIN_VALUE) this.item.getItemStack().setDurability(IStatueMechanic.this.durability);
 			vh.teleportEntityPacket(this.item);
 			vh.changeHitBox((Entity)this.item,0,0,0);
             if (IStatueMechanic.this.onStartSkill.isPresent()

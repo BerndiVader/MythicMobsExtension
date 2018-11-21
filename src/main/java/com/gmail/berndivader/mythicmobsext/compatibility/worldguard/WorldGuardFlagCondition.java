@@ -22,7 +22,7 @@ ILocationCondition {
 		super(line, mlc);
 		
 		flag_name=mlc.getString("flag","mob-spawning");
-		args=mlc.getString("args","");
+		args=mlc.getString("args",new String()).toLowerCase();
 	}
 
 	@Override
