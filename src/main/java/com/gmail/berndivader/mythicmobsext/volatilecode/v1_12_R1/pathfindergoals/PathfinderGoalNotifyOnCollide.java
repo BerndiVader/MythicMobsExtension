@@ -3,13 +3,14 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoal
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.events.OnEntityCollideEvent;
+import com.gmail.berndivader.mythicmobsext.events.MythicMobCollideEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -25,16 +26,16 @@ public class PathfinderGoalNotifyOnCollide
 extends PathfinderGoal {
 	int c;
     EntityInsentient e;
-    ActiveMob am;
+    Optional<ActiveMob>am;
     World w;
-    HashMap<UUID, Integer> cd;
+    HashMap<UUID,Integer>cooldown;
 
     public PathfinderGoalNotifyOnCollide(EntityInsentient e2,int i1) {
     	this.c=i1;
         this.e=e2;
-        this.am=Utils.mobmanager.getMythicMobInstance(e.getBukkitEntity());
+        this.am=Optional.ofNullable(Utils.mobmanager.getMythicMobInstance(e.getBukkitEntity()));
         this.w=e2.world;
-        this.cd=new HashMap<>();
+        this.cooldown=new HashMap<>();
     }
 
     public boolean a() {
@@ -42,27 +43,26 @@ extends PathfinderGoal {
     }
 
     public boolean b() {
-        for (Map.Entry<UUID, Integer> ee : this.cd.entrySet()) {
-            int i1=ee.getValue();
+        for (Map.Entry<UUID,Integer>pair:this.cooldown.entrySet()) {
+            int i1=pair.getValue();
             if (i1--<1) {
-                this.cd.remove(ee.getKey());
+                this.cooldown.remove(pair.getKey());
                 continue;
             }
-            ee.setValue(i1);
+            pair.setValue(i1);
         }
         return true;
     }
 
-    @SuppressWarnings("unchecked")
 	public void e() {
         ListIterator<Entity> it1=this.w.getEntities((Entity)this.e,this.e.getBoundingBox()).listIterator();
         while (it1.hasNext()) {
             Entity ee=it1.next();
-            if (this.cd.containsKey(ee.getUniqueID())) continue;
-            this.cd.put(ee.getUniqueID(),this.c);
-            new OnEntityCollideEvent(this.e.getBukkitEntity(),ee.getBukkitEntity());
+            if (this.cooldown.containsKey(ee.getUniqueID())) continue;
+            this.cooldown.put(ee.getUniqueID(),this.c);
+            Main.pluginmanager.callEvent(new MythicMobCollideEvent(am.get(),this.e.getBukkitEntity(),ee.getBukkitEntity()));
             this.e.getBukkitEntity().setMetadata(Utils.meta_LASTCOLLIDETYPE,new FixedMetadataValue(Main.getPlugin(),ee.getBukkitEntity().getType().toString()));
-            if (am!=null) new TriggeredSkill(SkillTrigger.BLOCK,this.am,BukkitAdapter.adapt(ee.getBukkitEntity()),new Pair[0]);
+            if (am.isPresent()) new TriggeredSkill(SkillTrigger.BLOCK,this.am.get(),BukkitAdapter.adapt(ee.getBukkitEntity()),new Pair[0]);
         }
     }
 }

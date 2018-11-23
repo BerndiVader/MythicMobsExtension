@@ -71,16 +71,16 @@ PacketListener {
 		case 28:
 			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
 			if(entity_status.getEntityStatus()==37) {
-				e=entity_status.getEntity(packet_event);
-				if(e!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) Volatile.handler.extinguish((LivingEntity)e);
-				packet_event.setCancelled(true);
+				if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+					Volatile.handler.extinguish((LivingEntity)e);
+					packet_event.setCancelled(true);
+				}
 			}
 			break;
 		case 63:
 			WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-			e=entity_meta.getEntity(packet_event);
-			if(e!=null&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-				List<WrappedWatchableObject> watchables=entity_meta.getMetadata();
+			if((e=entity_meta.getEntity(packet_event))!=null) {
+				List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
 				if(watchables.size()>0) {
 					WrappedWatchableObject watchable=watchables.get(0);
 					if(watchable.getValue() instanceof Byte) {
@@ -90,7 +90,7 @@ PacketListener {
 						packet_event.setPacket(entity_meta.getHandle());
 					}
 				}
-			}
+			};
 			break;
 		}
 	}

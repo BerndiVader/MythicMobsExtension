@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.guardianbeam.GuardianBeam;
 
 public
 class 
@@ -29,8 +30,9 @@ ProtocolLibSupport
 	public ProtocolLibSupport(Plugin plugin) {
 		core=this;
 		this.plugin=plugin;
-		Main.logger.info("using "+pluginName);
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketReader());
+		new GuardianBeam(plugin);
+		Main.logger.info("using "+pluginName);
 	}
 
 	public Plugin plugin() {

@@ -7,21 +7,25 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class FactionsFlagCondition
+public 
+class 
+FactionsRegionCondition
 extends
 AbstractCustomCondition
 implements
 ILocationCondition 
 {
-	String flagName;
+	String[]regions;
+	int size;
 
-	public FactionsFlagCondition(String line, MythicLineConfig mlc) {
+	public FactionsRegionCondition(String line, MythicLineConfig mlc) {
 		super(line,mlc);
-		flagName=mlc.getString(new String[] {"flagtype","flag","f"},"monster").toLowerCase();
+		regions=mlc.getString(new String[] {"regions","region","factions","faction","r","f"},"").toLowerCase().split(",");
+		size=regions.length;
 	}
 
 	@Override
 	public boolean check(AbstractLocation target) {
-		return FactionsSupport.checkRegionFlag(BukkitAdapter.adapt(target),this.flagName);
+		return FactionsSupport.inFaction(BukkitAdapter.adapt(target),regions);
 	}
 }
