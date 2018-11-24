@@ -36,7 +36,7 @@ IPacketReceivingHandler
 	@Override
 	public Packet<?> handle(PacketPlayInArmAnimation packet) {
     	float f1=Volatile.handler.getIndicatorPercentage(player);
-    	player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+    	player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));
 		return packet;
 	}
 

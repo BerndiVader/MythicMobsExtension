@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
@@ -23,7 +24,6 @@ import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlus
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.ProtocolLibSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
-import com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
@@ -65,7 +65,7 @@ public class Main extends JavaPlugin {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					String version=new String("");
+					String version=new String();
 					PluginDescriptionFile pdf = getDescription();
 					try {
 						URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if(ProtocolLibSupport.isPresent()) new ProtocolLibSupport(this);
+			if (pluginmanager.getPlugin("ProtocolLib")!=null) new ProtocolLibSupport(this);
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);

@@ -172,7 +172,7 @@ public class Utils implements Listener {
 				float f1;
 				@Override
 				public void run() {
-					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
+					if (p!=null&&p.isOnline()&&(f1=getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(Main.getPlugin(),f1));
 					} else {
 						this.cancel();

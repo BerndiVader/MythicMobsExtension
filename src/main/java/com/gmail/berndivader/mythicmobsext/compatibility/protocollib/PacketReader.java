@@ -66,7 +66,7 @@ PacketListener {
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
 		Entity e=null;
-//		System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
+		//System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
 		switch(packet_event.getPacketType().getCurrentId()) {
 		case 28:
 			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
@@ -79,7 +79,7 @@ PacketListener {
 			break;
 		case 63:
 			WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-			if((e=entity_meta.getEntity(packet_event))!=null) {
+			if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
 				List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
 				if(watchables.size()>0) {
 					WrappedWatchableObject watchable=watchables.get(0);
