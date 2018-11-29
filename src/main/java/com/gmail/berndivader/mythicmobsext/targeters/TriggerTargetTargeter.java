@@ -11,12 +11,11 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 
 @ExternalAnnotation(name="triggerstarget",author="BerndiVader")
 public class TriggerTargetTargeter
 extends
-IEntitySelector {
+ISelectorEntity {
 	public TriggerTargetTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}

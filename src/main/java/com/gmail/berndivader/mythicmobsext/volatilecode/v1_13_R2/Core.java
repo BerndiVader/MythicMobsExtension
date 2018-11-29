@@ -11,6 +11,7 @@ import net.minecraft.server.v1_13_R2.PacketPlayOutWorldBorder.EnumWorldBorderAct
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
@@ -38,6 +39,9 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeDisplay.AdvancementFrame;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.ControllerFly;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.ControllerVex;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.NavigationClimb;
@@ -1069,6 +1073,11 @@ implements Handler,Listener {
 	@Override
 	public int currentServerTick() {
 		return MinecraftServer.currentTick;
+	}
+	
+	@Override
+	public void sendPlayerAdvancement(Player player,Material material,String title,String description,String task) {
+		new FakeAdvancement(new FakeDisplay(material,title,description,AdvancementFrame.valueOf(task),null)).displayToast(player);
 	}
 
 }

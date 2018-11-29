@@ -514,7 +514,6 @@ public class InventoryUtils extends NMSUtils
         return propertyString;
     }
 
-    @SuppressWarnings("EqualsReference")
     public static boolean isSameInstance(ItemStack one, ItemStack two) {
         return one == two;
     }

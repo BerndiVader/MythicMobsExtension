@@ -37,19 +37,26 @@ import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Pre44MobSpawnEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-public class Main extends JavaPlugin {
+public
+class
+Main
+extends
+JavaPlugin
+{
 	private static Main plugin;
+	private static MythicPlayers mythicplayers;
+	
+	public static PluginManager pluginmanager;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
 	public static EntityCacheHandler entityCacheHandler;
-	public static Random random;
-	public static Integer wgVer;
-	public static boolean hasRpgItems = false;
 	public static Logger logger;
-	public static PluginManager pluginmanager;
+	public static Random random;
+	public static boolean hasRpgItems = false;
 	public static boolean slappyNewBorn = true;
-	private static MythicPlayers mythicplayers;
+	
 	public Thiefs thiefs;
+	
 	
 	public Internals internals;
 	public Externals externals;

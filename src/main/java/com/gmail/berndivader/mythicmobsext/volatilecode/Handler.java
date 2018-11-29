@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.volatilecode;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.ArmorStand;
@@ -69,4 +70,5 @@ public interface Handler {
 	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
 	int currentServerTick();
+	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 }

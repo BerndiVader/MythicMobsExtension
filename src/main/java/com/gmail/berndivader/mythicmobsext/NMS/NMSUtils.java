@@ -17,6 +17,8 @@ NMSUtils
 extends
 CompatibilityUtils
 {
+	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
+	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
     protected static Field class_Entity_lastZField;
@@ -25,10 +27,13 @@ CompatibilityUtils
     protected static Field class_MinecraftServer_currentTickField;
     
     protected static Method class_Entity_getFlagMethod;
+    protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
     
 	public static boolean initialize() {
 		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
         try {
+        	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
+        	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
 	        class_Entity_lastYField = class_Entity.getDeclaredField("lastY");
@@ -44,7 +49,9 @@ CompatibilityUtils
 	        class_MinecraftServer_currentTickField.setAccessible(true);
 	        
 	        class_Entity_getFlagMethod=class_Entity.getMethod("getFlag",Integer.TYPE);
-		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException e) {
+	        class_IChatBaseComponent_ChatSerializer_aMethod=class_IChatBaseComponent_ChatSerializer.getMethod("a",String.class);
+	        
+		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return bool;
@@ -200,6 +207,16 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return bl1;
+	}
+	
+	public static Object getJSONfromString(String string) {
+		Object o1=null;
+		try {
+			o1=class_IChatBaseComponent_ChatSerializer_aMethod.invoke(null,string);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return o1;
 	}
 
 }

@@ -12,6 +12,7 @@ import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -59,6 +60,9 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay.AdvancementFrame;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 
@@ -1096,6 +1100,11 @@ implements Handler,Listener {
 	@Override
 	public int currentServerTick() {
 		return MinecraftServer.currentTick;
-	}	
+	}
+
+	@Override
+	public void sendPlayerAdvancement(Player player,Material material,String title,String description,String task) {
+		new FakeAdvancement(new FakeDisplay(material,title,description,AdvancementFrame.valueOf(task),null)).displayToast(player);
+	}
 
 }

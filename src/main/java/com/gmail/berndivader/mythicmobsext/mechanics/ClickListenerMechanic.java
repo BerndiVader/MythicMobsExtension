@@ -33,7 +33,8 @@ public class ClickListenerMechanic
 extends 
 BuffMechanic
 implements
-ITargetedEntitySkill {
+ITargetedEntitySkill 
+{
 	static String str;
 	int maxDelay;
 	String metaString;
