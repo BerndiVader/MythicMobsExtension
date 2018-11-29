@@ -10,32 +10,28 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 
 public
 class
-MythicMobCollideEvent 
+EntityGrownEvent 
 extends
 Event {
     static final HandlerList handlers=new HandlerList();
     final Optional<ActiveMob>am;
-    final Entity collider;
+    final Entity entity;
     
-    public MythicMobCollideEvent(Entity entity,Entity collided_entity) {
-    	this(null,entity,collided_entity);
+    public EntityGrownEvent(Entity entity,ActiveMob am) {
+    	this.am=Optional.ofNullable(am);
+    	this.entity=entity;
 	}
     
-    public MythicMobCollideEvent(ActiveMob activemob,Entity entity,Entity collided_entity) {
-    	this.am=Optional.ofNullable(activemob);
-    	this.collider=collided_entity;
-	}
-    
-    public ActiveMob getActiveMob() {
-    	return am.get();
-    }
-    
-    public Entity getCollider() {
-    	return this.collider;
+    public Entity getEntity() {
+    	return this.entity;
     }
     
     public boolean isActiveMob() {
     	return am.isPresent();
+    }
+    
+    public ActiveMob getActiveMob() {
+    	return am.isPresent()?am.get():null;
     }
     
     public HandlerList getHandlers() {

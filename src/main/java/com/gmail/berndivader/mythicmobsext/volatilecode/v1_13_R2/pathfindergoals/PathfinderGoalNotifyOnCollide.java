@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.events.MythicMobCollideEvent;
+import com.gmail.berndivader.mythicmobsext.events.EntityCollideEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -60,7 +60,7 @@ extends PathfinderGoal {
             Entity ee=it1.next();
             if (this.cooldown.containsKey(ee.getUniqueID())) continue;
             this.cooldown.put(ee.getUniqueID(),this.c);
-            Main.pluginmanager.callEvent(new MythicMobCollideEvent(am.get(),this.e.getBukkitEntity(),ee.getBukkitEntity()));
+            Main.pluginmanager.callEvent(new EntityCollideEvent(am.get(),this.e.getBukkitEntity(),ee.getBukkitEntity()));
             this.e.getBukkitEntity().setMetadata(Utils.meta_LASTCOLLIDETYPE,new FixedMetadataValue(Main.getPlugin(),ee.getBukkitEntity().getType().toString()));
             if (am.isPresent()) new TriggeredSkill(SkillTrigger.BLOCK,this.am.get(),BukkitAdapter.adapt(ee.getBukkitEntity()),new Pair[0]);
         }
