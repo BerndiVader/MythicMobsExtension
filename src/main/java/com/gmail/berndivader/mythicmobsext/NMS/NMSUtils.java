@@ -9,12 +9,11 @@ import org.bukkit.Server;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-
-import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
 
 public
 class
@@ -33,8 +32,9 @@ CompatibilityUtils
     
     protected static Method class_Entity_getFlagMethod;
     protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
-    
     protected static Method class_EntityCreature_setGoalTargetMethod;
+    protected static Method class_EntityPlayer_clearActiveItemMethod;
+    protected static Method class_EntityLiving_getArmorStrengthMethod;
     
 	public static boolean initialize() {
 		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
@@ -58,6 +58,8 @@ CompatibilityUtils
 	        class_Entity_getFlagMethod=class_Entity.getMethod("getFlag",Integer.TYPE);
 	        class_IChatBaseComponent_ChatSerializer_aMethod=class_IChatBaseComponent_ChatSerializer.getMethod("a",String.class);
 	        class_EntityCreature_setGoalTargetMethod=class_EntityCreature.getMethod("setGoalTarget",class_EntityLiving,TargetReason.class,Boolean.TYPE);
+	        class_EntityPlayer_clearActiveItemMethod=class_EntityPlayer.getMethod("clearActiveItem");
+	        class_EntityLiving_getArmorStrengthMethod=class_EntityLiving.getMethod("getArmorStrength");
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -66,11 +68,11 @@ CompatibilityUtils
 	}
 	
 	/**
-	 * @param e - entity
+	 * @param entity {@link Entity}
 	 * @return motion vector - {@link Vec3D}
 	 */
-	public static Vec3D getEntityLastMot(Entity e) {
-		Object o=getHandle(e);
+	public static Vec3D getEntityLastMot(Entity entity) {
+		Object o=getHandle(entity);
 		Vec3D v3=null;
 		try {
 			double dx=(double)class_Entity_motXField.get(o)
@@ -244,5 +246,31 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * @param player {@link Player}
+	 */
+	public static void clearActiveItem(Player player) {
+		try {
+			class_EntityPlayer_clearActiveItemMethod.invoke(getHandle(player));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param entity {@link LivingEntity}
+	 * @return int {@link Integer}
+	 */
+	public static int getArmorStrength(LivingEntity entity) {
+		int armor;
+		try {
+			armor=(int)class_EntityLiving_getArmorStrengthMethod.invoke(getHandle(entity));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			armor=-1;
+			e.printStackTrace();
+		}
+		return armor;
+	}
+	
 }

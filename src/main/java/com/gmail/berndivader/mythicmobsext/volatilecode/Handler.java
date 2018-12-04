@@ -48,27 +48,18 @@ public interface Handler {
 	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
 	void moveto(LivingEntity entity);
 	boolean addNBTTag(Entity e1, String s);
-	@Deprecated
-	public Vec3D lastPosEntity(Entity bukkitEntity);
-	HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1);
 	void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target);
 	void setMNc(LivingEntity e1,String s1);
 	void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1);
 	void forceSpectate(Player player, Entity entity, boolean bl1);
-	int getArmorStrength(LivingEntity e);
 	void changeResPack(Player p, String url, String hash);
-	void forceShield(Player player);
-	void clearActiveItem(Player player);
 	LivingEntity spawnCustomZombie(Location location,boolean sunBurn);
 	void playBlockBreak(int eid, Location location, int stage);
 	void playAnimationPacket(LivingEntity e, int id);
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
-	void sendPlayerToSleep(Player player);
 	public void extinguish(LivingEntity e);
 	void setWorldborder(Player p, int density, boolean play);
-	Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target);
 	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
-	int currentServerTick();
 	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 }

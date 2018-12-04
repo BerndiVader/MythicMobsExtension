@@ -942,12 +942,6 @@ implements Handler,Listener {
 	}
 
 	@Override
-	public Vec3D lastPosEntity(Entity e1) {
-		net.minecraft.server.v1_13_R2.Entity me=((CraftEntity)e1).getHandle();
-		return new Vec3D(me.motX,me.motY,me.motZ);
-	}
-	
-	@Override
 	public void setMNc(LivingEntity e1,String s1) {
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
         switch (s1) {
@@ -971,11 +965,6 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
-		return null;
-	}
-	
-	@Override
 	public void forceBowDraw(LivingEntity e1, LivingEntity target,boolean bl1) {
 		if (bl1) System.err.println("try to draw bow");
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
@@ -993,12 +982,6 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public int getArmorStrength(LivingEntity e) {
-		EntityLiving e1=(EntityLiving)((CraftLivingEntity)e).getHandle();
-		return e1.getArmorStrength();
-	}
-	
-	@Override
 	public void changeResPack(Player p,String url,String hash) {
 		EntityPlayer player=((CraftPlayer)p).getHandle();
 		player.playerConnection.sendPacket(new PacketPlayOutResourcePackSend(url, hash));
@@ -1008,12 +991,6 @@ implements Handler,Listener {
 	public void forceSpectate(Player player, Entity entity) {
 		EntityPlayer entityplayer=((CraftPlayer)player).getHandle();
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
-	}
-	
-	@Override
-	public void clearActiveItem(Player player) {
-		EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
-        entityPlayer.clearActiveItem();
 	}
 	
 	@Override	
@@ -1032,24 +1009,9 @@ implements Handler,Listener {
 	}
 
 	@Override
-	public void sendPlayerToSleep(Player player) {
-		// TODO Auto-generated method stub
-	}
-	
-	@Override
-	public void forceShield(Player player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void extinguish(LivingEntity e) {
 		net.minecraft.server.v1_13_R2.Entity entity=((CraftLivingEntity)e).getHandle();
 		NMSUtils.setField("fireProof",net.minecraft.server.v1_13_R2.Entity.class,entity,true);
-	}
-	
-	@Override
-	public Vec3D getAimBowTargetPosition(Player bukkit_player,LivingEntity bukkit_target) {
-		return new Vec3D(0,0,0);
 	}
 	
 	@Override
@@ -1068,11 +1030,6 @@ implements Handler,Listener {
 		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-player.locZ;
 		
 		return new Vec3D(delta_x,delta_y,delta_z);
-	}
-	
-	@Override
-	public int currentServerTick() {
-		return MinecraftServer.currentTick;
 	}
 	
 	@Override
