@@ -6,10 +6,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.bukkit.Server;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+
+import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
 
 public
 class
@@ -28,6 +33,8 @@ CompatibilityUtils
     
     protected static Method class_Entity_getFlagMethod;
     protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
+    
+    protected static Method class_EntityCreature_setGoalTargetMethod;
     
 	public static boolean initialize() {
 		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
@@ -50,6 +57,7 @@ CompatibilityUtils
 	        
 	        class_Entity_getFlagMethod=class_Entity.getMethod("getFlag",Integer.TYPE);
 	        class_IChatBaseComponent_ChatSerializer_aMethod=class_IChatBaseComponent_ChatSerializer.getMethod("a",String.class);
+	        class_EntityCreature_setGoalTargetMethod=class_EntityCreature.getMethod("setGoalTarget",class_EntityLiving,TargetReason.class,Boolean.TYPE);
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -209,6 +217,10 @@ CompatibilityUtils
 		return bl1;
 	}
 	
+	/**
+	 * @param string {@link String}
+	 * @return object
+	 */
 	public static Object getJSONfromString(String string) {
 		Object o1=null;
 		try {
@@ -217,6 +229,20 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return o1;
+	}
+	
+	/**
+	 * @param entity {@link LivingEntity}
+	 * @param target {@link Creature}
+	 * @param reason {@link TargetReason}
+	 * @param fire_event {@link Boolean}
+	 */
+	public static void setGoalTarget(Entity entity, Entity target, TargetReason reason, boolean fire_event) {
+		try {
+			class_EntityCreature_setGoalTargetMethod.invoke(getHandle(entity),getHandle(target),reason,fire_event);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -83,7 +83,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
-		if (!arg1.isPlayer()) return false;
+		if (!ignoreTrigger&&!arg1.isPlayer()) return false;
 		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.buffName))||(!multi&&!arg0.getCaster().hasBuff(buffName.get()))) {
 			try {
 				BuffTracker ff=new ChatListener(this,arg0,arg1);

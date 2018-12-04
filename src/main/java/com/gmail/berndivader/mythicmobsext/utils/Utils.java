@@ -66,6 +66,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 import think.rpgitems.item.ItemManager;
