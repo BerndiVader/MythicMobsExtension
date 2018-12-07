@@ -52,7 +52,6 @@ import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
@@ -77,6 +76,7 @@ public class Utils implements Listener {
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
 	public static int serverV;
+	public static int renderLength;
 	public static HashMap<UUID,Vec3D>pl;
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
@@ -120,6 +120,7 @@ public class Utils implements Listener {
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
+		renderLength=512;
 		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);

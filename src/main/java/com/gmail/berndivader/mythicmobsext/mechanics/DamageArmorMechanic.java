@@ -6,11 +6,12 @@ import java.util.HashSet;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Snowman;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -54,7 +55,7 @@ ITargetedEntitySkill {
 			return false;
 		}
 		if (target.getBukkitEntity().getType().equals(EntityType.SNOWMAN)) {
-			Volatile.handler.removeSnowmanHead(target.getBukkitEntity());
+			NMSUtils.setSnowmanPumpkin((Snowman)target.getBukkitEntity(),false);
 		}
 		LivingEntity e=(LivingEntity)BukkitAdapter.adapt(target);
 		ItemStack armor;

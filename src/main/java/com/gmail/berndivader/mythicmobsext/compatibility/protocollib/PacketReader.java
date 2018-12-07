@@ -15,10 +15,10 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityMetadata;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityStatus;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 public
 class
@@ -72,7 +72,7 @@ PacketListener {
 			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
 			if(entity_status.getEntityStatus()==37) {
 				if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-					Volatile.handler.extinguish((LivingEntity)e);
+					NMSUtils.setFireProofEntity(e,true);;
 					packet_event.setCancelled(true);
 				}
 			}

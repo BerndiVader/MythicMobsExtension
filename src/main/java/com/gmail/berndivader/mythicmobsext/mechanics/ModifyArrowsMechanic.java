@@ -1,7 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -27,10 +30,34 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			Volatile.handler.modifyArrowsAtEntity(target.getBukkitEntity(),this.a,this.m);
+			modifyArrowsAtEntity(target.getBukkitEntity(),this.a,this.m);
 			return true;
 		}
 		return false;
 	}
+	
+	/**
+	 * @param entity {@link LivingEntity}
+	 * @param amount {@link Integer}
+	 * @param action {@link Char} <b>A</b>=add - <b>S</b>=sub - <b>C</b>=clear
+	 */
+	static void modifyArrowsAtEntity(Entity entity, int amount, char action) {
+		int a=NMSUtils.getArrowsOnEntity((LivingEntity)entity);
+		switch(action) {
+		case 'A':
+			amount+=a;
+			break;
+		case 'S':
+			amount=a-amount;
+			if(amount<0)a=0;
+			break;
+		case 'C':
+			amount=0;
+			break;
+		}
+		NMSUtils.setArrowsOnEntity((LivingEntity)entity,amount);
+	}
+	
+	
 
 }

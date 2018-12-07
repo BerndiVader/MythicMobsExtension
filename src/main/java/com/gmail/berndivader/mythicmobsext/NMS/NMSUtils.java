@@ -10,6 +10,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
@@ -22,6 +23,7 @@ extends
 CompatibilityUtils
 {
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
+	protected static Class<?> class_EntitySnowman;
 	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
@@ -29,17 +31,23 @@ CompatibilityUtils
     protected static Field class_Entity_lastPitchField;
     protected static Field class_Entity_lastYawField;
     protected static Field class_MinecraftServer_currentTickField;
+    protected static Field class_Entity_fireProof;
     
     protected static Method class_Entity_getFlagMethod;
     protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
     protected static Method class_EntityCreature_setGoalTargetMethod;
     protected static Method class_EntityPlayer_clearActiveItemMethod;
     protected static Method class_EntityLiving_getArmorStrengthMethod;
+    protected static Method class_EntitySnowman_setHasPumpkinMethod;
+    protected static Method class_EntityLiving_getArrowCountMethod;
+    protected static Method class_EntityLiving_setArrowCountMethod;
+    
     
 	public static boolean initialize() {
 		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
         try {
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
+        	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
         	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
@@ -51,6 +59,8 @@ CompatibilityUtils
 	        class_Entity_lastPitchField.setAccessible(true);
 	        class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
 	        class_Entity_lastYawField.setAccessible(true);
+	        class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
+	        class_Entity_fireProof.setAccessible(true);
 	        
 	        class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 	        class_MinecraftServer_currentTickField.setAccessible(true);
@@ -60,6 +70,9 @@ CompatibilityUtils
 	        class_EntityCreature_setGoalTargetMethod=class_EntityCreature.getMethod("setGoalTarget",class_EntityLiving,TargetReason.class,Boolean.TYPE);
 	        class_EntityPlayer_clearActiveItemMethod=class_EntityPlayer.getMethod("clearActiveItem");
 	        class_EntityLiving_getArmorStrengthMethod=class_EntityLiving.getMethod("getArmorStrength");
+	        class_EntitySnowman_setHasPumpkinMethod=class_EntitySnowman.getMethod("setHasPumpkin",Boolean.TYPE);
+	        class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
+	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -271,6 +284,57 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return armor;
+	}
+	
+	/**
+	 * @param snowman {@link Snowman
+	 * @param bool {@link Boolean}
+	 */
+	public static void setSnowmanPumpkin(Snowman snowman,boolean bool) {
+		try {
+			class_EntitySnowman_setHasPumpkinMethod.invoke(getHandle(snowman),bool);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param entity {@link LivingEntity}
+	 * @return int {@link Integer}
+	 */
+	public static int getArrowsOnEntity(LivingEntity entity) {
+		int arrow_count;
+		try {
+			arrow_count=(int)class_EntityLiving_getArrowCountMethod.invoke(getHandle(entity));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+			arrow_count=-1;
+		}
+		return arrow_count;
+	}
+	
+	/**
+	 * @param entity {@link LivingEntity}
+	 * @param amount {@link Integer}
+	 */
+	public static void setArrowsOnEntity(LivingEntity entity, int amount) {
+		try {
+			class_EntityLiving_setArrowCountMethod.invoke(getHandle(entity),amount);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param entity {@link Entity}
+	 * @param bool {@link Boolean}
+	 */
+	public static void setFireProofEntity(Entity entity,boolean bool) {
+		try {
+			class_Entity_fireProof.set(getHandle(entity),bool);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -1,11 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode;
 
-import java.util.HashMap;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -35,9 +31,6 @@ public interface Handler {
 	boolean playerIsJumping(Player p);
 	void forceCancelEndScreenPlayer(Player player);
 	void fakeEntityDeath(Entity entity,long d);
-	int arrowsOnEntity(Entity entity);
-	void modifyArrowsAtEntity(Entity entity, int a, char c);
-	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
 	boolean testForCondition(Entity e,String ns,char m);
 	float getItemCoolDown(Player p,int i1);
@@ -57,7 +50,6 @@ public interface Handler {
 	void playBlockBreak(int eid, Location location, int stage);
 	void playAnimationPacket(LivingEntity e, int id);
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
-	public void extinguish(LivingEntity e);
 	void setWorldborder(Player p, int density, boolean play);
 	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
