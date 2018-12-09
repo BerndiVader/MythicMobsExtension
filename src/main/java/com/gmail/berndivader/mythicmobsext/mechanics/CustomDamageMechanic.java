@@ -69,7 +69,7 @@ ITargetedEntitySkill {
 		if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
 			return false;
 		AbstractEntity c = data.getCaster().getEntity();
-		double dmg = Utils.randomRangeDouble(this.amount);
+		double dmg=Utils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
 		if (this.p) {
 			dmg=this.pcur?uc?c.getHealth()*dmg:t.getHealth()*dmg:c.getMaxHealth()*dmg;
 		}
