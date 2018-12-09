@@ -66,15 +66,14 @@ PacketListener {
 
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
-		Player player=packet_event.getPlayer();
-		if(player.isOnline()&&!player.hasMetadata("NPC")) {
+		if(!packet_event.isPlayerTemporary()) {
 			Entity e=null;
 			//System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
 			switch(packet_event.getPacketType().getCurrentId()) {
 			case 28:
 				WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
 				if(entity_status.getEntityStatus()==37) {
-					if((e=entity_status.getEntity(player.getWorld()))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+					if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
 						NMSUtils.setFireProofEntity(e,true);;
 						packet_event.setCancelled(true);
 					}
@@ -82,7 +81,7 @@ PacketListener {
 				break;
 			case 63:
 				WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-				if((e=entity_meta.getEntity(player.getWorld()))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+				if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
 					List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
 					if(watchables.size()>0) {
 						WrappedWatchableObject watchable=watchables.get(0);
