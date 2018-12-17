@@ -37,12 +37,16 @@ Reflections
 	static {
 		instance=Main.pluginmanager.getPlugin("WorldGuard");
 		Scanner s=new Scanner(((Plugin)instance).getResource("plugin.yml")).useDelimiter("\\A");
-		while(s.hasNext()) {
-			String s1=s.nextLine();
-			if(s1.startsWith("version")) {
-				version=Integer.parseInt(s1.substring(10,11));
-				break;
+		try {
+			while(s.hasNext()) {
+				String s1=s.nextLine();
+				if(s1.startsWith("version")) {
+					version=Integer.parseInt(s1.substring(10,11));
+					break;
+				}
 			}
+		} finally {
+			s.close();
 		}
 		
 		try {

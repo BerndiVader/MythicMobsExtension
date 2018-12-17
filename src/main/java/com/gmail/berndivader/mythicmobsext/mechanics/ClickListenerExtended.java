@@ -29,7 +29,9 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name="clicklistener_ext",author="BerndiVader")
-public class ClickListenerExtended 
+public
+class
+ClickListenerExtended 
 extends 
 BuffMechanic
 implements
@@ -39,18 +41,20 @@ ITargetedEntitySkill
 	int maxDelay;
 	String metaString;
 	boolean actionbar,crouch;
-	Optional<Skill>clickSkill=Optional.empty();
+	Optional<Skill>clickSkill=Optional.empty(),startSkill=Optional.empty(),endSkill=Optional.empty();
 	
 	static {
-		str="MME_CLICKLISTENER";
+		str="MME_CLICKLISTENER_EXT";
 	}
 	
 	public ClickListenerExtended(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.buffName=Optional.of("clicklistenerextended");
+		this.buffName=Optional.of(mlc.getString("buffname",str));
 		String s1;
 		if ((s1=mlc.getString("clickskill"))!=null) clickSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
+		if ((s1=mlc.getString("startskill"))!=null) startSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
+		if ((s1=mlc.getString("endskill"))!=null) endSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		maxDelay=mlc.getInteger("maxdelay",10);
 		actionbar=mlc.getBoolean("actionbar",true);
 		crouch=mlc.getBoolean("crouch",false);
@@ -58,10 +62,10 @@ ITargetedEntitySkill
 	}
 
 	@Override
-	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
-		if (!arg1.isPlayer()) return false;
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		if (!target.isPlayer()) return false;
 		try {
-			ClickTracker ct=new ClickTracker(this,arg0,(Player)arg1.getBukkitEntity());
+			ClickTracker ct=new ClickTracker(this,data,(Player)target.getBukkitEntity());
 			Field f=ct.getClass().getSuperclass().getDeclaredField("task");
 			f.setAccessible(true);
 			ct.task1=(Task)f.get(ct);
@@ -94,7 +98,7 @@ ITargetedEntitySkill
 			this.hasEnded=finish=false;
 			this.crouch=ClickListenerExtended.this.crouch;
 			this.p=p;
-			this.actionString="";
+			this.actionString=new String();
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
 			p.setMetadata(str,new FixedMetadataValue(Main.getPlugin(),true));
 			this.start();
@@ -117,11 +121,7 @@ ITargetedEntitySkill
 			if (e.getPlayer()==p&&e.getHand()==EquipmentSlot.HAND) {
 				e.setCancelled(true);
 				String s1=e.getAction().toString().split("_")[0];
-				if (actionString.isEmpty()) {
-					actionString+=s1;
-				} else {
-					actionString+="+"+s1;
-				}
+				actionString+=actionString.isEmpty()?s1:"+"+s1;
             	if (clickSkill.isPresent()) {
         			Skill sk=clickSkill.get();
         			SkillMetadata sd=data.deepClone();

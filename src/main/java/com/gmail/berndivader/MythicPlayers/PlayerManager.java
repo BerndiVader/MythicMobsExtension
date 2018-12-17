@@ -208,6 +208,7 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
+		System.err.println(e.getAction().toString());
 		if (!this.isActivePlayer(e.getPlayer().getUniqueId())) return;
 		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
 		TriggeredSkillAP ts=null;

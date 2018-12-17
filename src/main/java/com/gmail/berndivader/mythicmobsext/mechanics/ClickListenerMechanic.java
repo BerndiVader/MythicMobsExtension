@@ -37,7 +37,7 @@ ITargetedEntitySkill
 {
 	static String str;
 	int maxDelay;
-	String metaString;
+	String metaString,matchString;
 	boolean actionbar,crouch;
 	Optional<Skill>matchSkill=Optional.empty();
 	Optional<Skill>clickSkill=Optional.empty();
@@ -51,7 +51,7 @@ ITargetedEntitySkill
 	public ClickListenerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.buffName=Optional.of("clicklistener");
+		this.buffName=Optional.of(mlc.getString("buffname",str));
 		String s1;
 		if ((s1=mlc.getString("startskill"))!=null) startSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("clickskill"))!=null) clickSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -61,6 +61,7 @@ ITargetedEntitySkill
 		actionbar=mlc.getBoolean("actionbar",true);
 		crouch=mlc.getBoolean("crouch",true);
 		metaString=mlc.getString("meta","actionstring");
+		matchString=mlc.getString("matchstring",new String());
 	}
 
 	@Override
@@ -103,7 +104,7 @@ ITargetedEntitySkill
 			this.hasEnded=finish=false;
 			this.crouch=ClickListenerMechanic.this.crouch;
 			this.p=p;
-			this.actionString="";
+			this.actionString=new String();
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
 			p.setMetadata(str,new FixedMetadataValue(Main.getPlugin(),true));
         	if (startSkill.isPresent()) {
@@ -119,7 +120,6 @@ ITargetedEntitySkill
             this.ticksRemaining--;
             if (finish) {
             	p.setMetadata(metaString,new FixedMetadataValue(Main.getPlugin(),actionString));
-            	
             	if (matchSkill.isPresent()) {
         			Skill sk=matchSkill.get();
         			SkillMetadata sd=data.deepClone();
@@ -127,7 +127,7 @@ ITargetedEntitySkill
             	}
     			this.terminate();
             }
-            if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
+            if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<1) {
             	if (failSkill.isPresent()) {
         			Skill sk=failSkill.get();
         			SkillMetadata sd=data.deepClone();
@@ -142,11 +142,7 @@ ITargetedEntitySkill
 			if (e.getPlayer()==p&&e.getHand()==EquipmentSlot.HAND) {
 				e.setCancelled(true);
 				String s1=e.getAction().toString().split("_")[0];
-				if (actionString.isEmpty()) {
-					actionString+=s1;
-				} else {
-					actionString+="+"+s1;
-				}
+				actionString+=actionString.isEmpty()?s1:"+"+s1;
             	if (clickSkill.isPresent()) {
         			Skill sk=clickSkill.get();
         			SkillMetadata sd=data.deepClone();

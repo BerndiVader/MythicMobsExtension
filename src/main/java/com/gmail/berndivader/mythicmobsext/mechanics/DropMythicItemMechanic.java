@@ -89,7 +89,7 @@ ITargetedLocationSkill {
 		for(int i1=0;i1<types.length;i1++) {
 			String item=types[i1].replaceAll(":"," ");
 			String arr1[]=item.split(" ");
-			Drop drop=Drop.getDrop(item);
+			Drop drop=Drop.getDrop(item,null);
 			if(drop instanceof InvalidDrop) continue;
 			
 			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);
