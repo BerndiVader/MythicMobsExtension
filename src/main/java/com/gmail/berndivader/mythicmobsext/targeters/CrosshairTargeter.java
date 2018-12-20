@@ -12,12 +12,11 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 
 @ExternalAnnotation(name="crosshair,crosshairentity",author="BerndiVader")
 public class CrosshairTargeter 
 extends 
-IEntitySelector {
+ISelectorEntity {
 
 	public CrosshairTargeter(MythicLineConfig mlc) {
 		super(mlc);
