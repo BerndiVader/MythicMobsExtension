@@ -51,7 +51,7 @@ Navigation
                 if (this.a.d(this.i) < d2 || this.a.locY > (double)this.i.getY() && this.a.d(new BlockPosition(this.i.getX(), MathHelper.floor(this.a.locY), this.i.getZ())) < d2) {
                     this.i = null;
                 } else {
-                    this.a.getControllerMove().a(this.i.getX(), this.i.getY()+1d, this.i.getZ(), this.d);
+                    this.a.getControllerMove().a(this.i.getX(), this.i.getY()+2d, this.i.getZ(), this.d);
                 }
             }
             return;
