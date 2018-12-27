@@ -85,6 +85,12 @@ ITargetedEntitySkill {
 						e.getEquipment().setItemInHand(new ItemStack(Material.AIR));
 					}
 					broken=true;
+				} else {
+					if (ver>=9) {
+						e.getEquipment().setItemInMainHand(new ItemStack(armor));
+					} else {
+						e.getEquipment().setItemInHand(new ItemStack(armor));
+					}
 				}
 			}
 		}
@@ -96,6 +102,8 @@ ITargetedEntitySkill {
 				if (armor.getDurability()>armor.getType().getMaxDurability()) {
 					e.getEquipment().setHelmet(new ItemStack(Material.AIR));
 					broken=true;
+				} else {
+					e.getEquipment().setHelmet(new ItemStack(armor));
 				}
 			}
 		}
@@ -107,6 +115,8 @@ ITargetedEntitySkill {
 				if (armor.getDurability()>armor.getType().getMaxDurability()) {
 					e.getEquipment().setChestplate(new ItemStack(Material.AIR));
 					broken=true;
+				} else {
+					e.getEquipment().setChestplate(new ItemStack(armor));
 				}
 			}
 		}
@@ -118,6 +128,8 @@ ITargetedEntitySkill {
 				if (armor.getDurability()>armor.getType().getMaxDurability()) {
 					e.getEquipment().setLeggings(new ItemStack(Material.AIR));
 					broken=true;
+				} else {
+					e.getEquipment().setLeggings(new ItemStack(armor));
 				}
 			}
 		}
@@ -129,6 +141,8 @@ ITargetedEntitySkill {
 				if (armor.getDurability() > armor.getType().getMaxDurability()) {
 					e.getEquipment().setBoots(new ItemStack(Material.AIR));
 					broken=true;
+				} else {
+					e.getEquipment().setBoots(new ItemStack(armor));
 				}
 			}
 		}
