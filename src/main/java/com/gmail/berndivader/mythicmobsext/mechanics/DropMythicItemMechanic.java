@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.DropMetadata;
+import io.lumine.xikage.mythicmobs.drops.DropTable;
 import io.lumine.xikage.mythicmobs.drops.IIntangibleDrop;
 import io.lumine.xikage.mythicmobs.drops.IItemDrop;
 import io.lumine.xikage.mythicmobs.drops.IMessagingDrop;
@@ -82,38 +84,7 @@ ITargetedLocationSkill {
 	}
  	
  	private static LootBag makeLootBag(SkillMetadata data,String[]types,AbstractEntity target,boolean tag,String[]tags,boolean stackable) {
- 		LootBag loot=new LootBag(new DropMetadata(data.getCaster(),target));
-		Map<Class,Drop>intangibleDrops=new HashMap<Class,Drop>();
-		List<Drop>itemDrops=new ArrayList<Drop>();
-		
-		for(int i1=0;i1<types.length;i1++) {
-			String item=types[i1].replaceAll(":"," ");
-			String arr1[]=item.split(" ");
-			Drop drop=Drop.getDrop(item,new String());
-			if(drop instanceof InvalidDrop) continue;
-			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);
-			drop.setAmount(amount);
-			
-			if(drop instanceof IItemDrop) {
-				itemDrops.add(drop);
-			} else if(drop instanceof IMultiDrop) {
-				LootBag loot1=((IMultiDrop)drop).get(new DropMetadata(data.getCaster(),target));
-				for(Drop d1:loot1.getDrops()) {
-					if(d1 instanceof IItemDrop) {
-						itemDrops.add(d1);
-					} else {
-						intangibleDrops.merge(d1.getClass(),d1,(o,n)->o.addAmount(n));
-					}
-				}
-			} else {
-				intangibleDrops.merge(drop.getClass(),drop,(o,n)->o.addAmount(n));
-			}
-		}
-		
-		loot.setLootTable(itemDrops);
-		loot.setLootTableIntangible(intangibleDrops);
-		
- 		return loot;
+ 		return (new DropTable("MMEDropMechanic","MMEDropMechanic",Arrays.asList(types))).generate(new DropMetadata(data.getCaster(),target));
  	}
  	
  	static ItemStack createItemStack(ItemStack i,boolean tag,boolean stackable,String[]tags) {
