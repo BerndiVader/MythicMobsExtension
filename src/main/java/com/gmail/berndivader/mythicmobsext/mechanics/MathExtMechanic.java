@@ -76,18 +76,22 @@ INoTargetSkill
 			break;
 		}
 		if (target!=null) {
-			if (parse[1].equals("meta")) {
-				target.setMetadata(parse[2],new FixedMetadataValue(Main.getPlugin(),s1));
-			} else if(parse[1].equals("score")) {
-				Objective o1=Bukkit.getScoreboardManager().getMainScoreboard().getObjective(parse[2]);
-				if (o1!=null) {
-					o1.getScore(target instanceof Player?target.getName():target.getUniqueId().toString()).setScore((int)s1);;
-				} else {
-					Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2],"dummy").getScore(target instanceof Player?target.getName():target.getUniqueId().toString()).setScore((int)(s1));
-				}
-			} else if(parse[1].equals("stance")) {
-				ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
-				if (am!=null) am.setStance(Double.toString(s1));
+			switch(parse[1]) {
+				case "meta":
+					target.setMetadata(parse[2],new FixedMetadataValue(Main.getPlugin(),s1));
+					break;
+				case "score":
+					Objective o1=Bukkit.getScoreboardManager().getMainScoreboard().getObjective(parse[2]);
+					if (o1!=null) {
+						o1.getScore(target instanceof Player?target.getName():target.getUniqueId().toString()).setScore((int)s1);;
+					} else {
+						Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective(parse[2],"dummy").getScore(target instanceof Player?target.getName():target.getUniqueId().toString()).setScore((int)(s1));
+					}
+					break;
+				case "stance":
+					ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
+					if (am!=null) am.setStance(Double.toString(s1));
+					break;
 			}
 		} else if (parse[0].equals("score")){
 			Objective o1=Bukkit.getScoreboardManager().getMainScoreboard().getObjective(parse[1]);
