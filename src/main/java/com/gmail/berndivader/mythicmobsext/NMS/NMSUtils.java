@@ -90,7 +90,6 @@ CompatibilityUtils
 	        	ex.printStackTrace();
 	        	mm_version=45;
 	        }
-	        System.err.println(mm_version);
 	        if(mm_version<45) {
 	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class);
 	        } else {
