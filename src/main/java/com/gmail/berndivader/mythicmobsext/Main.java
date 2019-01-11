@@ -66,7 +66,6 @@ JavaPlugin
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
-		NMSUtils.initialize();
 		
 		if (Config.update) {
 			new BukkitRunnable() {
@@ -95,6 +94,7 @@ JavaPlugin
 			}.runTaskAsynchronously(this);
 		}
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
+			NMSUtils.initialize();
 			new Utils();
 			internals=new Internals();
 			if (Config.externals) {

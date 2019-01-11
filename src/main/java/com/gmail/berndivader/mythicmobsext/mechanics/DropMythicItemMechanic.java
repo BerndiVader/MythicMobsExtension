@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.DropMetadata;
-import io.lumine.xikage.mythicmobs.drops.DropTable;
 import io.lumine.xikage.mythicmobs.drops.IIntangibleDrop;
 import io.lumine.xikage.mythicmobs.drops.IItemDrop;
 import io.lumine.xikage.mythicmobs.drops.IMessagingDrop;
@@ -90,7 +88,8 @@ ITargetedLocationSkill {
 		for(int i1=0;i1<types.length;i1++) {
 			String item=types[i1].replaceAll(":"," ");
 			String arr1[]=item.split(" ");
-			Drop drop=Drop.getDrop("MMEDropMechanic",item);
+			Drop drop=NMSUtils.getDrop(item);
+//			Drop drop=Drop.getDrop("MMEDropMechanic",item);
 			if(drop instanceof InvalidDrop) continue;
 			
 			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);

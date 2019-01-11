@@ -14,7 +14,10 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+
+import io.lumine.xikage.mythicmobs.drops.Drop;
 
 public
 class
@@ -22,8 +25,12 @@ NMSUtils
 extends
 CompatibilityUtils
 {
+	
+	protected static int mm_version;
+	
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
+	protected static Class<?> class_Drop;
 	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
@@ -41,6 +48,7 @@ CompatibilityUtils
     protected static Method class_EntitySnowman_setHasPumpkinMethod;
     protected static Method class_EntityLiving_getArrowCountMethod;
     protected static Method class_EntityLiving_setArrowCountMethod;
+    protected static Method class_Drop_getDropMethod;
     
     
 	public static boolean initialize() {
@@ -48,6 +56,7 @@ CompatibilityUtils
         try {
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
+        	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
         	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
@@ -73,6 +82,20 @@ CompatibilityUtils
 	        class_EntitySnowman_setHasPumpkinMethod=class_EntitySnowman.getMethod("setHasPumpkin",Boolean.TYPE);
 	        class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
 	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
+	        
+	        mm_version=45;
+	        try {
+	        	mm_version=Integer.parseInt(Utils.mythicmobs.getVersion().replaceAll("\\.","").substring(0,2));
+	        } catch(Exception ex) {
+	        	ex.printStackTrace();
+	        	mm_version=45;
+	        }
+	        System.err.println(mm_version);
+	        if(mm_version<45) {
+	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class);
+	        } else {
+	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class,String.class);
+	        }
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -335,6 +358,20 @@ CompatibilityUtils
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @param item_name {@link String}
+	 * @return drop {@link Drop}
+	 */
+	public static Drop getDrop(String item_name) {
+		Drop drop=null;
+		try {
+			drop=mm_version<45?(Drop)class_Drop_getDropMethod.invoke(null,item_name):(Drop)class_Drop_getDropMethod.invoke(null,"MMEDrop",item_name);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return drop;
 	}
 	
 }
