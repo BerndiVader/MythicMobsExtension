@@ -63,7 +63,6 @@ ITargetedLocationSkill {
 	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		castAtEntity(data,data.getTrigger());
 		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),null,target).split(",");
 		LootBag loot=makeLootBag(data,types,data.getTrigger(),tag,tags,this.stackable);
 		giveOrDrop(BukkitAdapter.adapt(target),null,loot,give,tag,stackable,tags,silent);
@@ -84,8 +83,41 @@ ITargetedLocationSkill {
 	}
  	
  	private static LootBag makeLootBag(SkillMetadata data,String[]types,AbstractEntity target,boolean tag,String[]tags,boolean stackable) {
- 		return (new DropTable("MMEDropMechanic","MMEDropMechanic",Arrays.asList(types))).generate(new DropMetadata(data.getCaster(),target));
- 	}
+  		LootBag loot=new LootBag(new DropMetadata(data.getCaster(),target));
+		Map<Class,Drop>intangibleDrops=new HashMap<Class,Drop>();
+		List<Drop>itemDrops=new ArrayList<Drop>();
+		
+		for(int i1=0;i1<types.length;i1++) {
+			String item=types[i1].replaceAll(":"," ");
+			String arr1[]=item.split(" ");
+			Drop drop=Drop.getDrop("MMEDropMechanic",item);
+			if(drop instanceof InvalidDrop) continue;
+			
+			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);
+			if(amount<1) continue;
+			drop.setAmount(amount);
+			if(drop instanceof IItemDrop) {
+				itemDrops.add(drop);
+			} else if(drop instanceof IMultiDrop) {
+				LootBag loot1=((IMultiDrop)drop).get(new DropMetadata(data.getCaster(),target));
+				for(Drop d1:loot1.getDrops()) {
+					if(d1 instanceof IItemDrop) {
+						itemDrops.add(d1);
+					} else {
+						intangibleDrops.merge(d1.getClass(),d1,(o,n)->o.addAmount(n));
+					}
+				}
+			} else {
+				intangibleDrops.merge(drop.getClass(),drop,(o,n)->o.addAmount(n));
+			}
+		}
+		
+		loot.setLootTable(itemDrops);
+		loot.setLootTableIntangible(intangibleDrops);
+		
+ 		return loot;
+// 		return (new DropTable("MMEDropMechanic","MMEDropMechanic",Arrays.asList(types))).generate(new DropMetadata(data.getCaster(),target));
+ 	} 		
  	
  	static ItemStack createItemStack(ItemStack i,boolean tag,boolean stackable,String[]tags) {
  		ItemStack is=new ItemStack(i);
@@ -114,9 +146,9 @@ ITargetedLocationSkill {
             if (drop instanceof IItemDrop) {
                 ItemStack is=createItemStack(BukkitAdapter.adapt(((IItemDrop)drop).getDrop(loot.getMetadata())),tag,stackable,tags);
             	if(give&&isPresent&&player.getInventory().firstEmpty()>-1) {
-                    player.getInventory().addItem(new ItemStack(is));
+                    player.getInventory().addItem(is.clone());
             	} else {
-            		w.dropItem(l,is);
+            		w.dropItem(l,is.clone());
             	}
             } else if (drop instanceof ExperienceDrop) {
                 if(isPresent&&give) {
