@@ -178,17 +178,15 @@ IEntityCondition {
 		for (int a=0;a<i.length;a++) {
 			ItemStack is = i[a];
 			if (is==null) continue;
-			if ((entry.isMaterialAny()||entry.material.equals(is.getType()))
-					&& entry.amount.equals(is.getAmount())) {
+			if ((entry.isMaterialAny()||entry.material.equals(is.getType()))&&entry.amount.equals(is.getAmount())) {
 				if (entry.lore.equals("ANY")) return true;
 				if (is.hasItemMeta()&&is.getItemMeta().hasLore()) {
-					String l="";
+					String l=new String();
 					for(Iterator<String>it=is.getItemMeta().getLore().iterator();it.hasNext();) {
 						l+=it.next()+" ";
 					}
-					return (Pattern.compile(entry.lore)).matcher(l).find();
+					if ((Pattern.compile(entry.lore)).matcher(l).find()) return true;
 				}
-
 			}
 		}
 		return false;
