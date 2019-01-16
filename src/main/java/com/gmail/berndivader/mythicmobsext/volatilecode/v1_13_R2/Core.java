@@ -925,17 +925,13 @@ implements Handler,Listener {
 	public void forceBowDraw(LivingEntity e1, LivingEntity target,boolean bl1) {
 		if (bl1) System.err.println("try to draw bow");
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
-        if (ei instanceof IRangedEntity) {
-        	if (ei.isHandRaised()) {
-        		if (bl1) System.err.println("hand is raised draws bow");
-            	ei.da();
-        	} else {
-        		if (bl1) System.err.println("hand not raised!");
-                ei.c(EnumHand.MAIN_HAND);
-        	}
-        	
-        }
-		
+    	if (ei.isHandRaised()) {
+    		if (bl1) System.err.println("hand not raised!");
+        	ei.da();
+    	} else {
+    		if (bl1) System.err.println("hand is raised draws bow");
+            ei.c(EnumHand.MAIN_HAND);
+    	}
 	}
 	
 	@Override

@@ -81,7 +81,7 @@ Listener {
 				ClassLoader cl=URLClassLoader.newInstance(urls,this.getClass().getClassLoader());
 				JarFile jar=new JarFile(external);
 				Enumeration<JarEntry>e=jar.entries();
-				String cn1=new String("");
+				String cn1=new String();
 				while(e.hasMoreElements()) {
 					try {
 						JarEntry je=(JarEntry)e.nextElement();
