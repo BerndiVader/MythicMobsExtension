@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
+import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -17,7 +18,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="enchant",author="BerndiVader")
+@ExternalAnnotation(name="enchant,enchantweaponry",author="BerndiVader")
 public 
 class 
 EnchantWeaponryMechanic 
@@ -31,11 +32,11 @@ ITargetedEntitySkill {
 	
 	class Enchant{
 		Enchantment enchantment;
-		int level;
+		RandomDouble level;
 		
-		public Enchant(Enchantment ench,int level) {
+		public Enchant(Enchantment ench,String level) {
 			this.enchantment=ench;
-			this.level=level;
+			this.level=new RandomDouble(level);
 		}
 	}
 	List<Enchant>enchants;
@@ -97,13 +98,13 @@ ITargetedEntitySkill {
 			String parse[]=arr1[i1].split(":");
 			String name=parse[0];
 			Enchantment ench;
-			int level=0;
+			String level="1";
 			if(parse.length>0) {
 				try{
-					level=Integer.parseInt(parse[1]);
+					level=parse[1];
 				} catch(Exception ex) {
 					Main.logger.warning("Error parsing level in "+line);
-					level=0;
+					level="1";
 				}
 			}
 			if((ench=Enchantment.getByName(name))!=null) {
@@ -123,43 +124,49 @@ ITargetedEntitySkill {
 			if(((what>>i1)&1)==1) {
 				switch(i1) {
 					case 0:
-						stack=new ItemStack(entity.getEquipment().getItemInMainHand());
+						stack=entity.getEquipment().getItemInMainHand();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setItemInMainHand(stack.clone());
 						}
 						break;
 					case 1:
-						stack=new ItemStack(entity.getEquipment().getItemInOffHand());
+						stack=entity.getEquipment().getItemInOffHand();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setItemInOffHand(stack.clone());
 						}
 						break;
 					case 2:
-						stack=new ItemStack(entity.getEquipment().getHelmet());
+						stack=entity.getEquipment().getHelmet();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setHelmet(stack.clone());
 						}
 						break;
 					case 3:
-						stack=new ItemStack(entity.getEquipment().getChestplate());
+						stack=entity.getEquipment().getChestplate();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setChestplate(stack.clone());
 						}
 						break;
 					case 4:
-						stack=new ItemStack(entity.getEquipment().getLeggings());
+						stack=entity.getEquipment().getLeggings();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setLeggings(stack.clone());
 						}
 						break;
 					case 5:
-						stack=new ItemStack(entity.getEquipment().getBoots());
+						stack=entity.getEquipment().getBoots();
 						if(isValidMaterial(stack)) {
+							stack=new ItemStack(stack);
 							stack=enchantAction(stack,action,enchants);
 							entity.getEquipment().setBoots(stack.clone());
 						}
@@ -183,14 +190,14 @@ ITargetedEntitySkill {
 					if(stack.containsEnchantment(enchant)) {
 						stack.removeEnchantment(enchant);
 					} else if(enchant.canEnchantItem(stack)) {
-						stack.addEnchantment(enchant,enchants.get(i1).level);
+						stack.addEnchantment(enchant,(int)enchants.get(i1).level.rollInteger());
 					}
 				}
 				break;
 			case ADD:
 				for(int i1=0;i1<length;i1++) {
 					Enchantment enchant=enchants.get(i1).enchantment;
-					if(enchant.canEnchantItem(stack)) stack.addEnchantment(enchant,enchants.get(i1).level);
+					if(enchant.canEnchantItem(stack)) stack.addEnchantment(enchant,(int)enchants.get(i1).level.rollInteger());
 				}
 				break;
 			case DEL:
