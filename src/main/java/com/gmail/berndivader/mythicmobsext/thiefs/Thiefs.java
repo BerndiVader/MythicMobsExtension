@@ -47,6 +47,7 @@ Listener {
 	@EventHandler
 	public void onConditionLoad(MythicConditionLoadEvent e) {
 		if(e.getConditionName().toLowerCase().equals("isthief")) {
+			e.register(new IsThiefCondition(e.getConfig().getLine(),e.getConfig()));
 		}
 	}
 }
