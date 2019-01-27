@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -80,6 +81,7 @@ public class Utils implements Listener {
 	public static HashMap<UUID,Vec3D>pl;
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
+	public static final String signal_CHUNKUNLOAD="CHUNKUNLOAD";
 	public static final String meta_WALKSPEED="MMEXTWALKSPEED";
 	public static final String mpNameVar = "mythicprojectile";
 	public static final String noTargetVar = "nottargetable";
@@ -140,6 +142,16 @@ public class Utils implements Listener {
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+	}
+	
+	@EventHandler
+	public void onChunkUnload(ChunkUnloadEvent e) {
+		if(e.getChunk()==null) return;
+		for(Entity entity:e.getChunk().getEntities()) {
+			if(mobmanager.isActiveMob(entity.getUniqueId())) {
+				mobmanager.getMythicMobInstance(entity).signalMob(BukkitAdapter.adapt(entity),signal_CHUNKUNLOAD);
+			}
+		}
 	}
 	
 	@EventHandler
