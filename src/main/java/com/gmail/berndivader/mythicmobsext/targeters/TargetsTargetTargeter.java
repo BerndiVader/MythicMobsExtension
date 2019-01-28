@@ -16,8 +16,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 @ExternalAnnotation(name="targetstarget",author="BerndiVader")
 public class TargetsTargetTargeter 
 extends
-ISelectorEntity {
-
+ISelectorEntity 
+{
 	public TargetsTargetTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}
@@ -31,7 +31,7 @@ ISelectorEntity {
 			AbstractEntity target=it.next();
 			if (target!=null) {
 				if (target.isPlayer()) {
-					AbstractEntity pt=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)target.getBukkitEntity()));
+					AbstractEntity pt=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)target.getBukkitEntity(),length));
 					if (pt!=null) targets.add(pt);
 				} else if (target.getTarget()!=null){
 					targets.add(target.getTarget());

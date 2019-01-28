@@ -433,10 +433,17 @@ public class Utils implements Listener {
 		return round(damage, 3);
 	}
 
+	
+	/*
+	 * 
 	public static LivingEntity getTargetedEntity(Player player) {
-		int range = 32;
+		return getTargetedEntity(player,32);
+	}
+	 */
+	
+	public static LivingEntity getTargetedEntity(Player player,int range) {
 		BlockIterator bi;
-		List<Entity> ne = player.getNearbyEntities(range, range, range);
+		List<Entity>ne=player.getNearbyEntities(range, range, range);
 		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en:ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Utils.noTargetVar)) {
@@ -871,8 +878,7 @@ public class Utils implements Listener {
         	i2=p.getMetadata(meta_BOWTICKSTART).get(0).asInt();
         }
         if (i2==-1) return (float)i2;
-        int i3=i1-i2;
-        float f1=(float)i3/20.0f;
+        float f1=(float)(i1-i2)/20.0f;
         if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
         return f1;
 	}

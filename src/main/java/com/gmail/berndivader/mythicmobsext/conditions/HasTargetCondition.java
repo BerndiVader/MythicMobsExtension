@@ -15,15 +15,19 @@ extends
 AbstractCustomCondition 
 implements 
 IEntityCondition {
+	
+	int length;
 
 	public HasTargetCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
+		
+		length=mlc.getInteger("length",32);
 	}
 
 	@Override
 	public boolean check(AbstractEntity entity) {
 		if (entity.isPlayer()) {
-			return Utils.getTargetedEntity((Player)entity.getBukkitEntity())!=null;
+			return Utils.getTargetedEntity((Player)entity.getBukkitEntity(),length)!=null;
 		} else {
 			return entity.getTarget() != null;
 		}

@@ -25,12 +25,14 @@ IEntitySelector {
 	
     private boolean sort_by_distance,nearest;
     String filter_faction[];
+    int length;
 	
 	public ISelectorEntity(MythicLineConfig mlc) {
 		super(mlc);
         this.sort_by_distance=mlc.getBoolean("sortbydistance",false);
         this.nearest=mlc.getBoolean("nearest");
         this.filter_faction=mlc.getString("filterfaction",new String()).split(",");
+        this.length=mlc.getInteger("length",32);
 	}
 	
 	@Override

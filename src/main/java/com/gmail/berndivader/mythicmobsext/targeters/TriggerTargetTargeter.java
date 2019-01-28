@@ -15,7 +15,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 @ExternalAnnotation(name="triggerstarget",author="BerndiVader")
 public class TriggerTargetTargeter
 extends
-ISelectorEntity {
+ISelectorEntity 
+{
 	public TriggerTargetTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}
@@ -25,7 +26,7 @@ ISelectorEntity {
 		HashSet<AbstractEntity>targets=new HashSet<>();
 		AbstractEntity target;
 		if (data.getTrigger().isPlayer()) {
-			if ((target=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)data.getTrigger().getBukkitEntity())))!=null) {
+			if ((target=BukkitAdapter.adapt(Utils.getTargetedEntity((Player)data.getTrigger().getBukkitEntity(),length)))!=null) {
 				targets.add(target);
 			};
 		} else if ((target=data.getTrigger().getTarget())!=null) {

@@ -37,7 +37,6 @@ dependencies {
     compileOnly files('./lib/Quests-3.3.2.jar')
     compileOnly files('./lib/NoCheatPlus.jar')
     compileOnly files('./lib/ProtocolLib.jar')
-    
 }
 
 processResources {
