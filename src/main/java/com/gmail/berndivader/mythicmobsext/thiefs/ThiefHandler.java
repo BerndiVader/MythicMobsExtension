@@ -34,8 +34,8 @@ public class ThiefHandler {
 		return thiefs;
 	}
 
-	public boolean addThief(UUID uuid, ItemStack item) {
-		thiefs.add(new Thief(uuid, item));
+	public boolean addThief(UUID uuid,UUID victim,ItemStack item) {
+		thiefs.add(new Thief(uuid,victim,item));
 		return true;
 	}
 
