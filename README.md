@@ -1,17 +1,19 @@
 # MythicMobsExtension v1.320-SNAPSHOT for MythicMobs 4.4.0 and Spigot 1.12.2 or 1.13.2 and higher
 
 
-## [Discord](https://discord.gg/8EfDrnd) <br>
-### Use the bot there to get help `!help` 
+# [Discord](https://discord.gg/8EfDrnd) <br>
+## Use the bot there to get help `!help` 
 
 
-#### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki) VERY OUTDATED
-#### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
+## [DOWNLOAD](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/) [![Build Status](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/badge/icon)] <br>
+## [REPOSITORIES](https://mc.hackerzlair.org/repo) for the repos.
 
 
-Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
-Click [Snapshot](http://mc.hackerzlair.org:8080) for the lastest builds.
-Click [Repositories](https://mc.hackerzlair.org/repo) for the repos.
+### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki) VERY OUTDATED
+### Click [Externals](https://github.com/BerndiVader/MMExternals) for the MythicMobsExtensions external modules!
+
+
+### Click [here](https://github.com/BerndiVader/MythicMobsExtension#custom-entities) to see stuff that is not in the wiki yet.
 
 
 
