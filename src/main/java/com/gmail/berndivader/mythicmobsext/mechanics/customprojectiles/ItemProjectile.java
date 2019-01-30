@@ -22,6 +22,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -50,6 +51,7 @@ ITargetedLocationSkill {
 	protected String pEntityName;
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
+	short durability;
 
 	public ItemProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -59,12 +61,13 @@ ITargetedLocationSkill {
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
 		this.tickInterval=2;
 		this.ticksPerSecond=20.0f/this.tickInterval;
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
-			new ProjectileTracker(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
+			new ProjectileRunner(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
 			this.mythicmobs.handleException(ex);
@@ -77,7 +80,7 @@ ITargetedLocationSkill {
 		return this.castAtLocation(data, target.getLocation().add(0.0, target.getEyeHeight() / 2.0, 0.0));
 	}
 
-	public class ProjectileTracker implements IParentSkill, Runnable {
+	public class ProjectileRunner implements IParentSkill, Runnable {
 		private SkillMetadata data;
 		private boolean cancelled;
 		private SkillCaster am;
@@ -100,7 +103,7 @@ ITargetedLocationSkill {
 		private boolean pFaceDir, targetable, eyedir;
 		private float currentBounce, bounceReduce;
 
-		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractLocation target) {
+		public ProjectileRunner(SkillMetadata data, String customItemName, AbstractLocation target) {
 
 			float noise;
 			this.cancelled = false;
@@ -153,11 +156,8 @@ ITargetedLocationSkill {
 					this.startLocation.add(av);
 				}
 			}
-			this.startLocation.clone();
-			this.currentLocation = this.startLocation.clone();
-			if (this.currentLocation == null) {
-				return;
-			}
+			this.currentLocation=this.startLocation.clone();
+			if (this.currentLocation == null) return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -230,6 +230,7 @@ ITargetedLocationSkill {
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
 			ItemStack i = new ItemStack(Material.valueOf(customItemName));
+			if(durability>Short.MIN_VALUE) i.setDurability(ItemProjectile.this.durability);
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);
 			EntityCacheHandler.add(this.pItem);
@@ -273,6 +274,7 @@ ITargetedLocationSkill {
 			}
 			this.oldLocation=this.currentLocation.clone();
 			this.currentLocation.add(this.currentVelocity);
+		
 			if (ItemProjectile.this.hugSurface) {
 				if (this.currentLocation.getBlockX() != this.currentX
 						|| this.currentLocation.getBlockZ() != this.currentZ) {

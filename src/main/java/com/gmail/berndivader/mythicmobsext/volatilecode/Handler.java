@@ -1,10 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode;
 
-import java.util.HashMap;
-
 import org.bukkit.Location;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -34,9 +31,6 @@ public interface Handler {
 	boolean playerIsJumping(Player p);
 	void forceCancelEndScreenPlayer(Player player);
 	void fakeEntityDeath(Entity entity,long d);
-	int arrowsOnEntity(Entity entity);
-	void modifyArrowsAtEntity(Entity entity, int a, char c);
-	void removeSnowmanHead(Entity entity);
 	void setDeath(Player p, boolean b);
 	boolean testForCondition(Entity e,String ns,char m);
 	float getItemCoolDown(Player p,int i1);
@@ -47,25 +41,17 @@ public interface Handler {
 	boolean getNBTValueOf(Entity e1, String s1, boolean b1);
 	void moveto(LivingEntity entity);
 	boolean addNBTTag(Entity e1, String s);
-	@Deprecated
-	public Vec3D lastPosEntity(Entity bukkitEntity);
-	HashMap<Advancement, AdvancementProgress> getAdvMap(Player p, String s1);
 	void aiTargetSelector(LivingEntity entity, String uGoal, LivingEntity target);
 	void setMNc(LivingEntity e1,String s1);
 	void forceBowDraw(LivingEntity e1, LivingEntity target, boolean bl1);
 	void forceSpectate(Player player, Entity entity, boolean bl1);
-	int getArmorStrength(LivingEntity e);
 	void changeResPack(Player p, String url, String hash);
-	void forceShield(Player player);
-	void clearActiveItem(Player player);
 	LivingEntity spawnCustomZombie(Location location,boolean sunBurn);
 	void playBlockBreak(int eid, Location location, int stage);
 	void playAnimationPacket(LivingEntity e, int id);
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
-	void sendPlayerToSleep(Player player);
-	public void extinguish(LivingEntity e);
 	void setWorldborder(Player p, int density, boolean play);
-	Vec3D getAimBowTargetPosition(Player bukkit_player, LivingEntity bukkit_target);
 	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
+	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 }

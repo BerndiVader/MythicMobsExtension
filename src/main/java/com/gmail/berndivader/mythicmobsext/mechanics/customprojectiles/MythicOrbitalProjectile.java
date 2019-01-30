@@ -75,7 +75,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		try {
-			new ProjectileTracker(data, this.pEntityName, target);
+			new ProjectileRunner(data, this.pEntityName, target);
 			return true;
 		} catch (Exception ex) {
 			this.mythicmobs.handleException(ex);
@@ -83,7 +83,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 		}
 	}
 
-	public class ProjectileTracker implements IParentSkill, Runnable {
+	public class ProjectileRunner implements IParentSkill, Runnable {
 		private SkillMetadata data;
 		private boolean cancelled;
 		private SkillCaster am;
@@ -108,7 +108,7 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 		private boolean targetable, ct, tc, lt;
 		private String tag;
 
-		public ProjectileTracker(SkillMetadata data, String customItemName, AbstractEntity t) {
+		public ProjectileRunner(SkillMetadata data, String customItemName, AbstractEntity t) {
 
 			this.cancelled = false;
 			this.inRange = ConcurrentHashMap.newKeySet();

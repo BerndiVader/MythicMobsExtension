@@ -15,21 +15,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
-import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlagConditions;
-import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsFlags;
-import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaConditions;
+import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
+import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.ProtocolLibSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.quests.QuestsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlag;
-import com.gmail.berndivader.mythicmobsext.compatibility.worldguard.WorldGuardFlags;
 import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
-import com.gmail.berndivader.mythicmobsext.guardianbeam.GuardianBeam;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
@@ -39,21 +37,26 @@ import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Pre44MobSpawnEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-public class Main extends JavaPlugin {
+public
+class
+Main
+extends
+JavaPlugin
+{
 	private static Main plugin;
+	private static MythicPlayers mythicplayers;
+	
+	public static PluginManager pluginmanager;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
 	public static EntityCacheHandler entityCacheHandler;
-	public static Random random;
-	public static Integer wgVer;
-	public static WorldGuardFlags wgf;
-	public static FactionsFlags fflags;
-	public static boolean hasRpgItems = false;
 	public static Logger logger;
-	public static PluginManager pluginmanager;
+	public static Random random;
+	public static boolean hasRpgItems = false;
 	public static boolean slappyNewBorn = true;
-	private static MythicPlayers mythicplayers;
+	
 	public Thiefs thiefs;
+	
 	
 	public Internals internals;
 	public Externals externals;
@@ -68,7 +71,7 @@ public class Main extends JavaPlugin {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					String version=new String("");
+					String version=new String();
 					PluginDescriptionFile pdf = getDescription();
 					try {
 						URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
@@ -91,6 +94,7 @@ public class Main extends JavaPlugin {
 			}.runTaskAsynchronously(this);
 		}
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
+			NMSUtils.initialize();
 			new Utils();
 			internals=new Internals();
 			if (Config.externals) {
@@ -109,31 +113,16 @@ public class Main extends JavaPlugin {
 			}
 			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
 			if (Config.m_thiefs) thiefs=new Thiefs();
-			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) {
-				wgf=new WorldGuardFlags();
-				new WorldGuardFlag();
-			}
-			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) {
-				logger.info("using Factions");
-				fflags = new FactionsFlags();
-				new FactionsFlagConditions();
-			}
+			
+			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) new WorldGuardFlag();
+			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) new FactionsSupport();
 			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) {
 				hasRpgItems = true;
 				logger.info("using RPGItems");
 			}
-			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) {
-				new MobArenaConditions();
-				logger.info("using MobArena");
-			}
-			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) {
-				logger.info("using HolographicDisplays");
-				Main.healthbarhandler=new HealthbarHandler(this);
-			}
-			if(ProtocolLibSupport.isPresent()) {
-				new GuardianBeam(this);
-				new ProtocolLibSupport(this);
-			}
+			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
+			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
+			if (pluginmanager.getPlugin("ProtocolLib")!=null) new ProtocolLibSupport(this);
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
@@ -161,8 +150,6 @@ public class Main extends JavaPlugin {
 		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
-		Main.wgf = null;
-		Main.fflags = null;
 		pluginmanager.disablePlugin(this);
 	}
 

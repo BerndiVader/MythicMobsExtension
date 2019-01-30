@@ -24,6 +24,7 @@ Listener {
 	public static HashMap<String,String>conditions;
 	public static HashMap<String,String>targeters;
    	public static String filename;
+   	public static ClassLoader classLoader;
    	public static int m,c,t,ml,cl,tl;
    	
    	static {
@@ -31,6 +32,7 @@ Listener {
    		mechanics=new HashMap<>();
    		conditions=new HashMap<>();
    		targeters=new HashMap<>();
+   		classLoader=Internals.class.getClassLoader();
    		m=c=t=ml=cl=tl=0;
    	}
    	
@@ -47,8 +49,8 @@ Listener {
 		SimpleEntry<ExternalAnnotation,Class<?>> getClazz(String cn1) throws ClassNotFoundException{
 			Class<?>c1=null;
 			try {
-				c1=Class.forName(cn1);
-			} catch (Exception e) {
+				c1=Class.forName(cn1,false,classLoader);
+			} catch (Throwable e) {
 				return new SimpleEntry<>(null,null);
 			}
 			return new SimpleEntry<>(c1.getAnnotation(ExternalAnnotation.class),c1);

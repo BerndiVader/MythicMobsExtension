@@ -36,7 +36,7 @@ IPacketReceivingHandler
 	@Override
 	public Packet<?> handle(PacketPlayInArmAnimation packet) {
     	float f1=Volatile.handler.getIndicatorPercentage(player);
-    	player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+    	player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));
 		return packet;
 	}
 
@@ -59,7 +59,7 @@ IPacketReceivingHandler
 		v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
 				?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
 				:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-		Utils.pl.get(player.getUniqueId()).set(v3.getX(),v3.getY(),v3.getZ());
+		Utils.pl.put(player.getUniqueId(),v3);
 		return packet;
 	}
 

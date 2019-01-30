@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="lastdamagecause",author="BerndiVader")
+@ExternalAnnotation(name="lastdamagecause,lastdamagecause_ext",author="BerndiVader")
 public class LastDamageCauseCondition 
 extends 
 AbstractCustomCondition 

@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.events.EntityGrownEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -31,6 +33,7 @@ PathfinderGoal {
 		if(state==1) {
 			state=2;
 			if(am!=null&&signal!=null&&!signal.isEmpty()) am.signalMob(null,signal);
+			Main.pluginmanager.callEvent(new EntityGrownEvent(e.getBukkitEntity(),am));
 			return true;
 		}
 		return false;

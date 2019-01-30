@@ -1,7 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import org.bukkit.entity.LivingEntity;
+
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -24,7 +26,7 @@ IEntityCondition {
 	@Override
 	public boolean check(AbstractEntity entity) {
 		if (entity.isLiving()) {
-			return this.c.equals(Volatile.handler.arrowsOnEntity(entity.getBukkitEntity()));
+			return this.c.equals(NMSUtils.getArrowsOnEntity((LivingEntity)entity.getBukkitEntity()));
 		}
 		return false;
 	}

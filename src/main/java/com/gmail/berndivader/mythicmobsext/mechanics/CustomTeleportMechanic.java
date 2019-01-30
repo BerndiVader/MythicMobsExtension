@@ -2,9 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,9 +10,9 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -49,8 +47,8 @@ implements
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
 	String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
-	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner;
-	double delay, noise, maxTargets, frontOffset;
+	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
+	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
 	AbstractEntity entityTarget;
 	AbstractLocation startLocation;
 
@@ -59,12 +57,15 @@ ITargetedLocationSkill {
 		this.ASYNC_SAFE=false;
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
 		this.delay = mlc.getDouble(new String[] { "teleportdelay","tdelay", "td" }, 0D);
-		this.frontOffset=mlc.getDouble(new String[] {"frontoffest","fo"},0.0D);
+		this.frontOffset=mlc.getDouble(new String[] {"frontoffest","fo"},0D);
+		this.sideOffset=mlc.getDouble(new String[] {"sideoffset","so"},0D);
+		this.yOffset=mlc.getDouble(new String[] {"yoffset","yo"},0d);
 		if ((this.maxTargets=mlc.getDouble(new String[] { "maxtargets", "mt" },0D))<0) this.maxTargets=0D;
 		this.inFrontOf = mlc.getBoolean(new String[] { "infrontof", "infront", "front", "f" }, false);
 		this.returnToStart = mlc.getBoolean(new String[] { "returntostart", "return", "rs" }, false);
 		this.targetInsight = mlc.getBoolean(new String[] { "targetinsight", "insight", "is" }, false);
 		this.ignoreOwner = mlc.getBoolean(new String[] { "ignoreowner", "io" }, false);
+		this.ignorePitch = mlc.getBoolean(new String[] { "ignorepitch", "ip" }, false);
 		this.inBetweenLastSignal = mlc.getString(new String[] { "betweenlastentitysignal", "bls" }, null);
 		this.inBetweenNextSignal = mlc.getString(new String[] { "betweennextentitysignal", "bns" }, null);
 		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "final", "fs" }, null);
@@ -103,7 +104,6 @@ ITargetedLocationSkill {
 			return false;
 		}
 		HashSet<Object>osources=(HashSet<Object>)getDestination(targeter,data);
-		Map<Double,Object>sortedsources=new TreeMap<>();
 		if (osources==null||!osources.iterator().hasNext()) return false;
 		this.isLocations = osources.iterator().next() instanceof AbstractLocation;
 		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
@@ -123,14 +123,7 @@ ITargetedLocationSkill {
 		if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
 				&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
 			World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
-			osources.remove(BukkitAdapter.adapt(NMSUtil.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
-		}
-		if (this.sortTargets) {
-			for(Object o:osources) {
-				AbstractLocation l=this.isLocations?((AbstractLocation)o):((AbstractEntity)o).getLocation();
-				double distance=data.getCaster().getLocation().distanceSquared(l);
-				sortedsources.put(distance,o);
-			}
+			osources.remove(BukkitAdapter.adapt(NMSUtils.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
 		}
 
 		new BukkitRunnable() {
@@ -139,11 +132,12 @@ ITargetedLocationSkill {
 			boolean isLoc = isLocations;
 			boolean ifo = inFrontOf;
 			boolean is = targetInsight;
-			boolean sorted = sortTargets;
 			Iterator<?> it = osources.iterator();
-			Map<Double,Object>sosources=sortedsources;
 			double n = noise;
 			double fo=CustomTeleportMechanic.this.frontOffset;
+			double so=CustomTeleportMechanic.this.sideOffset;
+			double yo=CustomTeleportMechanic.this.yOffset;
+			boolean ip=CustomTeleportMechanic.this.ignorePitch;
 			String bls = inBetweenLastSignal;
 			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
@@ -170,13 +164,17 @@ ITargetedLocationSkill {
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
-						if (this.fo!=0.0D) {
-							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+						Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+						if (this.bns!=null) ((ActiveMob) data.getCaster()).signalMob(null,this.bns);
+						if(ip) ll.setPitch(0);
+						if(fo!=0.0d||so!=0.0d) {
 			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector soV=Utils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
 			    			ll.add(foV);
-			    			target=BukkitAdapter.adapt(ll);
+			    			ll.add(soV);
 						}
-						this.sourceEntity.teleport((AbstractLocation) target);
+		    			target=BukkitAdapter.adapt(ll);
+						this.sourceEntity.teleport(((AbstractLocation)target).add(0,yo,0));
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(null, this.bls);
 					} else {
@@ -192,15 +190,17 @@ ITargetedLocationSkill {
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
-						if (this.bns != null)
-							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
-						if (this.fo!=0.0D) {
-							Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+						if (this.bns != null) ((ActiveMob) data.getCaster()).signalMob(t, this.bns);
+						Location ll=BukkitAdapter.adapt((AbstractLocation)target);
+						if(ip)ll.setPitch(0);
+						if(fo!=0.0d||so!=0.0d) {
 			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector soV=Utils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
 			    			ll.add(foV);
-			    			target=BukkitAdapter.adapt(ll);
+			    			ll.add(soV);
 						}
-						this.sourceEntity.teleport((AbstractLocation) target);
+		    			target=BukkitAdapter.adapt(ll);
+						this.sourceEntity.teleport(((AbstractLocation)target).add(0,yo,0));
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(this.lastEntity, this.bls);
 						this.lastEntity = t;

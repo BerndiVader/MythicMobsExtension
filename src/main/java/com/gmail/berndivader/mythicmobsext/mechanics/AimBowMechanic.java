@@ -35,7 +35,6 @@ ITargetedEntitySkill
 
 	public AimBowMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		
 		aim_nearest=mlc.getBoolean("aimnearest",false);
 	}
 	
@@ -77,7 +76,7 @@ ITargetedEntitySkill
 							}
 						}
 					}
-				}.runTaskTimer(Main.getPlugin(),0l,0l);
+				}.runTaskTimer(Main.getPlugin(),1l,1l);
 			}
 			return true;
 		}

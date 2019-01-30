@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -13,17 +12,15 @@ extends
 AbstractCustomCondition 
 implements 
 ILocationCondition {
-	private WorldGuardFlags wgf = Main.wgf;
-	private String[] entities;
+	private String entities;
 
 	public WorldGuardDenySpawnFlagCondition(String line, MythicLineConfig mlc) {
 		super(line,mlc);
-		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie")
-				.toUpperCase().split(",");
+		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie").toUpperCase();
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return wgf.checkRegionDenySpawnFlagAtLocation(BukkitAdapter.adapt(location), entities);
+		return WorldGuardUtils.checkRegionDenySpawnFlagAtLocation(BukkitAdapter.adapt(location), entities);
 	}
 }

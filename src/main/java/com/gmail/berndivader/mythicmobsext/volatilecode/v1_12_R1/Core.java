@@ -4,13 +4,14 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import net.minecraft.server.v1_12_R1.*;
-import net.minecraft.server.v1_12_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_12_R1.MinecraftServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -18,7 +19,6 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSnowman;
 import org.bukkit.craftbukkit.v1_12_R1.util.CraftMagicNumbers.NBT;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -36,7 +36,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtil;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
@@ -59,13 +58,15 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay.AdvancementFrame;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 
 public class Core 
 implements Handler,Listener {
 	
-	static int renderLength;
 	static String nms_path;
 	
 	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
@@ -89,7 +90,6 @@ implements Handler,Listener {
 					}));
 	
 	static {
-	    renderLength=512;
 	    nms_path="net.minecraft.server.v1_12_R1";
 	}
 	
@@ -186,39 +186,9 @@ implements Handler,Listener {
 	@Override
 	public void playBlockBreak(int eid,Location location, int stage) {
 		BlockPosition blockPosition=new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		List<Player>players=Utils.getPlayersInRange(location, renderLength);
+		List<Player>players=Utils.getPlayersInRange(location,Utils.renderLength);
 		PacketPlayOutBlockBreakAnimation packet=new PacketPlayOutBlockBreakAnimation(eid,blockPosition,stage);
 		sendPlayerPacketsAsync(players, new Packet[] {packet});
-	}
-	
-	@Override
-	public void removeSnowmanHead(Entity entity) {
-		net.minecraft.server.v1_12_R1.EntitySnowman me = ((CraftSnowman)entity).getHandle();
-		me.setHasPumpkin(false);
-	}
-	
-	@Override
-	public int arrowsOnEntity(Entity entity) {
-		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
-		return me.getArrowCount();
-	}
-	
-	@Override
-	public void modifyArrowsAtEntity(Entity entity, int a, char c) {
-		net.minecraft.server.v1_12_R1.EntityLiving me = ((CraftLivingEntity)entity).getHandle();
-		switch(c) {
-		case 'A':
-			a+=me.getArrowCount();
-			break;
-		case 'S':
-			a=me.getArrowCount()-a;
-			if(a<0)a=0;
-			break;
-		case 'C':
-			a=0;
-			break;
-		}
-		me.setArrowCount(a);
 	}
 	
 	@Override
@@ -331,7 +301,7 @@ implements Handler,Listener {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{pd,ps});
+				sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),Utils.renderLength),new Packet[]{pd,ps});
 			}
 		}.runTaskLaterAsynchronously(Main.getPlugin(),d);
 	}
@@ -373,7 +343,7 @@ implements Handler,Listener {
 		byte pa=(byte)((int)(p*256.0F/360.0F));
 		PacketPlayOutEntityLook el=new PacketPlayOutEntityLook(me.getId(),ya,pa,me.onGround);
 		PacketPlayOutEntityHeadRotation hr=new PacketPlayOutEntityHeadRotation(me, ya);
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{el,hr});
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),Utils.renderLength),new Packet[]{el,hr});
 	}
 	
 	@Override
@@ -403,14 +373,14 @@ implements Handler,Listener {
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
 		PacketPlayOutEntityEquipment packet=new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1));
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),renderLength),new Packet[]{packet});
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),Utils.renderLength),new Packet[]{packet});
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
 		net.minecraft.server.v1_12_R1.Entity me = ((CraftEntity)entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{tp});
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),Utils.renderLength),new Packet[]{tp});
 	}
 	
 	@Override
@@ -420,7 +390,7 @@ implements Handler,Listener {
 		double y1=cl.getY()-me.locY;
 		double z1=cl.getZ()-me.locZ;
 		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),x1,y1,z1);
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), renderLength),new Packet[]{vp});
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(),Utils.renderLength),new Packet[]{vp});
 	}
 
 	@Override
@@ -594,7 +564,7 @@ implements Handler,Listener {
 	        			}
 	        		}
 	        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
-						Entity ee = NMSUtil.getEntity(w, uuid);
+						Entity ee = NMSUtils.getEntity(w, uuid);
 	        			if (ee instanceof LivingEntity) {
 	        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
 	        			}
@@ -721,15 +691,6 @@ implements Handler,Listener {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-	}
-	
-	interface PacketReceivingHandler {
-	    void handle(Player p,PacketPlayInArmAnimation packet);
-	    void handle(Player p, PacketPlayInResourcePackStatus packet);
-		void handle(Player p,PacketPlayInPosition packet);
-		void handle(Player p,PacketPlayInFlying packet);
-	    void handle(Player p,PacketPlayInSteerVehicle packet);
-	    void handle(Player p,PacketPlayInBlockDig packet);
 	}
 	
 	@Override
@@ -965,12 +926,6 @@ implements Handler,Listener {
 	}
 
 	@Override
-	public Vec3D lastPosEntity(Entity e1) {
-		net.minecraft.server.v1_12_R1.Entity me=((CraftEntity)e1).getHandle();
-		return new Vec3D(me.motX,me.motY,me.motZ);
-	}
-	
-	@Override
 	public void setMNc(LivingEntity e1,String s1) {
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
         switch (s1) {
@@ -994,31 +949,16 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public HashMap<org.bukkit.advancement.Advancement, org.bukkit.advancement.AdvancementProgress> getAdvMap(Player p,String s1) {
-		return null;
-	}
-	
-	@Override
 	public void forceBowDraw(LivingEntity e1, LivingEntity target,boolean bl1) {
 		if (bl1) System.err.println("try to draw bow");
         EntityInsentient ei=(EntityInsentient)((CraftLivingEntity)e1).getHandle();
-        if (ei instanceof IRangedEntity) {
-        	if (ei.isHandRaised()) {
-        		if (bl1) System.err.println("hand is raised draws bow");
-            	ei.cN();
-        	} else {
-        		if (bl1) System.err.println("hand not raised!");
-                ei.c(EnumHand.MAIN_HAND);
-        	}
-        	
-        }
-		
-	}
-	
-	@Override
-	public int getArmorStrength(LivingEntity e) {
-		EntityLiving e1=(EntityLiving)((CraftLivingEntity)e).getHandle();
-		return e1.getArmorStrength();
+       	if (!ei.isHandRaised()) {
+       		if (bl1) System.err.println("hand is raised draws bow");
+       		ei.c(EnumHand.MAIN_HAND);
+       	} else {
+       		if (bl1) System.err.println("hand not raised!");
+           	ei.cN();
+       	}
 	}
 	
 	@Override
@@ -1033,12 +973,6 @@ implements Handler,Listener {
         ((WorldServer)entityplayer.world).getTracker().a(entityplayer,new PacketPlayOutAnimation(entityplayer,3));
 	}
 	
-	@Override
-	public void clearActiveItem(Player player) {
-		EntityPlayer entityPlayer=((CraftPlayer)player).getHandle();
-        entityPlayer.clearActiveItem();
-	}
-	
 	@Override	
 	public void playAnimationPacket(LivingEntity e,Integer[] ints) {
 		EntityLiving living=(EntityLiving)((CraftLivingEntity)e).getHandle();
@@ -1046,35 +980,14 @@ implements Handler,Listener {
 		for(int j=0;j<ints.length;j++) {
 			packets[j]=new PacketPlayOutAnimation(living,ints[j]);
 		}
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),packets);
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(),Utils.renderLength),packets);
 	}
 
 	@Override
 	public void playAnimationPacket(LivingEntity e, int id) {
-		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(), renderLength),new PacketPlayOutAnimation[] {new PacketPlayOutAnimation((EntityLiving)((CraftLivingEntity)e).getHandle(),id) });
+		sendPlayerPacketsAsync(Utils.getPlayersInRange(e.getLocation(),Utils.renderLength),new PacketPlayOutAnimation[] {new PacketPlayOutAnimation((EntityLiving)((CraftLivingEntity)e).getHandle(),id) });
 	}
 
-	@Override
-	public void sendPlayerToSleep(Player player) {
-		// TODO Auto-generated method stub
-	}
-	
-	@Override
-	public void forceShield(Player player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void extinguish(LivingEntity e) {
-		net.minecraft.server.v1_12_R1.Entity entity=((CraftLivingEntity)e).getHandle();
-		NMSUtils.setField("fireProof",net.minecraft.server.v1_12_R1.Entity.class,entity,true);
-	}
-	
-	@Override
-	public Vec3D getAimBowTargetPosition(Player bukkit_player,LivingEntity bukkit_target) {
-		return new Vec3D(0,0,0);
-	}
-	
 	@Override
 	public boolean velocityChanged(Entity bukkit_entity) {
 		net.minecraft.server.v1_12_R1.Entity entity=((CraftEntity)bukkit_entity).getHandle();
@@ -1091,6 +1004,11 @@ implements Handler,Listener {
 		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-player.locZ;
 		
 		return new Vec3D(delta_x,delta_y,delta_z);
+	}
+	
+	@Override
+	public void sendPlayerAdvancement(Player player,Material material,String title,String description,String task) {
+		new FakeAdvancement(new FakeDisplay(material,title,description,AdvancementFrame.valueOf(task),null)).displayToast(player);
 	}
 
 }

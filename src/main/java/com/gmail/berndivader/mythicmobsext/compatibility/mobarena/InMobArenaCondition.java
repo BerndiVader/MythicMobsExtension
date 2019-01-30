@@ -7,22 +7,18 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-import com.garbagemule.MobArena.MobArenaHandler;
-
 public class InMobArenaCondition 
 extends
 AbstractCustomCondition
 implements 
-ILocationCondition {
-	protected MobArenaHandler maHandler;
-
+ILocationCondition 
+{
 	public InMobArenaCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.maHandler = new MobArenaHandler();
 	}
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		return maHandler.inRegion(BukkitAdapter.adapt(location));
+		return MobArenaSupport.mobarena.inRegion(BukkitAdapter.adapt(location));
 	}
 }

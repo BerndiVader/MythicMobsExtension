@@ -24,6 +24,7 @@ INoTargetSkill {
 		if (data.getCaster()instanceof ActiveMob) {
 			ActiveMob am=(ActiveMob)data.getCaster();
 			if(am.hasThreatTable()) {
+				am.getThreatTable().getAllThreatTargets().clear();
 				am.getThreatTable().dropCombat();
 				return true;
 			}

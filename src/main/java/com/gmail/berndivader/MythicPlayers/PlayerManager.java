@@ -208,25 +208,27 @@ public class PlayerManager implements Listener {
 	
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
-		if (!this.isActivePlayer(e.getPlayer().getUniqueId())) return;
-		ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
-		TriggeredSkillAP ts=null;
-		if (e.getHand().equals(EquipmentSlot.HAND)) {
-			if (e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-				ts = new TriggeredSkillAP(SkillTrigger.RIGHTCLICK, ap, null, null, true);
-			} else if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				ts = new TriggeredSkillAP(SkillTrigger.RIGHTCLICK, ap, null,
-						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
+		if(e.getHand()==EquipmentSlot.HAND&&this.isActivePlayer(e.getPlayer().getUniqueId())) {
+			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
+			TriggeredSkillAP ts=null;
+			switch(e.getAction()) {
+				case RIGHT_CLICK_AIR:
+					ts=new TriggeredSkillAP(SkillTrigger.RIGHTCLICK,ap,null,null,true);
+					break;
+				case RIGHT_CLICK_BLOCK:
+					ts=new TriggeredSkillAP(SkillTrigger.RIGHTCLICK,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true);
+					break;
+				case LEFT_CLICK_AIR:
+					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?new TriggeredSkillAP(SkillTrigger.USE,ap,null,null,true):new TriggeredSkillAP(SkillTrigger.SWING,ap,null,null,true);
+					break;
+				case LEFT_CLICK_BLOCK:
+					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?new TriggeredSkillAP(SkillTrigger.USE,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true):new TriggeredSkillAP(SkillTrigger.SWING,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true);
+					break;
+				default:
+					break;
 			}
-			if (e.getAction().equals(Action.LEFT_CLICK_AIR)) {
-				ts=new TriggeredSkillAP(SkillTrigger.USE, ap, null, null, true);
-			} else if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-				ts= new TriggeredSkillAP(SkillTrigger.USE, ap, null,
-						BukkitAdapter.adapt(e.getClickedBlock().getLocation()), true);
-			}
+			if (ts!=null&&ts.getCancelled()) e.setCancelled(true);
 		}
-		if (ts != null && ts.getCancelled())
-			e.setCancelled(true);
 	}
 
 	@EventHandler

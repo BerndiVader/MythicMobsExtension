@@ -4,7 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Bot {
+public 
+class
+Bot
+{
     final String bid;
 
     public Bot(String s1) {

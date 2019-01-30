@@ -100,7 +100,7 @@ ITargetedEntitySkill {
 					am.signalMob(am.getEntity(),this.signal_ok);
 					item1=new ItemStack(item);
 					item1.setAmount(ra);
-					Thiefs.thiefhandler.addThief(am.getUniqueId(),item1.clone());
+					Thiefs.thiefhandler.addThief(am.getUniqueId(),pl.getUniqueId(),item1.clone());
 					stolen=true;
 					break;
 				}

@@ -23,7 +23,6 @@ extends SkillMechanic
 implements 
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
-	private PotionEffect po=new PotionEffect(PotionEffectType.INVISIBILITY,999999,4);
 
 	public EnderDragonDeathEffect(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -43,7 +42,6 @@ ITargetedLocationSkill {
 
 	private void playEnderEffect(Location l) {
 		EnderDragon e=l.getWorld().spawn(l,EnderDragon.class);
-		e.addPotionEffect(this.po);
 		e.playEffect(EntityEffect.DEATH);
 		e.setHealth(0);
 		return;

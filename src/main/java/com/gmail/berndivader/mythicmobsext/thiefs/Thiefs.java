@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
@@ -40,6 +41,13 @@ Listener {
 			sm=new StealMechanic(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(sm);
 			break;
+		}
+	}
+	
+	@EventHandler
+	public void onConditionLoad(MythicConditionLoadEvent e) {
+		if(e.getConditionName().toLowerCase().equals("isthief")) {
+			e.register(new IsThiefCondition(e.getConfig().getLine(),e.getConfig()));
 		}
 	}
 }

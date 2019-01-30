@@ -15,10 +15,10 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityMetadata;
 import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityStatus;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 public
 class
@@ -65,33 +65,35 @@ PacketListener {
 
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
-		Entity e=null;
-//		System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
-		switch(packet_event.getPacketType().getCurrentId()) {
-		case 28:
-			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
-			if(entity_status.getEntityStatus()==37) {
-				e=entity_status.getEntity(packet_event);
-				if(e!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) Volatile.handler.extinguish((LivingEntity)e);
-				packet_event.setCancelled(true);
-			}
-			break;
-		case 63:
-			WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-			e=entity_meta.getEntity(packet_event);
-			if(e!=null&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-				List<WrappedWatchableObject> watchables=entity_meta.getMetadata();
-				if(watchables.size()>0) {
-					WrappedWatchableObject watchable=watchables.get(0);
-					if(watchable.getValue() instanceof Byte) {
-						byte b=(byte)((byte)watchable.getValue()&~0x1);
-						watchable.setValue(b);
-						entity_meta.setMetadata(watchables);
-						packet_event.setPacket(entity_meta.getHandle());
+		if(!packet_event.isPlayerTemporary()) {
+			Entity e=null;
+			//System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
+			switch(packet_event.getPacketType().getCurrentId()) {
+			case 28:
+				WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
+				if(entity_status.getEntityStatus()==37) {
+					if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+						NMSUtils.setFireProofEntity(e,true);;
+						packet_event.setCancelled(true);
 					}
 				}
+				break;
+			case 63:
+				WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
+				if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+					List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
+					if(watchables.size()>0) {
+						WrappedWatchableObject watchable=watchables.get(0);
+						if(watchable.getValue() instanceof Byte) {
+							byte b=(byte)((byte)watchable.getValue()&~0x1);
+							watchable.setValue(b);
+							entity_meta.setMetadata(watchables);
+							packet_event.setPacket(entity_meta.getHandle());
+						}
+					}
+				};
+				break;
 			}
-			break;
 		}
 	}
 

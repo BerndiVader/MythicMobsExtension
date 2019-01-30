@@ -23,6 +23,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -68,7 +69,7 @@ ITargetedLocationSkill
 			stopGround,
 			gravity,
 			stopBlock;
-    
+	short durability;
 
     public ItemThrowProjectile(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -99,13 +100,14 @@ ITargetedLocationSkill
         this.stopBlock=mlc.getBoolean("stopblock",false);
         this.gravity=mlc.getBoolean("gravity",true);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
         this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
     }
 
     @Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
         try {
-            new Tracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -116,7 +118,7 @@ ITargetedLocationSkill
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
         try {
-            new Tracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -125,7 +127,7 @@ ITargetedLocationSkill
         }
 	}
 
-    private class Tracker
+    private class ProjectileRunner
     implements 
     IParentSkill,
     Runnable 
@@ -141,14 +143,14 @@ ITargetedLocationSkill
         private Map<LivingEntity,Long> immune;
         private int count,dur;
         
-        public Tracker(SkillMetadata data, AbstractEntity target) {
+        public ProjectileRunner(SkillMetadata data, AbstractEntity target) {
         	this(data,target,null);
         }
-        public Tracker(SkillMetadata data, AbstractLocation target) {
+        public ProjectileRunner(SkillMetadata data, AbstractLocation target) {
         	this(data,null,target);
         }
 
-        private Tracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
+        private ProjectileRunner(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
             this.cancelled = false;
             this.data = data;
             this.data.setCallingEvent(this);
@@ -184,6 +186,7 @@ ITargetedLocationSkill
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
 			this.item.setGravity(ItemThrowProjectile.this.gravity);
+			if(durability>Short.MIN_VALUE) this.item.getItemStack().setDurability(ItemThrowProjectile.this.durability);
             if (ItemThrowProjectile.this.onStartSkill.isPresent()
             		&&ItemThrowProjectile.this.onStartSkill.get().isUsable(data)) {
                 SkillMetadata sData = data.deepClone();

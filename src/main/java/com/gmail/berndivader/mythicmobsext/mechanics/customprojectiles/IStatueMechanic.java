@@ -23,6 +23,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -65,6 +66,7 @@ ITargetedLocationSkill {
     		hitTargetOnly=false,
 			invunerable,
 			lifetime;
+    short durability;
 
     public IStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
@@ -93,6 +95,7 @@ ITargetedLocationSkill {
         this.hitTargetOnly = mlc.getBoolean("hittargetonly", false);
         this.invunerable=mlc.getBoolean(new String[] {"invulnerable","inv"},true);
         this.lifetime=mlc.getBoolean(new String[] {"lifetime","lt"},true);
+        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
         
 		if (this.onTickSkillName != null) {
 			this.onTickSkill = Utils.mythicmobs.getSkillManager().getSkill(this.onTickSkillName);
@@ -111,7 +114,7 @@ ITargetedLocationSkill {
     @Override
     public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
         try {
-            new StatueTracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -122,7 +125,7 @@ ITargetedLocationSkill {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
         try {
-            new StatueTracker(data, target);
+            new ProjectileRunner(data, target);
             return true;
         }
         catch (Exception ex) {
@@ -131,7 +134,7 @@ ITargetedLocationSkill {
         }
 	}
 
-    private class StatueTracker
+    private class ProjectileRunner
     implements IParentSkill,
     Runnable {
     	private Handler vh;
@@ -148,14 +151,14 @@ ITargetedLocationSkill {
         private int count,dur;
         private Vector vEmpty=new Vector(0d,0d,0d);
         
-        public StatueTracker(SkillMetadata data, AbstractEntity target) {
+        public ProjectileRunner(SkillMetadata data, AbstractEntity target) {
         	this(data,target,null);
         }
-        public StatueTracker(SkillMetadata data, AbstractLocation target) {
+        public ProjectileRunner(SkillMetadata data, AbstractLocation target) {
         	this(data,null,target);
         }
 
-        private StatueTracker(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
+        private ProjectileRunner(SkillMetadata data, AbstractEntity target, AbstractLocation location) {
         	this.vh=Volatile.handler;
         	this.islocationtarget=target==null&&location!=null;
             this.currentLocation=islocationtarget?BukkitAdapter.adapt(location):target.getBukkitEntity().getLocation();
@@ -189,6 +192,7 @@ ITargetedLocationSkill {
 			this.item.setGravity(false);
 			this.item.setTicksLived(Integer.MAX_VALUE);
 			this.item.setPickupDelay(Integer.MAX_VALUE);
+			if(durability>Short.MIN_VALUE) this.item.getItemStack().setDurability(IStatueMechanic.this.durability);
 			vh.teleportEntityPacket(this.item);
 			vh.changeHitBox((Entity)this.item,0,0,0);
             if (IStatueMechanic.this.onStartSkill.isPresent()

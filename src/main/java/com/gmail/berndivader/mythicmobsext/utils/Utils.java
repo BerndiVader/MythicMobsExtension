@@ -34,9 +34,9 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -48,14 +48,11 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
-import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
@@ -63,15 +60,13 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.spawning.spawners.MythicSpawner;
+
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
 import think.rpgitems.item.ItemManager;
@@ -82,9 +77,11 @@ public class Utils implements Listener {
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
 	public static int serverV;
+	public static int renderLength;
 	public static HashMap<UUID,Vec3D>pl;
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
+	public static final String signal_CHUNKUNLOAD="CHUNKUNLOAD";
 	public static final String meta_WALKSPEED="MMEXTWALKSPEED";
 	public static final String mpNameVar = "mythicprojectile";
 	public static final String noTargetVar = "nottargetable";
@@ -122,11 +119,10 @@ public class Utils implements Listener {
 			BlockFace.EAST,
 			BlockFace.SOUTH_EAST}; 
 
-	private static Handler handler;
-	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
+		renderLength=512;
 		str_PLUGINPATH=Main.getPlugin().getDataFolder().toString();
 	    try {
 		    serverV=Integer.parseInt(Bukkit.getServer().getClass().getPackage().getName().substring(23).split("_")[1]);
@@ -144,11 +140,17 @@ public class Utils implements Listener {
 	}
 	
 	public Utils() {
-		handler=Volatile.handler;
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
-		if (Utils.serverV>11) {
-			Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
-			if (Config.m_parrot) Main.logger.info("patching entity parrot!");
+		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+	}
+	
+	@EventHandler
+	public void onChunkUnload(ChunkUnloadEvent e) {
+		if(e.getChunk()==null) return;
+		for(Entity entity:e.getChunk().getEntities()) {
+			if(mobmanager.isActiveMob(entity.getUniqueId())) {
+				mobmanager.getMythicMobInstance(entity).signalMob(BukkitAdapter.adapt(entity),signal_CHUNKUNLOAD);
+			}
 		}
 	}
 	
@@ -184,7 +186,7 @@ public class Utils implements Listener {
 				float f1;
 				@Override
 				public void run() {
-					if (p!=null&&p.isOnline()&&(f1=com.gmail.berndivader.mythicmobsext.utils.Utils.getBowTension(p))>-1) {
+					if (p!=null&&p.isOnline()&&(f1=getBowTension(p))>-1) {
 						p.setMetadata(meta_BOWTENSIONLAST, new FixedMetadataValue(Main.getPlugin(),f1));
 					} else {
 						this.cancel();
@@ -195,36 +197,6 @@ public class Utils implements Listener {
 	}
 	
 	@EventHandler
-	public void replaceParrotsEvent(MythicMobSpawnEvent e) {
-		if (e.isCancelled()||!Config.m_parrot) return;
-		if (e.getEntity() instanceof Parrot) {
-			MythicMob mm=e.getMobType();
-			LivingEntity p=handler.spawnCustomParrot(e.getLocation(),mm.getConfig().getBoolean("Options.CookieDie",true));
-	        if (mm.getMythicEntity()!=null) p=(LivingEntity)mm.getMythicEntity().applyOptions(p);
-	        final ActiveMob am = new ActiveMob(p.getUniqueId(), BukkitAdapter.adapt(p),mm,e.getMobLevel());
-	        mythicmobs.getMobManager().registerActiveMob(am);
-	        mm.applyMobOptions(am,am.getLevel());
-	        mm.applyMobVolatileOptions(am);
-	        new TriggeredSkillAP(SkillTrigger.SPAWN,am,null);
-	        final Entity entity=e.getEntity();
-	        new BukkitRunnable() {
-				@Override
-				public void run() {
-					ActiveMob am1=null;
-					if ((am1=mythicmobs.getMobManager().getMythicMobInstance(entity))!=null) {
-						MythicSpawner ms=null;
-						if ((ms=am1.getSpawner())!=null) {
-							am.setSpawner(ms);
-							if (!ms.getAssociatedMobs().contains(am.getUniqueId())) ms.trackMob(am);
-						};
-						am1.getEntity().remove();
-					}
-				}
-			}.runTaskLater(Main.getPlugin(),1l);
-		}
-	}
-
-	@EventHandler
 	public void onProjectileLaunch(ProjectileLaunchEvent e) {
 		if (e.isCancelled()||!(e.getEntity().getShooter() instanceof Entity)) return;
 		final Entity s=(Entity)e.getEntity().getShooter();
@@ -232,21 +204,6 @@ public class Utils implements Listener {
 		if (am!=null) {
 			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
 			e.setCancelled(ts.getCancelled());
-		}
-	}
-	
-	
-	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInteractTrigger(PlayerInteractAtEntityEvent e) {
-		if (e.isCancelled()&&e.getRightClicked().getType().equals(EntityType.VILLAGER)) {
-			final Player p=e.getPlayer();
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					p.getOpenInventory().close();
-				}
-			}.runTaskLater(MythicMobs.inst(), 1L);
 		}
 	}
 	
@@ -476,10 +433,17 @@ public class Utils implements Listener {
 		return round(damage, 3);
 	}
 
+	
+	/*
+	 * 
 	public static LivingEntity getTargetedEntity(Player player) {
-		int range = 32;
+		return getTargetedEntity(player,32);
+	}
+	 */
+	
+	public static LivingEntity getTargetedEntity(Player player,int range) {
 		BlockIterator bi;
-		List<Entity> ne = player.getNearbyEntities(range, range, range);
+		List<Entity>ne=player.getNearbyEntities(range, range, range);
 		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en:ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Utils.noTargetVar)) {
@@ -914,8 +878,7 @@ public class Utils implements Listener {
         	i2=p.getMetadata(meta_BOWTICKSTART).get(0).asInt();
         }
         if (i2==-1) return (float)i2;
-        int i3=i1-i2;
-        float f1=(float)i3/20.0f;
+        float f1=(float)(i1-i2)/20.0f;
         if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
         return f1;
 	}

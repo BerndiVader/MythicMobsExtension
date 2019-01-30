@@ -8,8 +8,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.botai.Bot;
+import com.gmail.berndivader.mythicmobsext.botai.Session;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -17,7 +20,9 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.utils.tasks.Scheduler;
 import io.lumine.utils.tasks.Scheduler.Task;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.BuffMechanic;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -31,10 +36,10 @@ extends
 BuffMechanic
 implements
 ITargetedEntitySkill {
-	static String str;
+	static String str,response;
 	int period;
 	boolean breakOnMatch,breakOnFalse,multi,cancelMatch,cancelFalse,removephrase,infinite,ignoreTrigger,sense,strict;
-	String storage;
+	String storage,botId;
 	String[]phrases;
 	RangedDouble radius;
 	Optional<Skill>matchSkill=Optional.empty();
@@ -44,11 +49,13 @@ ITargetedEntitySkill {
 	
 	static {
 		str="MME_CHAT";
+		response="BOTRESPONSE";
 	}
 	
 	public ChatListenerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
+		this.buffName=Optional.of(mlc.getString("chatname","chatlistener"));
 		String s1=mlc.getString("phrases","").toLowerCase();
 		if (s1.startsWith("\"")&&s1.endsWith("\"")){
 			s1=s1.substring(1,s1.length()-1);
@@ -67,7 +74,7 @@ ITargetedEntitySkill {
 		multi=mlc.getBoolean("multi",false);
 		storage=mlc.getString("meta",null);
 		sense=mlc.getBoolean("sensitive",true);
-		this.buffName=Optional.of(mlc.getString("chatname","chatlistener"));
+		botId=mlc.getString("bot",new String());
 		if ((s1=mlc.getString("matchskill"))!=null) matchSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("falseskill"))!=null) falseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("inuseskill"))!=null) inuseSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -76,7 +83,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
-		if (!arg1.isPlayer()) return false;
+		if (!ignoreTrigger&&!arg1.isPlayer()) return false;
 		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.buffName))||(!multi&&!arg0.getCaster().hasBuff(buffName.get()))) {
 			try {
 				BuffTracker ff=new ChatListener(this,arg0,arg1);
@@ -106,8 +113,10 @@ ITargetedEntitySkill {
         final ChatListenerMechanic buff;
         Scheduler.Task task1;        
         int ticksRemaining;
-        boolean hasEnded;
+        boolean hasEnded=false,bot=false;
         AbstractEntity p;
+    	Bot steve;
+    	Session steveSession;
         
 		public ChatListener(ChatListenerMechanic buff,SkillMetadata data,AbstractEntity p) {
 			super(data);
@@ -115,8 +124,12 @@ ITargetedEntitySkill {
 			this.data=data;
             this.ticksRemaining=buff.period;
 			this.data.setCallingEvent(this);
-			this.hasEnded=false;
 			this.p=p;
+			if(botId.length()>0) {
+				steve=new Bot(botId);
+				steveSession=steve.createSession();
+			}
+			bot=steve!=null;
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
 			p.getBukkitEntity().setMetadata(str+this.buff.buffName,new FixedMetadataValue(Main.getPlugin(),true));
 			this.start();
@@ -125,11 +138,8 @@ ITargetedEntitySkill {
         @Override
         public void run() {
             if (!buff.infinite) this.ticksRemaining--;
-            
             if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
-            	if (endSkill.isPresent()) {
-            		if(endSkill.get().isUsable(data)) endSkill.get().execute(data.deepClone());
-            	}
+            	if (endSkill.isPresent()&&endSkill.get().isUsable(data)) endSkill.get().execute(data.deepClone());
                 this.terminate();
             }
         }
@@ -139,39 +149,60 @@ ITargetedEntitySkill {
 			if (!buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
         	String s2,s22;
-        	String s222=e.getMessage();
-        	s2=s22=Utils.parseMobVariables(s222,data,data.getCaster().getEntity(),p,null);
+        	final String s222=s2=s22=Utils.parseMobVariables(e.getMessage(),data,data.getCaster().getEntity(),p,null);
         	if (!sense) s2=s2.toLowerCase();
         	Skill sk=null;
-        	if(ChatListenerMechanic.this.radius.equals(
-        			(double)Math.sqrt(Utils.distance3D(this.data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),
-        			e.getPlayer().getLocation().toVector())))) {
-        		for(int i1=0;i1<phrases.length;i1++) {
-        			String s4=Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null);
-        			if (!sense) s4=s4.toLowerCase();
-        			if(bl1=buff.strict?s2.equals(s4):s2.contains(s4)) {
-        				if (removephrase) s22=s22.replace(phrases[i1],"");
-        				break;
-        			}
-        		}
-        		if (bl1) {
-        			if (cancelMatch) e.setCancelled(true);
-        			if (storage!=null) {
-        				String s3=Utils.parseMobVariables(storage,data,data.getCaster().getEntity(),p,null);
-        				data.getCaster().getEntity().getBukkitEntity().setMetadata(s3,new FixedMetadataValue(Main.getPlugin(),s22));
-        			}
-        			if (matchSkill.isPresent()) {
-        				sk=matchSkill.get();
-        				if(sk.isUsable(data)) sk.execute(data.deepClone());
-        			}
-    				if (breakOnMatch) this.terminate();
+        	if(ChatListenerMechanic.this.radius.equals((double)Math.sqrt(Utils.distance3D(this.data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),e.getPlayer().getLocation().toVector())))) {
+        		if(!bot) {
+            		for(int i1=0;i1<phrases.length;i1++) {
+            			String s4=Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null);
+            			if (!sense) s4=s4.toLowerCase();
+            			if(bl1=buff.strict?s2.equals(s4):s2.contains(s4)) {
+            				if (removephrase) s22=s22.replace(phrases[i1],"");
+            				break;
+            			}
+            		}
+            		if (bl1) {
+            			if (cancelMatch) e.setCancelled(true);
+            			if (storage!=null) {
+            				String s3=Utils.parseMobVariables(storage,data,data.getCaster().getEntity(),p,null);
+            				data.getCaster().getEntity().getBukkitEntity().setMetadata(s3,new FixedMetadataValue(Main.getPlugin(),s22));
+            			}
+            			if (matchSkill.isPresent()) {
+            				sk=matchSkill.get();
+            				if(sk.isUsable(data)) sk.execute(data.deepClone());
+            			}
+        				if (breakOnMatch) this.terminate();
+            		} else {
+            			if (cancelFalse) e.setCancelled(true);
+            			if (falseSkill.isPresent()) {
+            				sk=falseSkill.get();
+            				if(sk.isUsable(data)) sk.execute(data.deepClone());
+            			}
+        				if (breakOnFalse) this.terminate();
+            		}
         		} else {
-        			if (cancelFalse) e.setCancelled(true);
-        			if (falseSkill.isPresent()) {
-        				sk=falseSkill.get();
-        				if(sk.isUsable(data)) sk.execute(data.deepClone());
-        			}
-    				if (breakOnFalse) this.terminate();
+        			new BukkitRunnable() {
+						@Override
+						public void run() {
+		        			String thought;
+		        			try {
+								thought=steveSession.think(s222);
+							} catch (Exception e1) {
+								thought=new String();
+								e1.printStackTrace();
+							}
+		        			if(thought.length()>0) {
+		        				ActiveMob am=(ActiveMob)data.getCaster();
+		        				if(am!=null) {
+		        					am.setStance(thought);
+		        					am.signalMob(BukkitAdapter.adapt(e.getPlayer()),response);
+		        				} else {
+		        					e.getPlayer().sendMessage(thought);
+		        				}
+		        			}
+						}
+					}.runTaskAsynchronously(Main.getPlugin());
         		}
         	}
         }

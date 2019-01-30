@@ -14,7 +14,6 @@ AbstractCustomCondition
 implements
 ILocationCondition {
 
-	private WorldGuardFlags wgf = Main.wgf;
 	private String flagName;
 	private boolean debug;
 
@@ -26,7 +25,7 @@ ILocationCondition {
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		boolean b=wgf.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
+		boolean b=WorldGuardUtils.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
 		if (this.debug) Main.logger.info("wgstateflag outcome: "+b);
 		return b;
 	}

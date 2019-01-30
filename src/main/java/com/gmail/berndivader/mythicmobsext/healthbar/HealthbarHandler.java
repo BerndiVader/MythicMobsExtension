@@ -18,18 +18,31 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
-public class HealthbarHandler implements Listener {
-	protected static Plugin plugin=Main.getPlugin();
-	protected static Logger logger=Main.logger;
-	protected static HealthbarClock clock;
+public 
+class 
+HealthbarHandler 
+implements 
+Listener {
+	
+	static Plugin plugin=Main.getPlugin();
+	static Logger logger=Main.logger;
+	static String str_pluginName;
 	public static ConcurrentHashMap<UUID,Healthbar> healthbars;
 	public static ConcurrentHashMap<String,SpeechBubble> speechbubbles;
 	
+	HealthbarClock clock;
+	
+	static {
+		plugin=Main.getPlugin();
+		logger=Main.logger;
+		str_pluginName="HolograpicDisplays";
+		healthbars = new ConcurrentHashMap<UUID,Healthbar>();
+		speechbubbles = new ConcurrentHashMap<String,SpeechBubble>();
+		logger.info("using "+str_pluginName);
+	}
+	
 	public HealthbarHandler(Plugin plugin) {
-		HealthbarHandler.plugin = plugin;
-		HealthbarHandler.healthbars = new ConcurrentHashMap<UUID,Healthbar>();
-		HealthbarHandler.speechbubbles = new ConcurrentHashMap<String,SpeechBubble>();
-		HealthbarHandler.clock = new HealthbarClock();
+		clock = new HealthbarClock();
 		Main.pluginmanager.registerEvents(this, plugin);
 	}
 	
@@ -48,11 +61,16 @@ public class HealthbarHandler implements Listener {
 		});
 	}
 	
-	public class HealthbarClock implements Runnable {
+	public 
+	class 
+	HealthbarClock 
+	implements
+	Runnable 
+	{
 		protected BukkitTask taskId;
 		
 		public HealthbarClock() {
-			this.taskId = Bukkit.getScheduler().runTaskTimer(HealthbarHandler.plugin, () -> {
+			this.taskId = Bukkit.getScheduler().runTaskTimer(HealthbarHandler.plugin,()->{
 				this.run();
 	        },0L,1L);
 		}
@@ -60,8 +78,8 @@ public class HealthbarHandler implements Listener {
 		@Override
 		public void run() {
 			HealthbarHandler.healthbars.forEach((uuid,healthbar)-> {
-				Entity e=healthbar.entity;  // NMSUtils.getEntity(healthbar.getWorld(), uuid);
-				if (e==null || e.isDead()) {
+				Entity e=healthbar.entity;  
+				if (e==null||e.isDead()) {
 					healthbar.remove();
 				} else {
 					healthbar.update();
@@ -69,7 +87,7 @@ public class HealthbarHandler implements Listener {
 			});
 			HealthbarHandler.speechbubbles.forEach((idx,bubble)->{
 				Entity e= bubble.entity;
-				if (e==null || e.isDead()) {
+				if (e==null||e.isDead()) {
 					bubble.remove();
 				} else {
 					bubble.update();
@@ -83,37 +101,31 @@ public class HealthbarHandler implements Listener {
 		String mechanic = e.getMechanicName().toLowerCase();
 		SkillMechanic skill;
 		switch (mechanic) {
-		case "createhealthbar": {
-			skill = new CreateHealthbar(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-		case "changehealthbar": {
-			skill = new ChangeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-		case "speechbubble": {
-			skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-		case "removebubble": {
-			skill = new RemoveSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-		case "modifybubble": {
-			skill = new ModifySpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-		case "linebubble": {
-			skill = new LineSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
-			e.register(skill);
-			break;
-		}
-	    }
+			case "createhealthbar": 
+				skill = new CreateHealthbar(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+			case "changehealthbar": 
+				skill = new ChangeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+			case "speechbubble": 
+				skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+			case "removebubble": 
+				skill = new RemoveSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+			case "modifybubble": 
+				skill = new ModifySpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+			case "linebubble": 
+				skill = new LineSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
+		    }
 	}
 	
 	@EventHandler

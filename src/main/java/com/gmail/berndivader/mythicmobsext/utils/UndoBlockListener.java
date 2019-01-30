@@ -88,12 +88,10 @@ public class UndoBlockListener implements Listener {
 			new BukkitRunnable() {
 				int i=0;
 				@Override
-				@SuppressWarnings("deprecation")
 				public void run() {
 					if (i<blocks.size()) {
 						BlockState bs = blocks.get(i);
 						bs.getBlock().setType(bs.getType());
-						bs.getBlock().setData(bs.getBlock().getData());
 						bs.update();
 						if (ueffect)
 							bs.getBlock().getWorld().playEffect(bs.getLocation(), Effect.STEP_SOUND,bs.getBlock().getType());

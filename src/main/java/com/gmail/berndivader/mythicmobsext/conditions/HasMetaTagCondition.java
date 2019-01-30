@@ -20,7 +20,6 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
-import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
 @ExternalAnnotation(name="hasmeta,hasmetasimple",author="BerndiVader")
@@ -29,9 +28,7 @@ extends
 AbstractCustomCondition
 implements
 ILocationCondition,
-IEntityComparisonCondition,
-IEntityCondition
-{
+IEntityComparisonCondition {
 	protected HashMap<String,MetaTagValue> metatags = new HashMap<>();
 	protected boolean compareToSelf;
 
@@ -39,7 +36,7 @@ IEntityCondition
 		super(line, mlc);
 		this.compareToSelf=mlc.getBoolean(new String[] { "compareself", "cs" }, false);
 		if (!line.toLowerCase().startsWith("hasmetasimple")) {
-			String ms = mlc.getString(new String[] { "metalist", "list", "l" });
+			String ms = mlc.getString(new String[] { "metalist","meta","list", "l" });
 			if (ms.startsWith("\"")&&ms.endsWith("\"")) ms=ms.substring(1,ms.length()-1);
 			ms = SkillString.parseMessageSpecialChars(ms);
 			String metaStrings[]=ms.split("\\|\\|");
@@ -125,11 +122,6 @@ IEntityCondition
 			vs=((Double)v.getValue()).toString();
 		}
 		return vs;
-	}
-
-	@Override
-	public boolean check(AbstractEntity var1) {
-		return check(var1,var1);
 	}
 
 }
