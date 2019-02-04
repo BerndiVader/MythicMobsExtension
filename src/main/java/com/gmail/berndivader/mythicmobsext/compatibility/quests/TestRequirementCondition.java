@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
-import org.bukkit.entity.Player;
-
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -9,6 +7,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import me.blackvein.quests.Quest;
+import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
 
 public class TestRequirementCondition 
@@ -27,11 +26,11 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity e) {
-		if (!e.isPlayer()||s1.isEmpty()) return false;
+		if (!e.isPlayer()||s1.isEmpty()||quests.checkQuester(e.getUniqueId())) return false;
 		boolean bl1=false;
-		Player p=(Player)e.getBukkitEntity();
+		Quester quester=quests.getQuester(e.getUniqueId());
 		Quest quest=quests.getQuest(s1);
-		if (quest!=null) bl1=quest.testRequirements(p);
+		if (quest!=null) bl1=quest.testRequirements(quester);
 		return bl1;
 	}
 }

@@ -208,7 +208,7 @@ implements Handler,Listener {
         }
         location.setWorld(minecraftServer.getWorldServer(entityplayer.dimension).getWorld());
         entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        worldServer.getChunkProviderServer().getChunkAt((int)entityplayer1.locX >> 4, (int)entityplayer1.locZ >> 4,true,true);
+        worldServer.getChunkProvider().getChunkAt((int)entityplayer1.locX >> 4, (int)entityplayer1.locZ >> 4,true,true);
         entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(worldServer.worldProvider.getDimensionManager(),worldServer.getDifficulty(),worldServer.getWorldData().getType(),entityplayer1.playerInteractManager.getGameMode()));
         entityplayer1.spawnIn(worldServer);
         entityplayer1.dead = false;

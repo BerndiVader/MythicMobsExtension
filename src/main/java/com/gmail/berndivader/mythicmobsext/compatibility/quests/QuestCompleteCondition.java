@@ -35,7 +35,7 @@ IEntityCondition {
 		Quester q=quests.getQuester(p.getUniqueId());
 		boolean bl1=false;
 		if(q!=null) {
-			Iterator<String>quests=q.completedQuests.iterator();
+			Iterator<String>quests=q.getCompletedQuests().iterator();
 			while(quests.hasNext()&&!bl1) {
 				String quest=quests.next().toLowerCase();
 				for(int i1=0;i1<arr1.length;i1++) {
