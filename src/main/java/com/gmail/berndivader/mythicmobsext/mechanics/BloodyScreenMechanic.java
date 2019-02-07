@@ -40,20 +40,17 @@ ITargetedEntitySkill
 				if(!this.bl1) player.removeMetadata(str, Main.getPlugin());
 				Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),0,this.bl1);
 			} else {
-				if(!player.hasMetadata(str)) {
-					player.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-					Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),0,true);
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							if(player!=null&&player.isOnline()&&player.hasMetadata(str)) {
-								player.removeMetadata(str,Main.getPlugin());
-								Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),0,false);
-							}
+				player.setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
+				Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),0,true);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						if(player!=null&&player.isOnline()) {
+							if(player.hasMetadata(str)) player.removeMetadata(str,Main.getPlugin());
+							Volatile.handler.setWorldborder((Player)var2.getBukkitEntity(),0,false);
 						}
-					}.runTaskLater(Main.getPlugin(),timer);
-				}
-
+					}
+				}.runTaskLater(Main.getPlugin(),timer);
 			}
 		}
 		return true;

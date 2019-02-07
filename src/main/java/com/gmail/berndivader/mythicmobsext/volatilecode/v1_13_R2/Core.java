@@ -968,13 +968,13 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public Vec3D getPredictedMotion(Player bukkit_player,LivingEntity bukkit_target,float delta) {
-		EntityLiving target=(EntityLiving)((CraftLivingEntity)bukkit_target).getHandle();
-		EntityPlayer player=((CraftPlayer)bukkit_player).getHandle();
+	public Vec3D getPredictedMotion(LivingEntity bukkit_source,LivingEntity bukkit_target,float delta) {
+		EntityLiving target=((CraftLivingEntity)bukkit_target).getHandle();
+		EntityLiving source=((CraftLivingEntity)bukkit_source).getHandle();
 		
-		double delta_x=target.locX+(target.locX-target.lastX)*delta-player.locX;
-		double delta_y=target.locY+(target.locY-target.lastY)*delta+target.getHeadHeight()-0.15f-player.locY-player.getHeadHeight();
-		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-player.locZ;
+		double delta_x=target.locX+(target.locX-target.lastX)*delta-source.locX;
+		double delta_y=target.locY+(target.locY-target.lastY)*delta+target.getHeadHeight()-0.15f-source.locY-source.getHeadHeight();
+		double delta_z=target.locZ+(target.locZ-target.lastZ)*delta-source.locZ;
 		
 		return new Vec3D(delta_x,delta_y,delta_z);
 	}

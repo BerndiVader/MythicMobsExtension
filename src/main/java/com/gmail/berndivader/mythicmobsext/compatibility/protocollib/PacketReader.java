@@ -40,7 +40,7 @@ PacketListener {
 						PacketType.Play.Server.ENTITY_STATUS,
 					})
 				.gamePhase(GamePhase.PLAYING)
-				.options(new ListenerOptions[] {ListenerOptions.ASYNC})
+				.options(new ListenerOptions[0])
 				.build();
 	}
 
@@ -65,9 +65,9 @@ PacketListener {
 
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
+		if(packet_event.isCancelled()) return;
 		if(!packet_event.isPlayerTemporary()) {
 			Entity e=null;
-			//System.err.println(packet_event.getPacket().getHandle().getClass().getSimpleName()+":"+packet_event.getPacketType().getCurrentId());
 			switch(packet_event.getPacketType().getCurrentId()) {
 			case 28:
 				WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());

@@ -23,6 +23,7 @@ ITargetedEntitySkill {
 
 	public ChangeGamemodeMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 		try {
 			mode=GameMode.valueOf(mlc.getString("mode","SURVIVAL").toUpperCase());
 		} catch(Exception ex) {

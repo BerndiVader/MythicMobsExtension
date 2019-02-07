@@ -66,3 +66,12 @@ task createPom  {
         }
     }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
 }
+
+task copy132(type: Copy) {
+	from "build/libs/"+project.name+"-"+project.version+".jar"
+    into "c:/DevServer13/plugins/"
+}
+task copy122(type: Copy) {
+	from "build/libs/"+project.name+"-"+project.version+".jar"
+    into "c:/DevServer 112/plugins/"
+}

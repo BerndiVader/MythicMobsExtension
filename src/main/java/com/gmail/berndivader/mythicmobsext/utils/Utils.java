@@ -985,5 +985,50 @@ public class Utils implements Listener {
 	public static BlockFace getBlockFacing(float y,boolean bl1) {
 		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
 	}
+	
+	public static Vec2D calculateDirectionVec2D(Vec3D target_position,float velocity,float G) {
+		double x=target_position.getX();
+		double y=target_position.getY();
+		double z=target_position.getZ();
+		
+		float yaw=(float)(Math.atan2(z,x)*180/Math.PI)-90;
+		double distance=Math.sqrt(x*x+z*z);
+		float pitch=(float)-Math.toDegrees(
+				Math.atan((velocity*velocity
+						-Math.sqrt(
+								(float)(velocity*velocity*velocity
+										*velocity-G*(G*(distance*distance)
+												+2*y*(velocity*velocity)))))
+						/(G*distance)));
+		return new Vec2D(yaw,pitch);
+	}
+	
+	public static Vector calculateDirectionVector(Vec3D target_position,float velocity,float G) {
+		double x=target_position.getX();
+		double y=target_position.getY();
+		double z=target_position.getZ();
+		
+		float yaw=(float)(Math.atan2(z,x)*180/Math.PI)-90;
+		double distance=Math.sqrt(x*x+z*z);
+		float pitch=(float)-Math.toDegrees(
+				Math.atan((velocity*velocity
+						-Math.sqrt(
+								(float)(velocity*velocity*velocity
+										*velocity-G*(G*(distance*distance)
+												+2*y*(velocity*velocity)))))
+						/(G*distance)));
+		return getDirection(yaw,pitch);
+	}
+	
+	public static Vector getDirection(float yaw,float pitch) {
+        Vector vector=new Vector();
+        double rotX=DEGTORAD*yaw;
+        double rotY=DEGTORAD*pitch;
+        vector.setY(-Math.sin(rotY));
+        double h=Math.cos(rotY);
+        vector.setX(-h*Math.sin(rotX));
+        vector.setZ(h*Math.cos(rotX));
+        return vector;
+	}	
 
 }

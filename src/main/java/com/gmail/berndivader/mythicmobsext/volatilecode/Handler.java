@@ -51,7 +51,7 @@ public interface Handler {
 	void playAnimationPacket(LivingEntity e, int id);
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
 	void setWorldborder(Player p, int density, boolean play);
-	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
+	Vec3D getPredictedMotion(LivingEntity bukkit_source, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
 	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 }

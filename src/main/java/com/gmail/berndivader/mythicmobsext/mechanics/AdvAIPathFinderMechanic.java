@@ -24,6 +24,7 @@ ITargetedEntitySkill {
 	
 	public AdvAIPathFinderMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 		String parse=mlc.getString("goal","");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse=parse.substring(1, parse.length()-1);
