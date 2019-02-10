@@ -1,23 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-task processbuildnumber {
-	Properties p1=new Properties()
-	def d1=project.projectDir
-	def d2="${d1}/gradle.properties"
-	File pf1=new File(d2)
-	p1.load(pf1.newDataInputStream())
-	Integer i1=(((p1.getProperty('artbuild')) as BigDecimal) + 1 )
-	p1.setProperty('artbuild', i1.toString())
-	p1.store(pf1.newWriter(), null)
-	p1.load(pf1.newDataInputStream())
-	version = artver
-	group = "com.gmail.berndivader"
-}
-
 repositories {
     jcenter()
-    mavenCentral()
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
     }    
@@ -55,23 +40,4 @@ processResources {
 		exclude "plugin.yml"
 		exclude "version.txt"
 	}
-}
-
-task createPom  {
-    pom {
-        project {
-            groupId "com.gmail.berndivader"
-            artifactId "MythicMobsExtension"
-            version project.version
-        }
-    }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
-}
-
-task copy132(type: Copy) {
-	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/DevServer13/plugins/"
-}
-task copy122(type: Copy) {
-	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/DevServer 112/plugins/"
 }

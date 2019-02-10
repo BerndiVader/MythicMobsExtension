@@ -173,7 +173,7 @@ public class Utils implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
-		if (e.isCancelled()) return;
+		if (!e.getEntity().isValid()||e.isCancelled()) return;
 		e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	
@@ -1029,6 +1029,21 @@ public class Utils implements Listener {
         vector.setX(-h*Math.sin(rotX));
         vector.setZ(h*Math.cos(rotX));
         return vector;
-	}	
+	}
+	
+    public static double getGravity(EntityType entityType) {
+        switch (entityType) {
+            case ARROW:
+                return 0.118;
+            case SNOWBALL:
+                return 0.076;
+            case THROWN_EXP_BOTTLE:
+                return 0.157;
+            case EGG:
+                return 0.074;
+            default:
+                return 0.115;
+        }
+    }
 
 }

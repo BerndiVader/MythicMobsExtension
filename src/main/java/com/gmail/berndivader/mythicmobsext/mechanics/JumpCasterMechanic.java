@@ -26,7 +26,7 @@ ITargetedEntitySkill
 {
 	
 	float speed,force,G;
-	boolean debug;
+	boolean debug,default_g;
 	
 	public JumpCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

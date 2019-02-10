@@ -66,7 +66,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
-		if (t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
+		if (!t.isValid() || t.isDead() || t.getHealth() <= 0.0 || data.getCaster().isUsingDamageSkill())
 			return false;
 		AbstractEntity c = data.getCaster().getEntity();
 		double dmg=Utils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
