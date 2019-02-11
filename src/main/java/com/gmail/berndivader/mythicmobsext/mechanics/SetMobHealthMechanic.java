@@ -34,8 +34,8 @@ ITargetedEntitySkill {
 	}
 	
 	boolean c(SkillMetadata data,AbstractEntity t) {
-		if (data.getCaster().getEntity().isLiving()) {
-			ActiveMob am=(ActiveMob)data.getCaster();
+		if(t.isValid()&&t.isLiving()) {
+			ActiveMob am=Utils.mobmanager.getMythicMobInstance(t);
 			double h=20,mod=0;
 			h=Utils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
 			if (!b&&am!=null) {
@@ -47,7 +47,7 @@ ITargetedEntitySkill {
             }
 			
 			if (am!=null&&am.getLevel()>1&&mod>0.0) h+=mod*(am.getLevel()-1);
-			LivingEntity e=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
+			LivingEntity e=(LivingEntity)t.getBukkitEntity();
 			switch(m) {
 			case 'A':
 				h+=e.getMaxHealth();
@@ -70,7 +70,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		return c(data,null);
+		return c(data,data.getCaster().getEntity());
 	}
 
 	@Override

@@ -807,15 +807,16 @@ implements Handler,Listener {
 
 	private NBTTagCompound TFa(net.minecraft.server.v1_12_R1.Entity e) {
 		NBTTagCompound nbt=null;
-		try {
-			ItemStack is;
-			nbt=e.save(new NBTTagCompound());
-			if (e instanceof EntityHuman&&!(is=((EntityHuman)e).inventory.getItemInHand()).isEmpty()) {
-				nbt.set("SelectedItem",is.save(new NBTTagCompound()));
+		if(e.valid) {
+			try {
+				ItemStack is;
+				nbt=e.save(new NBTTagCompound());
+				if (e instanceof EntityHuman&&!(is=((EntityHuman)e).inventory.getItemInHand()).isEmpty()) {
+					nbt.set("SelectedItem",is.save(new NBTTagCompound()));
+				}
+			} catch (Throwable t) {
+				Main.logger.warning("Error while getting NBT for entity "+e.getBukkitEntity().getType().toString()+" "+e.getCustomName());
 			}
-			return nbt;
-		} catch (Throwable t) {
-			Main.logger.warning("Error while getting NBT for entity "+e.getName()+" "+e.getCustomName());
 		}
 		return nbt;
 	}
