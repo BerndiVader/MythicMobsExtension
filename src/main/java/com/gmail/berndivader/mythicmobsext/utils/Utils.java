@@ -73,7 +73,12 @@ import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
 @SuppressWarnings("deprecation")
-public class Utils implements Listener {
+public
+class 
+Utils
+implements
+Listener
+{
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
 	public static int serverV;
@@ -173,7 +178,7 @@ public class Utils implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
-		if (!e.getEntity().isValid()||e.isCancelled()) return;
+		if (e.isCancelled()||!e.getEntity().isValid()) return;
 		e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	
@@ -214,6 +219,10 @@ public class Utils implements Listener {
 		}
 	}
 
+	/*
+	 *
+	 * removed for debugging purposes
+	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
 		if (e.getEntity() instanceof Player) return;
@@ -225,8 +234,10 @@ public class Utils implements Listener {
 					e.getEntity().removeScoreboardTag(arr1[i1]);
 				}
 			}
-		}.runTaskAsynchronously(Main.getPlugin());
+		}.runTask(Main.getPlugin());
 	}
+	
+	 */
 	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
@@ -234,9 +245,8 @@ public class Utils implements Listener {
 		if (entityDamageEvent != null && !entityDamageEvent.isCancelled()
 				&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
-			if (damager != null && mobmanager.isActiveMob(damager.getUniqueId())) {
-				new TriggeredSkillAP(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),
-						BukkitAdapter.adapt(e.getEntity()));
+			if (damager!=null&&mobmanager.isActiveMob(damager.getUniqueId())) {
+				new TriggeredSkillAP(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),BukkitAdapter.adapt(e.getEntity()));
 			}
 		}
 	}
@@ -432,14 +442,6 @@ public class Utils implements Listener {
 			p.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), true));
 		return round(damage, 3);
 	}
-
-	
-	/*
-	 * 
-	public static LivingEntity getTargetedEntity(Player player) {
-		return getTargetedEntity(player,32);
-	}
-	 */
 	
 	public static LivingEntity getTargetedEntity(Player player,int range) {
 		BlockIterator bi;
@@ -1004,23 +1006,11 @@ public class Utils implements Listener {
 	}
 	
 	public static Vector calculateDirectionVector(Vec3D target_position,float velocity,float G) {
-		double x=target_position.getX();
-		double y=target_position.getY();
-		double z=target_position.getZ();
-		
-		float yaw=(float)(Math.atan2(z,x)*180/Math.PI)-90;
-		double distance=Math.sqrt(x*x+z*z);
-		float pitch=(float)-Math.toDegrees(
-				Math.atan((velocity*velocity
-						-Math.sqrt(
-								(float)(velocity*velocity*velocity
-										*velocity-G*(G*(distance*distance)
-												+2*y*(velocity*velocity)))))
-						/(G*distance)));
-		return getDirection(yaw,pitch);
+		Vec2D vec2d=calculateDirectionVec2D(target_position,velocity,G);
+		return getDirection((float)vec2d.getX(),(float)vec2d.getY());
 	}
 	
-	public static Vector getDirection(float yaw,float pitch) {
+	private static Vector getDirection(float yaw,float pitch) {
         Vector vector=new Vector();
         double rotX=DEGTORAD*yaw;
         double rotY=DEGTORAD*pitch;
