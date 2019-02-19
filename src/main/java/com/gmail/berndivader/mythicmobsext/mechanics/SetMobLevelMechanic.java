@@ -17,13 +17,11 @@ extends
 SkillMechanic 
 implements 
 ITargetedEntitySkill {
-	private String a,skill;
+	private String a;
 
 	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
 		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
-		this.skill=skill;
 		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 	}
 
@@ -40,7 +38,7 @@ ITargetedEntitySkill {
 			try {
 				am.setLevel(Utils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
 			} catch (NullPointerException ex) {
-				Main.logger.warning("Failed to set moblevel with "+skill+"!");
+				Main.logger.warning("Failed to set moblevel with for: "+this.config.getLine());
 			}
 			return true;
 		}

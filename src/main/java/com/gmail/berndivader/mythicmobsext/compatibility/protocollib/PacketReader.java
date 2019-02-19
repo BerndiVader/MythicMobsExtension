@@ -13,6 +13,7 @@ import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
+import com.comphenix.protocol.injector.server.TemporaryPlayer;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
@@ -65,35 +66,33 @@ PacketListener {
 
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
-		if(packet_event.isCancelled()) return;
-		if(!packet_event.isPlayerTemporary()) {
-			Entity e=null;
-			switch(packet_event.getPacketType().getCurrentId()) {
-			case 28:
-				WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
-				if(entity_status.getEntityStatus()==37) {
-					if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-						NMSUtils.setFireProofEntity(e,true);;
-						packet_event.setCancelled(true);
+		if(packet_event.isCancelled()||packet_event.getPlayer() instanceof TemporaryPlayer) return;
+		Entity e=null;
+		switch(packet_event.getPacketType().getCurrentId()) {
+		case 28:
+			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
+			if(entity_status.getEntityStatus()==37) {
+				if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+					NMSUtils.setFireProofEntity(e,true);;
+					packet_event.setCancelled(true);
+				}
+			}
+			break;
+		case 63:
+			WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
+			if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+				List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
+				if(watchables.size()>0) {
+					WrappedWatchableObject watchable=watchables.get(0);
+					if(watchable.getValue() instanceof Byte) {
+						byte b=(byte)((byte)watchable.getValue()&~0x1);
+						watchable.setValue(b);
+						entity_meta.setMetadata(watchables);
+						packet_event.setPacket(entity_meta.getHandle());
 					}
 				}
-				break;
-			case 63:
-				WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-				if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-					List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
-					if(watchables.size()>0) {
-						WrappedWatchableObject watchable=watchables.get(0);
-						if(watchable.getValue() instanceof Byte) {
-							byte b=(byte)((byte)watchable.getValue()&~0x1);
-							watchable.setValue(b);
-							entity_meta.setMetadata(watchables);
-							packet_event.setPacket(entity_meta.getHandle());
-						}
-					}
-				};
-				break;
-			}
+			};
+			break;
 		}
 	}
 
