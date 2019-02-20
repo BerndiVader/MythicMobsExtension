@@ -38,10 +38,7 @@ public class PathFinderGoalShoot extends PathfinderGoal {
 
     @Override
     public boolean a() {
-        if (this.a.getGoalTarget() == null) {
-            return false;
-        }
-        return true;
+    	return this.a.getGoalTarget()!=null;
     }
 
     @Override

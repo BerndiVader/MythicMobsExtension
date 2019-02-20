@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
@@ -9,6 +11,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.*;
 
 @ExternalAnnotation(name="resettarget,settarget",author="BerndiVader")
@@ -46,7 +49,15 @@ INoTargetSkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
-			NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),set?target.getBukkitEntity():null,reason,event);
+			if(Utils.mobmanager.isActiveMob(target)) {
+				ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
+				am.setTarget(target);
+			} else if(data.getCaster().getEntity().isCreature()) {
+				Creature creature=(Creature)data.getCaster().getEntity().getBukkitEntity();
+				creature.setTarget((LivingEntity)target.getBukkitEntity());
+			} else {
+				NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),set?target.getBukkitEntity():null,reason,event);
+			}
 			if(trigger&&Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
 				new TriggeredSkillAP(SkillTrigger.TARGETCHANGE,Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()),target);
 			}
