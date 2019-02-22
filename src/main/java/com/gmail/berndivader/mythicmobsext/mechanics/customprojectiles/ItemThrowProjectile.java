@@ -137,10 +137,10 @@ ITargetedLocationSkill
         private Item item;
         private SkillCaster caster;
         private Entity owner;
-        private Location currentLocation,target_location;
+        private Location currentLocation,target_location,lastLocation;
         private int taskId;
-        private HashSet<LivingEntity> targets;
-        private Map<LivingEntity,Long> immune;
+        private HashSet<LivingEntity>targets;
+        private Map<LivingEntity,Long>immune;
         private int count,dur;
         
         public ProjectileRunner(SkillMetadata data, AbstractEntity target) {
@@ -165,10 +165,10 @@ ITargetedLocationSkill
             
             this.currentLocation.setY(this.currentLocation.getY()+ItemThrowProjectile.this.YOffset);
     		if (ItemThrowProjectile.this.fOffset!=0d||ItemThrowProjectile.this.sOffset!=0d) {
-    			Vector soV=Utils.getSideOffsetVectorFixed(this.currentLocation.getYaw(),ItemThrowProjectile.this.sOffset, this.iYaw);
-    			Vector foV=Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),ItemThrowProjectile.this.fOffset);
-    			this.currentLocation.add(soV);
-    			this.currentLocation.add(foV);
+    			Vector offset;
+    			offset=Utils.getSideOffsetVectorFixed(this.currentLocation.getYaw(),ItemThrowProjectile.this.sOffset, this.iYaw);
+    			offset.add(Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),ItemThrowProjectile.this.fOffset));
+    			this.currentLocation.add(offset);
     		}
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
@@ -200,6 +200,10 @@ ITargetedLocationSkill
 
         @Override
         public void run() {
+        	
+        	this.lastLocation=currentLocation;
+            this.currentLocation=this.item.getLocation();
+            
             if (this.cancelled) {
                 return;
             }
@@ -212,8 +216,6 @@ ITargetedLocationSkill
             }
             
             if(ItemThrowProjectile.this.stopBlock) {
-//            	Vec2D vec=Utils.lookAtVec(this.currentLocation,this.currentLocation.clone().add(item.getVelocity()));
-//            	BlockFace face=Utils.getBlockFacing((float)vec.getX(),true);
             	if(Volatile.handler.velocityChanged(item)) {
             		this.stop();
             		return;
@@ -265,10 +267,9 @@ ITargetedLocationSkill
             }
 			if(this.lifetime) this.count++;
 			this.dur++;
-            this.currentLocation=this.item.getLocation();
         }
 
-        public void doHit(HashSet<AbstractEntity> targets) {
+        void doHit(HashSet<AbstractEntity> targets) {
             if (ItemThrowProjectile.this.onHitSkill.isPresent() && ItemThrowProjectile.this.onHitSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
                 sData.setEntityTargets(targets);
@@ -277,7 +278,7 @@ ITargetedLocationSkill
             }
         }
 
-        public void stop() {
+        void stop() {
             if (ItemThrowProjectile.this.onEndSkill.isPresent() && ItemThrowProjectile.this.onEndSkill.get().isUsable(this.data)) {
                 SkillMetadata sData = this.data.deepClone();
                 ItemThrowProjectile.this.onEndSkill.get().execute(sData.setOrigin(BukkitAdapter.adapt(this.currentLocation))

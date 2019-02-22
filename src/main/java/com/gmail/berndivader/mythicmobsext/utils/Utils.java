@@ -178,7 +178,7 @@ Listener
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void tagAndChangeSpawnReason(CreatureSpawnEvent e) {
-		if (e.isCancelled()||!e.getEntity().isValid()) return;
+		if (e.isCancelled()) return;
 		e.getEntity().setMetadata(meta_SPAWNREASON,new FixedMetadataValue(Main.getPlugin(),e.getSpawnReason()));
 	}
 	

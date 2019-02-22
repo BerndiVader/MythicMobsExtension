@@ -50,10 +50,8 @@ ITargetedLocationSkill
 		Entity entity=data.getCaster().getEntity().getBukkitEntity();
 		Location destination=BukkitAdapter.adapt(l);
 
-		if(!use_gravity) {
-			System.err.println("use gravity");
-			gravity=Utils.getGravity(entity.getType());
-		}
+		if(!use_gravity) gravity=Utils.getGravity(entity.getType());
+		System.err.println("g:"+gravity);
         entity.setVelocity(MathUtils.calculateVelocity(entity.getLocation().toVector(),destination.toVector(),gravity,height));
 		
 		return true;
