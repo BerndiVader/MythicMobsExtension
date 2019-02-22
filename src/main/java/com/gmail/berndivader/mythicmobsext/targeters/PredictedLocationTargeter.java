@@ -24,11 +24,11 @@ extends
 ILocationSelector 
 {
 	String selector;
-	double delta;
+	float delta;
 
 	public PredictedLocationTargeter(MythicLineConfig mlc) {
 		selector=mlc.getLine().toLowerCase().split("predict")[0];
-		delta=mlc.getDouble("delta",5d);
+		delta=mlc.getFloat("delta",5f);
 	}
 
 	@Override
@@ -54,9 +54,8 @@ ILocationSelector
 			break;
 		}
 		if (ee!=null&&ee instanceof LivingEntity&&data.getCaster().getEntity().isLiving()) {
-			Vec3D target_position=Volatile.handler.getPredictedMotion((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)ee,5.0f);
-//			System.err.println(target_position.toString());
-			targets.add(BukkitAdapter.adapt(new Location(ee.getWorld(),target_position.getX(),target_position.getY(),target_position.getZ())));
+			Vec3D target_position=Volatile.handler.getPredictedMotion((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)ee,delta);
+			targets.add(BukkitAdapter.adapt(ee.getLocation().clone().add(target_position.getX(),target_position.getY(),target_position.getZ())));
 		}
 		return targets;
 	}

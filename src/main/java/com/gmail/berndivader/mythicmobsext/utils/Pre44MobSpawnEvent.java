@@ -79,7 +79,6 @@ Listener {
                 mm.applyMobOptions(am, level);
                 mm.applyMobVolatileOptions(am);
                 mm.applySpawnModifiers(am);
-                if(spawn.isLiving()) ((LivingEntity)spawn.getBukkitEntity()).getEquipment().clear();
             }
         }
         if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) {
