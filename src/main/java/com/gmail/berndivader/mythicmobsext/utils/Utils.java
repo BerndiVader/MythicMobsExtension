@@ -373,7 +373,7 @@ Listener
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
+			boolean preventKnockback, boolean preventImmunity,List<EntityType>ignores, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -399,8 +399,9 @@ Listener
 		round(damage,3);
 		target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(), damage));
         target.damage(damage, source);
-		if (preventImmunity)
-			target.setNoDamageTicks(0);
+		if (preventImmunity) {
+			if(!ignores.contains(target.getType())) target.setNoDamageTicks(0);
+		}
 		am.setUsingDamageSkill(false);
 	}
 
