@@ -81,7 +81,7 @@ public class CachedOwnerHandler implements Listener {
 					};
 				}
 			}
-		}.runTaskAsynchronously(plugin);		
+		}.runTaskLaterAsynchronously(plugin,20l);
 	}
 	
 	public static void addCachedOwner(UUID slave, UUID owner) {
