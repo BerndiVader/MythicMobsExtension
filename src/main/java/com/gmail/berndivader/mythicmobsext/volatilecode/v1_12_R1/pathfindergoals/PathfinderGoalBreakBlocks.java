@@ -113,7 +113,7 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
                         block.breakNaturally();
                         PathfinderGoalBreakBlocks.this.isBreaking=false;
 					}
-				}.runTaskLaterAsynchronously(Main.getPlugin(), 20L);
+				}.runTaskLater(Main.getPlugin(), 20L);
             }
         }
     }

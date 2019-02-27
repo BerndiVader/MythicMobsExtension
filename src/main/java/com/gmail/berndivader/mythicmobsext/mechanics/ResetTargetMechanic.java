@@ -14,7 +14,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.*;
 
-@ExternalAnnotation(name="resettarget,settarget",author="BerndiVader")
+@ExternalAnnotation(name="resettarget,settarget_ext",author="BerndiVader")
 public 
 class 
 ResetTargetMechanic
@@ -51,10 +51,10 @@ INoTargetSkill
 		if(target.isLiving()) {
 			if(Utils.mobmanager.isActiveMob(target)) {
 				ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
-				am.setTarget(target);
+				am.setTarget(set?target:null);
 			} else if(data.getCaster().getEntity().isCreature()) {
 				Creature creature=(Creature)data.getCaster().getEntity().getBukkitEntity();
-				creature.setTarget((LivingEntity)target.getBukkitEntity());
+				creature.setTarget(set?(LivingEntity)target.getBukkitEntity():null);
 			} else {
 				NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),set?target.getBukkitEntity():null,reason,event);
 			}
