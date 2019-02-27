@@ -147,7 +147,10 @@ JavaPlugin
 			Main.healthbarhandler.removeHealthbars();
 			Main.healthbarhandler.removeSpeechBubbles();
 		}
-		if (Main.cachedOwnerHandler!=null) CachedOwnerHandler.saveCachedOwners();
+		if (Main.cachedOwnerHandler!=null) {
+			CachedOwnerHandler.cleanUp();
+			CachedOwnerHandler.saveCachedOwners();
+		}
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
 		pluginmanager.disablePlugin(this);
