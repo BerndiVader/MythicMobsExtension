@@ -12,8 +12,8 @@ import net.minecraft.server.v1_12_R1.PathfinderGoal;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -103,9 +103,7 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
             	new BukkitRunnable() {
 					@Override
 					public void run() {
-						EntityChangeBlockEvent event=new EntityChangeBlockEvent(PathfinderGoalBreakBlocks.this.entity.getBukkitEntity(), block, block.getBlockData());
-		                Main.getPlugin().getServer().getPluginManager().callEvent(event);
-		                if (!event.isCancelled()) {
+						if(!CraftEventFactory.callEntityChangeBlockEvent(entity,block,Material.AIR).isCancelled()) {
 		                	BlockPosition position=new BlockPosition(block.getX(),block.getY(),block.getZ());
 	                        entity.world.triggerEffect(1021,position,0);
 	                        entity.world.triggerEffect(2001,position,net.minecraft.server.v1_12_R1.Block.getCombinedId(entity.world.getType(position)));
