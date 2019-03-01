@@ -146,12 +146,12 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + ItemProjectile.this.startYOffset);
 				}
 				if (ItemProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),ItemProjectile.this.startForwardOffset);
+					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),ItemProjectile.this.startForwardOffset);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
 				if (ItemProjectile.this.startSideOffset != 0.0f) {
-					Vector v=Utils.getSideOffsetVectorFixed(this.startLocation.getYaw(), ItemProjectile.this.startSideOffset,false);
+					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), ItemProjectile.this.startSideOffset,false);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}

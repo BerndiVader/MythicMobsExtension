@@ -177,8 +177,8 @@ ITargetedLocationSkill {
             }
     		this.useOffset=IStatueMechanic.this.fOffset!=0d||IStatueMechanic.this.sOffset!=0d;
     		if (this.useOffset) {
-    			Vector soV=Utils.getSideOffsetVectorFixed(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
+    			Vector soV=MathUtils.getSideOffsetVectorFixed(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=MathUtils.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
@@ -260,8 +260,8 @@ ITargetedLocationSkill {
         		double z = this.currentLocation.getZ();
     			Location l=this.owner.getLocation();
     			l.setPitch(0f);
-    			Vector soV=Utils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=Utils.getFrontBackOffsetVector(l.getDirection(),this.fOffset);
+    			Vector soV=MathUtils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=MathUtils.getFrontBackOffsetVector(l.getDirection(),this.fOffset);
     			x+=soV.getX()+foV.getX();
     			z+=soV.getZ()+foV.getZ();
     			this.currentLocation.setX(x);

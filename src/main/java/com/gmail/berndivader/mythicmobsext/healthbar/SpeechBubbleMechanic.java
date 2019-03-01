@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -69,8 +70,8 @@ ITargetedEntitySkill {
 		String[]a1=li1.toArray(new String[li1.size()]);
 		if (!b1) {
 			if (this.so!=0d||this.fo!=0d) {
-				l1.add(Utils.getSideOffsetVectorFixed(l1.getYaw(),this.so,false));
-				l1.add(Utils.getFrontBackOffsetVector(l1.getDirection(),this.fo));
+				l1.add(MathUtils.getSideOffsetVectorFixed(l1.getYaw(),this.so,false));
+				l1.add(MathUtils.getFrontBackOffsetVector(l1.getDirection(),this.fo));
 			}
 			l1.add(0,(a1.length*0.25)+this.offset,0);
 		} else {

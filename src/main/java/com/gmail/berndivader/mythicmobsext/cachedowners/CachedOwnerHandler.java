@@ -44,7 +44,12 @@ public class CachedOwnerHandler implements Listener {
 			CachedOwnerHandler.cachedOwners = CachedOwnerHandler.loadCachedOwners();
 		}
 		Main.pluginmanager.registerEvents(this, plugin);
-		CachedOwnerHandler.restoreMobOwner();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				CachedOwnerHandler.restoreMobOwners();
+			}
+		}.runTaskLater(Main.getPlugin(),20l);
 	}
 	
 	@EventHandler
@@ -62,7 +67,7 @@ public class CachedOwnerHandler implements Listener {
 
 	@EventHandler
 	public void onMythicReloaded(MythicReloadedEvent e) {
-		CachedOwnerHandler.restoreMobOwner();
+		CachedOwnerHandler.restoreMobOwners();
 	}
 	
 	public static UUID getMobOwner(UUID slave_uuid) {
@@ -70,7 +75,7 @@ public class CachedOwnerHandler implements Listener {
 		return cachedOwners.get(slave_uuid);
 	}
 	
-	public static void restoreMobOwner() {
+	public static void restoreMobOwners() {
 		if (CachedOwnerHandler.cachedOwners.isEmpty()) return;
 		new BukkitRunnable() {
 			@Override

@@ -16,6 +16,7 @@ import com.gmail.berndivader.mythicmobsext.botai.Session;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.utils.tasks.Scheduler;
 import io.lumine.utils.tasks.Scheduler.Task;
@@ -23,17 +24,17 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.BuffMechanic;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 
 @ExternalAnnotation(name="chatlistener",author="BerndiVader")
 public class ChatListenerMechanic 
 extends 
-BuffMechanic
+AuraMechanic
 implements
 ITargetedEntitySkill {
 	static String str,response;
@@ -55,7 +56,7 @@ ITargetedEntitySkill {
 	public ChatListenerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.buffName=Optional.of(mlc.getString("chatname","chatlistener"));
+		this.auraName=Optional.of(mlc.getString("chatname","chatlistener"));
 		String s1=mlc.getString("phrases","").toLowerCase();
 		if (s1.startsWith("\"")&&s1.endsWith("\"")){
 			s1=s1.substring(1,s1.length()-1);
@@ -84,9 +85,9 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!ignoreTrigger&&!arg1.isPlayer()) return false;
-		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.buffName))||(!multi&&!arg0.getCaster().hasBuff(buffName.get()))) {
+		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.auraName))||(!multi&&!arg0.getCaster().hasAura(auraName.get()))) {
 			try {
-				BuffTracker ff=new ChatListener(this,arg0,arg1);
+				AuraTracker ff=new ChatListener(this,arg0,arg1);
 				Field f=ff.getClass().getSuperclass().getDeclaredField("task");
 				f.setAccessible(true);
 				((ChatListener)ff).task1=(Task)f.get(ff);
@@ -105,7 +106,7 @@ ITargetedEntitySkill {
 	
 	class ChatListener
 	extends
-	ChatListenerMechanic.BuffTracker
+	ChatListenerMechanic.AuraTracker
 	implements
 	Runnable,
 	IParentSkill,
@@ -119,11 +120,10 @@ ITargetedEntitySkill {
     	Session steveSession;
         
 		public ChatListener(ChatListenerMechanic buff,SkillMetadata data,AbstractEntity p) {
-			super(data);
+			super(p,data);
 			this.buff=buff;
-			this.data=data;
             this.ticksRemaining=buff.period;
-			this.data.setCallingEvent(this);
+			this.skillMetadata.setCallingEvent(this);
 			this.p=p;
 			if(botId.length()>0) {
 				steve=new Bot(botId);
@@ -131,15 +131,15 @@ ITargetedEntitySkill {
 			}
 			bot=steve!=null;
 			Main.pluginmanager.registerEvents(this,Main.getPlugin());
-			p.getBukkitEntity().setMetadata(str+this.buff.buffName,new FixedMetadataValue(Main.getPlugin(),true));
+			p.getBukkitEntity().setMetadata(str+this.buff.auraName,new FixedMetadataValue(Main.getPlugin(),true));
 			this.start();
 		}
 		
         @Override
         public void run() {
             if (!buff.infinite) this.ticksRemaining--;
-            if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
-            	if (endSkill.isPresent()&&endSkill.get().isUsable(data)) endSkill.get().execute(data.deepClone());
+            if (skillMetadata.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<=0) {
+            	if (endSkill.isPresent()&&endSkill.get().isUsable(skillMetadata)) endSkill.get().execute(skillMetadata.deepClone());
                 this.terminate();
             }
         }
@@ -149,13 +149,13 @@ ITargetedEntitySkill {
 			if (!buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
         	String s2,s22;
-        	final String s222=s2=s22=Utils.parseMobVariables(e.getMessage(),data,data.getCaster().getEntity(),p,null);
+        	final String s222=s2=s22=Utils.parseMobVariables(e.getMessage(),skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
         	if (!sense) s2=s2.toLowerCase();
         	Skill sk=null;
-        	if(ChatListenerMechanic.this.radius.equals((double)Math.sqrt(Utils.distance3D(this.data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),e.getPlayer().getLocation().toVector())))) {
+        	if(ChatListenerMechanic.this.radius.equals((double)Math.sqrt(MathUtils.distance3D(this.skillMetadata.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),e.getPlayer().getLocation().toVector())))) {
         		if(!bot) {
             		for(int i1=0;i1<phrases.length;i1++) {
-            			String s4=Utils.parseMobVariables(phrases[i1],data,data.getCaster().getEntity(),p,null);
+            			String s4=Utils.parseMobVariables(phrases[i1],skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
             			if (!sense) s4=s4.toLowerCase();
             			if(bl1=buff.strict?s2.equals(s4):s2.contains(s4)) {
             				if (removephrase) s22=s22.replace(phrases[i1],"");
@@ -165,19 +165,19 @@ ITargetedEntitySkill {
             		if (bl1) {
             			if (cancelMatch) e.setCancelled(true);
             			if (storage!=null) {
-            				String s3=Utils.parseMobVariables(storage,data,data.getCaster().getEntity(),p,null);
-            				data.getCaster().getEntity().getBukkitEntity().setMetadata(s3,new FixedMetadataValue(Main.getPlugin(),s22));
+            				String s3=Utils.parseMobVariables(storage,skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
+            				skillMetadata.getCaster().getEntity().getBukkitEntity().setMetadata(s3,new FixedMetadataValue(Main.getPlugin(),s22));
             			}
             			if (matchSkill.isPresent()) {
             				sk=matchSkill.get();
-            				if(sk.isUsable(data)) sk.execute(data.deepClone());
+            				if(sk.isUsable(skillMetadata)) sk.execute(skillMetadata.deepClone());
             			}
         				if (breakOnMatch) this.terminate();
             		} else {
             			if (cancelFalse) e.setCancelled(true);
             			if (falseSkill.isPresent()) {
             				sk=falseSkill.get();
-            				if(sk.isUsable(data)) sk.execute(data.deepClone());
+            				if(sk.isUsable(skillMetadata)) sk.execute(skillMetadata.deepClone());
             			}
         				if (breakOnFalse) this.terminate();
             		}
@@ -193,7 +193,7 @@ ITargetedEntitySkill {
 								e1.printStackTrace();
 							}
 		        			if(thought.length()>0) {
-		        				ActiveMob am=(ActiveMob)data.getCaster();
+		        				ActiveMob am=(ActiveMob)skillMetadata.getCaster();
 		        				if(am!=null) {
 		        					am.setStance(thought);
 		        					am.signalMob(BukkitAdapter.adapt(e.getPlayer()),response);
@@ -220,13 +220,13 @@ ITargetedEntitySkill {
         @Override
         public boolean terminate() {
             if (!this.hasEnded) {
-                if (ChatListenerMechanic.this.buffName.isPresent()) {
-                    this.data.getCaster().unregisterBuff(ChatListenerMechanic.this.buffName.get(),this);
+                if (ChatListenerMechanic.this.auraName.isPresent()) {
+                    this.skillMetadata.getCaster().unregisterAura(ChatListenerMechanic.this.auraName.get(),this);
                 }
                 this.hasEnded = true;
             }
         	HandlerList.unregisterAll(this);
-        	p.getBukkitEntity().removeMetadata(str+this.buff.buffName,Main.getPlugin());
+        	p.getBukkitEntity().removeMetadata(str+this.buff.auraName,Main.getPlugin());
         	return task1.terminate();
         }
 	}

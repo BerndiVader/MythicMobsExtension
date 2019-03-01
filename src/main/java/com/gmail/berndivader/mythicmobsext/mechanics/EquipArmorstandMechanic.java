@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -33,7 +34,7 @@ INoTargetSkill {
 		} catch (Exception e) {
 			this.material=Material.DIRT;
 		}
-		if (parse.length==2 && Utils.isNumeric(parse[1])) this.slot=Integer.parseInt(parse[1]);
+		if (parse.length==2 && MathUtils.isNumeric(parse[1])) this.slot=Integer.parseInt(parse[1]);
 		mythicItem=Utils.mythicmobs.getItemManager().getItem(parse[0]);
 	}
 

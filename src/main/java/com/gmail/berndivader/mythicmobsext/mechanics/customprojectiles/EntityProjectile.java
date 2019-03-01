@@ -21,6 +21,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -142,12 +143,12 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + EntityProjectile.this.startYOffset);
 				}
 				if (EntityProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),EntityProjectile.this.startForwardOffset);
+					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),EntityProjectile.this.startForwardOffset);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
 				if (EntityProjectile.this.startSideOffset != 0.0f) {
-					Vector v=Utils.getSideOffsetVectorFixed(this.startLocation.getYaw(), EntityProjectile.this.startSideOffset,false);
+					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), EntityProjectile.this.startSideOffset,false);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
@@ -202,7 +203,7 @@ ITargetedLocationSkill {
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {
-				yaw = Utils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+				yaw = MathUtils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
 				this.pLocation.setYaw(yaw);
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
@@ -355,7 +356,7 @@ ITargetedLocationSkill {
 			}
 			Location eloc = this.pEntity.getLocation();
 			float yaw = eloc.getYaw();
-			if (this.pFaceDir) yaw=Utils.lookAtYaw(eloc,BukkitAdapter.adapt(currentLocation));
+			if (this.pFaceDir) yaw=MathUtils.lookAtYaw(eloc,BukkitAdapter.adapt(currentLocation));
 			if (this.pSpin != 0.0) yaw=((yaw+this.pSpin)%360.0F);
 			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
 					this.currentLocation.getZ(), yaw, eloc.getPitch());

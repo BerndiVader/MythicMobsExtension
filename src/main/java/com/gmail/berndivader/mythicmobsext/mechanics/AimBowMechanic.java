@@ -10,6 +10,7 @@ import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -60,7 +61,7 @@ ITargetedEntitySkill
 							float velocity=Utils.getBowTension(player);
 							if(velocity>0.1f) {
 								Vec3D target_position=Volatile.handler.getPredictedMotion(player,target,5.0f);
-								Vec2D direction=Utils.calculateDirectionVec2D(target_position,velocity,0.006f);
+								Vec2D direction=MathUtils.calculateDirectionVec2D(target_position,velocity,0.006f);
 								float yaw=(float)direction.getX();
 								float pitch=(float)direction.getY();
 								if(!Float.isNaN(yaw)&&!Float.isNaN(pitch)) Volatile.handler.playerConnectionLookAt(player,yaw,pitch);

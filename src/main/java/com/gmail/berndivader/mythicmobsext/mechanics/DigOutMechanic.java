@@ -1,7 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -77,6 +79,7 @@ INoTargetSkill
 			double delta_x,delta_z;
 			@Override
 			public void run() {
+				if(entity==null||entity.isDead()) this.cancel();
 				Volatile.handler.playBlockBreak(entity.getEntityId(),block.getLocation(),stage);
 				Volatile.handler.playAnimationPacket(entity,0);
 				location.getWorld().playSound(location,sound,1.5f,1f);
@@ -85,6 +88,7 @@ INoTargetSkill
 				if(Utils.serverV<13) {
 					new ParticleMaker.ParticlePacket(particle_name,0,0,0,0,particle_amount,true).sendAsync(particle_location.clone().add(delta_x,0.1,delta_z),512);
 				} else {
+					
 					//
 				}
 				if(stage>9) {

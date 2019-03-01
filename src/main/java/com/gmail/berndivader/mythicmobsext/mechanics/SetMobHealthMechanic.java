@@ -4,6 +4,7 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.ConfigManager;
@@ -37,7 +38,7 @@ ITargetedEntitySkill {
 		if(t.isValid()&&t.isLiving()) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(t);
 			double h=20,mod=0;
-			h=Utils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
+			h=MathUtils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
 			if (!b&&am!=null) {
 				mod=ConfigManager.defaultLevelModifierHealth.startsWith("+")
                 		? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))

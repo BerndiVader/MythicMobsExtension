@@ -166,8 +166,8 @@ ITargetedLocationSkill
             this.currentLocation.setY(this.currentLocation.getY()+ItemThrowProjectile.this.YOffset);
     		if (ItemThrowProjectile.this.fOffset!=0d||ItemThrowProjectile.this.sOffset!=0d) {
     			Vector offset;
-    			offset=Utils.getSideOffsetVectorFixed(this.currentLocation.getYaw(),ItemThrowProjectile.this.sOffset, this.iYaw);
-    			offset.add(Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),ItemThrowProjectile.this.fOffset));
+    			offset=MathUtils.getSideOffsetVectorFixed(this.currentLocation.getYaw(),ItemThrowProjectile.this.sOffset, this.iYaw);
+    			offset.add(MathUtils.getFrontBackOffsetVector(this.currentLocation.getDirection(),ItemThrowProjectile.this.fOffset));
     			this.currentLocation.add(offset);
     		}
             this.targets=new HashSet<LivingEntity>();

@@ -5,8 +5,8 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -45,7 +45,7 @@ ITargetedEntitySkill
 			LivingEntity target=(LivingEntity)t.getBukkitEntity();
 			
 			Vec3D target_position=Volatile.handler.getPredictedMotion(caster,target,0.0f);
-			Vector direction=Utils.calculateDirectionVector(target_position,speed,G);
+			Vector direction=MathUtils.calculateDirectionVector(target_position,speed,G);
 			
 			if(Float.isFinite((float)direction.getX())&&Float.isFinite((float)direction.getZ())) {
 				caster.setVelocity(direction.multiply(speed));

@@ -21,6 +21,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -142,12 +143,12 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + BlockProjectile.this.startYOffset);
 				}
 				if (BlockProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),BlockProjectile.this.startForwardOffset);
+					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),BlockProjectile.this.startForwardOffset);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
 				if (BlockProjectile.this.startSideOffset != 0.0f) {
-					Vector v=Utils.getSideOffsetVector(this.startLocation.getYaw(), BlockProjectile.this.startSideOffset,false);
+					Vector v=MathUtils.getSideOffsetVector(this.startLocation.getYaw(), BlockProjectile.this.startSideOffset,false);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
@@ -201,7 +202,7 @@ ITargetedLocationSkill {
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {
-				yaw = Utils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+				yaw = MathUtils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
 				this.pLocation.setYaw(yaw);
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));

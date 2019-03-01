@@ -10,7 +10,6 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -95,7 +94,7 @@ ITargetedLocationSkill
 		} else {
 			Vector distance=final_distance_sq.clone();
 			if(magneto&&reducemagnetobydistance!=0.0d) {
-				int dd=(int)Math.sqrt(Utils.distance3D(caster.getLocation().toVector(),dest.toVector()));
+				int dd=(int)Math.sqrt(MathUtils.distance3D(caster.getLocation().toVector(),dest.toVector()));
 				speed=MathUtils.clamp(this.s-(this.s*(dd*reducemagnetobydistance)),0,this.s);
 			}
 			Vector mod_delta=set?distance.multiply(speed):distance.multiply(speed).add(caster.getVelocity());

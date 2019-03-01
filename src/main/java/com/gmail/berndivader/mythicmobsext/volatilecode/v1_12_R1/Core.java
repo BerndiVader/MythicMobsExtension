@@ -39,6 +39,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityParrot;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.entitiy.MythicEntityZombie;
@@ -579,7 +580,7 @@ implements Handler,Listener {
 	        	if (e instanceof EntityCreature) {
 	        		int chance=50;
 	        		if (data1!=null 
-	        				&& Utils.isNumeric(data1)) chance=Integer.parseInt(data1);
+	        				&& MathUtils.isNumeric(data1)) chance=Integer.parseInt(data1);
 	            	goals.a(i, (PathfinderGoal)new PathfinderGoalBreakBlocks(e,data,chance));
 	        	}
 	        	break;
@@ -592,7 +593,7 @@ implements Handler,Listener {
 	        }
 	        case "notifycollide": {
 	        	if (e instanceof EntityInsentient) {
-	        		int c=data!=null&&Utils.isNumeric(data)?Integer.parseInt(data):5;
+	        		int c=data!=null&&MathUtils.isNumeric(data)?Integer.parseInt(data):5;
                     goals.a(i,(PathfinderGoal)new PathfinderGoalNotifyOnCollide(e,c));
 	        	}
 	        	break;
@@ -621,7 +622,7 @@ implements Handler,Listener {
 	            	if (data1!=null) {
 		        		String[]p=data1.split(",");
 		        		for (int a=0;a<p.length;a++) {
-		        			if (Utils.isNumeric(p[a])) {
+		        			if (MathUtils.isNumeric(p[a])) {
 		        				switch(a) {
 		        				case 0:
 		        					x=Double.parseDouble(p[a]);
@@ -874,7 +875,7 @@ implements Handler,Listener {
 	@Override
 	public boolean playerIsJumping(Player p) {
 		net.minecraft.server.v1_12_R1.EntityPlayer me = ((CraftPlayer)p).getHandle();
-		return !me.onGround&&Utils.round(me.motY,5)!=-0.00784;
+		return !me.onGround&&MathUtils.round(me.motY,5)!=-0.00784;
 	}
 	
 	@Override

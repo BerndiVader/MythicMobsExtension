@@ -6,8 +6,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -47,7 +47,7 @@ ITargetedEntitySkill {
 					p.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
-					Vec2D v=Utils.lookAtVec(p.getEyeLocation(),
+					Vec2D v=MathUtils.lookAtVec(p.getEyeLocation(),
 							caster.getBukkitEntity().getLocation().add(0,caster.getEyeHeight(), 0));
 					PlayerGoggleMechanic.this.vh.playerConnectionLookAt(p,(float)v.getX(),(float)v.getY());
 				}

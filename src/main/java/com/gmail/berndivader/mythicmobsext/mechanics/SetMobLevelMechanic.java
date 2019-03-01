@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -36,7 +37,7 @@ ITargetedEntitySkill {
 		if (Utils.mobmanager.isActiveMob(target)) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
 			try {
-				am.setLevel(Utils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
+				am.setLevel(MathUtils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
 			} catch (NullPointerException ex) {
 				Main.logger.warning("Failed to set moblevel with for: "+this.config.getLine());
 			}

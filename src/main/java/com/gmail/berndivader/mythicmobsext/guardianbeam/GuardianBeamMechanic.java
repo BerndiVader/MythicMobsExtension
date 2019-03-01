@@ -7,7 +7,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -54,17 +54,17 @@ ITargetedLocationSkill {
 		final Entity caster=data.getCaster().getEntity().getBukkitEntity();
 		final Location end=BukkitAdapter.adapt(l);
 		
-		Vector foV=Utils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset);
+		Vector foV=MathUtils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset);
 		final Beam beam=new Beam(caster.getLocation().add(foV).add(0,yOffset,0),end);
 		beam.start();
 		
 		new BukkitRunnable() {
 			int t=0;
-			Location ol=caster.getLocation().add(Utils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset)).add(0,yOffset,0);
+			Location ol=caster.getLocation().add(MathUtils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset)).add(0,yOffset,0);
 			@Override
 			public void run() {
 				if(t<duration) {
-					Location l1=caster.getLocation().add(Utils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset)).add(0,yOffset,0);
+					Location l1=caster.getLocation().add(MathUtils.getFrontBackOffsetVector(caster.getLocation().getDirection(),forwardOffset)).add(0,yOffset,0);
 					Location l=ol.subtract(l1);
 					l.setYaw(caster.getLocation().getYaw());
 					l.setPitch(caster.getLocation().getPitch());

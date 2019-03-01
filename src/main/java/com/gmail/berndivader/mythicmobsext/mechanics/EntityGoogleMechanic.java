@@ -11,6 +11,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -74,7 +75,7 @@ ITargetedEntitySkill {
 					this.cancel();
 				} else {
 					if (!b1) {
-						v2=Utils.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
+						v2=MathUtils.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
 								EntityGoogleMechanic.this.location.isPresent()?EntityGoogleMechanic.this.location.get():target.getBukkitEntity().getLocation().add(0,target.getEyeHeight(),0));
 					} else {
 						v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());

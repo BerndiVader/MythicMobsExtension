@@ -4,7 +4,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -41,7 +41,7 @@ INoTargetSkill {
 	
 	private boolean d(AbstractEntity target) {
 		if (target.isLiving()) {
-			((LivingEntity)target.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(Utils.randomRangeDouble(s1));
+			((LivingEntity)target.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(MathUtils.randomRangeDouble(s1));
 			LivingEntity l=(LivingEntity)target.getBukkitEntity();
 			if (bl1) {
 				System.out.println("randomspeed debug");

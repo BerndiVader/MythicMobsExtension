@@ -21,6 +21,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.HitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -179,8 +180,8 @@ ITargetedLocationSkill {
             }
     		this.useOffset=EStatueMechanic.this.fOffset!=0d||EStatueMechanic.this.sOffset!=0d;
     		if (this.useOffset) {
-    			Vector soV=Utils.getSideOffsetVectorFixed(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
-    			Vector foV=Utils.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
+    			Vector soV=MathUtils.getSideOffsetVectorFixed(this.currentLocation.getYaw(), this.sOffset, this.iYaw);
+    			Vector foV=MathUtils.getFrontBackOffsetVector(this.currentLocation.getDirection(),this.fOffset);
     			this.currentLocation.add(soV);
     			this.currentLocation.add(foV);
     		}
@@ -276,8 +277,8 @@ ITargetedLocationSkill {
             	double z = this.currentLocation.getZ();
     			Location l=this.owner.getLocation();
     			l.setPitch(0f);
-            	Vector soV=Utils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
-            	Vector foV=Utils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
+            	Vector soV=MathUtils.getSideOffsetVectorFixed(this.owner.getLocation().getYaw(), this.sOffset, this.iYaw);
+            	Vector foV=MathUtils.getFrontBackOffsetVector(this.owner.getLocation().getDirection(),this.fOffset);
             	x+=soV.getX()+foV.getX();
             	z+=soV.getZ()+foV.getZ();
             	this.currentLocation.setX(x);
@@ -286,7 +287,7 @@ ITargetedLocationSkill {
             			x,
             			this.currentLocation.getY(),
             			z,
-            			facedir?Utils.lookAtYaw(oldLocation,currentLocation):currentLocation.getYaw(),
+            			facedir?MathUtils.lookAtYaw(oldLocation,currentLocation):currentLocation.getYaw(),
             			this.currentLocation.getPitch());
             } else {
             	NMSUtils.setLocation(this.entity,

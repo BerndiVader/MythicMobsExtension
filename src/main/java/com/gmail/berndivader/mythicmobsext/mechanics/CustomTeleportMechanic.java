@@ -15,6 +15,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -168,8 +169,8 @@ ITargetedLocationSkill {
 						if (this.bns!=null) ((ActiveMob) data.getCaster()).signalMob(null,this.bns);
 						if(ip) ll.setPitch(0);
 						if(fo!=0.0d||so!=0.0d) {
-			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
-			    			Vector soV=Utils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
+			    			Vector foV=MathUtils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector soV=MathUtils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
 			    			ll.add(foV);
 			    			ll.add(soV);
 						}
@@ -194,8 +195,8 @@ ITargetedLocationSkill {
 						Location ll=BukkitAdapter.adapt((AbstractLocation)target);
 						if(ip)ll.setPitch(0);
 						if(fo!=0.0d||so!=0.0d) {
-			    			Vector foV=Utils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
-			    			Vector soV=Utils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
+			    			Vector foV=MathUtils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
+			    			Vector soV=MathUtils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
 			    			ll.add(foV);
 			    			ll.add(soV);
 						}

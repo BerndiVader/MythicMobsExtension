@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -84,11 +85,11 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (!t.isValid()||t.isDead()||t.getHealth()<=0.0||data.getCaster().isUsingDamageSkill()) return false;
 		AbstractEntity c = data.getCaster().getEntity();
-		double dmg=Utils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
+		double dmg=MathUtils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
 		if (this.p) dmg=this.pcur?uc?c.getHealth()*dmg:t.getHealth()*dmg:ploss?uc?(c.getMaxHealth()-c.getHealth())*dmg:(t.getMaxHealth()-t.getHealth())*dmg:c.getMaxHealth()*dmg;
 		if (!this.ip) dmg=dmg*data.getPower();
 		if (this.dbd>0) {
-			int dd=(int)Math.sqrt(Utils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(), t.getBukkitEntity().getLocation().toVector()));
+			int dd=(int)Math.sqrt(MathUtils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(), t.getBukkitEntity().getLocation().toVector()));
 			dmg=rdbd?dmg-(dmg*(dd*dbd)):dmg+(dmg*(dd*dbd));
 		}
 		Utils.doDamage(data.getCaster(),t,dmg,this.ia,this.pk,this.pi,pi_ignores,this.iabs,this.debug,this.cause,this.ncp,this.strict);
