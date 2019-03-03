@@ -105,7 +105,6 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 					public void run() {
 	                	BlockPosition position=new BlockPosition(block.getX(),block.getY(),block.getZ());
 	                	if(!CraftEventFactory.callEntityChangeBlockEvent(entity,position,entity.world.getType(position).getBlock().getBlockData()).isCancelled()) {
-	                        entity.world.triggerEffect(1021,position,0);
 	                        entity.world.triggerEffect(2001,position,net.minecraft.server.v1_13_R2.Block.getCombinedId(entity.world.getType(position)));
 	                        block.breakNaturally();
 	                        PathfinderGoalBreakBlocks.this.isBreaking=false;
