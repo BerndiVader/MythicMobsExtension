@@ -18,8 +18,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 import io.lumine.xikage.mythicmobs.drops.Drop;
-import net.minecraft.server.v1_12_R1.PathfinderGoal;
-import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
 
 public
 class
