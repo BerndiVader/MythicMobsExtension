@@ -49,10 +49,7 @@ INoTargetSkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
-			if(Utils.mobmanager.isActiveMob(target)) {
-				ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
-				am.setTarget(set?target:null);
-			} else if(data.getCaster().getEntity().isCreature()) {
+			if(data.getCaster().getEntity().isCreature()) {
 				Creature creature=(Creature)data.getCaster().getEntity().getBukkitEntity();
 				creature.setTarget(set?(LivingEntity)target.getBukkitEntity():null);
 			} else {

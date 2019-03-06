@@ -18,6 +18,8 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 import io.lumine.xikage.mythicmobs.drops.Drop;
+import net.minecraft.server.v1_12_R1.PathfinderGoal;
+import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
 
 public
 class
@@ -31,6 +33,7 @@ CompatibilityUtils
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
 	protected static Class<?> class_Drop;
+	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
@@ -39,9 +42,12 @@ CompatibilityUtils
     protected static Field class_Entity_lastYawField;
     protected static Field class_MinecraftServer_currentTickField;
     protected static Field class_Entity_fireProof;
+	protected static Field class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField;
+	protected static Field class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField;
     
     protected static Method class_Entity_getFlagMethod;
     protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
+    protected static Method class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod;
     protected static Method class_EntityCreature_setGoalTargetMethod;
     protected static Method class_EntityPlayer_clearActiveItemMethod;
     protected static Method class_EntityLiving_getArmorStrengthMethod;
@@ -57,6 +63,7 @@ CompatibilityUtils
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
         	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
+        	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
         	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
@@ -71,6 +78,11 @@ CompatibilityUtils
 	        class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
 	        class_Entity_fireProof.setAccessible(true);
 	        
+	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("a");
+	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField.setAccessible(true);
+	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("b");
+	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.setAccessible(true);
+	        
 	        class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 	        class_MinecraftServer_currentTickField.setAccessible(true);
 	        
@@ -82,6 +94,7 @@ CompatibilityUtils
 	        class_EntitySnowman_setHasPumpkinMethod=class_EntitySnowman.getMethod("setHasPumpkin",Boolean.TYPE);
 	        class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
 	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
+	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getMethod("equals",Object.class);
 	        
 	        mm_version=45;
 	        try {
@@ -100,6 +113,38 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return bool;
+	}
+	
+	/**
+	 * 
+	 * @param object {@link PathfinderGoalSelector}
+	 * @return priority {@link Integer}
+	 */
+	public static int getPathfinderGoalSelectorItemPriority(Object object) {
+		int priority=-1;
+		try {
+			priority=class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.getInt(object);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return priority;
+	}
+	
+	/**
+	 * 
+	 * @param object {@link PathfinderGoalSelector}
+	 * @return object {@link PathfinderGoal}
+	 */
+	public static Object getPathfinderGoalFromPathFinderSelectorItem(Object object) {
+		Object pathfindergoal=null;
+		try {
+			pathfindergoal=class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField.get(object);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pathfindergoal;
 	}
 	
 	/**
