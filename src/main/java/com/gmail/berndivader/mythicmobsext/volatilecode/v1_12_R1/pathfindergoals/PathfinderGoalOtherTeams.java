@@ -16,6 +16,7 @@ public class PathfinderGoalOtherTeams<T extends EntityLiving>
 extends 
 PathfinderGoalNearestAttackableTarget<T> {
 	ScoreboardTeam team1,team2;
+	int i;
 	
     public PathfinderGoalOtherTeams(EntityCreature entitycreature, Class<T> oclass, boolean flag) {
         this(entitycreature, oclass, flag, false);
@@ -27,33 +28,32 @@ PathfinderGoalNearestAttackableTarget<T> {
     
     public PathfinderGoalOtherTeams(EntityCreature entitycreature, Class<T> oclass, int i2, boolean flag, boolean flag1, Predicate<? super T> predicate) {
         super(entitycreature, oclass,i2,flag, flag1, predicate);
+        this.i=i2;
 	}
     
     public boolean a() {
-    	//
-    	return false;
+        if (this.i>0&&this.e.getRandom().nextInt(this.i)!=0) return false;
+        
+        return true;
     }
     
     @Override
     public boolean b() {
         EntityLiving entityliving=this.e.getGoalTarget();
         if (entityliving==null) entityliving=this.g;
-        if (entityliving==null) return false;
-        if (!entityliving.isAlive()) return false;
+        if (entityliving==null||!entityliving.isAlive()) return false;
         teams(entityliving);
         if (this.team1!=null&&this.team1==this.team2) {
         	this.d();
         	return false;
         }
-        double d0 = this.i();
-        if (this.e.h(entityliving) > d0 * d0) {
-            return false;
-        }
+        double d0=this.i();
+        if (this.e.h(entityliving)>d0*d0) return false;
         if (this.f) {
-        	int d=(int)NMSUtils.getField("d",PathfinderGoalTarget.class,(Object)this);
             if (this.e.getEntitySenses().a(entityliving)) {
             	NMSUtils.setField("d",PathfinderGoalTarget.class,(Object)this,0);
             } else {
+            	int d=(int)NMSUtils.getField("d",PathfinderGoalTarget.class,(Object)this);
             	NMSUtils.setField("d",PathfinderGoalTarget.class,(Object)this,d++);
             	if(d++>this.h) return false;
             }
@@ -61,7 +61,7 @@ PathfinderGoalNearestAttackableTarget<T> {
         if (entityliving instanceof EntityHuman && ((EntityHuman)entityliving).abilities.isInvulnerable) {
             return false;
         }
-        this.e.setGoalTarget(entityliving,EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
+        this.e.setGoalTarget(entityliving,EntityTargetEvent.TargetReason.CLOSEST_ENTITY,true);
         return true;
     }
     
