@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -532,11 +531,11 @@ Listener
 				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
 			}
 		}
-		if (s.contains(".meta.")) s=parseMetaVar(s,c,t,l);
+		if (s.contains(".meta.")) s=parseMetaVar(s,m,c,t,l);
 		return s;
 	}
 	
-	private static String parseMetaVar(String s,AbstractEntity a1,AbstractEntity a2,AbstractLocation a3) {
+	private static String parseMetaVar(String s,SkillMetadata data,AbstractEntity a1,AbstractEntity a2,AbstractLocation a3) {
 		Entity e1=a1!=null?a1.getBukkitEntity():null;
 		Entity e2=a2!=null?a2.getBukkitEntity():null;
 		Location l1=a3!=null?BukkitAdapter.adapt(a3):null;
@@ -555,6 +554,15 @@ Listener
 			if (p.length>1) {
 				String s1=p[1].split(">")[0];
 				if (e1!=null&&e1.hasMetadata(s1)) return s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
+			}
+		} else if (s.contains("<trigger.meta")) {
+			String[]p=s.split("<trigger.meta.");
+			if (p.length>1) {
+				if(data.getTrigger()!=null) {
+					Entity entity=data.getTrigger().getBukkitEntity();
+					String s1=p[1].split(">")[0];
+					if (entity.hasMetadata(s1)) return s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
+				}
 			}
 		}
 		return s;
@@ -654,5 +662,4 @@ Listener
                 return 0.115;
         }
     }
-
 }

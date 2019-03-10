@@ -469,233 +469,236 @@ implements Handler,Listener {
         }
         PathfinderGoalSelector goals=e.goalSelector;
         Optional<PathfinderGoal>pathfindergoal=Optional.empty();
-        switch (goal) {
-        case "rangedmelee": {
-            if (e instanceof EntityCreature) {
-            	float range = 2.0f;
-            	if (data!=null) {
-            		range = Float.parseFloat(data);
-            	}
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalMeleeRangeAttack((EntityCreature)e,1.0,true,range));
-            }
-        	break;
-        }
-        case "attack": {
-            if (e instanceof EntityCreature) {
-        		double s=1.0d;
-        		float r=2.0f;
-            	if (data!=null) s=Double.parseDouble(data);
-            	if (data1!=null) r=Float.parseFloat(data1);
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalAttack((EntityCreature)e,s,true,r));
-            }
-        	break;
-        }
-        case "runfromsun": {
-        	if (e instanceof EntityCreature) {
-        		double s=1.0d;
-            	if (data!=null) s=Double.parseDouble(data);
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalFleeSun((EntityCreature)e,s));
-        	}
-        	break;
-        }
-        case "shootattack": {
-        	if (e instanceof EntityInsentient) {
-        		double d1=1.0d;
-        		int i1=20,i2=60;
-        		float f1=15.0f;
-        		if (data!=null) {
-	        		String[]p=data.split(",");
-	        		for (int a=0;a<p.length;a++) {
-	        			switch(a) {
-	        			case 0:
-        					d1=Double.parseDouble(p[a]);
-	        				break;
-	        			case 1:
-        					i1=Integer.parseInt(p[a]);
-	        				break;
-	        			case 2:
-        					i2=Integer.parseInt(p[a]);
-	        				break;
-	        			case 3:
-        					f1=Float.parseFloat(p[a]);
-	        				break;
-	        			}
-	        		}
-        		}
-            	pathfindergoal=Optional.ofNullable(new PathFinderGoalShoot((EntityInsentient)e,d1,i1,i2,f1));
-        	}
-        	break;
-        }
-        case "followentity": {
-        	UUID uuid=null;
-        	if (e instanceof EntityCreature) {
-        		double speed=1.0d;
-        		float aR=2.0F;
-        		float zR=10.0F;
-        		String[]p=data.split(",");
-        		for (int a=0;a<p.length;a++) {
-        			switch(a) {
-        			case 0:
-    					speed=Double.parseDouble(p[a]);
-    					break;
-        			case 1:
-    					aR=Float.parseFloat(p[a]);
-    					break;
-        			case 2:
-    					zR=Float.parseFloat(p[a]);
-    					break;
-        			}
-        		}
-        		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
-					Entity ee = NMSUtils.getEntity(w, uuid);
-        			if (ee instanceof LivingEntity) {
-        		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
-        			}
-        		}
-        		if (tE!=null && tE.isAlive()) {
-	            	pathfindergoal=Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalFollowEntity(e,tE,speed,zR,aR));
-        		}
-        	}
-        	break;
-        }
-        case "breakblocks": {
-        	if (e instanceof EntityCreature) {
-        		int chance=50;
-        		if (data1!=null 
-        				&& MathUtils.isNumeric(data1)) chance=Integer.parseInt(data1);
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalBreakBlocks(e,data,chance));
-        	}
-        	break;
-        }
-        case "jumpoffvehicle": {
-        	if (e instanceof EntityCreature) {
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalJumpOffFromVehicle(e));
-        	}
-        	break;
-        }
-        case "notifycollide": {
-        	if (e instanceof EntityInsentient) {
-        		int c=data!=null&&MathUtils.isNumeric(data)?Integer.parseInt(data):5;
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalNotifyOnCollide(e,c));
-        	}
-        	break;
-        }
-        case "notifygrow":
-        case "grownotify": {
-        	if(e instanceof EntityAgeable) {
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalEntityGrowNotify(e,data));
-        	} else {
-        		MythicMobs.error("No ageable entity");
-        	}
-        	break;
-        }
-        case "returnhome": {
-        	if (e instanceof EntityCreature) {
-        		double speed = 1.0d;
-        		double x=e.locX;
-        		double y=e.locY;
-        		double z=e.locZ;
-        		double mR=10.0D;
-        		double tR=512.0D;
-        		boolean iT=false;
-            	if (data!=null) {
-            		speed = Double.parseDouble(data);
-            	}
-            	if (data1!=null) {
-	        		String[]p=data1.split(",");
-	        		for (int a=0;a<p.length;a++) {
-	        			if (MathUtils.isNumeric(p[a])) {
-	        				switch(a) {
-	        				case 0:
-	        					x=Double.parseDouble(p[a]);
-	        					break;
-	        				case 1:
-	        					y=Double.parseDouble(p[a]);
-	        					break;
-	        				case 2:
-	        					z=Double.parseDouble(p[a]);
-	        					break;
-	        				case 3:
-	        					mR=Double.parseDouble(p[a]);
-	        					break;
-	        				case 4:
-	        					tR=Double.parseDouble(p[a]);
-	        					break;
-	        				}
-	        			} else if (a==5) {
-	        				iT=Boolean.parseBoolean(p[a].toUpperCase());
-	        			}
-	        		}
-            	}
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalReturnHome(e,speed,x,y,z,mR,tR,iT));
+        if(!goal.equals("removegoal")) {
+            switch (goal) {
+            case "rangedmelee": {
+                if (e instanceof EntityCreature) {
+                	float range = 2.0f;
+                	if (data!=null) {
+                		range = Float.parseFloat(data);
+                	}
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalMeleeRangeAttack((EntityCreature)e,1.0,true,range));
+                }
             	break;
-        	}
-        }
-        case "doorsopen": {
-        	if(e instanceof EntityInsentient) {
-        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalDoorOpen(e,bl1));
-        	}
-    		break;
-        }
-        case "doorsbreak": {
-        	if(e instanceof EntityInsentient) {
-        		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalDoorBreak(e,bl1));
-        	}
-    		break;
-        }
-        case "avoidtarget":
-        case "avoidentity":
-        	if(data==null||data.isEmpty()) return;
-            float distance=16f;
-            double speed=1.2d;
-        	EntityTypes<?> type=EntityTypes.a(data);
-        	if(type!=null) {
-        		if(data1!=null) {
-        			String[]arr1=data1.split(",");
-        			if(arr1.length>0) distance=Float.parseFloat(arr1[0]);
-        			if(arr1.length>1) speed=Double.parseDouble(arr1[1]);
+            }
+            case "attack": {
+                if (e instanceof EntityCreature) {
+            		double s=1.0d;
+            		float r=2.0f;
+                	if (data!=null) s=Double.parseDouble(data);
+                	if (data1!=null) r=Float.parseFloat(data1);
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalAttack((EntityCreature)e,s,true,r));
+                }
+            	break;
+            }
+            case "runfromsun": {
+            	if (e instanceof EntityCreature) {
+            		double s=1.0d;
+                	if (data!=null) s=Double.parseDouble(data);
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalFleeSun((EntityCreature)e,s));
+            	}
+            	break;
+            }
+            case "shootattack": {
+            	if (e instanceof EntityInsentient) {
+            		double d1=1.0d;
+            		int i1=20,i2=60;
+            		float f1=15.0f;
+            		if (data!=null) {
+    	        		String[]p=data.split(",");
+    	        		for (int a=0;a<p.length;a++) {
+    	        			switch(a) {
+    	        			case 0:
+            					d1=Double.parseDouble(p[a]);
+    	        				break;
+    	        			case 1:
+            					i1=Integer.parseInt(p[a]);
+    	        				break;
+    	        			case 2:
+            					i2=Integer.parseInt(p[a]);
+    	        				break;
+    	        			case 3:
+            					f1=Float.parseFloat(p[a]);
+    	        				break;
+    	        			}
+    	        		}
+            		}
+                	pathfindergoal=Optional.ofNullable(new PathFinderGoalShoot((EntityInsentient)e,d1,i1,i2,f1));
+            	}
+            	break;
+            }
+            case "followentity": {
+            	UUID uuid=null;
+            	if (e instanceof EntityCreature) {
+            		double speed=1.0d;
+            		float aR=2.0F;
+            		float zR=10.0F;
+            		String[]p=data.split(",");
+            		for (int a=0;a<p.length;a++) {
+            			switch(a) {
+            			case 0:
+        					speed=Double.parseDouble(p[a]);
+        					break;
+            			case 1:
+        					aR=Float.parseFloat(p[a]);
+        					break;
+            			case 2:
+        					zR=Float.parseFloat(p[a]);
+        					break;
+            			}
+            		}
+            		if (data1!=null && (uuid = Utils.isUUID(data1))!=null) {
+    					Entity ee = NMSUtils.getEntity(w, uuid);
+            			if (ee instanceof LivingEntity) {
+            		        tE = (EntityLiving)((CraftLivingEntity)(LivingEntity)ee).getHandle();
+            			}
+            		}
+            		if (tE!=null && tE.isAlive()) {
+    	            	pathfindergoal=Optional.ofNullable(new com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalFollowEntity(e,tE,speed,zR,aR));
+            		}
+            	}
+            	break;
+            }
+            case "breakblocks": {
+            	if (e instanceof EntityCreature) {
+            		int chance=50;
+            		if (data1!=null 
+            				&& MathUtils.isNumeric(data1)) chance=Integer.parseInt(data1);
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalBreakBlocks(e,data,chance));
+            	}
+            	break;
+            }
+            case "jumpoffvehicle": {
+            	if (e instanceof EntityCreature) {
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalJumpOffFromVehicle(e));
+            	}
+            	break;
+            }
+            case "notifycollide": {
+            	if (e instanceof EntityInsentient) {
+            		int c=data!=null&&MathUtils.isNumeric(data)?Integer.parseInt(data):5;
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalNotifyOnCollide(e,c));
+            	}
+            	break;
+            }
+            case "notifygrow":
+            case "grownotify": {
+            	if(e instanceof EntityAgeable) {
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalEntityGrowNotify(e,data));
+            	} else {
+            		MythicMobs.error("No ageable entity");
+            	}
+            	break;
+            }
+            case "returnhome": {
+            	if (e instanceof EntityCreature) {
+            		double speed = 1.0d;
+            		double x=e.locX;
+            		double y=e.locY;
+            		double z=e.locZ;
+            		double mR=10.0D;
+            		double tR=512.0D;
+            		boolean iT=false;
+                	if (data!=null) {
+                		speed = Double.parseDouble(data);
+                	}
+                	if (data1!=null) {
+    	        		String[]p=data1.split(",");
+    	        		for (int a=0;a<p.length;a++) {
+    	        			if (MathUtils.isNumeric(p[a])) {
+    	        				switch(a) {
+    	        				case 0:
+    	        					x=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 1:
+    	        					y=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 2:
+    	        					z=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 3:
+    	        					mR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 4:
+    	        					tR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				}
+    	        			} else if (a==5) {
+    	        				iT=Boolean.parseBoolean(p[a].toUpperCase());
+    	        			}
+    	        		}
+                	}
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalReturnHome(e,speed,x,y,z,mR,tR,iT));
+                	break;
+            	}
+            }
+            case "doorsopen": {
+            	if(e instanceof EntityInsentient) {
+            		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalDoorOpen(e,bl1));
+            	}
+        		break;
+            }
+            case "doorsbreak": {
+            	if(e instanceof EntityInsentient) {
+            		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalDoorBreak(e,bl1));
+            	}
+        		break;
+            }
+            case "avoidtarget":
+            case "avoidentity":
+            	if(data==null||data.isEmpty()) return;
+                float distance=16f;
+                double speed=1.2d;
+            	EntityTypes<?> type=EntityTypes.a(data);
+            	if(type!=null) {
+            		if(data1!=null) {
+            			String[]arr1=data1.split(",");
+            			if(arr1.length>0) distance=Float.parseFloat(arr1[0]);
+            			if(arr1.length>1) speed=Double.parseDouble(arr1[1]);
+            		}
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalAvoidTarget<>((EntityCreature)e,type.c(),distance,1d,speed));
+            	}
+            	break;
+            case "vexa":{
+            	if (e instanceof EntityInsentient) {
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalVexA(e));
+            	}
+            }
+            case "vexd":{
+            	if (e instanceof EntityInsentient) {
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalVexD(e));
+            	}
+            }}
+           	if(pathfindergoal.isPresent()) {
+           		if(i>-1) {
+           			e.goalSelector.a(i,pathfindergoal.get());
+           		} else {
+            		e.goalSelector.a(pathfindergoal.get());
+           		}
+           	} else {
+               	List<String>gList=new ArrayList<String>();
+               	gList.add(uGoal);
+               	Utils.mythicmobs.getVolatileCodeHandler().aiGoalSelectorHandler(entity,gList);
+           	}
+        } else {
+            if(i>-1) {
+        		try {
+        			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+        			list.clear();
+                    list=(Set)ai_pathfinderlist_b.get((Object)goals);
+                    Iterator<Object>iter=list.iterator();
+                    while(iter.hasNext()) {
+                    	Object object=iter.next();
+                    	int priority=NMSUtils.getPathfinderGoalSelectorItemPriority(object);
+                    	if(priority>-1&&priority==i) iter.remove();
+            		}
+        		} catch (Exception ex) {
+        			ex.printStackTrace();
         		}
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalAvoidTarget<>((EntityCreature)e,type.c(),distance,1d,speed));
-        	}
-        	break;
-        case "vexa":{
-        	if (e instanceof EntityInsentient) {
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalVexA(e));
-        	}
+            }
         }
-        case "vexd":{
-        	if (e instanceof EntityInsentient) {
-            	pathfindergoal=Optional.ofNullable(new PathfinderGoalVexD(e));
-        	}
-        }}
-        if(i>-1) {
-    		try {
-    			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-    			list.clear();
-                list=(Set)ai_pathfinderlist_b.get((Object)goals);
-                Iterator<Object>iter=list.iterator();
-                while(iter.hasNext()) {
-                	Object object=iter.next();
-                	int priority=NMSUtils.getPathfinderGoalSelectorItemPriority(object);
-                	if(priority>-1&&priority==i) iter.remove();
-        		}
-    		} catch (Exception ex) {
-    			ex.printStackTrace();
-    		}
-        }
-       	if(pathfindergoal.isPresent()) {
-       		if(i>-1) {
-       			e.goalSelector.a(i,pathfindergoal.get());
-       		} else {
-        		e.goalSelector.a(pathfindergoal.get());
-       		}
-       	} else {
-           	List<String>gList=new ArrayList<String>();
-           	gList.add(uGoal);
-           	Utils.mythicmobs.getVolatileCodeHandler().aiGoalSelectorHandler(entity,gList);
-       	}
 	}
 	
 	@Override
