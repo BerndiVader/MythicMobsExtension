@@ -30,22 +30,31 @@ ILocationSelector {
 	public HashSet<AbstractLocation> getLocations(SkillMetadata data) {
 		HashSet<AbstractLocation>targets=new HashSet<>();
 		if (data.getCaster().getEntity().isPlayer()) {
-			targets.add(BukkitAdapter.adapt(getTargetedBlockLocation((Player)data.getCaster().getEntity().getBukkitEntity(),length)));
+			AbstractLocation location=BukkitAdapter.adapt(getTargetedBlockLocation((Player)data.getCaster().getEntity().getBukkitEntity(),length));
+			if(location!=null) {
+				targets.add(location);
+			}
 		}
 		return targets;
 	}
 	
     static Location getTargetedBlockLocation(Player p1, int i1) {
-        BlockIterator it1=new BlockIterator(p1,i1);
-        Block b1=it1.next(),b2;
-        while (it1.hasNext()) {
-        	b2=b1;
+    	Block b1=null;
+    	try {
+            BlockIterator it1=new BlockIterator(p1,i1);
+            Block b2;
             b1=it1.next();
-            if (b1.getType()!=Material.AIR) {
-            	b1=b2;
-            	break;
+            while (it1.hasNext()) {
+            	b2=b1;
+                b1=it1.next();
+                if (b1.getType()!=Material.AIR) {
+                	b1=b2;
+                	break;
+                }
             }
-        }
+    	} catch (IllegalStateException ex) {
+    		return null;
+    	}
         Location l=null;
         if (b1!=null) {
         	l=b1.getLocation().clone();

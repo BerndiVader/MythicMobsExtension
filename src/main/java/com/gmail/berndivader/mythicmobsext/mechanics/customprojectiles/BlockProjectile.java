@@ -153,11 +153,8 @@ ITargetedLocationSkill {
 					this.startLocation.add(av);
 				}
 			}
-			this.startLocation.clone();
-			this.currentLocation = this.startLocation.clone();
-			if (this.currentLocation == null) {
-				return;
-			}
+			this.currentLocation=this.startLocation.clone();
+			if (this.currentLocation == null) return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {

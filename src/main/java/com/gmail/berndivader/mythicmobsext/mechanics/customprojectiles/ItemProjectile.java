@@ -274,7 +274,7 @@ ITargetedLocationSkill {
 			}
 			this.oldLocation=this.currentLocation.clone();
 			this.currentLocation.add(this.currentVelocity);
-		
+			
 			if (ItemProjectile.this.hugSurface) {
 				if (this.currentLocation.getBlockX() != this.currentX
 						|| this.currentLocation.getBlockZ() != this.currentZ) {

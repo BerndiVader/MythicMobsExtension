@@ -201,12 +201,10 @@ ITargetedLocationSkill
         @Override
         public void run() {
         	
-        	this.lastLocation=currentLocation;
+        	this.lastLocation=currentLocation.clone();
             this.currentLocation=this.item.getLocation();
             
-            if (this.cancelled) {
-                return;
-            }
+            if (this.cancelled) return;
             if(this.count>ItemThrowProjectile.this.duration||
             		this.item==null||
             		!BlockUtil.isPathable(this.currentLocation.getBlock())||
