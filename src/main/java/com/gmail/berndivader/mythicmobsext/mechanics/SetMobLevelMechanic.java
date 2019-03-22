@@ -1,6 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.Optional;
+
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
@@ -8,6 +11,7 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -38,7 +42,8 @@ ITargetedEntitySkill {
 		if (Utils.mobmanager.isActiveMob(target)) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
 			try {
-				if(am.getMount().isPresent()) am.getMount().get().getEntity().remove();
+				Optional<String>mount=(Optional<String>)NMSUtils.getField(MythicMob.class,"mount",am.getType());
+				if(am.getMount().isPresent()&&mount.isPresent()) am.getMount().get().getEntity().remove();
 				am.setLevel(MathUtils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
 			} catch (NullPointerException ex) {
 				Main.logger.warning("Failed to set moblevel with for: "+this.config.getLine());
