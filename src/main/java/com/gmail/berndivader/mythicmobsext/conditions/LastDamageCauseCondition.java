@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -35,11 +36,13 @@ IEntityCondition {
 		if (entity.hasMetadata(Utils.meta_LASTDAMAGER)) damager=entity.getMetadata(Utils.meta_LASTDAMAGER).get(0).asString().toUpperCase();
 		if (entity.hasMetadata(Utils.meta_LASTDAMAGECAUSE)) cause=entity.getMetadata(Utils.meta_LASTDAMAGECAUSE).get(0).asString().toUpperCase();
 		if (entity.hasMetadata(Utils.meta_LASTDAMAGEAMOUNT)) amount=entity.getMetadata(Utils.meta_LASTDAMAGEAMOUNT).get(0).asDouble();
-		if (damager!=null&&!attackers[0].equals("ANY")) {
-			for(String s1:attackers) {
-				if(s1.equals(damager)) {
-					match=true;
-					break;
+		if (!attackers[0].equals("ANY")) {
+			if(damager!=null) {
+				for(String s1:attackers) {
+					if(s1.equals(damager)) {
+						match=true;
+						break;
+					}
 				}
 			}
 		} else {
@@ -54,6 +57,8 @@ IEntityCondition {
 				}
 			}
 		}
-		return match&&(amount==-1337||this.amount.equals(amount));
+		boolean debug=match&&(amount==-1337||this.amount.equals(amount));
+		if(dba)Main.logger.info("outcome:"+debug+":damager:"+damager+":cause:"+cause);
+		return debug;
 	}
 }

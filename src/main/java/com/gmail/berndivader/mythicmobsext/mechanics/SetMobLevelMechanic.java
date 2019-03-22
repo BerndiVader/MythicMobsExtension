@@ -22,6 +22,7 @@ ITargetedEntitySkill {
 
 	public SetMobLevelMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 		this.a=mlc.getString(new String[] { "amount", "a" },"1").toLowerCase();
 		r(mlc.getInteger("min",-1),mlc.getInteger("max",-1));
 	}
@@ -37,6 +38,7 @@ ITargetedEntitySkill {
 		if (Utils.mobmanager.isActiveMob(target)) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(target);
 			try {
+				if(am.getMount().isPresent()) am.getMount().get().getEntity().remove();
 				am.setLevel(MathUtils.randomRangeInt(Utils.parseMobVariables(a,data,data.getCaster().getEntity(),target,null)));
 			} catch (NullPointerException ex) {
 				Main.logger.warning("Failed to set moblevel with for: "+this.config.getLine());

@@ -50,6 +50,7 @@ ITargetedLocationSkill {
 	protected String pEntityName;
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
+	protected byte bite;
 
 	public BlockProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -57,6 +58,7 @@ ITargetedLocationSkill {
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
+		this.bite=(byte)mlc.getInteger("byte",0);
 	}
 
 	@Override
@@ -204,7 +206,7 @@ ITargetedLocationSkill {
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
-					Material.valueOf(customItemName), (byte) 0);
+					Material.valueOf(customItemName),(byte)BlockProjectile.this.bite);
 			EntityCacheHandler.add(this.pBlock);
 			this.pBlock.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)

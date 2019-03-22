@@ -563,4 +563,21 @@ public final class MathUtils {
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
 	}
 	
+	/**
+	 * Checks if the source location is inside the cuboid
+	 * defined by edge_1 and edge_2
+	 * 
+	 * @param source {@link Location} The source/destination location
+	 * @param edge_1 {@link Location} An edge of the cubiod to check
+	 * @param edge_2 {@link Location} The opposite edge to check
+	 * @return {@link Boolean}
+	 */
+	public static boolean inCubiod(Location source,Location edge_1,Location edge_2) {
+		double edge_1x=edge_1.getX(),edge_1y=edge_1.getX(),edge_1z=edge_1.getZ();
+		double edge_2x=edge_2.getX(),edge_2y=edge_2.getX(),edge_2z=edge_2.getZ();
+		Vector max=new Vector(Math.max(edge_1x,edge_2x),Math.max(edge_1y,edge_2y),Math.max(edge_1z,edge_2z));
+		Vector min=new Vector(Math.min(edge_1x,edge_2x),Math.min(edge_1y,edge_2y),Math.min(edge_1z,edge_2z));
+		return source.toVector().isInAABB(min,max);
+	}
+	
 }
