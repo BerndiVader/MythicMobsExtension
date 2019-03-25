@@ -41,7 +41,7 @@ ILocationCondition
 	List<String>region_names;
 	List<String>region_names_exclude;
 	String types[];
-	boolean debug,use_priority,all_types;
+	boolean debug,use_priority,all_types,all_regions;
 	Predicate<Entity>entities;
 	RangedDouble amount;
 	
@@ -53,6 +53,7 @@ ILocationCondition
 		region_names_exclude=Arrays.asList(("__global__,"+mlc.getString("exclude",new String())).toUpperCase().split(","));
 		types=mlc.getString("types","ANY").toUpperCase().split(",");
 		all_types=types[0].equals("ANY");
+		all_regions=region_names.contains("ANY");
 		use_priority=mlc.getBoolean("usepriority",false);
 		entities=entity->{
 			if(all_types) return true;
@@ -93,25 +94,24 @@ ILocationCondition
 
 	@Override
 	public boolean check(AbstractLocation al) {
-		Set<ProtectedRegion>regions=WorldGuardUtils.getRegionsByLocation(BukkitAdapter.adapt(al));
+		Set<ProtectedRegion>regions_set=WorldGuardUtils.getRegionsByLocation(BukkitAdapter.adapt(al));
 		int size=0;
-		if(regions!=null) {
+		if(regions_set!=null) {
 			World world=BukkitAdapter.adapt(al).getWorld();
-			regions=regions.stream().filter(r->!region_names_exclude.contains(r.getId().toUpperCase())).collect(Collectors.toSet());
+			List<ProtectedRegion>regions=regions_set.stream().filter(r->!region_names_exclude.contains(r.getId().toUpperCase())).collect(Collectors.toList());
 			if(use_priority) {
 				Optional<ProtectedRegion>maybe=regions.stream().max(Comparator.comparing(ProtectedRegion::getPriority));
 				if(maybe.isPresent()) {
 					ProtectedRegion region=maybe.get();
-					if(region_names.contains(region.getId().toUpperCase())||region_names.contains("ANY")) {
+					if(all_regions||region_names.contains(region.getId().toUpperCase())) {
 						size+=sumEntityInRegion(world,region);
 					}
 				}
 			} else {
-				for(ProtectedRegion region:regions) {
-					if(region_names.contains(region.getId().toUpperCase())) {
-						size+=sumEntityInRegion(world,region);
-					}
+				if(!all_regions) {
+					regions=regions.stream().filter(r->region_names.contains(r.getId().toUpperCase())).collect(Collectors.toList());
 				}
+				size+=sumEntityInRegions(world,regions);
 			}
 		}
 		return amount.equals(size);
@@ -123,5 +123,28 @@ ILocationCondition
 		BoundingBox box=new BoundingBox(min_point.getX(),min_point.getY(),min_point.getZ(),max_point.getX(),max_point.getY(),max_point.getZ());
 		return world.getNearbyEntities(box,entities).size();
 	}
+	
+	int sumEntityInRegions(World world,List<ProtectedRegion>regions) {
+		if(regions.isEmpty()) return 0;
+		ProtectedRegion first_region=regions.get(0);
+		BlockVector min_point=first_region.getMinimumPoint();
+		BlockVector max_point=first_region.getMaximumPoint();
+		double min_x=min_point.getX(),min_y=min_point.getY(),min_z=min_point.getZ(),max_x=max_point.getX(),max_y=max_point.getY(),max_z=max_point.getZ();
+		int size=regions.size();
+		for(int i1=1;i1<size;i1++) {
+			ProtectedRegion region=regions.get(i1);
+			min_point=region.getMinimumPoint();
+			max_point=region.getMaximumPoint();
+			if(min_point.getX()<min_x) min_x=min_point.getX();
+			if(min_point.getY()<min_y) min_y=min_point.getY();
+			if(min_point.getZ()<min_z) min_z=min_point.getZ();
+			if(max_point.getX()>max_x) max_x=max_point.getX();
+			if(max_point.getY()>max_y) max_y=max_point.getY();
+			if(max_point.getZ()>max_z) max_z=max_point.getZ();
+		}
+		BoundingBox box=new BoundingBox(min_x,min_y,min_z,max_x,max_y,max_z);
+		return world.getNearbyEntities(box,entities).size();
+	}
+	
 
 }
