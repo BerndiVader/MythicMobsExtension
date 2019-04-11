@@ -1,10 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -56,7 +56,7 @@ INoTargetSkill
 				NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),set?target.getBukkitEntity():null,reason,event);
 			}
 			if(trigger&&Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
-				new TriggeredSkillAP(SkillTrigger.TARGETCHANGE,Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()),target);
+				new TriggeredSkill(SkillTrigger.TARGETCHANGE,Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()),target,new Pair[0]);
 			}
 			return true;
 		}

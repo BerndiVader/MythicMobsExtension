@@ -1,9 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -16,6 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 @ExternalAnnotation(name="infect",author="BerndiVader")
 public 
@@ -54,7 +55,7 @@ ITargetedEntitySkill {
 	            am.getLivingEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,mob_type.getFaction()));
 	        }
 	    	Utils.mobmanager.registerActiveMob(am);
-			new TriggeredSkillAP(SkillTrigger.SPAWN,am,data.getCaster().getEntity());
+			new TriggeredSkill(SkillTrigger.SPAWN,am,data.getCaster().getEntity(),new Pair[0]);
 		}
 	    return am;
 	}

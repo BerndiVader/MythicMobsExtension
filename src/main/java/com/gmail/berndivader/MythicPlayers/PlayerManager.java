@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -33,7 +33,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -44,6 +43,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 public class PlayerManager implements Listener {
 	public static String meta_MYTHICPLAYER = "MythicPlayer";
@@ -127,7 +127,7 @@ public class PlayerManager implements Listener {
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
 		if (dotrigger)
-			new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
+			new TriggeredSkill(SkillTrigger.SPAWN, ap, null,new Pair[0]);
 		return true;
 	}
 
@@ -136,7 +136,7 @@ public class PlayerManager implements Listener {
 		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
-		new TriggeredSkillAP(SkillTrigger.SPAWN, ap, null);
+		new TriggeredSkill(SkillTrigger.SPAWN, ap, null,new Pair[0]);
 		return true;
 	}
 
@@ -194,7 +194,7 @@ public class PlayerManager implements Listener {
 			AbstractEntity trigger = null;
 			if (e instanceof EntityDamageByEntityEvent)
 				trigger = BukkitAdapter.adapt(((EntityDamageByEntityEvent) e).getDamager());
-			new TriggeredSkillAP(SkillTrigger.DAMAGED, ap, trigger);
+			new TriggeredSkill(SkillTrigger.DAMAGED, ap, trigger,new Pair[0]);
 		}
 	}
 
@@ -203,26 +203,29 @@ public class PlayerManager implements Listener {
 		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId()))
 			return;
 		SkillTrigger st = e.getPlayer().isSneaking() ? SkillTrigger.UNCROUCH : SkillTrigger.CROUCH;
-		new TriggeredSkillAP(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null);
+		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null,new Pair[0]);
 	}
 	
 	@EventHandler
 	public void onUseTrigger(PlayerInteractEvent e) {
 		if(e.getHand()==EquipmentSlot.HAND&&this.isActivePlayer(e.getPlayer().getUniqueId())) {
 			ActivePlayer ap = this.getActivePlayer(e.getPlayer().getUniqueId()).get();
-			TriggeredSkillAP ts=null;
+			TriggeredSkill ts=null;
 			switch(e.getAction()) {
 				case RIGHT_CLICK_AIR:
-					ts=new TriggeredSkillAP(SkillTrigger.RIGHTCLICK,ap,null,null,true);
+					ts=new TriggeredSkill(SkillTrigger.RIGHTCLICK,ap,ap.getEntity(),true,new Pair[0]);
 					break;
 				case RIGHT_CLICK_BLOCK:
-					ts=new TriggeredSkillAP(SkillTrigger.RIGHTCLICK,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true);
+					ts=new TriggeredSkill(SkillTrigger.RIGHTCLICK,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0]);
 					break;
 				case LEFT_CLICK_AIR:
-					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?new TriggeredSkillAP(SkillTrigger.USE,ap,null,null,true):new TriggeredSkillAP(SkillTrigger.SWING,ap,null,null,true);
+					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?
+							new TriggeredSkill(SkillTrigger.USE,ap,ap.getEntity(),true,new Pair[0]):new TriggeredSkill(SkillTrigger.SWING,ap,ap.getEntity(),true,new Pair[0]);
 					break;
 				case LEFT_CLICK_BLOCK:
-					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?new TriggeredSkillAP(SkillTrigger.USE,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true):new TriggeredSkillAP(SkillTrigger.SWING,ap,null,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),true);
+					ts=e.getPlayer().getInventory().getItemInMainHand()!=null
+							?new TriggeredSkill(SkillTrigger.USE,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0])
+							:new TriggeredSkill(SkillTrigger.SWING,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0]);
 					break;
 				default:
 					break;
@@ -302,7 +305,7 @@ public class PlayerManager implements Listener {
 		if (maybeActivePlayer.isPresent()) {
 			ActivePlayer ap = maybeActivePlayer.get();
 			e.getPlayer().setMetadata(meta_READYREASON, new FixedMetadataValue(mythicplayers.plugin(), meta_ITEMCHANGE));
-			new TriggeredSkillAP(SkillTrigger.READY, ap, ap.getEntity());
+			new TriggeredSkill(SkillTrigger.READY,ap,ap.getEntity(),new Pair[0]);
 		}
 	}
 

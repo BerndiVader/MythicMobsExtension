@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,7 +41,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -61,6 +61,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
@@ -188,7 +189,7 @@ Listener
 		final Entity s=(Entity)e.getEntity().getShooter();
 		final ActiveMob am=mobmanager.getMythicMobInstance(s);
 		if (am!=null) {
-			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+			TriggeredSkill ts=new TriggeredSkill(SkillTrigger.SHOOT,am,am.getEntity().getTarget(),new Pair[0]);
 			e.setCancelled(ts.getCancelled());
 		}
 	}
@@ -227,7 +228,7 @@ Listener
 				&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
 			if (damager!=null&&mobmanager.isActiveMob(damager.getUniqueId())) {
-				new TriggeredSkillAP(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),BukkitAdapter.adapt(e.getEntity()));
+				new TriggeredSkill(SkillTrigger.KILL,mobmanager.getMythicMobInstance(damager),BukkitAdapter.adapt(e.getEntity()),new Pair[0]);
 			}
 		}
 	}
@@ -279,7 +280,7 @@ Listener
 	
 	@EventHandler
 	public void triggerDamageForNoneEntity(EntityDamageEvent e) {
-		TriggeredSkillAP ts;
+		TriggeredSkill ts;
 		final Entity victim = e.getEntity();
 		if (e instanceof EntityDamageByEntityEvent
 				|| !(victim instanceof LivingEntity) 
@@ -288,7 +289,7 @@ Listener
 		ActiveMob am = mobmanager.getMythicMobInstance(victim);
 		if (am==null
 				|| !am.getType().getConfig().getBoolean("onDamageForOtherCause")) return;
-		ts = new TriggeredSkillAP(SkillTrigger.DAMAGED, am, null);
+		ts = new TriggeredSkill(SkillTrigger.DAMAGED,am,null,new Pair[0]);
 		if (ts.getCancelled()) e.setCancelled(true);
 	}
 	
@@ -513,7 +514,7 @@ Listener
 	public static void triggerShoot(Entity caster, Entity trigger) {
 		final ActiveMob am=mobmanager.getMythicMobInstance(caster);
 		if (am!=null) {
-			new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+			new TriggeredSkill(SkillTrigger.SHOOT,am,am.getEntity().getTarget(),new Pair[0]);
 		}
 	}
 	
