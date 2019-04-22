@@ -1,5 +1,6 @@
 package com.gmail.berndivader.MythicPlayers;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,6 +43,7 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
+import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
@@ -127,7 +129,7 @@ public class PlayerManager implements Listener {
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
 		if (dotrigger)
-			new TriggeredSkill(SkillTrigger.SPAWN, ap, null,new Pair[0]);
+			new TriggeredSkill(SkillTrigger.SPAWN,ap,null,new Pair[0]);
 		return true;
 	}
 
@@ -136,7 +138,7 @@ public class PlayerManager implements Listener {
 		ActivePlayer ap = new ActivePlayer(l.getUniqueId(), BukkitAdapter.adapt(l), mm, 1);
 		this.addMythicPlayerToFaction(mm, ap);
 		this.registerActiveMob(ap);
-		new TriggeredSkill(SkillTrigger.SPAWN, ap, null,new Pair[0]);
+		new TriggeredSkill(SkillTrigger.SPAWN,ap,null,new Pair[0]);
 		return true;
 	}
 
@@ -200,10 +202,9 @@ public class PlayerManager implements Listener {
 
 	@EventHandler
 	public void onMythicPlayerToggleSneak(PlayerToggleSneakEvent e) {
-		if (e.isCancelled() || !this.isActivePlayer(e.getPlayer().getUniqueId()))
-			return;
+		if (e.isCancelled()||!this.isActivePlayer(e.getPlayer().getUniqueId())) return;
 		SkillTrigger st = e.getPlayer().isSneaking() ? SkillTrigger.UNCROUCH : SkillTrigger.CROUCH;
-		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(), null,new Pair[0]);
+		new TriggeredSkill(st, this.getActivePlayer(e.getPlayer().getUniqueId()).get(),null,new Pair[0]);
 	}
 	
 	@EventHandler
@@ -216,7 +217,7 @@ public class PlayerManager implements Listener {
 					ts=new TriggeredSkill(SkillTrigger.RIGHTCLICK,ap,ap.getEntity(),true,new Pair[0]);
 					break;
 				case RIGHT_CLICK_BLOCK:
-					ts=new TriggeredSkill(SkillTrigger.RIGHTCLICK,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0]);
+					ts=new TriggeredSkill(SkillTrigger.RIGHTCLICK,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),new ArrayList<SkillMechanic>(),true,new Pair[0]);
 					break;
 				case LEFT_CLICK_AIR:
 					ts=e.getPlayer().getInventory().getItemInMainHand()!=null?
@@ -224,8 +225,8 @@ public class PlayerManager implements Listener {
 					break;
 				case LEFT_CLICK_BLOCK:
 					ts=e.getPlayer().getInventory().getItemInMainHand()!=null
-							?new TriggeredSkill(SkillTrigger.USE,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0])
-							:new TriggeredSkill(SkillTrigger.SWING,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),null,true,new Pair[0]);
+							?new TriggeredSkill(SkillTrigger.USE,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),new ArrayList<SkillMechanic>(),true,new Pair[0])
+							:new TriggeredSkill(SkillTrigger.SWING,ap,BukkitAdapter.adapt(e.getClickedBlock().getLocation()),ap.getEntity(),new ArrayList<SkillMechanic>(),true,new Pair[0]);
 					break;
 				default:
 					break;
