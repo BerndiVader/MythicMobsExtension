@@ -34,7 +34,8 @@ ITargetedEntitySkill {
 		OFFHAND,
 		ARMOR,
 		INVENTORY,
-		ANY;
+		ANY,
+		SLOT;
 
 		public static WhereType get(String s) {
 			if (s==null) return null;
@@ -50,7 +51,7 @@ ITargetedEntitySkill {
 	public class ItemHolding {
 		Material material;
 		String lore;
-		int amount;
+		int amount,slot;
 		boolean matAny;
 		WhereType where;
 
@@ -59,6 +60,7 @@ ITargetedEntitySkill {
 			this.matAny=true;
 			this.lore="ANY";
 			this.amount=1;
+			this.slot=-1;
 			this.where=WhereType.ANY;
 		}
 		
@@ -85,9 +87,19 @@ ITargetedEntitySkill {
 			this.amount=a;
 		}
 		public void setWhere(String w) { this.where=WhereType.get(w); }
+		
 		public Boolean isMaterialAny(){
 			return this.matAny;
 		}
+		
+		public void setSlot(int slot) {
+			this.slot=slot;
+		}
+		
+		public int getSlot() {
+			return this.slot;
+		}
+		
 	}
 	
 	private ItemHolding holding;
@@ -123,6 +135,9 @@ ITargetedEntitySkill {
 				} else if(parse1.startsWith("where=")) {
 					parse1=parse1.substring(6,parse1.length());
 					this.holding.setWhere(parse1);
+				} else if(parse1.startsWith("slot=")) {
+					parse1=parse1.substring(5,parse1.length());
+					this.holding.setSlot(Integer.parseInt(parse1));
 				}
 			}
 		}
@@ -148,6 +163,11 @@ ITargetedEntitySkill {
 						iis.add(e.getEquipment().getItemInMainHand());
 						iis.add(e.getEquipment().getItemInOffHand());
 					}
+				} else if(entry.where.equals(WhereType.SLOT)) {
+					if(isPlayer) {
+						ItemStack itemstack=((Player)e).getInventory().getItem(entry.getSlot());
+						iis.add(itemstack);
+					}
 				} else {
 					if (isPlayer && entry.where.equals(WhereType.INVENTORY)) {
 						iis.addAll(Arrays.asList(((Player)e).getInventory().getStorageContents()));
@@ -168,7 +188,6 @@ ITargetedEntitySkill {
 	
 	private static boolean checkContentAndDrop(List<ItemStack> i, ItemHolding entry, Location l,int pd,boolean c) {
 		Collections.shuffle(i);
-		String ll;
 		for(ListIterator<ItemStack>it=i.listIterator();it.hasNext();) {
 			ItemStack is = it.next();
 			if (is==null||is.getType().equals(Material.AIR)) continue;
@@ -177,7 +196,7 @@ ITargetedEntitySkill {
 				if (entry.lore.equals("ANY")) return spawnItem(is,entry,l,pd,a,c);
 				if (is.hasItemMeta() && is.getItemMeta().hasLore()) {
 					for(Iterator<String>it1=is.getItemMeta().getLore().iterator();it1.hasNext();) {
-						if ((ll=it1.next()).contains(entry.lore)) return spawnItem(is,entry,l,pd,a,c); 					}
+						if (it1.next().contains(entry.lore)) return spawnItem(is,entry,l,pd,a,c); 					}
 				}
 
 			}
