@@ -32,6 +32,7 @@ IEntityCondition {
 		OFFHAND,
 		ARMOR,
 		INVENTORY,
+		SLOT,
 		ANY;
 
 		public static WhereType get(String s) {
@@ -50,6 +51,7 @@ IEntityCondition {
 		String lore;
 		RangedDouble amount;
 		boolean matAny;
+		int slot;
 		WhereType where;
 		
 		public ItemHolding() {
@@ -83,10 +85,18 @@ IEntityCondition {
 			this.amount=a==null||a.isEmpty()?new RangedDouble(">0"):new RangedDouble(a);
 		}
 		public void setWhere(String w) { this.where=WhereType.get(w); }
+		public void setSlot(String s) {
+			try {
+				this.slot=Integer.parseInt(s);
+			} catch (Exception e) {
+				this.slot=0;
+			}
+		}
 		public boolean isMaterialAny(){
 			return this.matAny;
 		}
 	}
+	
 	private String conditionLine;
 	private boolean is;
 	private LinkedHashSet<ItemHolding> holdinglist;
@@ -102,6 +112,7 @@ IEntityCondition {
 			tmp="\"where="+mlc.getString("where","");
 			tmp+=";material="+mlc.getString("material","");
 			tmp+=";amount="+mlc.getString("amount","");
+			tmp+=";slot="+mlc.getString("slot","0");
 			tmp+=";lore="+mlc.getString("lore","")+"\"";
 			tmp=SkillString.unparseMessageSpecialChars(tmp);
 		}
@@ -129,6 +140,9 @@ IEntityCondition {
 						} else if(parse1.startsWith("where=")) {
 							parse1=parse1.substring(6,parse1.length());
 							itemholding.setWhere(parse1);
+						} else if(parse1.startsWith("slot=")) {
+							parse1=parse1.substring(5,parse1.length());
+							itemholding.setSlot(parse1);
 						}
 					}
 				}
@@ -147,6 +161,10 @@ IEntityCondition {
 			int a=0;
 			for(ItemHolding entry:HasItemCondition.this.holdinglist) {
 				bool=false;
+				if(t.isPlayer()&&entry.where.equals(WhereType.SLOT)) {
+					Player p=(Player)t.getBukkitEntity();
+					return (checkContent(new ItemStack[]{p.getInventory().getItem(entry.slot)},entry));
+				}
 				if (entry.where.equals(WhereType.ANY)||entry.where.equals(WhereType.HAND)) {
 					if (checkContent(new ItemStack[]{target.getEquipment().getItemInMainHand()},entry)) bool=true;
 				}

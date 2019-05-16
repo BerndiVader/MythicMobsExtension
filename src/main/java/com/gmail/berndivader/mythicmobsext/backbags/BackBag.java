@@ -42,11 +42,10 @@ BackBag
 	public BackBag(Entity owner,int size) {
 		this.owner=owner;
 		this.size=size;
-		if((inventory=getBag(owner.getUniqueId()))==null) {
+		if((inventory=getInventory(owner.getUniqueId()))==null) {
 			inventory=Bukkit.createInventory(null,9+size,str_name);
-			addBag(owner.getUniqueId(),inventory);
+			addInventory(owner.getUniqueId(),inventory);
 		}
-		
 	}
 	
 	public void viewBackBag(Player player) {
@@ -57,7 +56,7 @@ BackBag
 		return this.inventory!=null;
 	}
 	
-	static void addBag(UUID uuid, Inventory inventory) {
+	static void addInventory(UUID uuid, Inventory inventory) {
 		if(bags.containsKey(uuid)) {
 			bags.replace(uuid,inventory);
 		} else {
@@ -65,16 +64,14 @@ BackBag
 		}
 	}
 	
-	static Inventory getBag(UUID uuid) {
+	static Inventory getInventory(UUID uuid) {
 		return bags.get(uuid);
 	}
-	
 	
 	public static void loadBags() {
 		File dir=new File(url);
 		File[]files=dir.listFiles();
 		int size=files.length;
-		System.err.println(size);
 		for(int i1=0;i1<size;i1++) {
 			File file=files[i1];
 			if(file.exists()) {
@@ -83,7 +80,7 @@ BackBag
 				    ItemStack[] contents=BukkitSerialization.itemStackArrayFromBase64(scanner.useDelimiter("\\A").next());
 				    Inventory inventory=Bukkit.createInventory(null,contents.length);
 				    inventory.setContents(contents);
-				    addBag(uuid,inventory);
+				    addInventory(uuid,inventory);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}		
