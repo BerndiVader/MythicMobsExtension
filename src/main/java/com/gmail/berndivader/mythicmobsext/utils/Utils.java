@@ -31,8 +31,10 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -102,6 +104,7 @@ Listener
 	public static final String meta_CUSTOMSPAWNREASON="SETSPAWNREASON";
 	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
 	public static final String meta_NOSUNBURN="MMENOSUN";
+	public static final String meta_SLOTCHANGEDSTAMP="SLOTSTAMP";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -129,6 +132,11 @@ Listener
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+	}
+	
+	@EventHandler
+	public void playerHeldItem(PlayerItemHeldEvent e) {
+		e.getPlayer().setMetadata(meta_SLOTCHANGEDSTAMP,new FixedMetadataValue(Main.getPlugin(),System.currentTimeMillis()));
 	}
 	
 	@EventHandler

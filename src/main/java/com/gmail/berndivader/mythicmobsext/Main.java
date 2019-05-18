@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
@@ -131,7 +131,7 @@ JavaPlugin
 			if (Config.pre44spawn) new Pre44MobSpawnEvent();
 			
 			entityCacheHandler=new EntityCacheHandler();
-			BackBag.loadBags();
+			new BackBagHelper();
 			
 	        new BukkitRunnable() {
 				@Override
@@ -153,7 +153,7 @@ JavaPlugin
 			CachedOwnerHandler.cleanUp();
 			CachedOwnerHandler.saveCachedOwners();
 		}
-		BackBag.saveBags();
+		BackBagHelper.saveBags();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
 		pluginmanager.disablePlugin(this);
