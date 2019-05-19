@@ -21,7 +21,7 @@ IEntityCondition
 
 	public PlayersHotbarChanged(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		millis=new RangedDouble(mlc.getString(new String[] {"milliseconds","millis","m","a"},"<1"));
+		millis=new RangedDouble(mlc.getString(new String[] {"milliseconds","millis","ms","m"},"<1"));
 	}
 
 	@Override

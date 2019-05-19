@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -32,7 +33,8 @@ EntityCacheHandler
 				Iterator<Map.Entry<UUID,String>>iteration=EntityCacheHandler.cached_entities.entrySet().iterator();
 				for (int i1=0;i1<size;i1++) {
 					Map.Entry<UUID,String>entry=iteration.next();
-					if(NMSUtils.getEntity(Bukkit.getWorld(entry.getValue()),entry.getKey())==null) {
+					World world=Bukkit.getWorld(entry.getValue());
+					if(world==null||NMSUtils.getEntity(world,entry.getKey())==null) {
 						iteration.remove();
 					}
 				}

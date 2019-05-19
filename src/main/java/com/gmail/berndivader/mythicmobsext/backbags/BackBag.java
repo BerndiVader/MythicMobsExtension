@@ -41,7 +41,6 @@ Listener
 		}
 		this.size=inventory.getSize();
 		if(default_content!=null&&default_content.length<=this.size) inventory.setContents(default_content);
-		
 	}
 	
 	public void viewBackBag(Player player) {
@@ -60,10 +59,10 @@ Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
 		if(inventory!=null) {
-			if(!e.getClickedInventory().equals(inventory)&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+			if(e.getClickedInventory().hashCode()!=inventory.hashCode()&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 				e.setCancelled(true);
 			}
-			if(e.getClickedInventory().equals(inventory)) e.setCancelled(true);
+			if(e.getClickedInventory().hashCode()==inventory.hashCode()) e.setCancelled(true);
 		}
 	}
 	

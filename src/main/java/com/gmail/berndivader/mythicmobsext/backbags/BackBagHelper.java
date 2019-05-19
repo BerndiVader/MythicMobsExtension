@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.CreateBackBag;
+import com.gmail.berndivader.mythicmobsext.backbags.mechanics.DropBackBagItem;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.OpenBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RemoveBackBag;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
@@ -64,6 +65,9 @@ Listener
 			break;
 		case "removebackbag":
 			e.register(new RemoveBackBag(e.getContainer().getConfigLine(),e.getConfig()));
+			break;
+		case "dropbackbagitem":
+			e.register(new DropBackBagItem(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}
 	}
