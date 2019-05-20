@@ -59,10 +59,11 @@ Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
 		if(inventory!=null) {
-			if(e.getClickedInventory().hashCode()!=inventory.hashCode()&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+			Inventory clicked_inventory=e.getClickedInventory();
+			if(clicked_inventory!=null&&clicked_inventory.hashCode()!=inventory.hashCode()&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 				e.setCancelled(true);
 			}
-			if(e.getClickedInventory().hashCode()==inventory.hashCode()) e.setCancelled(true);
+			if(clicked_inventory!=null&&clicked_inventory.hashCode()==inventory.hashCode()) e.setCancelled(true);
 		}
 	}
 	
