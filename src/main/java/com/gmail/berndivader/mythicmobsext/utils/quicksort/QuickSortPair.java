@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.utils.quicksort;
 
 public
 class
-QuickSortPair 
+QuickSortPair
 {
 	public double value;
 	public Object object;

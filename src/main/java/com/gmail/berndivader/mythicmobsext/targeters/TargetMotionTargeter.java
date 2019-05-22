@@ -16,20 +16,22 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 @ExternalAnnotation(name="targetmotion,triggermotion,selfmotion,ownermotion",author="BerndiVader")
-public class TargetMotionTargeter 
+public 
+class 
+TargetMotionTargeter 
 extends 
-ILocationSelector {
+ISelectorLocation 
+{
 	String selector;
 	int length;
 	double dyo;
 	boolean iy;
 
 	public TargetMotionTargeter(MythicLineConfig mlc) {
+		super(mlc);
 		selector=mlc.getLine().toLowerCase().split("motion")[0];
-		length=mlc.getInteger("length",10);
 		dyo=mlc.getDouble("yoffset",0d);
 		iy=mlc.getBoolean("ignorey",true);
 		
@@ -69,6 +71,6 @@ ILocationSelector {
 			t.subtract(v3.getX()*length,v3.getY()*(length/2),v3.getZ()*length).add(0d,dyo,0d);
 			targets.add(BukkitAdapter.adapt(t));
 		}
-		return targets;
+		return applyOffsets(targets);
 	}
 }

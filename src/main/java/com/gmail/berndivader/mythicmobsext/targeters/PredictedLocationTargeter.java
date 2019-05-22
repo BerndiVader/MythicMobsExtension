@@ -2,7 +2,6 @@ package com.gmail.berndivader.mythicmobsext.targeters;
 
 import java.util.HashSet;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
@@ -16,17 +15,17 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 @ExternalAnnotation(name="targetpredict,triggerpredict,selfpredict,ownerpredict",author="BerndiVader")
 public class PredictedLocationTargeter 
 extends 
-ILocationSelector 
+ISelectorLocation 
 {
 	String selector;
 	float delta;
 
 	public PredictedLocationTargeter(MythicLineConfig mlc) {
+		super(mlc);
 		selector=mlc.getLine().toLowerCase().split("predict")[0];
 		delta=mlc.getFloat("delta",5f);
 	}
@@ -57,6 +56,6 @@ ILocationSelector
 			Vec3D target_position=Volatile.handler.getPredictedMotion((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)ee,delta);
 			targets.add(BukkitAdapter.adapt(ee.getLocation().clone().add(target_position.getX(),target_position.getY(),target_position.getZ())));
 		}
-		return targets;
+		return applyOffsets(targets);
 	}
 }

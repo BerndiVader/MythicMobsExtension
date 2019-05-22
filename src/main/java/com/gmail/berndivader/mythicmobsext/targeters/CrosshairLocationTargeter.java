@@ -14,16 +14,17 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 @ExternalAnnotation(name="crosshairlocation",author="BerndiVader")
-public class CrosshairLocationTargeter
+public 
+class
+CrosshairLocationTargeter
 extends
-ILocationSelector {
-	int length;
+ISelectorLocation 
+{
 	
 	public CrosshairLocationTargeter(MythicLineConfig mlc) {
-		length=mlc.getInteger("length",64);
+		super(mlc);
 	}
 
 	@Override
@@ -35,7 +36,7 @@ ILocationSelector {
 				targets.add(location);
 			}
 		}
-		return targets;
+		return applyOffsets(targets);
 	}
 	
     static Location getTargetedBlockLocation(Player p1, int i1) {

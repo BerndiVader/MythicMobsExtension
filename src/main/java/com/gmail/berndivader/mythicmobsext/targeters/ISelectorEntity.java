@@ -1,7 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.targeters;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.Location;
@@ -11,6 +14,7 @@ import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSort;
 import com.gmail.berndivader.mythicmobsext.utils.quicksort.QuickSortPair;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -91,4 +95,47 @@ IEntitySelector {
             }
         }
 	}
+	
+    void sortByDistance(SkillMetadata data) {
+    	AbstractLocation source=data.getCaster().getEntity().getLocation();
+    	AbstractEntity[]targets=data.getEntityTargets().toArray(new AbstractEntity[data.getEntityTargets().size()]);
+    	int size=targets.length;
+    	QuickSortPair[]pairs=new QuickSortPair[size];
+    	for(int i1=0;i1<size;i1++) {
+    		AbstractEntity e=targets[i1];
+    		double distance=source.distance(e.getLocation());
+    		pairs[i1]=new QuickSortPair(distance,e);
+    	}
+    	pairs=QuickSort.sort(pairs,0,pairs.length-1);
+    	HashSet<AbstractEntity>sorted_targets=new HashSet<>();
+    	for(int i1=0;i1<size;i1++) {
+    		sorted_targets.add((AbstractEntity)pairs[i1].object);
+    	}
+    	data.setEntityTargets(sorted_targets);
+    }
+    
+    void nearest(SkillMetadata data) {
+    	AbstractEntity[]targets=data.getEntityTargets().toArray(new AbstractEntity[data.getEntityTargets().size()]);
+        AbstractLocation caster_location=data.getCaster().getLocation();
+        AbstractEntity nearest=null;
+        for(int i1=0;i1<targets.length;i1++) {
+        	AbstractEntity e=targets[i1];
+			if(nearest==null||caster_location.distance(e.getLocation())<caster_location.distance(nearest.getLocation())) nearest=e;
+        }
+        if(nearest!=null) data.setEntityTarget(nearest);
+    }
+    
+    void shuffle(SkillMetadata data) {
+		List<AbstractEntity>shuffled_targets=Arrays.asList(new AbstractEntity[data.getEntityTargets().size()]);
+		Collections.shuffle(shuffled_targets);
+    	HashSet<AbstractEntity>sorted_targets=new HashSet<>();
+    	int size=shuffled_targets.size();
+    	for(int i1=0;i1<size;i1++) {
+    		sorted_targets.add(shuffled_targets.get(i1));
+    	}
+    	data.setEntityTargets(sorted_targets);
+    }
+	
+	
+	
 }

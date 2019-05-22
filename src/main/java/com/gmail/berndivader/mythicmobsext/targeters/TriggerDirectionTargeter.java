@@ -15,16 +15,16 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 @ExternalAnnotation(name="triggerdirection,targetdirection,ownerdirection",author="BerndiVader")
 public class TriggerDirectionTargeter
 extends
-ILocationSelector {
-	private int length;
+ISelectorLocation 
+{
 	private char c;
 
 	public TriggerDirectionTargeter(MythicLineConfig mlc) {
+		super(mlc);
 		this.length=mlc.getInteger(new String[] {"length","l"},10);
 		c(mlc.getLine().toLowerCase().charAt(1));
 	}
@@ -54,7 +54,7 @@ ILocationSelector {
 			l.add(v);
 			targets.add(l);
 		}
-		return targets;
+		return applyOffsets(targets);
 	}
 	
 	private void c(char c) {

@@ -4,7 +4,6 @@ public
 class
 QuickSort
 { 
-	
 	static int part(QuickSortPair[]arr,int low,int high) {
 		QuickSortPair pivot=arr[high]; 
 		int i=low-1;
@@ -31,6 +30,6 @@ QuickSort
 			sort(arr,pi+1,high); 
 		} 
 		return arr;
-	} 
+	}
 
 } 
