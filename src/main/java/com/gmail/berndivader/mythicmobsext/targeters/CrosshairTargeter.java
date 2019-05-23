@@ -29,6 +29,6 @@ ISelectorEntity
 		if (caster.getEntity().isPlayer()) {
 			targets.add(BukkitAdapter.adapt(Utils.getTargetedEntity((Player)caster.getEntity().getBukkitEntity(),length)));
 		}
-		return targets;
+		return this.applyOffsets(targets);
 	}
 }

@@ -4,6 +4,7 @@ import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.ConfigManager;
@@ -34,10 +35,10 @@ ITargetedEntitySkill {
 	}
 	
 	boolean c(SkillMetadata data,AbstractEntity t) {
-		if (data.getCaster().getEntity().isLiving()) {
-			ActiveMob am=(ActiveMob)data.getCaster();
+		if(t.isValid()&&t.isLiving()) {
+			ActiveMob am=Utils.mobmanager.getMythicMobInstance(t);
 			double h=20,mod=0;
-			h=Utils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
+			h=MathUtils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
 			if (!b&&am!=null) {
 				mod=ConfigManager.defaultLevelModifierHealth.startsWith("+")
                 		? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))
@@ -47,7 +48,7 @@ ITargetedEntitySkill {
             }
 			
 			if (am!=null&&am.getLevel()>1&&mod>0.0) h+=mod*(am.getLevel()-1);
-			LivingEntity e=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
+			LivingEntity e=(LivingEntity)t.getBukkitEntity();
 			switch(m) {
 			case 'A':
 				h+=e.getMaxHealth();
@@ -70,7 +71,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		return c(data,null);
+		return c(data,data.getCaster().getEntity());
 	}
 
 	@Override

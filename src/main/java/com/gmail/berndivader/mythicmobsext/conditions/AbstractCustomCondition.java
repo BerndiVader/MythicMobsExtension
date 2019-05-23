@@ -5,11 +5,12 @@ import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 
 public class AbstractCustomCondition extends SkillCondition {
-	private boolean dba;
+	boolean dba;
 
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
-		String action="TRUE",actionVar="0";
+		String action="TRUE";
+		String actionVar="0";
 		String a=mlc.getString("action","");
 		dba=mlc.getBoolean("debug",false);
 		for(int i=0;i<ConditionAction.values().length;i++){

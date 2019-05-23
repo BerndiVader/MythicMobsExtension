@@ -26,7 +26,6 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class CachedOwnerHandler implements Listener {
 	protected final static Plugin plugin = Main.getPlugin();
@@ -45,29 +44,38 @@ public class CachedOwnerHandler implements Listener {
 			CachedOwnerHandler.cachedOwners = CachedOwnerHandler.loadCachedOwners();
 		}
 		Main.pluginmanager.registerEvents(this, plugin);
-		CachedOwnerHandler.cleanUp();
-		CachedOwnerHandler.restoreMobOwner();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				CachedOwnerHandler.restoreMobOwners();
+			}
+		}.runTaskLater(Main.getPlugin(),20l);
 	}
 	
 	@EventHandler
 	public void onMythicLoad(MythicMechanicLoadEvent e) {
 		String mechanicsName = e.getMechanicName().toLowerCase();
-		SkillMechanic mechanic = null;
 		switch (mechanicsName) {
-		case "setcachedowner": {
-			mechanic = new cachedOwnerSkill(e.getContainer().getConfigLine(), e.getConfig());
-			e.register(mechanic);
-			break;			
-		}}
+			case "setcachedowner": 
+				e.register(new CachedOwnerSkill(e.getContainer().getConfigLine(), e.getConfig()));
+				break;			
+			case "restorecachedowner":
+				e.register(new RestoreCachedOwnerMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+				break;
+		}
 	}
 
 	@EventHandler
 	public void onMythicReloaded(MythicReloadedEvent e) {
-		CachedOwnerHandler.cleanUp();
-		CachedOwnerHandler.restoreMobOwner();
+		CachedOwnerHandler.restoreMobOwners();
 	}
 	
-	public static void restoreMobOwner() {
+	public static UUID getMobOwner(UUID slave_uuid) {
+		if (cachedOwners.isEmpty()||!cachedOwners.containsKey(slave_uuid)) return null;
+		return cachedOwners.get(slave_uuid);
+	}
+	
+	public static void restoreMobOwners() {
 		if (CachedOwnerHandler.cachedOwners.isEmpty()) return;
 		new BukkitRunnable() {
 			@Override
@@ -81,7 +89,7 @@ public class CachedOwnerHandler implements Listener {
 					};
 				}
 			}
-		}.runTaskAsynchronously(plugin);		
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public static void addCachedOwner(UUID slave, UUID owner) {
@@ -119,16 +127,11 @@ public class CachedOwnerHandler implements Listener {
 	
 	public static void cleanUp() {
 		if (cachedOwners.isEmpty()) return;
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				for (Map.Entry<UUID,UUID>entry:CachedOwnerHandler.cachedOwners.entrySet()) {
-					if (!CachedOwnerHandler.mobmanager.isActiveMob(entry.getKey())) {
-						CachedOwnerHandler.removeCachedOwner(entry.getKey());
-					};
-				}
+		for (Map.Entry<UUID,UUID>entry:CachedOwnerHandler.cachedOwners.entrySet()) {
+			if (!CachedOwnerHandler.mobmanager.isActiveMob(entry.getKey())) {
+				CachedOwnerHandler.removeCachedOwner(entry.getKey());
 			}
-		}.runTaskLater(plugin, 1L);
+		}
 	}
 	
 	public static void saveCachedOwners() {

@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import org.bukkit.metadata.FixedMetadataValue;
+
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -33,9 +35,11 @@ INoTargetSkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		System.err.println("faction:"+this.faction);
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
 		String f=Utils.parseMobVariables(this.faction,data,data.getCaster().getEntity(),target,null);
 		if (am!=null) am.setFaction(f);
+        target.getBukkitEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,f));
 		return true;
 	}
 }

@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -49,8 +49,8 @@ ITargetedEntitySkill{
 					}
 					this.cancel();
 				} else {
-					yaw=Utils.normalise(yaw+yo,0,360);
-					pitch=Utils.normalise(pitch+po,0,360);
+					yaw=MathUtils.normalise(yaw+yo,0,360);
+					pitch=MathUtils.normalise(pitch+po,0,360);
 					Volatile.handler.rotateEntityPacket(target.getBukkitEntity(),yaw,pitch);
 				}
 				c++;

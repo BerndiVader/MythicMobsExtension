@@ -61,9 +61,8 @@ INoTargetSkill
 	}
 	
 	boolean eval(SkillMetadata data,Entity e1,Location l1) {
-		double s1=0d;
 		Entity target=null;
-		s1=MathInterpreter.parse(Utils.parseMobVariables(eval,data,data.getCaster().getEntity(),BukkitAdapter.adapt(e1),BukkitAdapter.adapt(l1)),variables).eval();
+		double s1=MathInterpreter.parse(Utils.parseMobVariables(eval,data,data.getCaster().getEntity(),BukkitAdapter.adapt(e1),BukkitAdapter.adapt(l1)),variables).eval();
 		switch(parse[0]) {
 		case "mob":
 			target=data.getCaster().getEntity().getBukkitEntity();

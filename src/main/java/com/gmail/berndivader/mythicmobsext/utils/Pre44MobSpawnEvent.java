@@ -40,13 +40,13 @@ Listener {
 		for(int i1=0;i1<listeners.length;i1++) {
 			Listener listener=listeners[i1].getListener();
 			if(listener.getClass().getName().equals("io.lumine.xikage.mythicmobs.adapters.bukkit.listeners.MobListeners")) {
-				Main.logger.warning("Unregistered MythicMobs 4.4.x MobSpawnEvent!");
 				CreatureSpawnEvent.getHandlerList().unregister(listener);
+				Main.logger.warning("Unregistered MythicMobs 4.4.x MobSpawnEvent!");
+				Main.pluginmanager.registerEvents(this,Main.getPlugin());
+				Main.logger.warning("Registered MythicMobs pre 4.4.x MobSpawnEvent!");
 				break;
 			}
 		}
-		Main.pluginmanager.registerEvents(this,Main.getPlugin());
-		Main.logger.warning("Registered MythicMobs pre 4.4.x MobSpawnEvent!");
 	}
 	
     @EventHandler(priority=EventPriority.HIGH)

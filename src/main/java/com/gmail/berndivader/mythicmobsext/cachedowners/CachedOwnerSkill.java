@@ -11,11 +11,11 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class cachedOwnerSkill extends SkillMechanic 
+public class CachedOwnerSkill extends SkillMechanic 
 implements
 ITargetedEntitySkill {
 	
-	public cachedOwnerSkill(String skill, MythicLineConfig mlc) {
+	public CachedOwnerSkill(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 	}
 

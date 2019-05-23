@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
@@ -28,7 +29,7 @@ ILocationCondition
 
 	public LocationBehindNearestPlayerCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.viewAngle=Utils.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
+		this.viewAngle=MathUtils.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
 		this.range=Math.pow(mlc.getDouble("range",32),2d);
 	}
 

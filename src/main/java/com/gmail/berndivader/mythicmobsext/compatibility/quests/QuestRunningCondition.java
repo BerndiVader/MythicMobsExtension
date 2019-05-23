@@ -41,7 +41,7 @@ IEntityCondition {
 		Quester q=quests.getQuester(p.getUniqueId());
 		boolean bl1=false;
 		if(q!=null) {
-			Iterator<Map.Entry<Quest,Integer>>entries=q.currentQuests.entrySet().iterator();
+			Iterator<Map.Entry<Quest,Integer>>entries=q.getCurrentQuests().entrySet().iterator();
 			while(entries.hasNext()&&!bl1) {
 				Quest quest=entries.next().getKey();
 				for(int i1=0;i1<arr1.length;i1++) {
@@ -57,7 +57,7 @@ IEntityCondition {
 	}
 	
 	static int getStageInt(Quest quest,Stage stage) {
-		Iterator<Stage>stages=quest.orderedStages.iterator();
+		Iterator<Stage>stages=quest.getStages().iterator();
 		int i1=0;
 		while(stages.hasNext()) {
 			Stage ss=stages.next();

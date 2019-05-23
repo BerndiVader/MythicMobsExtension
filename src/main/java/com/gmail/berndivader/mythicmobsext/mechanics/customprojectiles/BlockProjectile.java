@@ -21,6 +21,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -49,6 +50,7 @@ ITargetedLocationSkill {
 	protected String pEntityName;
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
+	protected byte bite;
 
 	public BlockProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -56,6 +58,7 @@ ITargetedLocationSkill {
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
+		this.bite=(byte)mlc.getInteger("byte",0);
 	}
 
 	@Override
@@ -142,21 +145,18 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + BlockProjectile.this.startYOffset);
 				}
 				if (BlockProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=Utils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),BlockProjectile.this.startForwardOffset);
+					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),BlockProjectile.this.startForwardOffset);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
 				if (BlockProjectile.this.startSideOffset != 0.0f) {
-					Vector v=Utils.getSideOffsetVector(this.startLocation.getYaw(), BlockProjectile.this.startSideOffset,false);
+					Vector v=MathUtils.getSideOffsetVector(this.startLocation.getYaw(), BlockProjectile.this.startSideOffset,false);
 					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
 					this.startLocation.add(av);
 				}
 			}
-			this.startLocation.clone();
-			this.currentLocation = this.startLocation.clone();
-			if (this.currentLocation == null) {
-				return;
-			}
+			this.currentLocation=this.startLocation.clone();
+			if (this.currentLocation == null) return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -201,12 +201,12 @@ ITargetedLocationSkill {
 			this.pLocation = BukkitAdapter.adapt(this.startLocation.clone());
 			float yaw = this.pLocation.getYaw();
 			if (this.pFaceDir && !this.eyedir) {
-				yaw = Utils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
+				yaw = MathUtils.lookAtYaw(this.pLocation, BukkitAdapter.adapt(target));
 				this.pLocation.setYaw(yaw);
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
-					Material.valueOf(customItemName), (byte) 0);
+					Material.valueOf(customItemName),(byte)BlockProjectile.this.bite);
 			EntityCacheHandler.add(this.pBlock);
 			this.pBlock.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)

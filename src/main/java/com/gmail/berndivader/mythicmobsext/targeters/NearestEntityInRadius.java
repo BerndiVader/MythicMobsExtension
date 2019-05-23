@@ -69,7 +69,7 @@ ISelectorEntity
 			}
 		}
 		if(nearest!=null) targets.add(BukkitAdapter.adapt(nearest));
-		return targets;
+		return this.applyOffsets(targets);
 	}
 	
 }

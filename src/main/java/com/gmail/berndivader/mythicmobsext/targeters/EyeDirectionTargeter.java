@@ -8,16 +8,14 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
 
 @ExternalAnnotation(name="eyedirection",author="BerndiVader")
 public class EyeDirectionTargeter
 extends
-ILocationSelector {
-	private int length;
+ISelectorLocation {
 	
 	public EyeDirectionTargeter(MythicLineConfig mlc) {
-		this.length=mlc.getInteger(new String[] {"length","l"},10);
+		super(mlc);
 	}
 
 	@Override
@@ -29,7 +27,7 @@ ILocationSelector {
 			l.add(v);
 			targets.add(l);
 		}
-		return targets;
+		return applyOffsets(targets);
 	}
 
 }

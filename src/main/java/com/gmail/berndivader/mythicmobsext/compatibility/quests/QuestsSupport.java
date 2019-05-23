@@ -72,7 +72,7 @@ Listener {
 	}
 	
 	static Quest getQuestFromCurrent(Quester quester, String questName) {
-		Iterator<Map.Entry<Quest,Integer>>entries=quester.currentQuests.entrySet().iterator();
+		Iterator<Map.Entry<Quest,Integer>>entries=quester.getCurrentQuests().entrySet().iterator();
 		while(entries.hasNext()) {
 			Quest quest=entries.next().getKey();
 			if((quest.getName().toLowerCase().equals(questName))) return quest;

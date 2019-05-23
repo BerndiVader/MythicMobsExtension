@@ -11,12 +11,11 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 
 @ExternalAnnotation(name="lastdamager",author="BerndiVader")
 public class LastDamagerTargeter
 extends
-IEntitySelector {
+ISelectorEntity {
 
 	public LastDamagerTargeter(MythicLineConfig mlc) {
 		super(mlc);
@@ -29,7 +28,7 @@ IEntitySelector {
 		if (e instanceof EntityDamageByEntityEvent) {
 			targets.add(BukkitAdapter.adapt(((EntityDamageByEntityEvent)e).getDamager()));
 		}
-		return targets;
+		return this.applyOffsets(targets);
 	}
 
 }

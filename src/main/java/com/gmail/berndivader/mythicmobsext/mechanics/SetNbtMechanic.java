@@ -25,6 +25,7 @@ INoTargetSkill {
 
 	public SetNbtMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 		s1=mlc.getString("nbt");
 		if (s1.startsWith("\"")&&s1.endsWith("\"")) {
 			s1=SkillString.parseMessageSpecialChars(s1.substring(1,s1.length()-1));

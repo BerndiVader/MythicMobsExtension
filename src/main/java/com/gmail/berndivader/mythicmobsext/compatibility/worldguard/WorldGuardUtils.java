@@ -25,6 +25,16 @@ WorldGuardUtils
 	}
 	
 	/**
+	 * @param location - location to collect regions from
+	 * @return Set<ProtectedRegion> - set of applicable regions
+	 */
+	static Set<ProtectedRegion> getRegionsByLocation(Location location) {
+		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vector(location.getX(),location.getY(),location.getZ()));
+		regions.add((ProtectedRegion)Reflections.getRegion(location.getWorld(), global_name));
+		return regions;
+	}
+	
+	/**
 	 * @param location - location to check
 	 * @param flag_name - name of the flag
 	 * @param args - list goes in there if its a SetFlag

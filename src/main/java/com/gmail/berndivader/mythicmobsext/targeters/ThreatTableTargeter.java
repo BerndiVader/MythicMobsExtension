@@ -61,7 +61,7 @@ ISelectorEntity {
 				}
 			}
 		}
-		return targets;
+		return this.applyOffsets(targets);
 	}
 	
 	static List<Entry<AbstractEntity,Double>> sort(Map<AbstractEntity,Double>tt) {

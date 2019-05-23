@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -19,7 +19,7 @@ implements IEntityComparisonCondition {
 
 	public InFrontCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.viewAngle = Utils.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
+		this.viewAngle = MathUtils.round(mlc.getDouble(new String[]{"view","angle","v"},45.0D),3);
 	}
 
 	@Override

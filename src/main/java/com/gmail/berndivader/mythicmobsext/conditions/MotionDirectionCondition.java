@@ -12,6 +12,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.utils.MotionDirectionType;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -59,7 +60,7 @@ IEntityCondition {
 				:NMSUtils.getEntityLastMot(var1.getBukkitEntity());
 		t.add(v3.getX(),0,v3.getZ());
 		if (v3.getX()!=0||v3.getZ()!=0) {
-			float f1=Utils.lookAtYaw(t,s);
+			float f1=MathUtils.lookAtYaw(t,s);
 			t.setYaw(f1);
 	        Vvp=s.toVector();
 	        Vap=t.toVector();

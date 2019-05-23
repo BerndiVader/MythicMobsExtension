@@ -32,6 +32,6 @@ ISelectorEntity
 		} else if ((target=data.getTrigger().getTarget())!=null) {
 			targets.add(target);
 		}
-		return targets;
+		return this.applyOffsets(targets);
 	}
 }

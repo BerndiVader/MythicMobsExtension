@@ -2,22 +2,22 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoal
 
 import java.util.HashSet;
 
+import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.EntityLiving;
-import net.minecraft.server.v1_12_R1.MathHelper;
 import net.minecraft.server.v1_12_R1.PathEntity;
 import net.minecraft.server.v1_12_R1.PathPoint;
 import net.minecraft.server.v1_12_R1.PathfinderGoal;
 
-import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_12_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
@@ -38,6 +38,7 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 				try {
 					this.materials.add(Material.valueOf(parse[a]));
 				} catch (Exception ex) {
+					Main.logger.warning("Material "+parse[a]+" is not valid for PathfinderGoalBreakBlocks.");
 					continue;
 				}
 			}
@@ -60,27 +61,24 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 		if (!this.canContinue()) return;
 		EntityLiving target=this.entity.getGoalTarget();
 		Block[] blocks=new Block[2];
-        blocks[0] = this.getBreakableTargetBlock(target);
-        blocks[1] = blocks[0].getRelative(BlockFace.UP);
-        for (int a=0;a<blocks.length;a++) {
-        	if (this.materials.isEmpty() 
-       			|| this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
+        blocks[1] = this.getBreakableTargetBlock(target);
+        blocks[0] = blocks[1].getRelative(BlockFace.UP);
+        int size=blocks.length;
+        for (int a=0;a<size;a++) {
+        	if (this.materials.isEmpty()||this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
         }
 	}
 	
 	private boolean canContinue() {
-		EntityLiving target = this.entity.getGoalTarget();
-		if (target !=null
-				&& target.isAlive()
-				&& !this.isBreaking
-				&& !this.isReachable(target)) {
-			return true;
+		if(Main.random.nextInt(100)<=chance) {
+			EntityLiving target=this.entity.getGoalTarget();
+			return target!=null&&target.isAlive()&&!this.isBreaking&&!this.isReachable(target);
 		}
 		return false;
 	}
 	
     private Block getBreakableTargetBlock(EntityLiving target) {
-        Location direction = target.getBukkitEntity().getLocation().subtract(this.entity.getBukkitEntity().getLocation());
+    	Vector direction=((LivingEntity)this.entity.getBukkitEntity()).getLocation().getDirection();
         double dx=direction.getX();
         double dz=direction.getY();
         int bdx=0;
@@ -96,41 +94,35 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
     }
     
 	private void attemptBreakBlock(Block block) {
-        Material type = block.getType();
-        if (!this.isBreaking
-        		&& type!=Material.AIR 
-        		&& type.isSolid()) {
-            Location location = block.getLocation();
-            if (Main.random.nextInt(100) < 50) {
-                this.entity.world.getWorld().playEffect(location, Effect.ZOMBIE_DESTROY_DOOR, 0);
-            } else {
+        Material type=block.getType();
+        if(!this.isBreaking&&type!=Material.AIR&&type.isSolid()) {
+            if(Main.random.nextInt(100)<=this.chance) {
             	this.isBreaking=true;
                 PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, 20, 4, false, false);
                 ((LivingEntity)this.entity.getBukkitEntity()).addPotionEffect(effect);
             	new BukkitRunnable() {
 					@Override
 					public void run() {
-                        block.breakNaturally();
-                        PathfinderGoalBreakBlocks.this.isBreaking=false;
+						if(!CraftEventFactory.callEntityChangeBlockEvent(entity,block,Material.AIR).isCancelled()) {
+		                	BlockPosition position=new BlockPosition(block.getX(),block.getY(),block.getZ());
+	                        entity.world.triggerEffect(2001,position,net.minecraft.server.v1_12_R1.Block.getCombinedId(entity.world.getType(position)));
+	                        block.breakNaturally();
+	                        PathfinderGoalBreakBlocks.this.isBreaking=false;
+		                }
 					}
-				}.runTaskLaterAsynchronously(Main.getPlugin(), 20L);
+				}.runTaskLater(Main.getPlugin(), 20L);
             }
         }
     }
     private boolean isReachable(EntityLiving target) {
-    	if (this.entity.getEntitySenses().a(target)) return true;
+    	if (target==null) return true;
         PathEntity pe=this.entity.getNavigation().a(target);
         if (pe==null) {
-            return false;
+        	return this.entity.onGround!=true;
         } else {
             PathPoint pp=pe.c();
-            if (pp==null) {
-                return false;
-            } else {
-                int i=pp.a-MathHelper.floor(target.locX);
-                int j=pp.c-MathHelper.floor(target.locZ);
-                return (double)(i*i+j*j)<=2.25D;
-            }
+            return pp!=null;
         }
     }
+
 }

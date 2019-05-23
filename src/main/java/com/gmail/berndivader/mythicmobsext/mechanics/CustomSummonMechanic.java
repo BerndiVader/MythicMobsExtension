@@ -6,6 +6,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -71,10 +72,10 @@ public class CustomSummonMechanic extends SkillMechanic
 		if (!data.getCaster().getEntity().getWorld().equals(tl.getWorld())) return false;
 		if (this.useEyeDirection) {
 			target = BukkitAdapter
-					.adapt(Utils.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
+					.adapt(MathUtils.getLocationInFront(BukkitAdapter.adapt(target), this.inFrontBlocks));
 		}
 		target.add(this.addx, this.addy, this.addz);
-		int amount=Utils.randomRangeInt(this.amount);
+		int amount=MathUtils.randomRangeInt(this.amount);
 		if (this.mm != null) {
 			for (int i=1;i<=amount;i++) {
 				AbstractLocation l=noise>0?MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.mm.getMythicEntity().getHeight(), this.yUpOnly):target;

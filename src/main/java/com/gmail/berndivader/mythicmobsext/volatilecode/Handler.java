@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
+import net.minecraft.server.v1_12_R1.EntityLiving;
+
 public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
@@ -51,7 +53,8 @@ public interface Handler {
 	void playAnimationPacket(LivingEntity e, int id);
 	void playAnimationPacket(LivingEntity e, Integer[] ints);
 	void setWorldborder(Player p, int density, boolean play);
-	Vec3D getPredictedMotion(Player bukkit_player, LivingEntity bukkit_target, float delta);
+	Vec3D getPredictedMotion(LivingEntity bukkit_source, LivingEntity bukkit_target, float delta);
 	boolean velocityChanged(Entity bukkit_entity);
 	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
+	boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target);
 }

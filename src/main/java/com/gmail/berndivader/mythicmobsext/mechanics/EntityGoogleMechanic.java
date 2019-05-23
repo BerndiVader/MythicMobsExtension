@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -29,6 +29,7 @@ SkillMechanic
 implements
 ITargetedEntitySkill {
 	public static String str="mmGoggle";
+	private float rotate;
 	private long dur;
 	private boolean b;
 	private Handler vh=Volatile.handler;
@@ -38,6 +39,7 @@ ITargetedEntitySkill {
 		super(skill, mlc);
 		b(skill.toLowerCase().startsWith("entitylookin"));
 		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.rotate=mlc.getFloat("rotate",0f);
 		String s1=mlc.getString("location",null);
 		Location l=null;
 		if(s1!=null) {
@@ -74,12 +76,12 @@ ITargetedEntitySkill {
 					this.cancel();
 				} else {
 					if (!b1) {
-						v2=Utils.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
+						v2=MathUtils.lookAtVec(BukkitAdapter.adapt(caster.getEyeLocation()),
 								EntityGoogleMechanic.this.location.isPresent()?EntityGoogleMechanic.this.location.get():target.getBukkitEntity().getLocation().add(0,target.getEyeHeight(),0));
 					} else {
 						v2=new Vec2D(target.getEyeLocation().getYaw(),target.getEyeLocation().getPitch());
 					}
-					EntityGoogleMechanic.this.vh.rotateEntityPacket(caster.getBukkitEntity(),(float)v2.getX(),(float)v2.getY());
+					EntityGoogleMechanic.this.vh.rotateEntityPacket(caster.getBukkitEntity(),(float)v2.getX()+EntityGoogleMechanic.this.rotate,(float)v2.getY());
 				}
 				l++;
 			}

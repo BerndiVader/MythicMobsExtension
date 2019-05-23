@@ -4,7 +4,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -26,7 +26,7 @@ IEntityCondition {
 		if (e.isLiving()&&!e.isPlayer()) {
 			return Volatile.handler.inMotion((LivingEntity)e.getBukkitEntity());
 		} else if (e.isPlayer()) {
-			return Utils.playerInMotion((Player)e.getBukkitEntity());
+			return MathUtils.playerInMotion((Player)e.getBukkitEntity());
 		}
 		return false;
 	}

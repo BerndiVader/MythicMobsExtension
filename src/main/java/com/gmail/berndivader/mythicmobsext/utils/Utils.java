@@ -2,9 +2,6 @@ package com.gmail.berndivader.mythicmobsext.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,15 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,6 +31,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +42,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.MythicPlayers.Mechanics.TriggeredSkillAP;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -66,14 +62,21 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
 
 @SuppressWarnings("deprecation")
-public class Utils implements Listener {
+public
+class 
+Utils
+implements
+Listener
+{
 	public static MythicMobs mythicmobs;
 	public static MobManager mobmanager;
 	public static int serverV;
@@ -100,25 +103,11 @@ public class Utils implements Listener {
 	public static final String meta_CUSTOMSPAWNREASON="SETSPAWNREASON";
 	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
 	public static final String meta_NOSUNBURN="MMENOSUN";
+	public static final String meta_SLOTCHANGEDSTAMP="SLOTSTAMP";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
 	
-	private static BlockFace[]axis={
-			BlockFace.SOUTH,
-			BlockFace.WEST,
-			BlockFace.NORTH,
-			BlockFace.EAST};
-	private static BlockFace[]radial={
-			BlockFace.SOUTH,
-			BlockFace.SOUTH_WEST,
-			BlockFace.WEST,
-			BlockFace.NORTH_WEST,
-			BlockFace.NORTH,
-			BlockFace.NORTH_EAST,
-			BlockFace.EAST,
-			BlockFace.SOUTH_EAST}; 
-
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
@@ -142,6 +131,11 @@ public class Utils implements Listener {
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+	}
+	
+	@EventHandler
+	public void playerHeldItem(PlayerItemHeldEvent e) {
+		e.getPlayer().setMetadata(meta_SLOTCHANGEDSTAMP,new FixedMetadataValue(Main.getPlugin(),System.currentTimeMillis()));
 	}
 	
 	@EventHandler
@@ -202,7 +196,7 @@ public class Utils implements Listener {
 		final Entity s=(Entity)e.getEntity().getShooter();
 		final ActiveMob am=mobmanager.getMythicMobInstance(s);
 		if (am!=null) {
-			TriggeredSkillAP ts=new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+			TriggeredSkill ts=new TriggeredSkill(SkillTrigger.SHOOT,am,am.getEntity().getTarget(),new Pair[0]);
 			e.setCancelled(ts.getCancelled());
 		}
 	}
@@ -214,6 +208,10 @@ public class Utils implements Listener {
 		}
 	}
 
+	/*
+	 *
+	 * removed for debugging purposes
+	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
 		if (e.getEntity() instanceof Player) return;
@@ -225,8 +223,10 @@ public class Utils implements Listener {
 					e.getEntity().removeScoreboardTag(arr1[i1]);
 				}
 			}
-		}.runTaskAsynchronously(Main.getPlugin());
+		}.runTask(Main.getPlugin());
 	}
+	
+	 */
 	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
@@ -234,9 +234,8 @@ public class Utils implements Listener {
 		if (entityDamageEvent != null && !entityDamageEvent.isCancelled()
 				&& entityDamageEvent instanceof EntityDamageByEntityEvent) {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
-			if (damager != null && mobmanager.isActiveMob(damager.getUniqueId())) {
-				new TriggeredSkillAP(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),
-						BukkitAdapter.adapt(e.getEntity()));
+			if (damager!=null&&mobmanager.isActiveMob(damager.getUniqueId())) {
+				new TriggeredSkill(SkillTrigger.KILL,mobmanager.getMythicMobInstance(damager),BukkitAdapter.adapt(e.getEntity()),new Pair[0]);
 			}
 		}
 	}
@@ -288,7 +287,7 @@ public class Utils implements Listener {
 	
 	@EventHandler
 	public void triggerDamageForNoneEntity(EntityDamageEvent e) {
-		TriggeredSkillAP ts;
+		TriggeredSkill ts;
 		final Entity victim = e.getEntity();
 		if (e instanceof EntityDamageByEntityEvent
 				|| !(victim instanceof LivingEntity) 
@@ -297,7 +296,7 @@ public class Utils implements Listener {
 		ActiveMob am = mobmanager.getMythicMobInstance(victim);
 		if (am==null
 				|| !am.getType().getConfig().getBoolean("onDamageForOtherCause")) return;
-		ts = new TriggeredSkillAP(SkillTrigger.DAMAGED, am, null);
+		ts = new TriggeredSkill(SkillTrigger.DAMAGED,am,null,new Pair[0]);
 		if (ts.getCancelled()) e.setCancelled(true);
 	}
 	
@@ -330,7 +329,7 @@ public class Utils implements Listener {
 		boolean ignoreAbs = victim.getMetadata("IgnoreAbs").get(0).asBoolean();
 		boolean strict=victim.getMetadata("DamageStrict").get(0).asBoolean();
 		double md=strict?victim.getMetadata("DamageAmount").get(0).asDouble():e.getDamage();
-		double df = e.getDamage(DamageModifier.BASE)!=0?round(md / e.getDamage(DamageModifier.BASE), 3):0.0d;
+		double df = e.getDamage(DamageModifier.BASE)!=0?MathUtils.round(md / e.getDamage(DamageModifier.BASE), 3):0.0d;
 		if (debug) {
 			Main.logger.info("Orignal BukkitDamage: " + Double.toString(e.getDamage(DamageModifier.BASE)));
 			Main.logger.info("Custom MythicDamage.: " + Double.toString(md));
@@ -339,12 +338,12 @@ public class Utils implements Listener {
 		}
 		if (Double.isNaN(md)) md=0.001D;
 		e.setDamage(DamageModifier.BASE,md);
-		double damage=round(e.getDamage(DamageModifier.BASE),3);
+		double damage=MathUtils.round(e.getDamage(DamageModifier.BASE),3);
 		for (DamageModifier modifier:DamageModifier.values()) {
 			if (!e.isApplicable(modifier)||modifier.equals(DamageModifier.BASE)) continue;
 			double modF=df;
 			if ((modifier.equals(DamageModifier.ARMOR)&&ignoreArmor)||(modifier.equals(DamageModifier.ABSORPTION)&&ignoreAbs)) modF=0D;
-			modF=round(modF*e.getDamage(modifier),3);
+			modF=MathUtils.round(modF*e.getDamage(modifier),3);
 			if (Double.isNaN(modF)) modF=0.001D;
 			e.setDamage(modifier,modF);
 			damage+=e.getDamage(modifier);
@@ -363,7 +362,7 @@ public class Utils implements Listener {
 	}
 
 	public static void doDamage(SkillCaster am, AbstractEntity t, double damage, boolean ignorearmor,
-			boolean preventKnockback, boolean preventImmunity, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
+			boolean preventKnockback, boolean preventImmunity,List<EntityType>ignores, boolean ignoreabs, boolean debug, DamageCause cause,boolean ncp,boolean strict) {
 		LivingEntity target;
 		am.setUsingDamageSkill(true);
 		if (am instanceof ActiveMob)
@@ -386,11 +385,12 @@ public class Utils implements Listener {
 			target.setMetadata(meta_NCP,new FixedMetadataValue(Main.getPlugin(),true));
 		}
 		if (Double.isNaN(damage)) damage = 0.001D;
-		round(damage,3);
+		MathUtils.round(damage,3);
 		target.setMetadata("DamageAmount", new FixedMetadataValue(Main.getPlugin(), damage));
         target.damage(damage, source);
-		if (preventImmunity)
-			target.setNoDamageTicks(0);
+		if (preventImmunity) {
+			if(!ignores.contains(target.getType())) target.setNoDamageTicks(0);
+		}
 		am.setUsingDamageSkill(false);
 	}
 
@@ -404,10 +404,6 @@ public class Utils implements Listener {
 			shooter=(LivingEntity)damager;
 		}
 		return shooter;
-	}
-
-	public static Location getLocationInFront(Location start, double range) {
-		return start.clone().add(start.getDirection().setY(0).normalize().multiply(range));
 	}
 
 	public static double rpgItemPlayerHit(Player p, double damage) {
@@ -430,16 +426,8 @@ public class Utils implements Listener {
 		}
 		if (useDamage)
 			p.setMetadata(meta_MMRPGITEMDMG, new FixedMetadataValue(Main.getPlugin(), true));
-		return round(damage, 3);
+		return MathUtils.round(damage, 3);
 	}
-
-	
-	/*
-	 * 
-	public static LivingEntity getTargetedEntity(Player player) {
-		return getTargetedEntity(player,32);
-	}
-	 */
 	
 	public static LivingEntity getTargetedEntity(Player player,int range) {
 		BlockIterator bi;
@@ -493,248 +481,6 @@ public class Utils implements Listener {
 		}.runTaskLater(Main.getPlugin(), runlater);
 	}
 
-	public static final float DEGTORAD = 0.017453293F;
-	public static final float RADTODEG = 57.29577951F;
-
-	public static float getLookAtYaw(Entity loc, Entity lookat) {
-		return getLookAtYaw(loc.getLocation(), lookat.getLocation());
-	}
-
-	public static float getLookAtYaw(Block loc, Block lookat) {
-		return getLookAtYaw(loc.getLocation(), lookat.getLocation());
-	}
-
-	public static float getLookAtYaw(Location loc, Location lookat) {
-		return getLookAtYaw(lookat.getX() - loc.getX(), lookat.getZ() - loc.getZ());
-	}
-
-	public static float getLookAtYaw(Vector motion) {
-		return getLookAtYaw(motion.getX(), motion.getZ());
-	}
-
-	public static float getLookAtYaw(double dx, double dz) {
-		float yaw = 0;
-		if (dx != 0) {
-			if (dx < 0) {
-				yaw = 270;
-			} else {
-				yaw = 90;
-			}
-			yaw -= atan(dz / dx);
-		} else if (dz < 0) {
-			yaw = 180;
-		}
-		return -yaw - 90;
-	}
-
-	private static float atan(double value) {
-		return RADTODEG * (float) Math.atan(value);
-	}
-
-	public static Location move(Location loc, Vector offset) {
-		return move(loc, offset.getX(), offset.getY(), offset.getZ());
-	}
-
-	public static Location move(Location loc, double dx, double dy, double dz) {
-		Vector off = rotate(loc.getYaw(), loc.getPitch(), dx, dy, dz);
-		double x = loc.getX() + off.getX();
-		double y = loc.getY() + off.getY();
-		double z = loc.getZ() + off.getZ();
-		return new Location(loc.getWorld(), x, y, z, loc.getYaw(), loc.getPitch());
-	}
-
-	public static Vector rotate(float yaw, float pitch, Vector value) {
-		return rotate(yaw, pitch, value.getX(), value.getY(), value.getZ());
-	}
-
-	public static Vector rotate(float yaw, float pitch, double x, double y, double z) {
-		float angle;
-		angle = yaw * DEGTORAD;
-		double sinyaw = Math.sin(angle);
-		double cosyaw = Math.cos(angle);
-		angle = pitch * DEGTORAD;
-		double sinpitch = Math.sin(angle);
-		double cospitch = Math.cos(angle);
-		double newx = 0.0;
-		double newy = 0.0;
-		double newz = 0.0;
-		newz -= x * cosyaw;
-		newz -= y * sinyaw * sinpitch;
-		newz -= z * sinyaw * cospitch;
-		newx += x * sinyaw;
-		newx -= y * cosyaw * sinpitch;
-		newx -= z * cosyaw * cospitch;
-		newy += y * cospitch;
-		newy -= z * sinpitch;
-		return new Vector(newx, newy, newz);
-	}
-	
-	public static Vector getFrontBackOffsetVector(Vector v, double o) {
-		Vector d=v.clone();
-		d.normalize();
-		d.multiply(o);
-		return d;
-	}
-	
-	@Deprecated
-	public static Vector getSideOffsetVector(float vYa, double hO, boolean iy) {
-		double y = 0d;
-		if (!iy)
-			y=Math.toRadians(vYa);
-		double xo=Math.cos(y)*hO;
-		double zo=Math.sin(y)*hO;
-		return new Vector(xo,0d,zo);
-	}
-	
-	public static Vector getSideOffsetVectorFixed(float vYa, double hO, boolean iy) {
-		double y=0d;
-		if (!iy) y=Math.toRadians(vYa);
-		double xo=Math.cos(y)*hO;
-		double zo=Math.sin(y)*hO;
-		return new Vector(xo,y,zo);
-	}
-	
-
-	public static float lookAtYaw(Location loc, Location lookat) {
-		loc = loc.clone();
-		lookat = lookat.clone();
-		float yaw = 0.0F;
-		double dx = lookat.getX() - loc.getX();
-		double dz = lookat.getZ() - loc.getZ();
-		if (dx != 0) {
-			if (dx < 0) {
-				yaw = (float) (1.5 * Math.PI);
-			} else {
-				yaw = (float) (0.5 * Math.PI);
-			}
-			yaw = yaw - (float) Math.atan(dz / dx);
-		} else if (dz < 0) {
-			yaw = (float) Math.PI;
-		}
-		yaw = -yaw * 180f / (float) Math.PI;
-		return yaw;
-	}
-	
-	public static Vec2D lookAtVec(Vector loc, Vector lookat) {
-		float yaw=0.0F;
-		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
-		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
-		if (dx!=0) {
-			if(dx<0) {
-				yaw=(float)(1.5*Math.PI);
-			} else {
-				yaw=(float)(0.5*Math.PI);
-			}
-			yaw=yaw-(float)Math.atan(dz/dx);
-		} else if (dz<0) {
-			yaw=(float)Math.PI;
-		}
-		float pitch=(float)-Math.atan(dy/dxz);
-		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
-	}
-	
-	public static Vec2D lookAtVec(Location loc, Location lookat) {
-		loc=loc.clone();
-		lookat=lookat.clone();
-		float yaw=0.0f,pitch=yaw;
-		double dx=lookat.getX()-loc.getX(),dz=lookat.getZ()-loc.getZ(),dy=lookat.getY()-loc.getY();
-		double dxz=Math.sqrt(Math.pow(dx,2)+Math.pow(dz,2));
-		if (dx!=0) {
-			if(dx<0) {
-				yaw=(float)(1.5*Math.PI);
-			} else {
-				yaw=(float)(0.5*Math.PI);
-			}
-			yaw=yaw-(float)Math.atan(dz/dx);
-		} else if (dz<0) {
-			yaw=(float)Math.PI;
-		}
-		pitch=(float)-Math.atan(dy/dxz);
-		return new Vec2D(-yaw*180f/Math.PI,pitch*180f/Math.PI);
-	}
-
-	public static Location moveTo(Location loc, Vector offset) {
-		float ryaw = -loc.getYaw() / 180f * (float) Math.PI;
-		float rpitch = loc.getPitch() / 180f * (float) Math.PI;
-		double x = loc.getX();
-		double y = loc.getY();
-		double z = loc.getZ();
-		z -= offset.getX() * Math.sin(ryaw);
-		z += offset.getY() * Math.cos(ryaw) * Math.sin(rpitch);
-		z += offset.getZ() * Math.cos(ryaw) * Math.cos(rpitch);
-		x += offset.getX() * Math.cos(ryaw);
-		x += offset.getY() * Math.sin(rpitch) * Math.sin(ryaw);
-		x += offset.getZ() * Math.sin(ryaw) * Math.cos(rpitch);
-		y += offset.getY() * Math.cos(rpitch);
-		y -= offset.getZ() * Math.sin(rpitch);
-		return new Location(loc.getWorld(), x, y, z, loc.getYaw(), loc.getPitch());
-	}
-
-	public static AbstractLocation getCircleLoc(Location c, double rX, double rZ, double rY, double air) {
-		double x=c.getX()+rX*Math.cos(air);
-		double z=c.getZ()+rZ*Math.sin(air);
-		double y=c.getY()+rY*Math.cos(air);
-		Location loc=new Location(c.getWorld(),x,y,z);
-		Vector difference=c.toVector().clone().subtract(loc.toVector());
-		loc.setDirection(difference);
-		return BukkitAdapter.adapt(loc);
-	}
-
-	public static double round(double value, int places) {
-		return new BigDecimal(value).round(new MathContext(places, RoundingMode.HALF_UP)).doubleValue();
-	}
-
-	public static Vector calculateTrajectory(Vector from, Vector to, double heightGain, double gravity) {
-		int endGain = to.getBlockY() - from.getBlockY();
-		double horizDist = Math.sqrt(distance2D(from, to));
-		double maxGain = heightGain > (endGain + heightGain) ? heightGain : (endGain + heightGain);
-		double a = -horizDist * horizDist / (4 * maxGain);
-		double b = horizDist;
-		double c = -endGain;
-		double slope = -b / (2 * a) - Math.sqrt(b * b - 4 * a * c) / (2 * a);
-		double vy = Math.sqrt(maxGain * (gravity + 0.0013675090252708 * heightGain));
-		double vh = vy / slope;
-		int dx = to.getBlockX() - from.getBlockX();
-		int dz = to.getBlockZ() - from.getBlockZ();
-		double mag = Math.sqrt(dx * dx + dz * dz);
-		double dirx = dx / mag;
-		double dirz = dz / mag;
-		double vx = vh * dirx;
-		double vz = vh * dirz;
-		if (Double.isNaN(vx)) vx=0.0D;
-		if (Double.isNaN(vz)) vz=0.0D;
-		return new Vector(vx, vy, vz);
-	}
-
-	public static Vector spread(Vector from, double yaw, double pitch) {
-		Vector vec = from.clone();
-		float cosyaw = (float)Math.cos(yaw);
-		float cospitch = (float)Math.cos(pitch);
-		float sinyaw = (float)Math.sin(yaw);
-		float sinpitch = (float)Math.sin(pitch);
-		float bX = (float) (vec.getY() * sinpitch + vec.getX() * cospitch);
-		float bY = (float) (vec.getY() * cospitch - vec.getX() * sinpitch);
-		return new Vector(bX * cosyaw - vec.getZ() * sinyaw, bY, bX * sinyaw + vec.getZ() * cosyaw);
-	}
-
-    public static double distance2D(Vector f, Vector t) {
-        double dx = t.getBlockX() - f.getBlockX();
-        double dz = t.getBlockZ() - f.getBlockZ();
-        return dx * dx + dz * dz;
-    }
-    
-    public static double distance3D(Vector f,Vector t) {
-    	double dx=t.getBlockX()-f.getBlockX(),dy=t.getBlockY()-f.getBlockY(),dz=t.getBlockZ()-f.getBlockZ();
-    	return dx*dx+dz*dz+dy*dy;
-    }
-    
-    public static double distance3D(double x1,double y1,double z1,double x2,double y2,double z2) {
-    	return Math.pow(x1-x2,2d)+Math.pow(y1-y2,2d)+Math.pow(z1-z2,2d);
-    }
-    public static double distance2D(double x1,double z1,double x2,double z2) {
-    	return Math.pow(x1-x2,2d)+Math.pow(z1-z2,2d);
-    }
-    
     public static List<Player> getPlayersInRange(Location l,double distance){
     	List<Player>players=new ArrayList<Player>();
     	List<Player>list1=l.getWorld().getPlayers();
@@ -742,15 +488,11 @@ public class Utils implements Listener {
     	for(int i1=0;i1<list1.size();i1++) {
     		Player p=list1.get(i1);
     		Location l1=p.getLocation();
-    		if(distance3D(x1,y1,z1,l1.getBlockX(),l1.getBlockY(),l1.getBlockZ())<=distance) players.add(p);
+    		if(MathUtils.distance3D(x1,y1,z1,l1.getBlockX(),l1.getBlockY(),l1.getBlockZ())<=distance) players.add(p);
     	}
     	return players;
     }
     
-    public static boolean isNumeric(String s) {
-    	return s!=null?s.matches("[0-9]*"):false;
-    }
-
 	public static UUID isUUID(String data) {
 		UUID uuid = null;
 		try {
@@ -759,48 +501,6 @@ public class Utils implements Listener {
 			return null;
 		}
 		return uuid;
-	}
-	
-	public static int randomRangeInt(String range) {
-		ThreadLocalRandom r=ThreadLocalRandom.current();
-		int amount=0;
-		String[]split;
-		int min,max;
-		if (range.contains("to")) {
-			split=range.split("to");
-			min=Integer.parseInt(split[0]);
-			max=Integer.parseInt(split[1]);
-			if (max<min) max=min;
-			amount=r.nextInt(min, max+1);
-		} else amount=Integer.parseInt(range);
-		return amount;
-	}
-
-	public static double randomRangeDouble(String range) {
-		ThreadLocalRandom r=ThreadLocalRandom.current();
-		double amount=0.0D;
-		String[]split;
-		double min,max;
-		if (range.contains("to")) {
-			split=range.split("to");
-			min=Double.parseDouble(split[0]);
-			max=Double.parseDouble(split[1]);
-			if (max<min) max=min;
-			amount=r.nextDouble(min,max);
-		} else amount=Double.parseDouble(range);
-		return amount;
-	}
-
-	public static byte encodeAngle(float angle) {
-		return (byte)(angle*256f/360f);
-	}
-
-	public static int encodeVelocity(double v) {
-		return (int)(v*8000D);
-	}
-
-	public static long encodePosition(double d) {
-		return (long)(d*4096D);
 	}
 	
 	public static String[] wrapStr(String s, int l) {
@@ -818,15 +518,10 @@ public class Utils implements Listener {
 		return r.split(d);
 	}
 	
-    public static float normalise(float v,float s,float e) {
-        float w=e-s,o=v-s;
-        return (float)((o-(Math.floor(o/w)*w))+s);
-    }
-
 	public static void triggerShoot(Entity caster, Entity trigger) {
 		final ActiveMob am=mobmanager.getMythicMobInstance(caster);
 		if (am!=null) {
-			new TriggeredSkillAP(SkillTrigger.SHOOT,am,am.getEntity().getTarget());
+			new TriggeredSkill(SkillTrigger.SHOOT,am,am.getEntity().getTarget(),new Pair[0]);
 		}
 	}
 	
@@ -844,11 +539,11 @@ public class Utils implements Listener {
 				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
 			}
 		}
-		if (s.contains(".meta.")) s=parseMetaVar(s,c,t,l);
+		if (s.contains(".meta.")) s=parseMetaVar(s,m,c,t,l);
 		return s;
 	}
 	
-	private static String parseMetaVar(String s,AbstractEntity a1,AbstractEntity a2,AbstractLocation a3) {
+	private static String parseMetaVar(String s,SkillMetadata data,AbstractEntity a1,AbstractEntity a2,AbstractLocation a3) {
 		Entity e1=a1!=null?a1.getBukkitEntity():null;
 		Entity e2=a2!=null?a2.getBukkitEntity():null;
 		Location l1=a3!=null?BukkitAdapter.adapt(a3):null;
@@ -868,6 +563,15 @@ public class Utils implements Listener {
 				String s1=p[1].split(">")[0];
 				if (e1!=null&&e1.hasMetadata(s1)) return s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
 			}
+		} else if (s.contains("<trigger.meta")) {
+			String[]p=s.split("<trigger.meta.");
+			if (p.length>1) {
+				if(data.getTrigger()!=null) {
+					Entity entity=data.getTrigger().getBukkitEntity();
+					String s1=p[1].split(">")[0];
+					if (entity.hasMetadata(s1)) return s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
+				}
+			}
 		}
 		return s;
 	}
@@ -881,31 +585,6 @@ public class Utils implements Listener {
         float f1=(float)(i1-i2)/20.0f;
         if((f1=(f1*f1+f1*2.0f)/3.0f)>1.0f) f1=1.0f;
         return f1;
-	}
-	
-	public static boolean isHeadingTo(Vector offset,Vector velocity) {
-		double dbefore=offset.lengthSquared();
-		if (dbefore<0.0001) {
-			return true;
-		}
-		Vector clonedVelocity=velocity.clone();
-		setVecLenSqrt(clonedVelocity,dbefore);
-		return dbefore>clonedVelocity.subtract(offset).lengthSquared();
-	}	
-	
-	public static void setVecLen(Vector vector,double length) {
-		setVecLenSqrt(vector,Math.signum(length)*length*length);
-	}
-
-	public static void setVecLenSqrt(Vector vector, double lengthsquared) {
-		double vlength=vector.lengthSquared();
-		if (Math.abs(vlength)>0.0001) {
-			if (lengthsquared<0) {
-				vector.multiply(-Math.sqrt(-lengthsquared/vlength));
-			} else {
-				vector.multiply(Math.sqrt(lengthsquared/vlength));
-			}
-		}
 	}
 	
 	public static int[] shuffleArray(int[]arr1) {
@@ -977,13 +656,18 @@ public class Utils implements Listener {
 		return l1.getBlockX()==l2.getBlockX()&&l1.getBlockY()==l2.getBlockY()&&l1.getBlockZ()==l2.getBlockZ();
 	}
 	
-	public static boolean playerInMotion(Player p) {
-		Vec3D v3=Utils.pl.get(p.getUniqueId());
-		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
-	}
-	
-	public static BlockFace getBlockFacing(float y,boolean bl1) {
-		return bl1?radial[Math.round(y/45f)&0x7]:axis[Math.round(y/90f)&0x3];
-	}
-
+    public static double getGravity(EntityType entityType) {
+        switch (entityType) {
+            case ARROW:
+                return 0.118;
+            case SNOWBALL:
+                return 0.076;
+            case THROWN_EXP_BOTTLE:
+                return 0.157;
+            case EGG:
+                return 0.074;
+            default:
+                return 0.115;
+        }
+    }
 }

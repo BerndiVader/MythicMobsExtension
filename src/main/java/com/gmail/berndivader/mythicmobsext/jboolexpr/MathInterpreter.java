@@ -5,7 +5,7 @@ import java.util.function.DoubleUnaryOperator;
 
 public class MathInterpreter {
 	private static final Map<String,DoubleUnaryOperator>functions=new HashMap<>();
-	Map<String,Double>variables=new HashMap<>();
+	Map<String,Object>variables=new HashMap<>();
 	
 	static {
 	    functions.put("sqrt",x->Math.sqrt(x));

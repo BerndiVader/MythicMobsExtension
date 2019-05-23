@@ -8,7 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -35,6 +37,7 @@ ITargetedEntitySkill
 
 	public AimBowMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 		aim_nearest=mlc.getBoolean("aimnearest",false);
 	}
 	
@@ -58,21 +61,10 @@ ITargetedEntitySkill
 							float velocity=Utils.getBowTension(player);
 							if(velocity>0.1f) {
 								Vec3D target_position=Volatile.handler.getPredictedMotion(player,target,5.0f);
-								double x=target_position.getX();
-								double y=target_position.getY();
-								double z=target_position.getZ();
-								
-								float yaw=(float)(Math.atan2(z,x)*180/Math.PI)-90;
-								double distance=Math.sqrt(x*x+z*z);
-								float G=0.006f;
-								float pitch=(float)-Math.toDegrees(
-										Math.atan((velocity*velocity
-												-Math.sqrt(
-														(float)(velocity*velocity*velocity
-																*velocity-G*(G*(distance*distance)
-																		+2*y*(velocity*velocity)))))
-												/(G*distance)));
-								if(!Float.isNaN(pitch)&&!Float.isNaN(yaw)) Volatile.handler.playerConnectionLookAt(player, yaw, pitch);
+								Vec2D direction=MathUtils.calculateDirectionVec2D(target_position,velocity,0.006f);
+								float yaw=(float)direction.getX();
+								float pitch=(float)direction.getY();
+								if(!Float.isNaN(yaw)&&!Float.isNaN(pitch)) Volatile.handler.playerConnectionLookAt(player,yaw,pitch);
 							}
 						}
 					}

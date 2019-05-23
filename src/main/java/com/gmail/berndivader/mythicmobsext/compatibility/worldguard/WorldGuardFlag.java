@@ -31,6 +31,10 @@ Listener {
 			e.register(c);
 		} else if(e.getConditionName().toLowerCase().equals("worldguardflag")) {
 			e.register(new WorldGuardFlagCondition(e.getConditionName(),e.getConfig()));
+		} else if(e.getConditionName().toLowerCase().equals("regionname")) {
+			e.register(new WorldGuardRegionCondition(e.getConditionName(),e.getConfig()));
+		} else if(e.getConditionName().toLowerCase().equals("entitiesinregion")) {
+			e.register(new EntitiesInRegionCondition(e.getConditionName(),e.getConfig()));
 		}
 	}
 }

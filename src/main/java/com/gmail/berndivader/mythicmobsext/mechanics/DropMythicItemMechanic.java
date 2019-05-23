@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -89,10 +90,9 @@ ITargetedLocationSkill {
 			String item=types[i1].replaceAll(":"," ");
 			String arr1[]=item.split(" ");
 			Drop drop=NMSUtils.getDrop(item);
-//			Drop drop=Drop.getDrop("MMEDropMechanic",item);
 			if(drop instanceof InvalidDrop) continue;
 			
-			double amount=arr1.length==1?1.0D:Utils.randomRangeInt(arr1[1]);
+			double amount=arr1.length==1?1.0D:MathUtils.randomRangeInt(arr1[1]);
 			if(amount<1) continue;
 			drop.setAmount(amount);
 			if(drop instanceof IItemDrop) {
@@ -110,12 +110,9 @@ ITargetedLocationSkill {
 				intangibleDrops.merge(drop.getClass(),drop,(o,n)->o.addAmount(n));
 			}
 		}
-		
 		loot.setLootTable(itemDrops);
 		loot.setLootTableIntangible(intangibleDrops);
-		
  		return loot;
-// 		return (new DropTable("MMEDropMechanic","MMEDropMechanic",Arrays.asList(types))).generate(new DropMetadata(data.getCaster(),target));
  	} 		
  	
  	static ItemStack createItemStack(ItemStack i,boolean tag,boolean stackable,String[]tags) {

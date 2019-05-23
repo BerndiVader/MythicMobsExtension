@@ -22,6 +22,7 @@ ITargetedEntitySkill {
 	
 	public ClearActiveItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		ASYNC_SAFE=false;
 	}
 
 	@Override

@@ -77,6 +77,7 @@ INoTargetSkill
 			double delta_x,delta_z;
 			@Override
 			public void run() {
+				if(entity==null||entity.isDead()) this.cancel();
 				Volatile.handler.playBlockBreak(entity.getEntityId(),block.getLocation(),stage);
 				Volatile.handler.playAnimationPacket(entity,0);
 				location.getWorld().playSound(location,sound,1.5f,1f);

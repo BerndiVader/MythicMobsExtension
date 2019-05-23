@@ -21,17 +21,18 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.utils.tasks.Scheduler;
 import io.lumine.utils.tasks.Scheduler.Task;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.BuffMechanic;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 
 @ExternalAnnotation(name="clicklistener",author="BerndiVader")
 public class ClickListenerMechanic 
 extends 
-BuffMechanic
+AuraMechanic
 implements
 ITargetedEntitySkill 
 {
@@ -51,7 +52,7 @@ ITargetedEntitySkill
 	public ClickListenerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.buffName=Optional.of(mlc.getString("buffname",str));
+		this.auraName=Optional.of(mlc.getString("buffname",str));
 		String s1;
 		if ((s1=mlc.getString("startskill"))!=null) startSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1=mlc.getString("clickskill"))!=null) clickSkill=Utils.mythicmobs.getSkillManager().getSkill(s1);
@@ -83,7 +84,7 @@ ITargetedEntitySkill
 	
 	class ClickTracker
 	extends
-	ClickListenerMechanic.BuffTracker
+	ClickListenerMechanic.AuraTracker
 	implements
 	Runnable,
 	IParentSkill,
@@ -96,11 +97,10 @@ ITargetedEntitySkill
         Player p;
         
 		public ClickTracker(ClickListenerMechanic buff,SkillMetadata data,Player p) {
-			super(data);
+			super(BukkitAdapter.adapt(p),data);
 			this.buff=buff;
-			this.data=data;
             this.ticksRemaining=buff.maxDelay;
-			this.data.setCallingEvent(this);
+			this.skillMetadata.setCallingEvent(this);
 			this.hasEnded=finish=false;
 			this.crouch=ClickListenerMechanic.this.crouch;
 			this.p=p;
@@ -122,15 +122,15 @@ ITargetedEntitySkill
             	p.setMetadata(metaString,new FixedMetadataValue(Main.getPlugin(),actionString));
             	if (matchSkill.isPresent()) {
         			Skill sk=matchSkill.get();
-        			SkillMetadata sd=data.deepClone();
+        			SkillMetadata sd=skillMetadata.deepClone();
         			if(sk.isUsable(sd)) sk.execute(sd);
             	}
     			this.terminate();
             }
-            if (data.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<1) {
+            if (skillMetadata.getCaster().getEntity().isDead()||!this.hasEnded&&this.ticksRemaining<1) {
             	if (failSkill.isPresent()) {
         			Skill sk=failSkill.get();
-        			SkillMetadata sd=data.deepClone();
+        			SkillMetadata sd=skillMetadata.deepClone();
         			if (sk.isUsable(sd)) sk.execute(sd);
             	}
                 this.terminate();
@@ -145,7 +145,7 @@ ITargetedEntitySkill
 				actionString+=actionString.isEmpty()?s1:"+"+s1;
             	if (clickSkill.isPresent()) {
         			Skill sk=clickSkill.get();
-        			SkillMetadata sd=data.deepClone();
+        			SkillMetadata sd=skillMetadata.deepClone();
         			if (sk.isUsable(sd)) sk.execute(sd);
             	}
 				if (actionbar) NMSUtils.sendActionBar(p,actionString);
@@ -175,8 +175,8 @@ ITargetedEntitySkill
         @Override
         public boolean terminate() {
             if (!this.hasEnded) {
-                if (ClickListenerMechanic.this.buffName.isPresent()) {
-                    this.data.getCaster().unregisterBuff(ClickListenerMechanic.this.buffName.get(),this);
+                if (ClickListenerMechanic.this.auraName.isPresent()) {
+                    this.skillMetadata.getCaster().unregisterAura(ClickListenerMechanic.this.auraName.get(),this);
                 }
                 this.hasEnded = true;
             }

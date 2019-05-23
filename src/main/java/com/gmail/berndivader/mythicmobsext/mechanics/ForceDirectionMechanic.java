@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec2D;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -76,7 +76,7 @@ ITargetedEntitySkill {
 						dy+=r.nextDouble(noise*-1,noise);
 						dz+=r.nextDouble(noise*-1,noise);
 					}
-					Vec2D v=Utils.lookAtVec(p.getEyeLocation(),dd.add(dx,dy,dz));
+					Vec2D v=MathUtils.lookAtVec(p.getEyeLocation(),dd.add(dx,dy,dz));
 					Volatile.handler.playerConnectionLookAt(p,(float)v.getX(),(float)v.getY());
 				}
 				dd.subtract(dx, dy, dz);

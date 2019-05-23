@@ -1,7 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,18 +21,19 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 public class CustomRandomSkillMechanic extends SkillMechanic 
 implements
 IMetaSkill {
-	SkillManager skillmanager;
-	LinkedHashMap<Integer,SkillEntry> entrylist;
-	boolean b1;
+	static SkillManager skillmanager;
+	LinkedList<SkillEntry> entrylist;
+	boolean b1,shuffle;
 	
 	public CustomRandomSkillMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-        	this.target_creative = true;
-		this.skillmanager = Utils.mythicmobs.getSkillManager();
-		this.entrylist = new LinkedHashMap<>();
+       	this.target_creative=true;
+		skillmanager=Utils.mythicmobs.getSkillManager();
+		this.entrylist=new LinkedList<>();
 		
 		String parse[] = mlc.getString(new String[] { "skills", "s" }).split(",");
 		b1(mlc.getBoolean(new String[] {"renewrandom","newrandom","rnr"},false));
+		shuffle=mlc.getBoolean("shuffle",false);
 
 		if (parse.length>0) {
 			for (int a=0;a<parse.length;a++) {
@@ -42,7 +43,7 @@ IMetaSkill {
 				s = par[0];
 				if (par.length>1) c=par[1];
 				SkillEntry entry = new SkillEntry(a,c,s);
-				if (entry.isSkillPresent()) entrylist.put(a,entry);
+				if (entry.isSkillPresent()) entrylist.add(a,entry);
 			}
 		}
 	}
@@ -54,8 +55,8 @@ IMetaSkill {
 	@Override
 	public boolean cast(SkillMetadata data) {
 		double r = ThreadLocalRandom.current().nextDouble();
-		for (Entry<Integer,SkillEntry> entry:entrylist.entrySet()) {
-			SkillEntry sentry = entry.getValue();
+		if(shuffle) Collections.shuffle(entrylist);
+		for (SkillEntry sentry:entrylist) {
 			if (b1) r=ThreadLocalRandom.current().nextDouble();
 			if (r<=sentry.getChance(data)) {
 				if (sentry.isSkillPresent()
@@ -74,7 +75,7 @@ IMetaSkill {
 		Optional<Skill> skill = Optional.empty();
 		
 		public SkillEntry(int priority, String chance, String skill) {
-			this.skill = CustomRandomSkillMechanic.this.skillmanager.getSkill(skill);
+			this.skill = skillmanager.getSkill(skill);
 			this.chance = chance;
 			this.priority = priority;
 		}

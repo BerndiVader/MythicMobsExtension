@@ -1,7 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -26,7 +26,7 @@ IEntityCondition {
 		double maxHealth=entity.getMaxHealth();
 		double health=entity.getHealth();
 		double percent=(health*100)/maxHealth;
-		return this.pc.equals(Utils.round(percent,0));
+		return this.pc.equals(MathUtils.round(percent,0));
 	}
 
 }

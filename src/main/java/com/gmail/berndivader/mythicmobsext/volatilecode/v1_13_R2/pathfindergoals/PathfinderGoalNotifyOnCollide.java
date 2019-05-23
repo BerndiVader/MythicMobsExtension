@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
@@ -43,14 +44,16 @@ extends PathfinderGoal {
     }
 
     public boolean b() {
-        for (Map.Entry<UUID,Integer>pair:this.cooldown.entrySet()) {
+    	Iterator<Map.Entry<UUID,Integer>> it=this.cooldown.entrySet().iterator();
+    	while(it.hasNext()) {
+    		Map.Entry<UUID,Integer>pair=(Map.Entry<UUID, Integer>)it.next();
             int i1=pair.getValue();
             if (i1--<1) {
-                this.cooldown.remove(pair.getKey());
+                it.remove();
                 continue;
             }
             pair.setValue(i1);
-        }
+    	}
         return true;
     }
 
