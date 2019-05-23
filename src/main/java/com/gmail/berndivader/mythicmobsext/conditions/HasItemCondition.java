@@ -27,7 +27,7 @@ IEntityCondition
 	
 	private String conditionLine;
 	private boolean is;
-	private List<HoldingItem> holdinglist;
+	private List<HoldingItem>holdinglist;
 
 	public HasItemCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -42,6 +42,7 @@ IEntityCondition
 			tmp+=";amount="+mlc.getString("amount",">0");
 			tmp+=";slot="+mlc.getString("slot","0");
 			tmp+=";name="+mlc.getString("name","ANY");
+			tmp+=";enchant="+mlc.getString("enchant","ANY");
 			tmp+=";lore="+mlc.getString("lore","ANY")+"\"";
 			tmp=SkillString.unparseMessageSpecialChars(tmp);
 		}
@@ -75,6 +76,9 @@ IEntityCondition
 						} else if(parse1.startsWith("slot=")) {
 							parse1=parse1.substring(5,parse1.length());
 							holding.setSlot(Integer.parseInt(parse1));
+						} else if(parse1.startsWith("enchant=")) {
+							parse1=parse1.substring(8,parse1.length());
+							holding.setEnchantment(parse1);
 						}
 					}
 				}

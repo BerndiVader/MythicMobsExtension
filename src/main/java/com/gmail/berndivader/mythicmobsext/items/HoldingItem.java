@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -22,6 +23,7 @@ public
 class
 HoldingItem
 {
+	Enchantment enchantment;
 	Material material;
 	String lore,name;
 	RangedDouble amount;
@@ -30,16 +32,17 @@ HoldingItem
 	public WhereEnum where;
 
 	public HoldingItem() {
-		this(null,"1","ANY","ANY",-1,"ANY");
+		this(null,"1","ANY","ANY",-1,"ANY","ANY");
 	}
 	
-	public HoldingItem(String material,String amount,String name,String lore,int slot,String where) {
+	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant) {
 		setMaterial(material);
 		this.setAmount(amount);
 		this.setLore(lore);
 		this.setSlot(slot);
 		this.setWhere(where);
 		this.setName(name);
+		this.setEnchantment(enchant);
 	}
 	
 	boolean materialMatch(Material material) {
@@ -66,11 +69,15 @@ HoldingItem
 		}
 		return false;
 	}
+	boolean enchantMatch(ItemMeta meta) {
+		return this.enchantment==null||meta.hasEnchant(this.enchantment);
+	}
 	
 	public boolean stackMatch(ItemStack item_stack,boolean ignore_amount) {
 		boolean match=item_stack!=null&&this.materialMatch(item_stack.getType());
 		if(match) match=this.nameMatch(item_stack.getItemMeta());
 		if(match) match=this.loreMatch(item_stack.getItemMeta());
+		if(match) match=this.enchantMatch(item_stack.getItemMeta());
 		if(match&&!ignore_amount) match=this.amountMatch(item_stack.getAmount());
 		return match;
 	}
@@ -94,6 +101,25 @@ HoldingItem
 	}
 	public Material getMaterial() {
 		return material;
+	}
+	
+	public void setEnchantment(String enchant) {
+		if(enchant==null) enchant="ANY";
+		if (enchant.toUpperCase().equals("ANY")) {
+			this.enchantment=null;
+			return;
+		}
+		Enchantment enchantment;
+		try {
+			enchantment=Enchantment.getByName(enchant.toUpperCase());
+		} catch (Exception ex) {
+			return;
+		}
+		System.err.println(enchantment.getName());
+		this.enchantment=enchantment;
+	}
+	public Enchantment getEnchantment() {
+		return enchantment;
 	}
 	
 	public void setLore(String l) {

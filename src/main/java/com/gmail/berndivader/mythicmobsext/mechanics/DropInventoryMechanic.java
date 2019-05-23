@@ -40,6 +40,7 @@ ITargetedEntitySkill
 			this.holding.setWhere("ANY");
 			this.holding.setName("ANY");
 			this.holding.setLore("ANY");
+			this.holding.setEnchantment("ANY");
 			this.holding.setAmount("1");
 		} else {
 			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);
@@ -65,6 +66,9 @@ ITargetedEntitySkill
 				} else if(parse1.startsWith("slot=")) {
 					parse1=parse1.substring(5,parse1.length());
 					this.holding.setSlot(Integer.parseInt(parse1));
+				} else if(parse1.startsWith("enchant=")) {
+					parse1=parse1.substring(8,parse1.length());
+					holding.setEnchantment(parse1);
 				}
 			}
 		}

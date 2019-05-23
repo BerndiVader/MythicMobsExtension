@@ -23,6 +23,6 @@ ISelectorEntity {
 		HashSet<AbstractEntity>targets=new HashSet<>();
 		ActiveMob am=(ActiveMob)data.getCaster();
 		if (am!=null&&am.hasThreatTable()) targets.add(am.getThreatTable().getTopThreatHolder());
-		return targets;
+		return this.applyOffsets(targets);
 	}
 }

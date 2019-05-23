@@ -47,6 +47,6 @@ ISelectorEntity
 				}
 			}
 		}
-		return targets;
+		return this.applyOffsets(targets);
 	}
 }
