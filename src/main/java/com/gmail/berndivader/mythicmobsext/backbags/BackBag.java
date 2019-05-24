@@ -22,7 +22,7 @@ Listener
 {
 	Entity owner;
 	Inventory inventory;
-	int size;
+	private int size;
 	
 	public BackBag(Entity onwer) {
 		this(onwer,9);
@@ -54,6 +54,16 @@ Listener
 	
 	public boolean isPresent() {
 		return this.inventory!=null;
+	}
+	
+	public int getSize() {
+		return this.inventory.getSize();
+	}
+	
+	public void setInventory(Inventory new_inv) {
+		this.inventory=new_inv;
+		this.size=new_inv.getSize();
+		BackBagHelper.bags.replace(owner.getUniqueId(),this.inventory);
 	}
 	
 	@EventHandler

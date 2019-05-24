@@ -12,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -32,7 +33,7 @@ HoldingItem
 	public WhereEnum where;
 
 	public HoldingItem() {
-		this(null,"1","ANY","ANY",-1,"ANY","ANY");
+		this(null,"1","ANY","ANY",-7331,"ANY","ANY");
 	}
 	
 	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant) {
@@ -115,7 +116,6 @@ HoldingItem
 		} catch (Exception ex) {
 			return;
 		}
-		System.err.println(enchantment.getName());
 		this.enchantment=enchantment;
 	}
 	public Enchantment getEnchantment() {
@@ -164,6 +164,34 @@ HoldingItem
 		return this.material_any;
 	}
 	
+	public static void parse(String parse, HoldingItem holding) {
+		String[]p=parse.split(parse.contains(",")?",":";");
+		for(String parse1:p) {
+			if(parse1.startsWith("material=")) {
+				parse1=parse1.substring(9, parse1.length());
+				holding.setMaterial(parse1);
+			} else if(parse1.startsWith("lore=")) {
+				parse1=parse1.substring(5, parse1.length());
+				holding.setLore(parse1);
+			} else if(parse1.startsWith("name=")) {
+				parse1=parse1.substring(5, parse1.length());
+				holding.setName(parse1);
+			} else if(parse1.startsWith("amount=")) {
+				parse1=parse1.substring(7, parse1.length());
+				holding.setAmount(parse1);
+			} else if(parse1.startsWith("where=")) {
+				parse1=parse1.substring(6,parse1.length());
+				holding.setWhere(parse1);
+			} else if(parse1.startsWith("slot=")) {
+				parse1=parse1.substring(5,parse1.length());
+				holding.setSlot(Integer.parseInt(parse1));
+			} else if(parse1.startsWith("enchant=")) {
+				parse1=parse1.substring(8,parse1.length());
+				holding.setEnchantment(parse1);
+			}
+		}
+	}
+	
 	public static List<ItemStack> getContents(HoldingItem holding, LivingEntity entity) {
 		boolean is_player=entity.getType()==EntityType.PLAYER;
 		List<ItemStack>contents=new ArrayList<ItemStack>();
@@ -182,7 +210,12 @@ HoldingItem
 			}
 		} else if(holding.getWhere().equals(WhereEnum.BACKBAG)) {
 			if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				contents=Arrays.asList(BackBagHelper.getInventory(entity.getUniqueId()).getContents());
+				Inventory inventroy=BackBagHelper.getInventory(entity.getUniqueId());
+				if(holding.slot>-1) {
+					contents.add(inventroy.getItem(holding.getSlot()));
+				} else {
+					contents=Arrays.asList(inventroy.getContents());
+				}
 			}
 		} else {
 			if (is_player&&holding.getWhere().equals(WhereEnum.INVENTORY)) {

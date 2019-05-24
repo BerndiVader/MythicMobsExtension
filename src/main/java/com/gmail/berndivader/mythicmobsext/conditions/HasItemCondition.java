@@ -54,34 +54,7 @@ IEntityCondition
 				HoldingItem holding=new HoldingItem();
 				parse=SkillString.parseMessageSpecialChars(parse);
 				this.conditionLine=this.conditionLine.replaceFirst(parse,"\\$"+Integer.toString(a));
-				if (parse.startsWith("\"")&&parse.endsWith("\"")) {
-					parse=parse.substring(1,parse.length()-1);
-					String[]p=parse.split(";");
-					for(String parse1:p) {
-						if(parse1.startsWith("material=")) {
-							parse1=parse1.substring(9, parse1.length());
-							holding.setMaterial(parse1);
-						} else if(parse1.startsWith("lore=")) {
-							parse1=parse1.substring(5, parse1.length());
-							holding.setLore(parse1);
-						} else if(parse1.startsWith("name=")) {
-							parse1=parse1.substring(5, parse1.length());
-							holding.setName(parse1);
-						} else if(parse1.startsWith("amount=")) {
-							parse1=parse1.substring(7, parse1.length());
-							holding.setAmount(parse1);
-						} else if(parse1.startsWith("where=")) {
-							parse1=parse1.substring(6,parse1.length());
-							holding.setWhere(parse1);
-						} else if(parse1.startsWith("slot=")) {
-							parse1=parse1.substring(5,parse1.length());
-							holding.setSlot(Integer.parseInt(parse1));
-						} else if(parse1.startsWith("enchant=")) {
-							parse1=parse1.substring(8,parse1.length());
-							holding.setEnchantment(parse1);
-						}
-					}
-				}
+				if (parse.startsWith("\"")&&parse.endsWith("\"")) HoldingItem.parse(parse.substring(1,parse.length()-1),holding);
 				this.holdinglist.add(holding);
 			}
 		}

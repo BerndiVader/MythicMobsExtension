@@ -45,32 +45,7 @@ ITargetedEntitySkill
 		} else {
 			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);
 			tmp=SkillString.parseMessageSpecialChars(tmp);
-			String[] p=tmp.split(",");
-			for(int a=0;a<p.length;a++) {
-				String parse1=p[a];
-				if(parse1.startsWith("material=")) {
-					parse1=parse1.substring(9, parse1.length());
-					this.holding.setMaterial(parse1);
-				} else if(parse1.startsWith("lore=")) {
-					parse1=parse1.substring(5, parse1.length());
-					this.holding.setLore(parse1);
-				} else if(parse1.startsWith("amount=")) {
-					parse1=parse1.substring(7, parse1.length());
-					this.holding.setAmount(parse1);
-				} else if(parse1.startsWith("where=")) {
-					parse1=parse1.substring(6,parse1.length());
-					this.holding.setWhere(parse1);
-				} else if(parse1.startsWith("name=")) {
-					parse1=parse1.substring(6,parse1.length());
-					this.holding.setName(parse1);
-				} else if(parse1.startsWith("slot=")) {
-					parse1=parse1.substring(5,parse1.length());
-					this.holding.setSlot(Integer.parseInt(parse1));
-				} else if(parse1.startsWith("enchant=")) {
-					parse1=parse1.substring(8,parse1.length());
-					holding.setEnchantment(parse1);
-				}
-			}
+			HoldingItem.parse(tmp,holding);
 		}
 		this.pd=mlc.getInteger(new String[] { "pickupdelay", "pd" }, 20);
 		this.p=mlc.getInteger(new String[] { "pieces", "amount", "a", "p" }, 1);

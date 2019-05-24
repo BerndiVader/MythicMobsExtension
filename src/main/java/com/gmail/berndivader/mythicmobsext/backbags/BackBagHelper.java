@@ -6,14 +6,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.CreateBackBag;
+import com.gmail.berndivader.mythicmobsext.backbags.mechanics.ExpandBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.OpenBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RemoveBackBag;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
@@ -64,6 +69,9 @@ Listener
 			break;
 		case "removebackbag":
 			e.register(new RemoveBackBag(e.getContainer().getConfigLine(),e.getConfig()));
+			break;
+		case "expandbackbag":
+			e.register(new ExpandBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}
 	}
@@ -139,6 +147,28 @@ Listener
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}			
+			}
+		}
+	}
+
+	public static void expandBackBag(Entity owner,int size) {
+		size=size%9>0?size+(9-size%9):size;
+		if(BackBagHelper.hasBackBag(owner.getUniqueId())) {
+			BackBag bag=new BackBag(owner);
+			if(bag.getSize()>size) {
+				List<ItemStack>content=Arrays.asList(bag.inventory.getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
+				if(content.size()>size) {
+					for(int i1=content.size()-1;i1>=size;i1--) {
+						content.remove(i1);
+					}
+				}
+				Inventory new_inv=Bukkit.createInventory(null,size);
+				new_inv.setContents(content.toArray(new ItemStack[content.size()]));
+				bag.setInventory(new_inv);
+			} else {
+				Inventory new_inv=Bukkit.createInventory(null,size);
+				new_inv.setContents(bag.inventory.getContents());
+				bag.setInventory(new_inv);
 			}
 		}
 	}
