@@ -50,7 +50,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()||target.isDead()||!(data.getCaster()instanceof ActiveMob)) return false;
+		if (!target.isPlayer()||target.isDead()) return false;
 		ActiveMob am=(ActiveMob)data.getCaster();
 		Player pl=(Player)BukkitAdapter.adapt(target);
 		Collections.shuffle(this.items,Main.random);
@@ -97,17 +97,23 @@ ITargetedEntitySkill {
 						ra=a;
 						iter2.set(new ItemStack(Material.AIR));
 					}
-					am.signalMob(am.getEntity(),this.signal_ok);
 					item1=new ItemStack(item);
 					item1.setAmount(ra);
-					Thiefs.thiefhandler.addThief(am.getUniqueId(),pl.getUniqueId(),item1.clone());
 					stolen=true;
-					break;
+					if(am!=null&&!am.getEntity().isPlayer()) {
+						am.signalMob(am.getEntity(),this.signal_ok);
+						Thiefs.thiefhandler.addThief(am.getUniqueId(),pl.getUniqueId(),item1.clone());
+					} else if (data.getCaster().getEntity().isPlayer()) {
+						if(am!=null) am.signalMob(am.getEntity(),this.signal_ok);
+						Player player=(Player)data.getCaster().getEntity().getBukkitEntity();
+						int slot=player.getInventory().firstEmpty();
+						if(slot>-1) player.getInventory().addItem(item1.clone());
+					}
 				}
 				if (stolen) break;
 			}
 		}
-		if (!stolen) am.signalMob(am.getEntity(),this.signal_fail);
+		if (!stolen&&am!=null) am.signalMob(am.getEntity(),this.signal_fail);
 		return true;
 	}
 }
