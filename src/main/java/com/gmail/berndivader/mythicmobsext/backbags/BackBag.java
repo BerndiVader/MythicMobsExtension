@@ -60,6 +60,9 @@ Listener
 		return this.inventory.getSize();
 	}
 	
+	public Inventory getInventory() {
+		return this.inventory;
+	}
 	public void setInventory(Inventory new_inv) {
 		this.inventory=new_inv;
 		this.size=new_inv.getSize();

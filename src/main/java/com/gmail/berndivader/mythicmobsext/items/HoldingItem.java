@@ -225,6 +225,14 @@ HoldingItem
 				contents.add(entity.getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.OFFHAND)) {
 				contents.add(entity.getEquipment().getItemInOffHand());
+			} else if (holding.getWhere().equals(WhereEnum.HELMET)) {
+				contents.add(entity.getEquipment().getHelmet());
+			} else if (holding.getWhere().equals(WhereEnum.CHESTPLATE)) {
+				contents.add(entity.getEquipment().getChestplate());
+			} else if (holding.getWhere().equals(WhereEnum.LEGGINGS)) {
+				contents.add(entity.getEquipment().getLeggings());
+			} else if (holding.getWhere().equals(WhereEnum.BOOTS)) {
+				contents.add(entity.getEquipment().getBoots());
 			} else if (holding.getWhere().equals(WhereEnum.ARMOR)) {
 				contents=Arrays.asList(entity.getEquipment().getArmorContents());
 			}
