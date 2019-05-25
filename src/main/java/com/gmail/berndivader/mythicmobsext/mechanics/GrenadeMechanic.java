@@ -70,6 +70,11 @@ ITargetedLocationSkill {
 		Location target=BukkitAdapter.adapt(t);
 		Vector v=this.ued?((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().getDirection()
 				:MathUtils.calculateVelocity(source.toVector(),target.toVector(),this.gravity,this.hGain);
+		try {
+			v.checkFinite();
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 		for (int a=0;a<this.amount;a++) {
 			Location sl=source.clone();
 			final TNTPrimed grenade=(TNTPrimed)sl.getWorld().spawnEntity(sl,EntityType.PRIMED_TNT);
