@@ -14,7 +14,8 @@ WhereEnum
 	INVENTORY,
 	ANY,
 	SLOT,
-	BACKBAG;
+	BACKBAG,
+	TAG;
 
 	public static WhereEnum get(String s) {
 		if (s==null) return null;

@@ -76,11 +76,12 @@ IEntitySelector {
 		if (this.use_relative) {
 			targets.stream().forEach(abstract_entity->{
 		    	Location location=abstract_entity.getBukkitEntity().getLocation();
+		    	if(length!=0) location.add(location.getDirection().clone().multiply(this.length));
 		    	float yaw=location.getYaw();
 		    	float pitch=location.getPitch();
 				Vector soV=MathUtils.getSideOffsetVectorFixed(yaw,this.side_offset,false);
 				Vector foV=MathUtils.getFrontBackOffsetVector(location.getDirection(),this.forward_offset);
-				abstract_entity.getLocation().add(soV.getX()+foV.getX(),this.y_offset,soV.getZ()+foV.getZ());
+				abstract_entity.getLocation().add(soV.getX()+foV.getX(),this.y_offset+soV.getY()+foV.getY(),soV.getZ()+foV.getZ());
 				abstract_entity.getLocation().setYaw(yaw+this.yaw_offset);
 				abstract_entity.getLocation().setPitch(pitch+this.pitch_offset);
 			});

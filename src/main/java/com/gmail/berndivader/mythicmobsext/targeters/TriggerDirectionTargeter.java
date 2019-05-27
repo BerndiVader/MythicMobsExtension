@@ -10,7 +10,6 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -50,8 +49,6 @@ ISelectorLocation
 			}
 		}
 		if (l!=null) {
-			AbstractVector v=l.getDirection().clone().multiply(this.length);
-			l.add(v);
 			targets.add(l);
 		}
 		return applyOffsets(targets);

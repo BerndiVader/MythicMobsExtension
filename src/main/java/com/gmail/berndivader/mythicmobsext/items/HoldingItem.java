@@ -16,8 +16,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble.Operation;
 
 public 
@@ -205,7 +207,10 @@ HoldingItem
 			}
 		} else if(holding.getWhere().equals(WhereEnum.SLOT)) {
 			if(is_player) {
-				ItemStack itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
+				ItemStack itemstack=null;
+				if(holding.getSlot()>-1) {
+					itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
+				}
 				contents.add(itemstack);
 			}
 		} else if(holding.getWhere().equals(WhereEnum.BACKBAG)) {
@@ -256,5 +261,9 @@ HoldingItem
 		}
 		return true;
 	}
-		
+	
+	public static void tagWhere(HoldingItem holding,ItemStack new_item) {
+		new_item=NMSUtils.makeReal(new_item);
+		NMSUtils.setMeta(new_item,Utils.meta_BACKBACKTAG,holding.getWhere().name());
+	}
 }

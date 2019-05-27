@@ -24,7 +24,8 @@ abstract
 class 
 ISelectorLocation
 extends
-ILocationSelector {
+ILocationSelector 
+{
 	
 	List<FilterEnum> filters;
     int length;
@@ -77,9 +78,10 @@ ILocationSelector {
 		    	float pitch=location.getPitch();
 				Vector soV=MathUtils.getSideOffsetVectorFixed(yaw,this.side_offset,false);
 				Vector foV=MathUtils.getFrontBackOffsetVector(location.getDirection(),this.forward_offset);
-				abstract_location.add(soV.getX()+foV.getX(),this.y_offset,soV.getZ()+foV.getZ());
+				abstract_location.add(soV.getX()+foV.getX(),this.y_offset+soV.getY()+foV.getY(),soV.getZ()+foV.getZ());
 				abstract_location.setYaw(yaw+this.yaw_offset);
 				abstract_location.setPitch(pitch+this.pitch_offset);
+		    	if(length!=0) abstract_location.add(abstract_location.getDirection().clone().multiply(this.length));
 			});
 		}
 		return targets;

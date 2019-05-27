@@ -32,7 +32,7 @@ ITargetedEntitySkill
 {
 	int backbag_slot,slot;
 	WhereEnum what;
-	boolean override;
+	boolean override,tag_where;
 	String meta_name;
 	HoldingItem holding;
 	
@@ -43,7 +43,9 @@ ITargetedEntitySkill
 		slot=mlc.getInteger("slot",-1);
 		backbag_slot=mlc.getInteger("bagslot",-1);
 		override=mlc.getBoolean("override",true);
+		tag_where=mlc.getBoolean("tag",false);
 		meta_name=mlc.getString("meta","");
+		
 		holding=new HoldingItem();
 		holding.setWhere(what);
 		holding.setSlot(slot);
@@ -58,7 +60,6 @@ ITargetedEntitySkill
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			if(holder.hasMetadata(meta_name)) holder.removeMetadata(meta_name,Main.getPlugin());
 			BackBag bag=new BackBag(holder);
 			Inventory inventory=bag.getInventory();
 			List<ItemStack>stack=HoldingItem.getContents(holding,holder);
@@ -66,20 +67,20 @@ ITargetedEntitySkill
 				ItemStack old_item=stack.get(i1);
 				if(old_item==null) continue;
 				ItemStack new_item=old_item.clone();
-				int tmp_slot=backbag_slot;
+				if(tag_where)HoldingItem.tagWhere(holding,new_item);
+				int tmp_slot=backbag_slot<=inventory.getSize()?backbag_slot:inventory.getSize();
 				if(backbag_slot==-1) {
 					if((tmp_slot=inventory.firstEmpty())>-1) {
 						inventory.addItem(new_item);
-						setMetaValue(old_item,holder,meta_name,tmp_slot);
+						setMetaVariable(old_item,holder,meta_name,tmp_slot);
 					}
 				} else {
-					if(backbag_slot>inventory.getSize()) continue;
 					if(override) {
-						inventory.setItem(backbag_slot,new_item);
-						setMetaValue(old_item,holder,meta_name,backbag_slot);
-					} else if(inventory.getItem(backbag_slot)==null||inventory.getItem(backbag_slot).getType()==Material.AIR){
-						inventory.setItem(backbag_slot,new_item);
-						setMetaValue(old_item,holder,meta_name,backbag_slot);
+						inventory.setItem(tmp_slot,new_item);
+						setMetaVariable(old_item,holder,meta_name,tmp_slot);
+					} else if(inventory.getItem(tmp_slot)==null||inventory.getItem(tmp_slot).getType()==Material.AIR){
+						inventory.setItem(tmp_slot,new_item);
+						setMetaVariable(old_item,holder,meta_name,tmp_slot);
 					}
 				}
 			}
@@ -87,7 +88,7 @@ ITargetedEntitySkill
 		return true;
 	}
 	
-	static void setMetaValue(ItemStack old_item,LivingEntity holder,String meta_name,int backbag_slot) {
+	static void setMetaVariable(ItemStack old_item,LivingEntity holder,String meta_name,int backbag_slot) {
 		old_item.setAmount(0);
 		old_item.setType(Material.AIR);
 		if(meta_name.length()>0) {

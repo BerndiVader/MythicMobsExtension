@@ -378,6 +378,10 @@ public final class MathUtils {
 		d.multiply(o);
 		return d;
 	}
+	
+	public static Vector getForwardOffsetVector(Location location, double length) {
+		return location.getDirection().clone().multiply(length);
+	}
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();

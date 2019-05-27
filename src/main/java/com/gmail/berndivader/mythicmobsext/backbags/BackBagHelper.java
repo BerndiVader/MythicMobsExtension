@@ -30,6 +30,7 @@ import com.gmail.berndivader.mythicmobsext.backbags.mechanics.ExpandBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.MoveToBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.OpenBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RemoveBackBag;
+import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RestoreFromBackBag;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
@@ -75,7 +76,12 @@ Listener
 			e.register(new ExpandBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "movetobackbag":
+		case "savetobackbag":
 			e.register(new MoveToBackBag(e.getContainer().getConfigLine(),e.getConfig()));
+			break;
+		case "takefrombackbag":
+		case "loadfrombackbag":
+			e.register(new RestoreFromBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}
 	}

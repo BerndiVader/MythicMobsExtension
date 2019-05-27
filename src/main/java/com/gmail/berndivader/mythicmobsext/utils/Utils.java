@@ -104,6 +104,7 @@ Listener
 	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
 	public static final String meta_NOSUNBURN="MMENOSUN";
 	public static final String meta_SLOTCHANGEDSTAMP="SLOTSTAMP";
+	public static final String meta_BACKBACKTAG="BAG_POS_TAG";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
