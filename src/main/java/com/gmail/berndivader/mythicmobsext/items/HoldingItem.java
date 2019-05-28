@@ -14,9 +14,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -243,6 +245,59 @@ HoldingItem
 			}
 		}
 		return contents;
+	}
+	
+	public static boolean giveItem(LivingEntity entity,HoldingItem holding,ItemStack item_stack,boolean override) {
+		switch(holding.where) {
+		case SLOT:
+		case INVENTORY:
+			if(entity instanceof Player) {
+				Player player=(Player)entity;
+				PlayerInventory inventory=player.getInventory();
+				if(holding.slot>-1) {
+					if(override||(inventory.getItem(holding.slot)==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+						inventory.setItem(holding.getSlot(),item_stack.clone());
+					}
+				} else if(inventory.firstEmpty()>-1){
+					inventory.addItem(item_stack.clone());
+				}
+			}
+			break;
+			case BACKBAG:
+				if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
+					BackBag bag=new BackBag(entity);
+					Inventory inventory=bag.getInventory();
+					if(holding.slot>-1) {
+						if(override||(inventory.getItem(holding.slot)==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+							inventory.setItem(holding.getSlot(),item_stack.clone());
+						}
+					} else if(inventory.firstEmpty()>-1){
+						inventory.addItem(item_stack.clone());
+					}
+				}
+				break;
+			case HELMET:
+				if(override||entity.getEquipment().getHelmet()==null) entity.getEquipment().setHelmet(item_stack.clone());
+				break;
+			case CHESTPLATE:
+				if(override||entity.getEquipment().getChestplate()==null) entity.getEquipment().setChestplate(item_stack.clone());
+				break;
+			case LEGGINGS:
+				if(override||entity.getEquipment().getLeggings()==null) entity.getEquipment().setLeggings(item_stack.clone());
+				break;
+			case BOOTS:
+				if(override||entity.getEquipment().getBoots()==null) entity.getEquipment().setBoots(item_stack.clone());
+				break;
+			case HAND:
+				if(override||entity.getEquipment().getItemInMainHand()==null) entity.getEquipment().setItemInMainHand(item_stack.clone());
+				break;
+			case OFFHAND:
+				if(override||entity.getEquipment().getItemInOffHand()==null) entity.getEquipment().setItemInOffHand(item_stack.clone());
+				break;
+			default:
+				break;
+		}
+		return true;
 	}
 	
 	public static boolean spawnItem(ItemStack item_stack,HoldingItem holding,Location location,int pickup_delay,boolean no_drop) {
