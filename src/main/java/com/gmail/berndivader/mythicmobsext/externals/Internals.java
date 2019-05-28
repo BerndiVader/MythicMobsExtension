@@ -43,7 +43,11 @@ Listener {
 	
 	public class InternalsLoader {
 		public InternalsLoader() {
-			load();
+			try {
+				load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		SimpleEntry<ExternalAnnotation,Class<?>> getClazz(String cn1) throws ClassNotFoundException{
@@ -56,7 +60,7 @@ Listener {
 			return new SimpleEntry<>(c1.getAnnotation(ExternalAnnotation.class),c1);
 		}
 		
-		void load() {
+		void load() throws Exception {
 	   		ml=cl=tl=0;
 			try {
 			   	JarInputStream jarFile=new JarInputStream(new FileInputStream(filename));
@@ -105,7 +109,7 @@ Listener {
 		            				}
 			            		}
 			            	}
-	            		} catch (Exception ex) {
+	            		} catch (Throwable ex) {
 	            			Main.logger.info("Unable to load "+cn1+" but continue.");
 	            			continue;
 	            		}
@@ -175,7 +179,12 @@ Listener {
 	
 	@EventHandler
 	public void onMythicMobsReload(MythicReloadedEvent e) {
-		loader.load();
+		try {
+			loader.load();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }

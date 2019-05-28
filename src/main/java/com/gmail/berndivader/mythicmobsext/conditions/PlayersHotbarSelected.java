@@ -4,32 +4,30 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="hotbar,hotbarchanged",author="BerndiVader")
-public class PlayersHotbarChanged 
+@ExternalAnnotation(name="hotbarselected",author="BerndiVader")
+public class PlayersHotbarSelected 
 extends 
 AbstractCustomCondition 
 implements 
 IEntityCondition 
 {
-	RangedDouble millis;
+	RangedDouble slot;
 
-	public PlayersHotbarChanged(String line, MythicLineConfig mlc) {
+	public PlayersHotbarSelected(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		millis=new RangedDouble(mlc.getString(new String[] {"milliseconds","millis","ms","m"},"<1"));
+		slot=new RangedDouble(mlc.getString(new String[] {"slots","slot"},"0"));
 	}
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		if (entity.isPlayer()&&entity.getBukkitEntity().hasMetadata(Utils.meta_SLOTCHANGEDSTAMP)) {
+		if (entity.isPlayer()) {
 			Player player=(Player)entity.getBukkitEntity();
-			double time=System.currentTimeMillis()-player.getMetadata(Utils.meta_SLOTCHANGEDSTAMP).get(0).asDouble();
-			return millis.equals(time);
+			return slot.equals(player.getInventory().getHeldItemSlot());
 		}
 		return false;
 	}

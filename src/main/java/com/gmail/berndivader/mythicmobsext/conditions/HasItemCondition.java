@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
@@ -25,14 +26,15 @@ implements
 IEntityCondition 
 {
 	
-	private String conditionLine;
-	private boolean is;
+	private String conditionLine,meta_var;
+	private boolean is,store_result;
 	private List<HoldingItem>holdinglist;
 
 	public HasItemCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.is=line.toLowerCase().startsWith("ownsitemsimple");
 		this.holdinglist=new ArrayList<>();
+		store_result=!(this.meta_var=mlc.getString("var","")).isEmpty();
 		String tmp=null;
 		if (!is) {
 			tmp=mlc.getString(new String[]{"list","l"},null);
@@ -70,7 +72,10 @@ IEntityCondition
 				HoldingItem holding=holdinglist.get(i1);
 				List<ItemStack>contents=HoldingItem.getContents(holding,target);
 				for(int i2=0;i2<contents.size();i2++) {
-					if(bool=holding.stackMatch(contents.get(i2),false)) break;
+					if(bool=holding.stackMatch(contents.get(i2),false)) {
+						if(store_result) target.setMetadata(meta_var,new FixedMetadataValue(Main.getPlugin(),holding.getWhere().name()));
+						break;
+					}
 				}
 				c=c.replaceFirst("\\$"+Integer.toString(i1),Boolean.toString(bool));
 			}
