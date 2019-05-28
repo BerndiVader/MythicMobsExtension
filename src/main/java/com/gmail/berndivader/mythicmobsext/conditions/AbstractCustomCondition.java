@@ -6,6 +6,7 @@ import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 
 public class AbstractCustomCondition extends SkillCondition {
 	boolean dba;
+	String actionVar;
 
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
