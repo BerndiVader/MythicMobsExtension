@@ -57,4 +57,5 @@ public interface Handler {
 	boolean velocityChanged(Entity bukkit_entity);
 	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 	boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target);
+	void addTravelPoint(Entity bukkit_entity, Vec3D vector);
 }

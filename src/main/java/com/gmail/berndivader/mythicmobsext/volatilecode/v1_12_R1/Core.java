@@ -1073,4 +1073,10 @@ implements Handler,Listener {
         }		
     }
 
+	@Override
+	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
