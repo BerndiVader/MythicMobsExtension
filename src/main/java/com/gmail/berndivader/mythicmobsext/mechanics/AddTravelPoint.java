@@ -22,9 +22,12 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill
 {
+	boolean remove_points;
 	
 	public AddTravelPoint(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		
+		this.remove_points=mlc.getBoolean("removeagain",true);
 	}
 
 	@Override
@@ -34,9 +37,7 @@ ITargetedLocationSkill
 	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation abstract_location) {
-		Volatile.handler.addTravelPoint(data.getCaster().getEntity().getBukkitEntity(),new Vec3D(abstract_location.getX(),abstract_location.getY(),abstract_location.getZ()));
+		Volatile.handler.addTravelPoint(data.getCaster().getEntity().getBukkitEntity(),new Vec3D(abstract_location.getX(),abstract_location.getY(),abstract_location.getZ()),this.remove_points);
 		return true;
 	}
-	
-	
 }

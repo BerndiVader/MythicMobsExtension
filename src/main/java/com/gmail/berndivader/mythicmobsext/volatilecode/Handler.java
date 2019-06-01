@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import net.minecraft.server.v1_12_R1.EntityLiving;
-
 public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
     public boolean inMotion(LivingEntity entity);
@@ -58,4 +56,5 @@ public interface Handler {
 	void sendPlayerAdvancement(Player player,Material material,String title,String description,String task);
 	boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target);
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector);
+	void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove);
 }

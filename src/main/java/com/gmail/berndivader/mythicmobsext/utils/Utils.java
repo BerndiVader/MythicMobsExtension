@@ -106,6 +106,8 @@ Listener
 	public static final String meta_SLOTCHANGEDSTAMP="SLOTSTAMP";
 	public static final String meta_BACKBACKTAG="BAG_POS_TAG";
 	public static final String meta_TRAVELPOINTS="MME_TRAVEL_POINTS";
+	public static final String signal_GOAL_TRAVELEND="GOAL_TRAVELEND";
+	public static final String signal_GOAL_TRAVELPOINT = "GOAL_TRAVELPOINT";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;

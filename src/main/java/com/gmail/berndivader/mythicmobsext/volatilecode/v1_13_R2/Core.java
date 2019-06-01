@@ -715,7 +715,7 @@ implements Handler,Listener {
 	}
 	
 	@Override
-	public void addTravelPoint(Entity bukkit_entity,Vec3D vector) {
+	public void addTravelPoint(Entity bukkit_entity,Vec3D vector,boolean remove) {
         EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
         PathfinderGoalSelector goals=entity.goalSelector;
 		try {
@@ -727,7 +727,7 @@ implements Handler,Listener {
             	Object object=iter.next();
             	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
             	if(goal instanceof PathfinderGoalTravelAround) {
-            		((PathfinderGoalTravelAround)goal).addTravelPoint(vector);
+            		((PathfinderGoalTravelAround)goal).addTravelPoint(vector,remove);
             	}
     		}
 		} catch (Exception ex) {
@@ -1071,6 +1071,11 @@ implements Handler,Listener {
             PathPoint pp=pe.c();
             return pp!=null;
         }
+	}
+
+	@Override
+	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {
+		this.addTravelPoint(bukkit_entity,vector,true);
 	}
 
 }

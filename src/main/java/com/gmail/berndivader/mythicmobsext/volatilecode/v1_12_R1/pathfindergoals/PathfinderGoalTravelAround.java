@@ -1,22 +1,22 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.EntityInsentient;
-import net.minecraft.server.v1_13_R2.EnumBlockFaceShape;
-import net.minecraft.server.v1_13_R2.EnumDirection;
-import net.minecraft.server.v1_13_R2.IBlockData;
-import net.minecraft.server.v1_13_R2.Navigation;
-import net.minecraft.server.v1_13_R2.NavigationAbstract;
-import net.minecraft.server.v1_13_R2.NavigationFlying;
-import net.minecraft.server.v1_13_R2.PathType;
-import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.minecraft.server.v1_13_R2.Vec3D;
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.EntityInsentient;
+import net.minecraft.server.v1_12_R1.EnumBlockFaceShape;
+import net.minecraft.server.v1_12_R1.EnumDirection;
+import net.minecraft.server.v1_12_R1.IBlockData;
+import net.minecraft.server.v1_12_R1.Navigation;
+import net.minecraft.server.v1_12_R1.NavigationAbstract;
+import net.minecraft.server.v1_12_R1.NavigationFlying;
+import net.minecraft.server.v1_12_R1.PathType;
+import net.minecraft.server.v1_12_R1.PathfinderGoal;
+import net.minecraft.server.v1_12_R1.Vec3D;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.event.entity.EntityTeleportEvent;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -38,7 +38,7 @@ PathfinderGoal
 	private Vec3D aV;
 	private final double f;
 	private final double mR,tR;
-	net.minecraft.server.v1_13_R2.World a;
+	net.minecraft.server.v1_12_R1.World a;
 	private final NavigationAbstract g;
 	private int h,travel_index;
 	float b;
@@ -102,7 +102,7 @@ PathfinderGoal
 	
 	@Override
 	public boolean b() {
-		return (!g.p())&&v.distanceSquared(this.aV)>2.0D;
+		return (!g.o())&&v.distanceSquared(this.aV)>2.0D;
 	}
 	
 	@Override
@@ -131,7 +131,7 @@ PathfinderGoal
 	
 	@Override
 	public void e() {
-		d.getControllerLook().a(v.x,v.y,v.z,10.0F,d.K());
+		d.getControllerLook().a(v.x,v.y,v.z,10.0F,d.N());
 		if (h--<=0) {
 			h=10;
 			if (!g.a(v.x,v.y,v.z,f)&&(!d.isLeashed())&&(!d.isPassenger())&&v.distanceSquared(this.aV)>this.tR) {
@@ -151,7 +151,7 @@ PathfinderGoal
 	protected boolean a(int i, int j, int k, int l, int i1) {
 		BlockPosition blockposition=new BlockPosition(i+l,k-1,j+i1);
 		IBlockData iblockdata=a.getType(blockposition);
-		return (iblockdata.c(a,blockposition,EnumDirection.DOWN)==EnumBlockFaceShape.SOLID)&&(iblockdata.a(d))&&(a.isEmpty(blockposition.up()))&&(a.isEmpty(blockposition.up(2)));
+		return (iblockdata.d(a,blockposition,EnumDirection.DOWN)==EnumBlockFaceShape.SOLID)&&(iblockdata.a(d))&&(a.isEmpty(blockposition.up()))&&(a.isEmpty(blockposition.up(2)));
 	}
 	
 	protected Vec3D nextCheckPoint() {

@@ -23,6 +23,7 @@ Listener
 	Entity owner;
 	Inventory inventory;
 	private int size;
+	String name;
 	
 	public BackBag(Entity onwer) {
 		this(onwer,9);
@@ -33,15 +34,20 @@ Listener
 	}
 	
 	public BackBag(Entity owner,int size,ItemStack[]default_content) {
+		this(owner,size,default_content,null);
+	}
+	
+	public BackBag(Entity owner,int size,ItemStack[]default_content,String name) {
 		size=size%9>0?size+(9-size%9):size;
 		this.owner=owner;
 		if((inventory=BackBagHelper.getInventory(owner.getUniqueId()))==null) {
-			inventory=Bukkit.createInventory(null,9+size,BackBagHelper.str_name);
+			inventory=Bukkit.createInventory(null,9+size,name==null?BackBagHelper.str_name:name);
 			BackBagHelper.addInventory(owner.getUniqueId(),inventory);
 		}
 		this.size=inventory.getSize();
 		if(default_content!=null&&default_content.length<=this.size) inventory.setContents(default_content);
 	}
+	
 	
 	public void viewBackBag(Player player) {
 		viewBackBag(player,false);

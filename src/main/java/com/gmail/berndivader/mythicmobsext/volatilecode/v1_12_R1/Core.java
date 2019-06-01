@@ -7,6 +7,10 @@ import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_12_R1.EntityInsentient;
+import net.minecraft.server.v1_12_R1.PathfinderGoal;
+import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_12_R1.EntityCreature;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -59,6 +63,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalReturnHome;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalVexD;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals.PathfinderGoalTravelAround;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeAdvancement;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.advancement.FakeDisplay.AdvancementFrame;
@@ -590,6 +595,18 @@ implements Handler,Listener {
             	}
             	break;
             }
+            case "travelaround": {
+            	if (e instanceof EntityCreature) {
+            		double speed = 1.0d;
+            		double mR=50.0D;
+            		double tR=1100.0D;
+            		boolean iT=false;
+                	if (data!=null) speed=Double.parseDouble(data);
+                	if (data1!=null) iT=Boolean.parseBoolean(data1.toUpperCase());
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalTravelAround(e,speed,mR,tR,iT));
+                	break;
+            	}
+            }
             case "breakblocks": {
             	if (e instanceof EntityCreature) {
             		int chance=50;
@@ -1075,8 +1092,28 @@ implements Handler,Listener {
 
 	@Override
 	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {
-		// TODO Auto-generated method stub
-		
+		this.addTravelPoint(bukkit_entity,vector,true);
+	}
+
+	@Override
+	public void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove) {
+        EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
+        PathfinderGoalSelector goals=entity.goalSelector;
+		try {
+			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+			list.clear();
+            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+            Iterator<Object>iter=list.iterator();
+            while(iter.hasNext()) {
+            	Object object=iter.next();
+            	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
+            	if(goal instanceof PathfinderGoalTravelAround) {
+            		((PathfinderGoalTravelAround)goal).addTravelPoint(vector,remove);
+            	}
+    		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }
