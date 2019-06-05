@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,9 +23,11 @@ implements
 Listener
 {
 	Entity owner;
+	Player viewer;
 	Inventory inventory;
 	private int size;
 	String name;
+	boolean only_view;
 	
 	public BackBag(Entity onwer) {
 		this(onwer,9);
@@ -54,7 +58,9 @@ Listener
 	}
 	
 	public void viewBackBag(Player player,boolean bool) {
-		if(bool) Main.pluginmanager.registerEvents(this,Main.getPlugin());
+		this.only_view=bool;
+		Main.pluginmanager.registerEvents(this,Main.getPlugin());
+		this.viewer=player;
 		player.openInventory(inventory);
 	}
 	
@@ -76,8 +82,18 @@ Listener
 	}
 	
 	@EventHandler
+	public void ownerQuit(PlayerQuitEvent e) {
+		if(e.getPlayer()==this.owner) viewer.closeInventory();
+	}
+	
+	@EventHandler
+	public void inventoryOpen(InventoryOpenEvent e) {
+		if(e.isCancelled()&&e.getInventory().equals(inventory)) HandlerList.unregisterAll(this);
+	}
+	
+	@EventHandler
 	public void interact(InventoryClickEvent e) {
-		if(inventory!=null) {
+		if(only_view&&inventory!=null) {
 			Inventory clicked_inventory=e.getClickedInventory();
 			if(clicked_inventory!=null&&clicked_inventory.hashCode()!=inventory.hashCode()&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 				e.setCancelled(true);

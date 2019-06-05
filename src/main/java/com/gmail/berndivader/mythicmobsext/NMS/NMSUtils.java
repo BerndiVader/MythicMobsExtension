@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.inventory.Inventory;
 
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -32,6 +33,9 @@ CompatibilityUtils
 	protected static Class<?> class_EntitySnowman;
 	protected static Class<?> class_Drop;
 	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
+	protected static Class<?> class_IInventory;
+	protected static Class<?> class_CraftInventory;
+	
 	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
@@ -53,6 +57,9 @@ CompatibilityUtils
     protected static Method class_EntityLiving_getArrowCountMethod;
     protected static Method class_EntityLiving_setArrowCountMethod;
     protected static Method class_Drop_getDropMethod;
+    protected static Method class_EntityPlayer_openContainerMethod;
+    protected static Method class_IInventory_getInventoryMethod;
+    
     
     
 	public static boolean initialize() {
@@ -62,6 +69,8 @@ CompatibilityUtils
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
         	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
         	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
+        	class_IInventory=fixBukkitClass("net.minecraft.server.IInventory");
+        	class_CraftInventory=fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventory");
         	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
@@ -88,13 +97,17 @@ CompatibilityUtils
 	        class_IChatBaseComponent_ChatSerializer_aMethod=class_IChatBaseComponent_ChatSerializer.getMethod("a",String.class);
 	        class_EntityCreature_setGoalTargetMethod=class_EntityCreature.getMethod("setGoalTarget",class_EntityLiving,TargetReason.class,Boolean.TYPE);
 	        class_EntityPlayer_clearActiveItemMethod=class_EntityPlayer.getMethod("clearActiveItem");
+	        class_EntityPlayer_openContainerMethod=class_EntityPlayer.getMethod("openContainer",class_IInventory);
 	        class_EntityLiving_getArmorStrengthMethod=class_EntityLiving.getMethod("getArmorStrength");
 	        class_EntitySnowman_setHasPumpkinMethod=class_EntitySnowman.getMethod("setHasPumpkin",Boolean.TYPE);
 	        class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
 	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
 	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getMethod("equals",Object.class);
 	        
+	        class_IInventory_getInventoryMethod=class_CraftInventory.getMethod("getInventory");
+	        
 	        mm_version=45;
+	        
 	        try {
 	        	mm_version=Integer.parseInt(Utils.mythicmobs.getVersion().replaceAll("\\.","").substring(0,2));
 	        } catch(Exception ex) {
@@ -414,6 +427,18 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return drop;
+	}
+	
+	/**
+	 * @param player
+	 * @param inventory
+	 */
+	public static void openContainer(Player player,Inventory inventory) {
+		try {
+			class_EntityPlayer_openContainerMethod.invoke(getHandle(player),class_IInventory_getInventoryMethod.invoke(inventory));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
