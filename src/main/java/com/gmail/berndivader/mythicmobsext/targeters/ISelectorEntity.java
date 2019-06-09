@@ -89,7 +89,7 @@ IEntitySelector {
 		return targets;
     }
     
-    void sortByDistance(SkillMetadata data) {
+    static void sortByDistance(SkillMetadata data) {
     	AbstractLocation source=data.getCaster().getEntity().getLocation();
     	AbstractEntity[]targets=data.getEntityTargets().toArray(new AbstractEntity[data.getEntityTargets().size()]);
     	int size=targets.length;
@@ -107,7 +107,7 @@ IEntitySelector {
     	data.setEntityTargets(sorted_targets);
     }
     
-    void nearest(SkillMetadata data) {
+    static void nearest(SkillMetadata data) {
     	AbstractEntity[]targets=data.getEntityTargets().toArray(new AbstractEntity[data.getEntityTargets().size()]);
         AbstractLocation caster_location=data.getCaster().getLocation();
         AbstractEntity nearest=null;
@@ -118,7 +118,7 @@ IEntitySelector {
         if(nearest!=null) data.setEntityTarget(nearest);
     }
     
-    void shuffle(SkillMetadata data) {
+    static void shuffle(SkillMetadata data) {
 		List<AbstractEntity>shuffled_targets=Arrays.asList(new AbstractEntity[data.getEntityTargets().size()]);
 		Collections.shuffle(shuffled_targets);
     	HashSet<AbstractEntity>sorted_targets=new HashSet<>();

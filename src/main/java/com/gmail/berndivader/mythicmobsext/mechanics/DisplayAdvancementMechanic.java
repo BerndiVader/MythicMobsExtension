@@ -29,7 +29,7 @@ ITargetedEntitySkill
 		super(skill, mlc);
 		material=Material.STONE;
 		try {
-			material=Material.valueOf(mlc.getString("icon","stone").toUpperCase());
+			material=Material.valueOf(mlc.getString(new String[] {"icon","material"},"stone").toUpperCase());
 		} catch (Exception e) {
 			Main.logger.warning("Wrong material type. Set to stone");
 		}

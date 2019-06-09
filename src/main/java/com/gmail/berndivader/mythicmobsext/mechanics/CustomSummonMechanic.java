@@ -19,14 +19,19 @@ import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
 import io.lumine.xikage.mythicmobs.skills.*;
 
 @ExternalAnnotation(name="customsummon",author="BerndiVader")
-public class CustomSummonMechanic extends SkillMechanic
-		implements
-		ITargetedLocationSkill,
-		ITargetedEntitySkill {
+public 
+class
+CustomSummonMechanic
+extends
+SkillMechanic
+implements
+ITargetedLocationSkill,
+ITargetedEntitySkill 
+{
 	MythicMob mm;
 	MythicEntity me;
 	String tag,amount;
-	int noise,yNoise;
+	int noise,yNoise,yaw;
 	boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
 	double addx,addy,addz,inFrontBlocks;
 	String reason;
@@ -48,6 +53,7 @@ public class CustomSummonMechanic extends SkillMechanic
 		this.addx = mlc.getDouble(new String[] { "addx", "ax", "relx", "rx" }, 0);
 		this.addy = mlc.getDouble(new String[] { "addy", "ay", "rely", "ry" }, 0);
 		this.addz = mlc.getDouble(new String[] { "addz", "az", "relz", "rz" }, 0);
+		this.yaw=mlc.getInteger("yaw",-1337);
 		this.useEyeDirection = mlc.getBoolean(new String[] { "useeyedirection", "eyedirection", "ued" }, false);
 		this.inFrontBlocks = mlc.getDouble(new String[] { "infrontblocks", "infront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
@@ -79,6 +85,7 @@ public class CustomSummonMechanic extends SkillMechanic
 		if (this.mm != null) {
 			for (int i=1;i<=amount;i++) {
 				AbstractLocation l=noise>0?MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.mm.getMythicEntity().getHeight(), this.yUpOnly):target;
+				if(this.yaw!=-1337) l.setYaw(Math.abs(this.yaw));
 				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
 				if (ams==null||ams.getEntity()==null||ams.getEntity().isDead()) continue;
 				ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,new FixedMetadataValue(Main.getPlugin(),this.reason));
@@ -120,6 +127,7 @@ public class CustomSummonMechanic extends SkillMechanic
 		if (this.me!=null) {
 			for (int i = 1; i <= amount; ++i) {
 				AbstractLocation l=this.noise>0?MobManager.findSafeSpawnLocation(target,(int)this.noise,(int)this.yNoise,this.me.getHeight(),this.yUpOnly):target;
+				if(this.yaw!=-1337) l.setYaw(Math.abs(this.yaw));
 				this.me.spawn(BukkitAdapter.adapt(l));
 			}
 			return true;
