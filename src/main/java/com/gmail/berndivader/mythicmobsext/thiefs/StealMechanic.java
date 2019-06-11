@@ -34,7 +34,7 @@ ITargetedEntitySkill {
 	public StealMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.items=new ArrayList<>(Arrays.asList(mlc.getString(new String[] { "items", "i" }, "ANY").toUpperCase().split(",")));
+		this.items=new ArrayList<>(Arrays.asList(mlc.getString(new String[] { "items","item","i"}, "ANY:1").toUpperCase().split(",")));
 		this.signal_fail = mlc.getString(new String[] { "failsignal", "fail" }, "steal_fail");
 		this.signal_ok = mlc.getString(new String[] { "oksignal", "ok" }, "steal_ok");
 		this.iarr=i();
