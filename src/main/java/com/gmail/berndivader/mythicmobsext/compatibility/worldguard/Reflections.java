@@ -36,8 +36,7 @@ Reflections
 	
 	static {
 		instance=Main.pluginmanager.getPlugin("WorldGuard");
-		Scanner s=new Scanner(((Plugin)instance).getResource("plugin.yml")).useDelimiter("\\A");
-		try {
+		try(Scanner s=new Scanner(((Plugin)instance).getResource("plugin.yml")).useDelimiter("\\A")){
 			while(s.hasNext()) {
 				String s1=s.nextLine();
 				if(s1.startsWith("version")) {
@@ -45,10 +44,7 @@ Reflections
 					break;
 				}
 			}
-		} finally {
-			s.close();
-		}
-		
+		};
 		try {
 			load_classes();
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
