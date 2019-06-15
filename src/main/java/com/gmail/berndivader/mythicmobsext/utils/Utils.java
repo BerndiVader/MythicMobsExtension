@@ -674,4 +674,14 @@ Listener
                 return 0.115;
         }
     }
+    
+	public static <E extends Enum<E>> E enum_lookup(Class<E> e,String id) {
+		E result;
+		try {
+			result=Enum.valueOf(e,id);
+		} catch (IllegalArgumentException e1) {
+			result=null;
+		}
+		return result;
+	}
 }
