@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -58,6 +59,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
@@ -111,6 +113,7 @@ Listener
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
+	static Field threattable_field;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
@@ -130,6 +133,12 @@ Listener
 			}
 		}
 		pl=new HashMap<>();
+		try {
+			threattable_field=ThreatTable.class.getDeclaredField("threatTable");
+			threattable_field.setAccessible(true);
+		} catch (NoSuchFieldException | SecurityException e) {
+			// Auto-generated catch block
+		}
 	}
 	
 	public Utils() {
@@ -683,5 +692,18 @@ Listener
 			result=null;
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Map<AbstractEntity,Double> getActiveMobThreatTable(ActiveMob am) {
+		Map<AbstractEntity,Double>threattable=new HashMap<>();
+		if (am!=null&&am.hasThreatTable()) {
+			try {
+				threattable=(Map<AbstractEntity,Double>)threattable_field.get(am.getThreatTable());
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return threattable;
 	}
 }
