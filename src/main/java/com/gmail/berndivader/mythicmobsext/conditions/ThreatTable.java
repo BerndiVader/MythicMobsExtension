@@ -33,7 +33,7 @@ IEntityComparisonCondition
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(source);
 			if(am.hasThreatTable()) {
 				Map<AbstractEntity,Double>threattable_map=Utils.getActiveMobThreatTable(am);
-				if(threattable_map.containsKey(target)) return range.equals(threattable_map.get(target));
+				return threattable_map.containsKey(target)&&range.equals(threattable_map.get(target));
 			}
 		}
 		return false;

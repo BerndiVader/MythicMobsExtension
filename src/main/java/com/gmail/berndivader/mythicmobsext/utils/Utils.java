@@ -685,6 +685,7 @@ Listener
     }
     
 	public static <E extends Enum<E>> E enum_lookup(Class<E> e,String id) {
+		if(id==null) return null;
 		E result;
 		try {
 			result=Enum.valueOf(e,id);

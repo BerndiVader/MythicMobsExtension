@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
+import com.gmail.berndivader.mythicmobsext.items.Enchant;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -30,15 +30,6 @@ ITargetedEntitySkill {
 	byte what;
 	ACTION action;
 	
-	class Enchant{
-		Enchantment enchantment;
-		RandomDouble level;
-		
-		public Enchant(Enchantment ench,String level) {
-			this.enchantment=ench;
-			this.level=new RandomDouble(level);
-		}
-	}
 	List<Enchant>enchants;
 	
 	enum WHAT_ENUM{
@@ -198,34 +189,6 @@ ITargetedEntitySkill {
 				for(int i1=0;i1<length;i1++) {
 					Enchantment enchant=enchants.get(i1).enchantment;
 					stack.addUnsafeEnchantment(enchant,(int)enchants.get(i1).level.rollInteger());
-				}
-				break;
-			case DEL:
-				for(int i1=0;i1<length;i1++) {
-					Enchantment enchant=enchants.get(i1).enchantment;
-					if(stack.containsEnchantment(enchant)) stack.removeEnchantment(enchant);
-				}
-				break;
-		}
-		return stack;
-	}
-	static ItemStack enchantAction_old(ItemStack stack,ACTION action,List<Enchant>enchants) {
-		int length=enchants.size();
-		switch(action) {
-			case SET:
-				for(int i1=0;i1<length;i1++) {
-					Enchantment enchant=enchants.get(i1).enchantment;
-					if(stack.containsEnchantment(enchant)) {
-						stack.removeEnchantment(enchant);
-					} else if(enchant.canEnchantItem(stack)) {
-						stack.addEnchantment(enchant,(int)enchants.get(i1).level.rollInteger());
-					}
-				}
-				break;
-			case ADD:
-				for(int i1=0;i1<length;i1++) {
-					Enchantment enchant=enchants.get(i1).enchantment;
-					if(enchant.canEnchantItem(stack)) stack.addEnchantment(enchant,(int)enchants.get(i1).level.rollInteger());
 				}
 				break;
 			case DEL:
