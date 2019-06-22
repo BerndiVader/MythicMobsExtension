@@ -56,7 +56,6 @@ ITargetedEntitySkill
 		if(temp!=null) lore=(temp.substring(1,temp.length()-1)).split(",");
 		if((temp=SkillString.parseMessageSpecialChars(mlc.getString("name")))!=null) name=temp.substring(1,temp.length()-1);
 		if((temp=mlc.getString("amount"))!=null) amount=new RandomDouble(temp);
-		
 		if((temp=mlc.getString("enchants",null))!=null) {
 			String[]arr1=temp.toUpperCase().split(",");
 			int length=arr1.length;

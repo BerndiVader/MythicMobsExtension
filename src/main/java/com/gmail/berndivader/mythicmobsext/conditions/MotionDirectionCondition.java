@@ -56,7 +56,7 @@ IEntityCondition {
 		t=s.clone();
 		Vector Vvp,Vap,Vvd,Vd,VDD;
 		Vec3D v3=var1.isPlayer()
-				?Utils.pl.getOrDefault(var1.getUniqueId(),new Vec3D(0,0,0))
+				?Utils.players.getOrDefault(var1.getUniqueId(),new Vec3D(0,0,0))
 				:NMSUtils.getEntityLastMot(var1.getBukkitEntity());
 		t.add(v3.getX(),0,v3.getZ());
 		if (v3.getX()!=0||v3.getZ()!=0) {

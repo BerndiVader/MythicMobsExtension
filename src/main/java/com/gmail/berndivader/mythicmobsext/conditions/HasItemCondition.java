@@ -18,7 +18,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
+@ExternalAnnotation(name="testitemfor,ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
 public class HasItemCondition 
 extends
 AbstractCustomCondition

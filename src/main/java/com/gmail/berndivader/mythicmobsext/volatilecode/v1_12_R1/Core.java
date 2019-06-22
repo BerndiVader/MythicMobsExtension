@@ -36,7 +36,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BoundingBox;
 
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -1101,9 +1100,9 @@ implements Handler,Listener {
         EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
         PathfinderGoalSelector goals=entity.goalSelector;
 		try {
-			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-			list.clear();
-            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+//			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+//			list.clear();
+            Set<Object>list=(Set)ai_pathfinderlist_b.get((Object)goals);
             Iterator<Object>iter=list.iterator();
             while(iter.hasNext()) {
             	Object object=iter.next();

@@ -19,7 +19,6 @@ public
 class
 ModdingItem
 {
-	
 	public enum ACTION{
 		SET,
 		ADD,

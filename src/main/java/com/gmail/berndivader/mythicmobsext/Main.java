@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
@@ -132,6 +133,7 @@ JavaPlugin
 			
 			entityCacheHandler=new EntityCacheHandler();
 			new BackBagHelper();
+			new BossBars();
 			
 	        new BukkitRunnable() {
 				@Override

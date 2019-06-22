@@ -83,7 +83,7 @@ Listener
 	public static MobManager mobmanager;
 	public static int serverV;
 	public static int renderLength;
-	public static HashMap<UUID,Vec3D>pl;
+	public static HashMap<UUID,Vec3D>players;
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
 	public static final String signal_CHUNKUNLOAD="CHUNKUNLOAD";
@@ -110,6 +110,7 @@ Listener
 	public static final String meta_TRAVELPOINTS="MME_TRAVEL_POINTS";
 	public static final String signal_GOAL_TRAVELEND="GOAL_TRAVELEND";
 	public static final String signal_GOAL_TRAVELPOINT = "GOAL_TRAVELPOINT";
+	public static final String meta_DISORIENTATION = "MMEDISORIENTATION";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -132,7 +133,7 @@ Listener
 				advancements.add(adv);
 			}
 		}
-		pl=new HashMap<>();
+		players=new HashMap<>();
 		try {
 			threattable_field=ThreatTable.class.getDeclaredField("threatTable");
 			threattable_field.setAccessible(true);
@@ -221,26 +222,6 @@ Listener
 		}
 	}
 
-	/*
-	 *
-	 * removed for debugging purposes
-	
-	@EventHandler(priority=EventPriority.LOWEST)
-	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
-		if (e.getEntity() instanceof Player) return;
-		final String[]arr1=e.getEntity().getScoreboardTags().toArray(new String[e.getEntity().getScoreboardTags().size()]);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				for(int i1=0;i1<arr1.length;i1++) {
-					e.getEntity().removeScoreboardTag(arr1[i1]);
-				}
-			}
-		}.runTask(Main.getPlugin());
-	}
-	
-	 */
-	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
 		EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
@@ -317,7 +298,7 @@ Listener
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p=e.getPlayer();
 		UUID uuid;
-		if(pl.containsKey(uuid=p.getUniqueId())) pl.remove(uuid);
+		if(players.containsKey(uuid=p.getUniqueId())) players.remove(uuid);
 		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (p.hasMetadata(StunMechanic.str)) {
 			p.setGravity(true);

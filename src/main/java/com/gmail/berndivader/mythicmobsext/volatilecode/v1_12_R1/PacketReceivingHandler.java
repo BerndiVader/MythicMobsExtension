@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1;
 
+import java.lang.reflect.Field;
+
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -24,6 +26,29 @@ PacketReceivingHandler
 implements
 IPacketReceivingHandler 
 {
+	
+	static Field hasPos_field,hasLook_field,x_field,y_field,z_field,yaw_field,pitch_field;
+	
+	static {
+		try {
+			hasPos_field=PacketPlayInFlying.class.getDeclaredField("hasPos");
+			hasLook_field=PacketPlayInFlying.class.getDeclaredField("hasLook");
+			x_field=PacketPlayInFlying.class.getDeclaredField("x");
+			y_field=PacketPlayInFlying.class.getDeclaredField("y");
+			z_field=PacketPlayInFlying.class.getDeclaredField("z");
+			yaw_field=PacketPlayInFlying.class.getDeclaredField("yaw");
+			pitch_field=PacketPlayInFlying.class.getDeclaredField("pitch");
+			hasPos_field.setAccessible(true);
+			hasLook_field.setAccessible(true);
+			x_field.setAccessible(true);
+			y_field.setAccessible(true);
+			z_field.setAccessible(true);
+			yaw_field.setAccessible(true);
+			pitch_field.setAccessible(true);
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	Player player;
 	EntityPlayer entity_player;
@@ -54,12 +79,12 @@ IPacketReceivingHandler
 
 	@Override
 	public Packet<?> handle(PacketPlayInFlying packet) {
-		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(entity_player.locX,entity_player.locY,entity_player.locZ);
 		double dx=packet.a(entity_player.locX),dy=packet.b(entity_player.locY),dz=packet.c(entity_player.locZ);
+		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(entity_player.locX,entity_player.locY,entity_player.locZ);
 		v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
 				?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
 				:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-		Utils.pl.put(player.getUniqueId(),v3);
+		Utils.players.put(player.getUniqueId(),v3);
 		return packet;
 	}
 
