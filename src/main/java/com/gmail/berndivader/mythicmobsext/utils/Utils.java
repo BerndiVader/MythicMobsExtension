@@ -188,7 +188,7 @@ Listener
 	@EventHandler
 	public void storeBowTensionEvent(PlayerInteractEvent e) {
 		final Player p=e.getPlayer();
-		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+		if (p.getInventory().getItemInMainHand().getType()==Material.BOW||p.getInventory().getItemInOffHand().getType()==Material.BOW) {
 			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(Main.getPlugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
 			new BukkitRunnable() {
 				float f1;
