@@ -59,10 +59,9 @@ JavaPlugin
 	
 	public Thiefs thiefs;
 	
-	
 	public Internals internals;
 	public Externals externals;
-
+	
 	public void onEnable() {
 		plugin = this;
 		random = new Random();

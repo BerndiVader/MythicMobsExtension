@@ -11,19 +11,17 @@ public class MetaTagValue {
 
 	public MetaTagValue(String value, String type,boolean strict) {
 		this.strict=strict;
-		if (value==null||!MetaTagValue.containsType(type))
-			type=ValueTypes.DEFAULT.toString();
-		this.valType=ValueTypes.valueOf(type);
+		if (value!=null||MetaTagValue.containsType(type)) {
+			this.valType=ValueTypes.valueOf(type);
+		} else {
+			this.valType=ValueTypes.DEFAULT;
+		}
 		switch(this.valType) {
 		case DEFAULT:
 			this.value=null;
 			break;
 		case BOOLEAN:
-			if (value.equalsIgnoreCase("true")||value.equalsIgnoreCase("false")) {
-				this.value=Boolean.parseBoolean(value);
-			} else {
-				this.value=false;
-			}
+			this.value=value.equalsIgnoreCase("true")||value.equalsIgnoreCase("false")?Boolean.parseBoolean(value):false;
 			break;
 		case NUMERIC:
 			if (value==null||value.isEmpty()) {

@@ -20,9 +20,12 @@ repositories {
     mavenCentral()
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
-    }    
-}
-
+    }
+    maven {
+        name="placeholderapi"
+        url="http://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+ }
 
 dependencies {
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
@@ -41,6 +44,7 @@ dependencies {
     compileOnly  ("me.libraryaddict:disguise:+")
     compileOnly  ("net.citizensnpcs:citizens:+")
     compileOnly  ("think:rpgitems:+")
+    compileOnly  group:"me.clip",name:"placeholderapi",version:"+"
 }
 
 processResources {

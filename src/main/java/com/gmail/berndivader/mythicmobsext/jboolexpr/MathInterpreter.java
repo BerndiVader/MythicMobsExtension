@@ -1,4 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.jboolexpr;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleUnaryOperator;

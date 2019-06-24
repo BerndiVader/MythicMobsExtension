@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.bossbars.conditions;
 
+import org.bukkit.boss.BossBar;
+
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
@@ -28,7 +30,8 @@ IEntityCondition
 	@Override
 	public boolean check(AbstractEntity abstract_entity) {
 		if (abstract_entity.isPlayer()&&BossBars.contains(abstract_entity.getUniqueId())) {
-			return range.equals(BossBars.getBar(abstract_entity.getUniqueId(),title).getProgress());
+			BossBar bar=BossBars.getBar(abstract_entity.getUniqueId(),title);
+			if(bar!=null) return range.equals(bar.getProgress());
 		}
 		return false;
 	}

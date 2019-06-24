@@ -45,6 +45,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
+import com.gmail.berndivader.mythicmobsext.compatibility.papi.Papi;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
@@ -116,6 +117,8 @@ Listener
 	public static HashSet<Advancement>advancements;
 	static Field threattable_field;
 	
+	static boolean papi_ispresent;
+	
 	static {
 		mythicmobs=MythicMobs.inst();
 		mobmanager=mythicmobs.getMobManager();
@@ -140,6 +143,7 @@ Listener
 		} catch (NoSuchFieldException | SecurityException e) {
 			// Auto-generated catch block
 		}
+		papi_ispresent=Main.pluginmanager.getPlugin(Papi.str_PLUGINNAME)!=null;
 	}
 	
 	public Utils() {
@@ -534,6 +538,7 @@ Listener
 			}
 		}
 		if (s.contains(".meta.")) s=parseMetaVar(s,m,c,t,l);
+		if(papi_ispresent) s=Papi.setPlaceHolders(t,s);
 		return s;
 	}
 	

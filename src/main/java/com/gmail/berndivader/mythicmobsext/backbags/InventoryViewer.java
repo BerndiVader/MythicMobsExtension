@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -76,11 +75,7 @@ Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
 		if(inventory!=null&&e.getWhoClicked()==caster&&this.view_only) {
-			Inventory clicked_inventory=e.getClickedInventory();
-			if(clicked_inventory!=null&&clicked_inventory.hashCode()!=inventory.hashCode()&&e.getAction()==InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-				e.setCancelled(true);
-			}
-			if(clicked_inventory!=null&&clicked_inventory.hashCode()==inventory.hashCode()) e.setCancelled(true);
+			if(e.getInventory().equals(inventory)) e.setCancelled(true);
 		}
 	}
 	
