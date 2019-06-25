@@ -602,7 +602,23 @@ implements Handler,Listener {
             		double tR=1100.0D;
             		boolean iT=false;
                 	if (data!=null) speed=Double.parseDouble(data);
-                	if (data1!=null) iT=Boolean.parseBoolean(data1.toUpperCase());
+                	if (data1!=null) {
+    	        		String[]p=data1.split(",");
+    	        		for (int a=0;a<p.length;a++) {
+    	        			if (MathUtils.isNumeric(p[a])) {
+    	        				switch(a) {
+    	        				case 0:
+    	        					mR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 1:
+    	        					tR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				}
+    	        			} else if (a==2) {
+    	        				iT=Boolean.parseBoolean(p[a].toUpperCase());
+    	        			}
+    	        		}
+                	}
                 	pathfindergoal=Optional.ofNullable(new PathfinderGoalTravelAround(e,speed,mR,tR,iT));
                 	break;
             	}
@@ -644,7 +660,7 @@ implements Handler,Listener {
             		double y=e.locY;
             		double z=e.locZ;
             		double mR=10.0D;
-            		double tR=512.0D;
+            		double tR=1000.0D;
             		boolean iT=false;
                 	if (data!=null) {
                 		speed = Double.parseDouble(data);

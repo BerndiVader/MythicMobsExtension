@@ -11,7 +11,7 @@ public class MetaTagValue {
 
 	public MetaTagValue(String value, String type,boolean strict) {
 		this.strict=strict;
-		if (value!=null||MetaTagValue.containsType(type)) {
+		if (value!=null&&MetaTagValue.containsType(type)) {
 			this.valType=ValueTypes.valueOf(type);
 		} else {
 			this.valType=ValueTypes.DEFAULT;
