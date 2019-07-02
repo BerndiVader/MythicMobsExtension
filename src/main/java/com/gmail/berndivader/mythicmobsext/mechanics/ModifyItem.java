@@ -47,7 +47,7 @@ ITargetedEntitySkill
 		RandomDouble amount=null;
 		List<Enchant>enchants=null;
 		String[]lore=null;
-		String name=null;
+		String name=null,bag_name=null;
 		
 		String temp=mlc.getString("material");
 		if(temp!=null) temp=temp.toUpperCase();
@@ -56,6 +56,7 @@ ITargetedEntitySkill
 		if(temp!=null) lore=(temp.substring(1,temp.length()-1)).split(",");
 		if((temp=SkillString.parseMessageSpecialChars(mlc.getString("name")))!=null) name=temp.substring(1,temp.length()-1);
 		if((temp=mlc.getString("amount"))!=null) amount=new RandomDouble(temp);
+		if((temp=mlc.getString("bagname"))!=null) bag_name=temp;
 		if((temp=mlc.getString("enchants",null))!=null) {
 			String[]arr1=temp.toUpperCase().split(",");
 			int length=arr1.length;
@@ -80,7 +81,7 @@ ITargetedEntitySkill
 				}
 			}
 		}
-		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants);
+		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,bag_name);
 	}
 
 	@Override

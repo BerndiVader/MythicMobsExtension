@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -59,8 +59,8 @@ Listener
 		return null;
 	}
 	
-	public static void removeBar(Player player,String title) {
-		Iterator<BossBar>bar_iter=bars.get(player.getUniqueId()).iterator();
+	public static void removeBar(Entity entity,String title) {
+		Iterator<BossBar>bar_iter=bars.get(entity.getUniqueId()).iterator();
 		while(bar_iter.hasNext()) {
 			BossBar bar=bar_iter.next();
 			if(bar.getTitle().equals(title)) {

@@ -8,11 +8,11 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.bossbars.SegmentedEnum;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -33,13 +33,13 @@ ITargetedEntitySkill
 	BarColor color;
 	List<BarFlag>flags;
 	int flags_size;
-	double default_value;
+	String expr;
 	
 	public CreateBossBar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		title=mlc.getString("title","Bar");
 		style=BarStyle.valueOf(SegmentedEnum.real(mlc.getInteger("segment",6)).name());
-		default_value=mlc.getDouble("value",1d);
+		expr=mlc.getString("value","0.05d");
 		try {
 			color=BarColor.valueOf(mlc.getString("color","RED").toUpperCase());
 		} catch (Exception ex) {
@@ -66,14 +66,20 @@ ITargetedEntitySkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
-		if(abstract_entity.isPlayer()) {
-			BossBar bar=null;
-			bar=Bukkit.createBossBar(title,color,style);
+		BossBar bar=Bukkit.createBossBar(title,color,style);
+		if(bar!=null) {
+			double default_value=1d;
+			String parsed_expr=Utils.parseMobVariables(expr,data,data.getCaster().getEntity(),abstract_entity,null);
+			try {
+				default_value=Double.parseDouble(parsed_expr);
+			}catch (Exception e) {
+				Main.logger.info(parsed_expr+" is not valid for double in "+this.line);
+				default_value=0d;
+			}				
 			bar.setProgress(default_value);
 			for(int i1=0;i1<flags_size;i1++) {
 				bar.addFlag(flags.get(i1));
 			}
-			bar.addPlayer((Player)abstract_entity.getBukkitEntity());
 			BossBars.addBar(abstract_entity.getUniqueId(),bar);
 			return true;
 		}

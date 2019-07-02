@@ -13,6 +13,7 @@ import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -33,18 +34,19 @@ ITargetedEntitySkill
 	int backbag_slot,slot;
 	WhereEnum what;
 	boolean override,tag_where;
-	String meta_name;
+	String meta_name,bag_name;
 	HoldingItem holding;
 	
 	public MoveToBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		ASYNC_SAFE=false;
-		what=WhereEnum.get(mlc.getString("what","head"));
+		what=WhereEnum.getWhere(mlc.getString("what","head"));
 		slot=mlc.getInteger("slot",-1);
 		backbag_slot=mlc.getInteger("bagslot",-1);
 		override=mlc.getBoolean("override",true);
 		tag_where=mlc.getBoolean("tag",false);
 		meta_name=mlc.getString("meta","");
+		bag_name=mlc.getString(new String[] {"title","name"},BackBagHelper.str_name);
 		
 		holding=new HoldingItem();
 		holding.setWhere(what);
@@ -60,7 +62,8 @@ ITargetedEntitySkill
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder);
+			BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			if(bag.getInventory()==null) return false;
 			Inventory inventory=bag.getInventory();
 			List<ItemStack>stack=HoldingItem.getContents(holding,holder);
 			for(int i1=0;i1<stack.size();i1++) {
@@ -84,7 +87,7 @@ ITargetedEntitySkill
 					}
 				}
 			}
-		}
+			}
 		return true;
 	}
 	

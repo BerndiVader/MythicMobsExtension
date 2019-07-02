@@ -26,23 +26,33 @@ ModdingItem
 	} ACTION action;
 	
 	WhereEnum where;
-	int slot;
 	
 	Optional<Material>material;
 	Optional<String[]>lore;
 	Optional<String>name;
 	Optional<RandomDouble>amount;
 	Optional<List<Enchant>>enchants;
+	Optional<String>bag_name;
+	Optional<Integer>slot;
 	
-	public ModdingItem(WhereEnum where,int slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants) {
+	public ModdingItem(WhereEnum where,int slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String bag_name) {
 		this.where=where;
-		this.slot=slot;
+		this.setSlot(slot);
 		this.action=action;
 		this.material=Optional.ofNullable(material);
 		this.lore=Optional.ofNullable(lore_array);
 		this.name=Optional.ofNullable(name);
 		this.amount=Optional.ofNullable(amount);
 		this.enchants=Optional.ofNullable(enchants);
+		this.bag_name=Optional.ofNullable(bag_name);
+	}
+	
+	public void setSlot(int slot) {
+		this.slot=Optional.ofNullable(slot);
+	}
+	
+	public int getSlot() {
+		return this.slot.isPresent()?this.slot.get():-1;
 	}
 	
 	public ItemStack applyMods(ItemStack item_stack) {
@@ -155,16 +165,18 @@ ModdingItem
 			if((output=entity.getEquipment().getBoots())!=null&&output.getType()!=Material.AIR) return output;
 			break;
 		case INVENTORY:
-			if(entity instanceof Player&&slot>-1) {
+			if(entity instanceof Player&&this.getSlot()>-1) {
 				Player player=(Player)entity;
-				if((output=player.getInventory().getItem(slot))!=null&&output.getType()!=Material.AIR) return output;
+				if((output=player.getInventory().getItem(this.getSlot()))!=null&&output.getType()!=Material.AIR) return output;
 			}
 			break;
 		case BACKBAG:
 			if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				BackBag bag=new BackBag(entity);
-				if(bag.getSize()>=slot&&slot>-1) {
-					if((output=bag.getInventory().getItem(slot))!=null&&output.getType()!=Material.AIR) return output;
+				BackBag bag=bag_name.isPresent()?new BackBag(entity,bag_name.get()):new BackBag(entity);
+				if(bag!=null) {
+					if(bag.getSize()>=this.getSlot()&&this.getSlot()>-1) {
+						if((output=bag.getInventory().getItem(this.getSlot()))!=null&&output.getType()!=Material.AIR) return output;
+					}
 				}
 			}
 			break;

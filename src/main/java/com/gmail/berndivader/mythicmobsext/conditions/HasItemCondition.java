@@ -10,6 +10,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 
@@ -45,7 +46,8 @@ IEntityCondition
 			tmp+=";slot="+mlc.getString("slot","0");
 			tmp+=";name="+mlc.getString("name","ANY");
 			tmp+=";enchant="+mlc.getString("enchant","ANY");
-			tmp+=";lore="+mlc.getString("lore","ANY")+"\"";
+			tmp+=";lore="+mlc.getString("lore","ANY");
+			tmp+=";bagname="+mlc.getString("bagname",BackBagHelper.str_name)+"\"";
 			tmp=SkillString.unparseMessageSpecialChars(tmp);
 		}
 		this.conditionLine=SkillString.parseMessageSpecialChars(tmp);

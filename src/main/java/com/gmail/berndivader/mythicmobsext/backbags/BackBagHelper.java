@@ -1,28 +1,32 @@
 package com.gmail.berndivader.mythicmobsext.backbags;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.CreateBackBag;
@@ -33,6 +37,8 @@ import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RemoveBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RestoreFromBackBag;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.items.ItemManager;
@@ -43,10 +49,10 @@ BackBagHelper
 implements
 Listener
 {
-	static ItemManager itemmananger=Utils.mythicmobs.getItemManager();
-	static HashMap<UUID,Inventory>bags;
-	static String str_name;
-	static String url;
+	final static ItemManager itemmananger=Utils.mythicmobs.getItemManager();
+	final static HashMap<UUID,List<BackBagInventory>>bags;
+	final public static String str_name;
+	final static String url;
 
 	static {
 		url=Main.getPlugin().getDataFolder().getPath()+"/backbags";
@@ -56,7 +62,6 @@ Listener
 	}
 	
 	public BackBagHelper() {
-		loadBags();
 		Main.pluginmanager.registerEvents(this,Main.getPlugin());
 	}
 	
@@ -103,24 +108,125 @@ Listener
 		return list.toArray(new ItemStack[list.size()]);
 	}
 	
-	public static void removeBackBag(UUID uuid) {
+	public static void remove(UUID uuid,String name) {
+		if(bags.containsKey(uuid)) {
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(name)) inventory_iter.remove();
+			}
+		}
+	}
+	
+	public static void removeAll(UUID uuid) {
 		if(bags.containsKey(uuid)) bags.remove(uuid);
 	}
 	
-	public static void addInventory(UUID uuid, Inventory inventory) {
+	public static void addInventory(UUID uuid,BackBagInventory bag_inventory) {
 		if(bags.containsKey(uuid)) {
-			bags.replace(uuid,inventory);
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(bag_inventory.getName())) inventory_iter.remove();
+			}
 		} else {
-			bags.put(uuid,inventory);
+			bags.put(uuid,new ArrayList<>());
 		}
+		bags.get(uuid).add(bag_inventory);
+	}
+	
+	private static void addInventory(UUID uuid, Inventory inventory) {
+		if(bags.containsKey(uuid)) {
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(inventory.getName())) inventory_iter.remove();
+			}
+		} else {
+			bags.put(uuid,new ArrayList<>());
+		}
+		bags.get(uuid).add(new BackBagInventory(inventory.getName(),inventory.getSize(),inventory,false));
 	}
 	
 	public static boolean hasBackBag(UUID uuid) {
 		return bags.containsKey(uuid);
 	}
 	
-	public static Inventory getInventory(UUID uuid) {
-		return bags.get(uuid);
+	public static Inventory getInventory(UUID uuid,String name) {
+		if(bags.containsKey(uuid)) {
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(name)) {
+					return stored_inventory.getInventory();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static void replace(UUID uuid,Inventory inventory) {
+		addInventory(uuid,inventory);
+	}
+	
+	public static void removeInventory(UUID uuid,String bag_name) {
+		if(bags.containsKey(uuid)) {
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(bag_name)) inventory_iter.remove();
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				UUID uuid=e.getPlayer().getUniqueId();
+				File file=new File(url+"/"+uuid.toString());
+				if(file.exists()) loadBags(file);
+			}
+		}.runTaskAsynchronously(Main.getPlugin());
+	}
+	
+	
+	public static void loadBags(File file) {
+		Gson gson=new Gson();
+		BackBagInventory[]bag_inventories=null;
+		try (FileReader reader=new FileReader(file.getAbsolutePath())) {
+			bag_inventories=gson.fromJson(reader,BackBagInventory[].class);
+		} catch (Exception ex) {
+			Main.logger.info("Found illegal backbag save: "+file.getName()+". Try to load old format...");
+			bag_inventories=loadOldSaveFile(file);
+		}
+		if(bag_inventories!=null) {
+			UUID uuid=UUID.fromString(file.getName());
+			for(int i2=0;i2<bag_inventories.length;i2++) {
+				BackBagInventory bag_inventory=bag_inventories[i2];
+				Inventory inventory=Bukkit.createInventory(null,bag_inventory.getSize(),bag_inventory.getName());
+				inventory.setContents(bag_inventory.getContentBase64());
+				bag_inventory.setInventory(inventory);
+				bag_inventory.setTemporary(false);
+				BackBagHelper.addInventory(uuid,bag_inventory);
+			}
+		}
+	}
+	
+	public static BackBagInventory[] loadOldSaveFile(File file) {
+		BackBagInventory[]bags=new BackBagInventory[0];
+		try(Scanner scanner=new Scanner(file)) {
+			ItemStack[] contents=new ItemStack[0];
+			String content=scanner.useDelimiter("\\A").next();
+			if(!content.isEmpty()) contents=BukkitSerialization.itemStackArrayFromBase64(content);
+		    Inventory inventory=Bukkit.createInventory(null,contents.length,str_name);
+		    inventory.setContents(contents);
+		    bags=new BackBagInventory[] {new BackBagInventory(inventory.getName(),inventory.getSize(),inventory)};
+		} catch (IOException e) {
+			Main.logger.info("Failed to load old backbag format return empty.");
+		}
+		return bags;
 	}
 	
 	public static void loadBags() {
@@ -129,42 +235,81 @@ Listener
 		int size=files.length;
 		for(int i1=0;i1<size;i1++) {
 			File file=files[i1];
-			if(file.exists()) {
-				try(Scanner scanner=new Scanner(file)) {
-					UUID uuid=UUID.fromString(file.getName());
-				    ItemStack[] contents=BukkitSerialization.itemStackArrayFromBase64(scanner.useDelimiter("\\A").next());
-				    Inventory inventory=Bukkit.createInventory(null,contents.length,str_name);
-				    inventory.setContents(contents);
-				    addInventory(uuid,inventory);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}		
+			if(file.exists()) loadBags(file);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e) {
+		if(!Main.server_running) return;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				UUID uuid=e.getPlayer().getUniqueId();
+				if(hasBackBag(uuid)) {
+					List<BackBagInventory>backbags=bags.get(uuid);
+					if(backbags!=null&&!backbags.isEmpty()) saveBags(uuid,backbags);
+				}
+			}
+		}.runTaskAsynchronously(Main.getPlugin());
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent e) {
+		if(e.getEntityType()!=EntityType.PLAYER) {
+			final UUID uuid=e.getEntity().getUniqueId();
+			if(BackBagHelper.hasBackBag(uuid)) {
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						Iterator<UUID>bag_iter=bags.keySet().iterator();
+						while(bag_iter.hasNext()) {
+							if(uuid==bag_iter.next()) {
+								bag_iter.remove();
+							}
+						}
+					}
+				}.runTaskAsynchronously(Main.getPlugin());
 			}
 		}
 	}
 	
-	public static void saveBags() {
-		Iterator<Entry<UUID,Inventory>>it=bags.entrySet().iterator();
-		while(it.hasNext()) {
-			Entry<UUID,Inventory>entry=it.next();
-			UUID uuid=entry.getKey();
-			if(Bukkit.getEntity(uuid) instanceof Player) {
-				Inventory bag=entry.getValue();
-				String str_uuid=uuid.toString();
-				String base64=BukkitSerialization.itemStackArrayToBase64(bag.getContents());
-				try (PrintStream out=new PrintStream(new FileOutputStream(url+"/"+str_uuid))) {
-				    out.print(base64);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}			
+	public static void saveBags(UUID uuid,List<BackBagInventory>backbags) {
+		Iterator<BackBagInventory>inventory_iter=backbags.iterator();
+		if(inventory_iter==null) return;
+		while(inventory_iter.hasNext()) {
+			BackBagInventory bag=inventory_iter.next();
+			if(bag.isTemporary()) {
+				inventory_iter.remove();;
+			} else {
+				bag.convert();
 			}
+		}
+		Gson gson=new GsonBuilder().setPrettyPrinting().create();
+		File file=new File(url+"/"+uuid.toString());
+		if(!backbags.isEmpty()) {
+			try(FileWriter writer=new FileWriter(file)){
+				BackBagInventory[]array=backbags.toArray(new BackBagInventory[backbags.size()]);
+				gson.toJson(array,writer);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		bags.remove(uuid);
+	}
+	
+	public static void saveBags() {
+		if(bags==null) return;
+		for(Map.Entry<UUID,List<BackBagInventory>>entry:bags.entrySet()) {
+			UUID uuid=entry.getKey();
+			if(Bukkit.getOfflinePlayer(uuid)!=null) saveBags(uuid,entry.getValue());
 		}
 	}
 
-	public static void expandBackBag(Entity owner,int size) {
+	public static void expandBackBag(Entity owner,String bag_name,int size) {
 		size=size%9>0?size+(9-size%9):size;
 		if(BackBagHelper.hasBackBag(owner.getUniqueId())) {
-			BackBag bag=new BackBag(owner);
+			BackBag bag=new BackBag(owner,bag_name);
 			if(bag.getSize()>size) {
 				List<ItemStack>content=Arrays.asList(bag.inventory.getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
 				if(content.size()>size) {

@@ -18,7 +18,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -30,17 +29,18 @@ HoldingItem
 {
 	Enchantment enchantment;
 	Material material;
-	String lore,name;
+	String lore,name,bag_name;
 	RangedDouble amount;
-	int slot;
 	boolean material_any;
 	public WhereEnum where;
+	int slot;
 
 	public HoldingItem() {
-		this(null,"1","ANY","ANY",-7331,"ANY","ANY");
+		this(null,"1","ANY","ANY",-7331,"ANY","ANY",BackBagHelper.str_name);
 	}
 	
-	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant) {
+	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant,String bag_name) {
+		this.where=WhereEnum.ANY;
 		setMaterial(material);
 		this.setAmount(amount);
 		this.setLore(lore);
@@ -151,7 +151,7 @@ HoldingItem
 		this.where=where;
 	}
 	public void setWhere(String w) { 
-		this.where=WhereEnum.get(w); 
+		this.where=WhereEnum.getWhere(w); 
 	}
 	public WhereEnum getWhere() {
 		return where;
@@ -162,6 +162,13 @@ HoldingItem
 	}
 	public void setAmount(String amount) {
 		this.amount=new RangedDouble(amount);
+	}
+	
+	public void setBagName(String bag_name) {
+		this.bag_name=bag_name;
+	}
+	public String getBagName() {
+		return this.bag_name;
 	}
 	
 	public Boolean isAnyMaterial(){
@@ -189,6 +196,9 @@ HoldingItem
 			} else if(parse1.startsWith("slot=")) {
 				parse1=parse1.substring(5,parse1.length());
 				holding.setSlot(Integer.parseInt(parse1));
+			} else if(parse1.startsWith("bagname=")) {
+				parse1=parse1.substring(8,parse1.length());
+				holding.setBagName(parse1);
 			} else if(parse1.startsWith("enchant=")) {
 				parse1=parse1.substring(8,parse1.length());
 				holding.setEnchantment(parse1);
@@ -201,32 +211,32 @@ HoldingItem
 		List<ItemStack>contents=new ArrayList<ItemStack>();
 		if (holding.getWhere().equals(WhereEnum.ANY)) {
 			if (is_player) {
-				contents=Arrays.asList(((Player)entity).getInventory().getContents());
+				contents.addAll(Arrays.asList(((Player)entity).getInventory().getContents()));
 			} else {
-				contents=Arrays.asList(entity.getEquipment().getArmorContents());
+				contents.addAll(Arrays.asList(entity.getEquipment().getArmorContents()));
 				contents.add(entity.getEquipment().getItemInMainHand());
 				contents.add(entity.getEquipment().getItemInOffHand());
 			}
 		} else if(holding.getWhere().equals(WhereEnum.SLOT)) {
 			if(is_player) {
-				ItemStack itemstack=null;
-				if(holding.getSlot()>-1) {
-					itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
-				}
+				ItemStack itemstack=new ItemStack(Material.AIR);
+				if(holding.getSlot()>-1) itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
 				contents.add(itemstack);
 			}
 		} else if(holding.getWhere().equals(WhereEnum.BACKBAG)) {
 			if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				Inventory inventroy=BackBagHelper.getInventory(entity.getUniqueId());
-				if(holding.slot>-1) {
-					contents.add(inventroy.getItem(holding.getSlot()));
-				} else {
-					contents=Arrays.asList(inventroy.getContents());
+				Inventory inventroy=BackBagHelper.getInventory(entity.getUniqueId(),holding.getBagName());
+				if(inventroy!=null) {
+					if(holding.getSlot()>-1) {
+						contents.add(inventroy.getItem(holding.getSlot()));
+					} else {
+						contents=Arrays.asList(inventroy.getContents());
+					}
 				}
 			}
 		} else {
 			if (is_player&&holding.getWhere().equals(WhereEnum.INVENTORY)) {
-				contents=Arrays.asList(((Player)entity).getInventory().getStorageContents());
+				contents.addAll(Arrays.asList(((Player)entity).getInventory().getStorageContents()));
 				contents.remove(((Player)entity).getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.HAND)) {
 				contents.add(entity.getEquipment().getItemInMainHand());
@@ -241,8 +251,11 @@ HoldingItem
 			} else if (holding.getWhere().equals(WhereEnum.BOOTS)) {
 				contents.add(entity.getEquipment().getBoots());
 			} else if (holding.getWhere().equals(WhereEnum.ARMOR)) {
-				contents=Arrays.asList(entity.getEquipment().getArmorContents());
+				contents.addAll(Arrays.asList(entity.getEquipment().getArmorContents()));
 			}
+		}
+		for(int i1=0;i1<contents.size();i1++) {
+			ItemStack stack=contents.get(i1);
 		}
 		return contents;
 	}
@@ -254,8 +267,8 @@ HoldingItem
 			if(entity instanceof Player) {
 				Player player=(Player)entity;
 				PlayerInventory inventory=player.getInventory();
-				if(holding.slot>-1) {
-					if(override||(inventory.getItem(holding.slot)==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+				if(holding.getSlot()>-1) {
+					if(override||(inventory.getItem(holding.getSlot())==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
 						inventory.setItem(holding.getSlot(),item_stack.clone());
 					}
 				} else if(inventory.firstEmpty()>-1){
@@ -265,14 +278,15 @@ HoldingItem
 			break;
 			case BACKBAG:
 				if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-					BackBag bag=new BackBag(entity);
-					Inventory inventory=bag.getInventory();
-					if(holding.slot>-1) {
-						if(override||(inventory.getItem(holding.slot)==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
-							inventory.setItem(holding.getSlot(),item_stack.clone());
+					Inventory inventory=BackBagHelper.getInventory(entity.getUniqueId(),holding.getBagName());
+					if(inventory!=null) {
+						if(holding.getSlot()>-1) {
+							if(override||(inventory.getItem(holding.getSlot())==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+								inventory.setItem(holding.getSlot(),item_stack.clone());
+							}
+						} else if(inventory.firstEmpty()>-1){
+							inventory.addItem(item_stack.clone());
 						}
-					} else if(inventory.firstEmpty()>-1){
-						inventory.addItem(item_stack.clone());
 					}
 				}
 				break;
@@ -301,18 +315,20 @@ HoldingItem
 	}
 	
 	public static boolean spawnItem(ItemStack item_stack,HoldingItem holding,Location location,int pickup_delay,boolean no_drop) {
-		ItemStack drop_stack=item_stack.clone();
+		ItemStack drop_stack=new ItemStack(item_stack);
 		int amount=(int)(item_stack.getAmount()<holding.amount.getMin()?item_stack.getAmount():holding.getAmount().getMin());
 		drop_stack.setAmount(amount);
-		if (!no_drop) {
-			Item dropped_item=location.getWorld().dropItem(location,drop_stack);
-			dropped_item.setPickupDelay(pickup_delay);
-		}
-		if (item_stack.getAmount()<=holding.getAmount().getMin()) {
-			item_stack.setAmount(0);
-			item_stack.setType(Material.AIR);
-		} else {
-			item_stack.setAmount(item_stack.getAmount()-amount);
+		if(amount>0&&drop_stack.getType()!=Material.AIR) {
+			if (!no_drop) {
+				Item dropped_item=location.getWorld().dropItem(location,drop_stack);
+				dropped_item.setPickupDelay(pickup_delay);
+			}
+			if (item_stack.getAmount()<=holding.getAmount().getMin()) {
+				item_stack.setAmount(0);
+				item_stack.setType(Material.AIR);
+			} else {
+				item_stack.setAmount(item_stack.getAmount()-amount);
+			}
 		}
 		return true;
 	}

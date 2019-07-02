@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils;
@@ -32,7 +33,7 @@ ITargetedEntitySkill
 	int to_slot;
 	WhereEnum what;
 	boolean override;
-	String meta_name,from_slot;
+	String meta_name,from_slot,bag_name;
 	HoldingItem holding;
 	
 	public RestoreFromBackBag(String skill, MythicLineConfig mlc) {
@@ -41,7 +42,8 @@ ITargetedEntitySkill
 		from_slot=mlc.getString("fromslot","-1");
 		to_slot=mlc.getInteger("toslot",-1);
 		override=mlc.getBoolean("override",true);
-		what=WhereEnum.get(mlc.getString("to"));
+		what=WhereEnum.getWhere(mlc.getString("to"));
+		bag_name=mlc.getString(new String[] {"title","name"},BackBagHelper.str_name);
 	}
 
 	@Override
@@ -55,16 +57,17 @@ ITargetedEntitySkill
 		try {
 			inventory_slot=Integer.parseInt(Utils.parseMobVariables(from_slot, data, data.getCaster().getEntity(), abstract_entity, null));
 		} catch (Exception ex) {
-			//
+			Main.logger.warning("Invalid Integer for slot (reset to default -1) in skillline: "+this.line);
 		}
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder);
+			BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			if(bag.getInventory()==null) return false;
 			Inventory inventory=bag.getInventory();
 			if(inventory.getSize()>=inventory_slot&&inventory_slot>-1) {
 				ItemStack old_item=inventory.getItem(inventory_slot);
 				if(old_item!=null) {
-					if(what==WhereEnum.TAG) what=WhereEnum.get(NMSUtils.getMetaString(old_item,Utils.meta_BACKBACKTAG));
+					if(what==WhereEnum.TAG) what=WhereEnum.getWhere(NMSUtils.getMetaString(old_item,Utils.meta_BACKBACKTAG));
 					switch(what) {
 						case SLOT:
 						case INVENTORY:

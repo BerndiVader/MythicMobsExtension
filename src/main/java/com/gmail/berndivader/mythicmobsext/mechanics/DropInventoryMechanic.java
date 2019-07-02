@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 
@@ -41,6 +42,8 @@ ITargetedEntitySkill
 			this.holding.setName("ANY");
 			this.holding.setLore("ANY");
 			this.holding.setEnchantment("ANY");
+			this.holding.setBagName(BackBagHelper.str_name);
+			this.holding.setSlot(-7331);
 			this.holding.setAmount("1");
 		} else {
 			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);

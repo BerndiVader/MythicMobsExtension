@@ -50,8 +50,6 @@ ITargetedLocationSkill {
 	String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
 	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
-	AbstractEntity entityTarget;
-	AbstractLocation startLocation;
 
 	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
 		super(line,mlc);
@@ -95,11 +93,13 @@ ITargetedLocationSkill {
 
 	@SuppressWarnings("unchecked")
 	private boolean doMechanic(SkillMetadata data, Object target) {
+		AbstractEntity entityTarget;
+		AbstractLocation startLocation;
 		String targeter = this.stargeter;
 		if (target.getClass().equals(BukkitEntity.class)||target.getClass().equals(BukkitPlayer.class)) {
 			targeter=Utils.parseMobVariables(this.stargeter,data,data.getCaster().getEntity(),(AbstractEntity)target,null);
-			this.entityTarget = (AbstractEntity) target;
-			this.startLocation = ((AbstractEntity) target).getLocation();
+			entityTarget = (AbstractEntity) target;
+			startLocation = ((AbstractEntity) target).getLocation();
 		} else {
 			Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
 			return false;

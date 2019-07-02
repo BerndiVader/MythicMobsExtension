@@ -16,8 +16,8 @@ WhereEnum
 	SLOT,
 	BACKBAG,
 	TAG;
-
-	public static WhereEnum get(String s) {
+	
+	public static WhereEnum getWhere(String s) {
 		if (s==null) return null;
 		try {
 			return WhereEnum.valueOf(s.toUpperCase());

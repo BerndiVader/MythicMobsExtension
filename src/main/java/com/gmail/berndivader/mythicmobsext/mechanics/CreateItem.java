@@ -2,7 +2,10 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -28,7 +31,7 @@ INoTargetSkill
 	
 	static ItemManager itemmanager=Utils.mythicmobs.getItemManager();
 	
-	String item_name;
+	String item_name,bag_name,click_skill;
 	HoldingItem holding;
 	boolean override;
 	int amount;
@@ -40,10 +43,12 @@ INoTargetSkill
 		holding=new HoldingItem();
 		this.holding.setWhere(mlc.getString("to","inventory"));
 		this.holding.setSlot(mlc.getInteger("slot",-1));
+		this.holding.setBagName(mlc.getString("bagname"));
 		
 		this.item_name=mlc.getString("item");
 		this.amount=mlc.getInteger("amount",1);
 		this.override=mlc.getBoolean("override",true);
+		this.click_skill=mlc.getString("clickskill");
 	}
 
 	@Override
@@ -55,10 +60,13 @@ INoTargetSkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(item_name==null||!abstract_entity.isLiving()) return false;
-		
 		ItemStack item_stack=itemmanager.getItemStack(this.item_name);
 		if(item_stack!=null) {
 			item_stack.setAmount(amount);
+			if(this.click_skill!=null) {
+				item_stack=NMSUtils.makeReal(item_stack);
+				NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
+			}
 			HoldingItem.giveItem((LivingEntity)abstract_entity.getBukkitEntity(),holding,item_stack,override);
 			return true;
 		}

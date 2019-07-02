@@ -56,6 +56,7 @@ JavaPlugin
 	public static Random random;
 	public static boolean hasRpgItems = false;
 	public static boolean slappyNewBorn = true;
+	public static boolean server_running;
 	
 	public Thiefs thiefs;
 	
@@ -63,6 +64,7 @@ JavaPlugin
 	public Externals externals;
 	
 	public void onEnable() {
+		server_running=true;
 		plugin = this;
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
@@ -145,6 +147,7 @@ JavaPlugin
 
 	@Override
 	public void onDisable() {
+		server_running=false;
 		if(entityCacheHandler!=null) entityCacheHandler.stop();
 		if (healthbarhandler!=null) {
 			Main.healthbarhandler.removeHealthbars();
