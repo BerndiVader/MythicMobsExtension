@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 import org.bukkit.Bukkit;
@@ -300,7 +300,9 @@ Listener
 	
 	public static void saveBags() {
 		if(bags==null) return;
-		for(Map.Entry<UUID,List<BackBagInventory>>entry:bags.entrySet()) {
+		Iterator<Entry<UUID,List<BackBagInventory>>>bag_iterator=bags.entrySet().iterator();
+		while(bag_iterator.hasNext()) {
+			Map.Entry<UUID,List<BackBagInventory>>entry=bag_iterator.next();
 			UUID uuid=entry.getKey();
 			if(Bukkit.getOfflinePlayer(uuid)!=null) saveBags(uuid,entry.getValue());
 		}

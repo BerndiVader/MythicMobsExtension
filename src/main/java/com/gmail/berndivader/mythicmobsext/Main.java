@@ -125,7 +125,9 @@ JavaPlugin
 			}
 			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if (pluginmanager.getPlugin("ProtocolLib")!=null) new ProtocolLibSupport(this);
+			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
+				new ProtocolLibSupport(this);
+			}
 			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
 			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
 			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);

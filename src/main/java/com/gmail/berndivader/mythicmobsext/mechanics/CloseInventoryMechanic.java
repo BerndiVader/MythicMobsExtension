@@ -26,7 +26,9 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Volatile.handler.forceCancelEndScreenPlayer((Player)target.getBukkitEntity());
+			Player player=(Player)target.getBukkitEntity();
+			player.closeInventory();
+			Volatile.handler.forceCancelEndScreenPlayer(player);
 			return true;
 		}
 		return false;
