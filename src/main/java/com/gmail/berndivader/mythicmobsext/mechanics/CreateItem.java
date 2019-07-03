@@ -2,9 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
@@ -42,7 +40,7 @@ INoTargetSkill
 		
 		holding=new HoldingItem();
 		this.holding.setWhere(mlc.getString("to","inventory"));
-		this.holding.setSlot(mlc.getInteger("slot",-1));
+		this.holding.setSlot(mlc.getString("slot","-1"));
 		this.holding.setBagName(mlc.getString("bagname"));
 		
 		this.item_name=mlc.getString("item");
@@ -60,6 +58,8 @@ INoTargetSkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(item_name==null||!abstract_entity.isLiving()) return false;
+		holding.parseSlot(data,abstract_entity);
+		if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(this.bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
 		ItemStack item_stack=itemmanager.getItemStack(this.item_name);
 		if(item_stack!=null) {
 			item_stack.setAmount(amount);

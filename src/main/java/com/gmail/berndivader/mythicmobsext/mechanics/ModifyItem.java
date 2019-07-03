@@ -33,14 +33,14 @@ SkillMechanic
 implements
 ITargetedEntitySkill 
 {
-	int slot;
+	String slot;
 	ModdingItem modding_item;
 	
 	public ModifyItem(String skill, MythicLineConfig mlc) {
 		super(skill,mlc);
 		
 		WhereEnum where=Utils.enum_lookup(WhereEnum.class,mlc.getString("what","HAND").toUpperCase());
-		slot=mlc.getInteger("slot",-7331);
+		slot=mlc.getString("slot","-7331");
 		
 		ACTION action=Utils.enum_lookup(ACTION.class,mlc.getString("action","SET").toUpperCase());
 		Material material=null;
@@ -87,6 +87,8 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
+			modding_item.parseSlot(data,target);
+			if(modding_item.getBagName()!=null) modding_item.setBagName(Utils.parseMobVariables(modding_item.getBagName(),data,data.getCaster().getEntity(),target,null));
 			LivingEntity entity=(LivingEntity)target.getBukkitEntity();
 			ItemStack item_stack=modding_item.getItemStackByWhere(entity);
 			if(item_stack!=null) item_stack=modding_item.applyMods(item_stack);

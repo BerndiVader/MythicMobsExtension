@@ -113,6 +113,9 @@ Listener
 	public static final String signal_GOAL_TRAVELPOINT = "GOAL_TRAVELPOINT";
 	public static final String meta_DISORIENTATION = "MMEDISORIENTATION";
 	public static final String meta_CLICKEDSKILL="click_skill";
+	public static final String meta_LASTCLICKEDSLOT = "lastclickedslot";
+	public static final String signal_BACKBAGCLICK = "BAGCLICKED";
+	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -554,22 +557,24 @@ Listener
 				if (l1!=null&&l1.getWorld().getBlockAt(l1).hasMetadata(s1)) return s.replace("<target.meta."+s1+">"
 						,l1.getWorld().getBlockAt(l1).getMetadata(s1).get(0).asString());
 				if (e2!=null&&e2.hasMetadata(s1)) {
-					return s.replaceAll("<target.meta."+s1+">",e2.getMetadata(s1).get(0).asString());
+					s=s.replaceAll("<target.meta."+s1+">",e2.getMetadata(s1).get(0).asString());
 				}
 			}
-		} else if (s.contains("<mob.meta")) {
+		} 
+		if (s.contains("<mob.meta")) {
 			String[]p=s.split("<mob.meta.");
 			if (p.length>1) {
 				String s1=p[1].split(">")[0];
-				if (e1!=null&&e1.hasMetadata(s1)) return s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
+				if (e1!=null&&e1.hasMetadata(s1)) s=s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
 			}
-		} else if (s.contains("<trigger.meta")) {
+		} 
+		if (s.contains("<trigger.meta")) {
 			String[]p=s.split("<trigger.meta.");
 			if (p.length>1) {
 				if(data.getTrigger()!=null) {
 					Entity entity=data.getTrigger().getBukkitEntity();
 					String s1=p[1].split(">")[0];
-					if (entity.hasMetadata(s1)) return s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
+					if (entity.hasMetadata(s1)) s=s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
 				}
 			}
 		}

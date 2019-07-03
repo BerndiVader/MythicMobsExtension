@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -43,7 +44,7 @@ ITargetedEntitySkill
 			this.holding.setLore("ANY");
 			this.holding.setEnchantment("ANY");
 			this.holding.setBagName(BackBagHelper.str_name);
-			this.holding.setSlot(-7331);
+			this.holding.setSlot("-7331");
 			this.holding.setAmount("1");
 		} else {
 			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);
@@ -58,6 +59,8 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
+			holding.parseSlot(data,target);
+			if(this.holding.getBagName()!=null) holding.setBagName(Utils.parseMobVariables(this.holding.getBagName(),data,data.getCaster().getEntity(),target,null));
 			final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
 			final Location location=target.getBukkitEntity().getLocation();
 			for(int a=0;a<this.p;a++) {

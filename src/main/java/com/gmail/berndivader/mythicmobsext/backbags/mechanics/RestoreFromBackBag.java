@@ -62,6 +62,7 @@ ITargetedEntitySkill
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
 			BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			holding.parseSlot(data,abstract_entity);
 			if(bag.getInventory()==null) return false;
 			Inventory inventory=bag.getInventory();
 			if(inventory.getSize()>=inventory_slot&&inventory_slot>-1) {

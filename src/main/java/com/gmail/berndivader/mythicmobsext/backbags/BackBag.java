@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
@@ -21,6 +22,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -108,8 +110,7 @@ Listener
 			AbstractEntity abstract_target=BukkitAdapter.adapt(viewer);
 			SkillMetadata data=new SkillMetadata(SkillTrigger.API,new GenericCaster(BukkitAdapter.adapt(owner)),abstract_target);
 			data.setEntityTarget(abstract_target);
-			skill.isUsable(data);
-			skill.execute(data);
+			if(skill.isUsable(data)) skill.execute(data);
 		}
 	}
 	
@@ -126,6 +127,15 @@ Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
 		if(e.getWhoClicked()==viewer) {
+			if(e.getClickedInventory().getName().equals(this.inventory.getName())) {
+				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
+				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.inventory.getName()));
+				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
+				if(Utils.mobmanager.isActiveMob(owner.getUniqueId())) {
+					ActiveMob am=Utils.mobmanager.getMythicMobInstance(owner);
+					am.signalMob(BukkitAdapter.adapt(e.getWhoClicked()),Utils.signal_BACKBAGCLICK);
+				}
+			}
 			if(only_view) e.setCancelled(true);
 			ItemStack clicked_stack=e.getCurrentItem();
 			if(NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {

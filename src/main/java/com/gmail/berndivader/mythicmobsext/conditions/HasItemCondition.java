@@ -9,6 +9,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
@@ -16,7 +17,10 @@ import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name="testitemfor,ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
@@ -43,7 +47,7 @@ IEntityCondition
 			tmp="\"where="+mlc.getString("where","ANY");
 			tmp+=";material="+mlc.getString("material","ANY");
 			tmp+=";amount="+mlc.getString("amount",">0");
-			tmp+=";slot="+mlc.getString("slot","0");
+			tmp+=";slot="+mlc.getString("slot","-1");
 			tmp+=";name="+mlc.getString("name","ANY");
 			tmp+=";enchant="+mlc.getString("enchant","ANY");
 			tmp+=";lore="+mlc.getString("lore","ANY");
@@ -72,6 +76,10 @@ IEntityCondition
 			for(int i1=0;i1<holdinglist.size();i1++) {
 				boolean bool=false;
 				HoldingItem holding=holdinglist.get(i1);
+				SkillMetadata data=new SkillMetadata(SkillTrigger.API,new GenericCaster(t),t);
+				holding.parseSlot(data,t);
+				String bag_name=holding.getBagName();
+				if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(bag_name,data,t,t,null));
 				List<ItemStack>contents=HoldingItem.getContents(holding,target);
 				for(int i2=0;i2<contents.size();i2++) {
 					if(bool=holding.stackMatch(contents.get(i2),false)) {

@@ -8,6 +8,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
@@ -66,22 +67,26 @@ ITargetedEntitySkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
-		BossBar bar=Bukkit.createBossBar(title,color,style);
-		if(bar!=null) {
-			double default_value=1d;
-			String parsed_expr=Utils.parseMobVariables(expr,data,data.getCaster().getEntity(),abstract_entity,null);
-			try {
-				default_value=Double.parseDouble(parsed_expr);
-			}catch (Exception e) {
-				Main.logger.info(parsed_expr+" is not valid for double in "+this.line);
-				default_value=0d;
-			}				
-			bar.setProgress(default_value);
-			for(int i1=0;i1<flags_size;i1++) {
-				bar.addFlag(flags.get(i1));
+		if(abstract_entity.isPlayer()) {
+			Player player=(Player)abstract_entity.getBukkitEntity();
+			BossBar bar=Bukkit.createBossBar(title,color,style);
+			if(bar!=null) {
+				double default_value=1d;
+				String parsed_expr=Utils.parseMobVariables(expr,data,data.getCaster().getEntity(),abstract_entity,null);
+				try {
+					default_value=Double.parseDouble(parsed_expr);
+				}catch (Exception e) {
+					Main.logger.info(parsed_expr+" is not valid for double in "+this.line);
+					default_value=0d;
+				}				
+				bar.setProgress(default_value);
+				for(int i1=0;i1<flags_size;i1++) {
+					bar.addFlag(flags.get(i1));
+				}
+				BossBars.addBar(abstract_entity.getUniqueId(),bar);
+				bar.addPlayer(player);
+				return true;
 			}
-			BossBars.addBar(abstract_entity.getUniqueId(),bar);
-			return true;
 		}
 		return false;
 	}

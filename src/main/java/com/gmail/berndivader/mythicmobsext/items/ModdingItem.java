@@ -14,6 +14,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+
+import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 public 
 class
@@ -33,11 +37,10 @@ ModdingItem
 	Optional<RandomDouble>amount;
 	Optional<List<Enchant>>enchants;
 	Optional<String>bag_name;
-	Optional<Integer>slot;
+	Optional<String>slot;
 	
-	public ModdingItem(WhereEnum where,int slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String bag_name) {
+	public ModdingItem(WhereEnum where,String slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String bag_name) {
 		this.where=where;
-		this.setSlot(slot);
 		this.action=action;
 		this.material=Optional.ofNullable(material);
 		this.lore=Optional.ofNullable(lore_array);
@@ -45,14 +48,27 @@ ModdingItem
 		this.amount=Optional.ofNullable(amount);
 		this.enchants=Optional.ofNullable(enchants);
 		this.bag_name=Optional.ofNullable(bag_name);
-	}
-	
-	public void setSlot(int slot) {
 		this.slot=Optional.ofNullable(slot);
 	}
 	
+	public void setSlot(String slot) {
+		this.slot=Optional.ofNullable(slot);
+	}
+	
+	public void parseSlot(SkillMetadata data,AbstractEntity target) {
+		if(this.slot.isPresent()) setSlot(Utils.parseMobVariables(this.slot.get(),data,data.getCaster().getEntity(),target,null));
+	}
+	
 	public int getSlot() {
-		return this.slot.isPresent()?this.slot.get():-1;
+		return this.slot.isPresent()?Integer.parseInt(this.slot.get()):-1;
+	}
+	
+	public void setBagName(String bag_name) {
+		this.bag_name=Optional.ofNullable(bag_name);
+	}
+	
+	public String getBagName() {
+		return bag_name.orElse(null);
 	}
 	
 	public ItemStack applyMods(ItemStack item_stack) {

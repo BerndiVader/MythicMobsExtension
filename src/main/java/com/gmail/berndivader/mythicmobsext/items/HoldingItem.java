@@ -23,6 +23,9 @@ import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble.Operation;
 
+import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+
 public 
 class
 HoldingItem
@@ -33,13 +36,13 @@ HoldingItem
 	RangedDouble amount;
 	boolean material_any;
 	public WhereEnum where;
-	int slot;
+	String slot;
 
 	public HoldingItem() {
-		this(null,"1","ANY","ANY",-7331,"ANY","ANY",BackBagHelper.str_name);
+		this(null,"1","ANY","ANY","-7331","ANY","ANY",BackBagHelper.str_name);
 	}
 	
-	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant,String bag_name) {
+	public HoldingItem(String material,String amount,String name,String lore,String slot,String where,String enchant,String bag_name) {
 		this.where=WhereEnum.ANY;
 		setMaterial(material);
 		this.setAmount(amount);
@@ -140,11 +143,17 @@ HoldingItem
 		return name;
 	}
 	
-	public void setSlot(int slot) {
+	public void parseSlot(SkillMetadata data,AbstractEntity target) {
+		if(this.slot!=null) {
+			this.slot=Utils.parseMobVariables(this.slot,data,data.getCaster().getEntity(),target,null);
+		}
+	}
+	
+	public void setSlot(String slot) {
 		this.slot=slot;
 	}
 	public int getSlot() {
-		return this.slot;
+		return Integer.parseInt(this.slot);
 	}
 	
 	public void setWhere(WhereEnum where) {
@@ -195,7 +204,7 @@ HoldingItem
 				holding.setWhere(parse1);
 			} else if(parse1.startsWith("slot=")) {
 				parse1=parse1.substring(5,parse1.length());
-				holding.setSlot(Integer.parseInt(parse1));
+				holding.setSlot(parse1);
 			} else if(parse1.startsWith("bagname=")) {
 				parse1=parse1.substring(8,parse1.length());
 				holding.setBagName(parse1);
