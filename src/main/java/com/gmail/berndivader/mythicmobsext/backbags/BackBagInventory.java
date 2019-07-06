@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.backbags;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,6 +51,13 @@ BackBagInventory
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String new_name) {
+		this.name=new_name;
+		Inventory new_inventory=Bukkit.createInventory(null,this.size,this.name);
+		new_inventory.setContents(this.getInventory().getContents().clone());
+		this.inventory=new_inventory;
 	}
 	
 	public int getSize() {

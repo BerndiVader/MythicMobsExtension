@@ -39,7 +39,6 @@ ITargetedEntitySkill
 		default_items=BackBagHelper.createDefaultItemStack(mlc.getString("items",null));
 		bag_name=mlc.getString(new String[] {"name","title"},"BackBag");
 		temporary=mlc.getBoolean("temporary",false);
-		
 	}
 
 	@Override

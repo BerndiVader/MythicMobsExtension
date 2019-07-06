@@ -34,6 +34,7 @@ import com.gmail.berndivader.mythicmobsext.backbags.mechanics.ExpandBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.MoveToBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.OpenBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RemoveBackBag;
+import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RenameBackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.mechanics.RestoreFromBackBag;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -87,6 +88,9 @@ Listener
 		case "takefrombackbag":
 		case "loadfrombackbag":
 			e.register(new RestoreFromBackBag(e.getContainer().getConfigLine(),e.getConfig()));
+			break;
+		case "renamebackbag":
+			e.register(new RenameBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}
 	}
@@ -152,6 +156,19 @@ Listener
 		return bags.containsKey(uuid);
 	}
 	
+	public static BackBagInventory getBagInventory(UUID uuid,String name) {
+		if(bags.containsKey(uuid)) {
+			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
+			while(inventory_iter.hasNext()) {
+				BackBagInventory stored_inventory=inventory_iter.next();
+				if(stored_inventory.getName().equals(name)) {
+					return stored_inventory;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static Inventory getInventory(UUID uuid,String name) {
 		if(bags.containsKey(uuid)) {
 			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
@@ -195,7 +212,7 @@ Listener
 	public static void loadBags(File file) {
 		Gson gson=new Gson();
 		BackBagInventory[]bag_inventories=null;
-		try (FileReader reader=new FileReader(file.getAbsolutePath())) {
+		try (FileReader reader=new FileReader(url+"/"+file.getName())) {
 			bag_inventories=gson.fromJson(reader,BackBagInventory[].class);
 		} catch (Exception ex) {
 			Main.logger.info("Found illegal backbag save: "+file.getName()+". Try to load old format...");

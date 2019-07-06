@@ -126,7 +126,7 @@ Listener
 	
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
-		if(e.getWhoClicked()==viewer) {
+		if(e.getWhoClicked()==viewer&&e.getClickedInventory()!=null) {
 			if(e.getClickedInventory().getName().equals(this.inventory.getName())) {
 				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
 				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.inventory.getName()));
