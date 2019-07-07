@@ -4,6 +4,7 @@ import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
@@ -32,8 +33,8 @@ INoTargetSkill
 	public boolean cast(SkillMetadata data) {
 		Entity entity=data.getCaster().getEntity().getBukkitEntity();
 		if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-			BackBagInventory bag_inventory=BackBagHelper.getBagInventory(entity.getUniqueId(),bag_name);
-			if(bag_inventory!=null) bag_inventory.setName(new_bag_name);
+			BackBagInventory bag_inventory=BackBagHelper.getBagInventory(entity.getUniqueId(),Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),data.getCaster().getEntity(),null));
+			if(bag_inventory!=null) bag_inventory.setName(Utils.parseMobVariables(new_bag_name,data,data.getCaster().getEntity(),data.getCaster().getEntity(),null));
 		}
 		return true;
 	}

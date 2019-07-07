@@ -128,9 +128,9 @@ JavaPlugin
 			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
 				new ProtocolLibSupport(this);
 			}
-			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
-			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
-			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
+			if (Config.quests&&pluginmanager.getPlugin("Quests")!=null) new QuestsSupport(this);
+			if (pluginmanager.getPlugin("LibsDisguise")!=null) new LibsDisguisesSupport();
+			if (Config.ncp&&pluginmanager.getPlugin("NoCheatPlus")!=null) new NoCheatPlusSupport(this);
 			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			if (Config.pre44spawn) new Pre44MobSpawnEvent();
 			

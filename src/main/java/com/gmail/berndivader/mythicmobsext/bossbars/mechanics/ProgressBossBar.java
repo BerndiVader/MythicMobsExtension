@@ -46,7 +46,7 @@ ITargetedEntitySkill
 			int delta=value>0?1:-1;
 			value=Math.abs(value);
 			if(BossBars.contains(abstract_entity.getUniqueId())) {
-				BossBar bar=BossBars.getBar(abstract_entity.getUniqueId(),title);
+				BossBar bar=BossBars.getBar(abstract_entity.getUniqueId(),Utils.parseMobVariables(title,data,data.getCaster().getEntity(),abstract_entity,null));
 				if(bar!=null) {
 					bar.setProgress(MathUtils.clamp(set?value:bar.getProgress()+value*delta,0d,1d));
 				}

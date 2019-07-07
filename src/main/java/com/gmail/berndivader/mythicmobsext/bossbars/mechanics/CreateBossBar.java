@@ -69,7 +69,7 @@ ITargetedEntitySkill
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(abstract_entity.isPlayer()) {
 			Player player=(Player)abstract_entity.getBukkitEntity();
-			BossBar bar=Bukkit.createBossBar(title,color,style);
+			BossBar bar=Bukkit.createBossBar(Utils.parseMobVariables(title,data,data.getCaster().getEntity(),abstract_entity,null),color,style);
 			if(bar!=null) {
 				double default_value=1d;
 				String parsed_expr=Utils.parseMobVariables(expr,data,data.getCaster().getEntity(),abstract_entity,null);
