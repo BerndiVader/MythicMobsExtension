@@ -16,8 +16,6 @@ task processbuildnumber {
 }
 
 repositories {
-    jcenter()
-    mavenCentral()
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
     }

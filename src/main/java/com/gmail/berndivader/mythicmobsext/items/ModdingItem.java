@@ -55,10 +55,6 @@ ModdingItem
 		this.slot=Optional.ofNullable(slot);
 	}
 	
-	public void parseSlot(SkillMetadata data,AbstractEntity target) {
-		if(this.slot.isPresent()) setSlot(Utils.parseMobVariables(this.slot.get(),data,data.getCaster().getEntity(),target,null));
-	}
-	
 	public int getSlot() {
 		return this.slot.isPresent()?Integer.parseInt(this.slot.get()):-1;
 	}
@@ -69,6 +65,25 @@ ModdingItem
 	
 	public String getBagName() {
 		return bag_name.orElse(null);
+	}
+	
+	public void parseVars(SkillMetadata data,AbstractEntity target) {
+		AbstractEntity caster=data.getCaster().getEntity();
+		if(name.isPresent()) {
+			this.name=Optional.of(Utils.parseMobVariables(this.name.get(),data,caster,target,null));
+		}
+		if(lore.isPresent()) {
+			String[]lores=lore.get();
+			int size=lores.length;
+			for(int i1=0;i1<size;i1++) {
+				lores[i1]=Utils.parseMobVariables(lores[i1],data,caster,target,null);
+			}
+			this.lore=Optional.of(lores);
+		}
+		if(bag_name.isPresent()) {
+			this.bag_name=Optional.of(Utils.parseMobVariables(this.bag_name.get(),data,caster,target,null));
+		}
+		if(this.slot.isPresent()) setSlot(Utils.parseMobVariables(this.slot.get(),data,caster,target,null));
 	}
 	
 	public ItemStack applyMods(ItemStack item_stack) {

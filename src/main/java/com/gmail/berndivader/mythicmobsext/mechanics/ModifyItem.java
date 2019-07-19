@@ -87,14 +87,12 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
-			modding_item.parseSlot(data,target);
-			if(modding_item.getBagName()!=null) modding_item.setBagName(Utils.parseMobVariables(modding_item.getBagName(),data,data.getCaster().getEntity(),target,null));
 			LivingEntity entity=(LivingEntity)target.getBukkitEntity();
+			modding_item.parseVars(data,target);
 			ItemStack item_stack=modding_item.getItemStackByWhere(entity);
 			if(item_stack!=null) item_stack=modding_item.applyMods(item_stack);
 			return true;
 		}
 		return false;
 	}
-	
 }
