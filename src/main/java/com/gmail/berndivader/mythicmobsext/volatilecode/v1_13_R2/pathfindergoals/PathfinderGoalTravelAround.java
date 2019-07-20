@@ -45,7 +45,7 @@ PathfinderGoal
 	float b;
 	float c;
 	private float i;
-	private boolean iF,iT,remove_travelpoint;
+	private boolean iF,iT;
 	
 	public PathfinderGoalTravelAround(EntityInsentient entity,double d0,double mR,double tR,boolean iT) {
 		this.d=entity;
@@ -60,7 +60,6 @@ PathfinderGoal
 		this.tR=tR;
 		this.iF=false;
 		this.iT=iT;
-		this.remove_travelpoint=true;
 		if ((!(entity.getNavigation() instanceof Navigation)) && (!(entity.getNavigation() instanceof NavigationFlying))) {
 			throw new IllegalArgumentException("Unsupported mob type for TravelAroundGoal");
 		}
@@ -162,7 +161,7 @@ PathfinderGoal
 			if(travel_index>=size) travel_index=0;
 			SimpleEntry<Vec3D,Boolean>entry=travelpoints.get(travel_index);
 			vector=entry.getKey();
-			if(remove_travelpoint||entry.getValue()) travelpoints.remove(travel_index);
+			if(entry.getValue()) travelpoints.remove(travel_index);
 			travel_index++;
 		}
 		return vector;
