@@ -1116,15 +1116,36 @@ implements Handler,Listener {
         EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
         PathfinderGoalSelector goals=entity.goalSelector;
 		try {
-//			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-//			list.clear();
-            Set<Object>list=(Set)ai_pathfinderlist_b.get((Object)goals);
+			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+			list.clear();
+            list=(Set)ai_pathfinderlist_b.get((Object)goals);
             Iterator<Object>iter=list.iterator();
             while(iter.hasNext()) {
             	Object object=iter.next();
             	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
             	if(goal instanceof PathfinderGoalTravelAround) {
             		((PathfinderGoalTravelAround)goal).addTravelPoint(vector,remove);
+            	}
+    		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void clearTravelPoints(Entity bukkit_entity) {
+        EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
+        PathfinderGoalSelector goals=entity.goalSelector;
+		try {
+			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+			list.clear();
+            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+            Iterator<Object>iter=list.iterator();
+            while(iter.hasNext()) {
+            	Object object=iter.next();
+            	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
+            	if(goal instanceof PathfinderGoalTravelAround) {
+            		((PathfinderGoalTravelAround)goal).clearTravelPoints();
             	}
     		}
 		} catch (Exception ex) {

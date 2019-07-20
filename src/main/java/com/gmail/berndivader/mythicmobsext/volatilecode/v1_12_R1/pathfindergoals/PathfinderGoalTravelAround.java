@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_12_R1.pathfindergoals;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -29,8 +30,7 @@ PathfinderGoalTravelAround
 extends
 PathfinderGoal
 {
-	
-	ArrayList<Vec3D>travelpoints;
+	ArrayList<SimpleEntry<Vec3D,Boolean>>travelpoints;
 	
 	private final EntityInsentient d;
 	private Vec3D v;
@@ -158,21 +158,21 @@ PathfinderGoal
 		int size=this.travelpoints.size();
 		Vec3D vector=null;
 		if(size>0) {
-			if(remove_travelpoint) {
-				vector=travelpoints.get(size-1);
-				travelpoints.remove(size-1);
-			} else {
-				if(travel_index==size) travel_index=0;
-				vector=travelpoints.get(travel_index);
-				travel_index++;
-			}
+			if(travel_index>=size) travel_index=0;
+			SimpleEntry<Vec3D,Boolean>entry=travelpoints.get(travel_index);
+			vector=entry.getKey();
+			if(remove_travelpoint||entry.getValue()) travelpoints.remove(travel_index);
+			travel_index++;
 		}
 		return vector;
 	}
 	
 	public void addTravelPoint(com.gmail.berndivader.mythicmobsext.utils.Vec3D vector,boolean remove) {
-		this.remove_travelpoint=remove;
-		travelpoints.add(new Vec3D(vector.getX(),vector.getY(),vector.getZ()));
+		travelpoints.add(new SimpleEntry<Vec3D,Boolean>(new Vec3D(vector.getX(),vector.getY(),vector.getZ()),remove));
 	}
-	
+
+	public void clearTravelPoints() {
+		travelpoints=new ArrayList<>();
+	}
+
 }

@@ -57,4 +57,5 @@ public interface Handler {
 	boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target);
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector);
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove);
+	void clearTravelPoints(Entity bukkit_entity);
 }
