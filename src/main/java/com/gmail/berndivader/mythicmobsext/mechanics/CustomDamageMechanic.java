@@ -84,9 +84,9 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (!t.isValid()||t.isDead()||t.getHealth()<=0.0||data.getCaster().isUsingDamageSkill()) return false;
-		AbstractEntity c = data.getCaster().getEntity();
+		AbstractEntity c=data.getCaster().getEntity();
 		double dmg=MathUtils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
-		if (this.p) dmg=this.pcur?uc?c.getHealth()*dmg:t.getHealth()*dmg:ploss?uc?(c.getMaxHealth()-c.getHealth())*dmg:(t.getMaxHealth()-t.getHealth())*dmg:uc?c.getMaxHealth()*dmg:t.getMaxHealth();
+		if (this.p) dmg=this.pcur?uc?c.getHealth()*dmg:t.getHealth()*dmg:ploss?uc?(c.getMaxHealth()-c.getHealth())*dmg:(t.getMaxHealth()-t.getHealth())*dmg:uc?c.getMaxHealth()*dmg:t.getMaxHealth()*dmg;
 		if (!this.ip) dmg=dmg*data.getPower();
 		if (this.dbd>0) {
 			int dd=(int)Math.sqrt(MathUtils.distance3D(data.getCaster().getEntity().getBukkitEntity().getLocation().toVector(), t.getBukkitEntity().getLocation().toVector()));
