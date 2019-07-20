@@ -59,18 +59,21 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			holding.parseSlot(data,target);
-			if(this.holding.getBagName()!=null) holding.setBagName(Utils.parseMobVariables(this.holding.getBagName(),data,data.getCaster().getEntity(),target,null));
-			final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
-			final Location location=target.getBukkitEntity().getLocation();
-			for(int a=0;a<this.p;a++) {
-				List<ItemStack>contents=HoldingItem.getContents(this.holding,entity);
-				Collections.shuffle(contents);
-				for(int i1=0;i1<contents.size();i1++) {
-					ItemStack item_stack=contents.get(i1);
-					if(holding.stackMatch(item_stack,true)) {
-						HoldingItem.spawnItem(item_stack,holding,location,this.pd,this.c);
-						break;
+			HoldingItem holding=this.holding.clone();
+			if(holding!=null) {
+				holding.parseSlot(data,target);
+				if(this.holding.getBagName()!=null) holding.setBagName(Utils.parseMobVariables(this.holding.getBagName(),data,data.getCaster().getEntity(),target,null));
+				final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
+				final Location location=target.getBukkitEntity().getLocation();
+				for(int a=0;a<this.p;a++) {
+					List<ItemStack>contents=HoldingItem.getContents(this.holding,entity);
+					Collections.shuffle(contents);
+					for(int i1=0;i1<contents.size();i1++) {
+						ItemStack item_stack=contents.get(i1);
+						if(holding.stackMatch(item_stack,true)) {
+							HoldingItem.spawnItem(item_stack,holding,location,this.pd,this.c);
+							break;
+						}
 					}
 				}
 			}

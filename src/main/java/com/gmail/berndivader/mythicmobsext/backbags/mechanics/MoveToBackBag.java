@@ -61,34 +61,37 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
-			holding.parseSlot(data,abstract_entity);
-			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
-			if(bag.getInventory()==null) return false;
-			Inventory inventory=bag.getInventory();
-			List<ItemStack>stack=HoldingItem.getContents(holding,holder);
-			for(int i1=0;i1<stack.size();i1++) {
-				ItemStack old_item=stack.get(i1);
-				if(old_item==null) continue;
-				ItemStack new_item=old_item.clone();
-				if(tag_where)HoldingItem.tagWhere(holding,new_item);
-				int tmp_slot=backbag_slot<=inventory.getSize()?backbag_slot:inventory.getSize();
-				if(backbag_slot==-1) {
-					if((tmp_slot=inventory.firstEmpty())>-1) {
-						inventory.addItem(new_item);
-						setMetaVariable(old_item,holder,meta_name,tmp_slot);
-					}
-				} else {
-					if(override) {
-						inventory.setItem(tmp_slot,new_item);
-						setMetaVariable(old_item,holder,meta_name,tmp_slot);
-					} else if(inventory.getItem(tmp_slot)==null||inventory.getItem(tmp_slot).getType()==Material.AIR){
-						inventory.setItem(tmp_slot,new_item);
-						setMetaVariable(old_item,holder,meta_name,tmp_slot);
+			HoldingItem holding=this.holding.clone();
+			if(holding!=null) {
+				holding.parseSlot(data,abstract_entity);
+				LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
+				BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+				if(bag.getInventory()==null) return false;
+				Inventory inventory=bag.getInventory();
+				List<ItemStack>stack=HoldingItem.getContents(holding,holder);
+				for(int i1=0;i1<stack.size();i1++) {
+					ItemStack old_item=stack.get(i1);
+					if(old_item==null) continue;
+					ItemStack new_item=old_item.clone();
+					if(tag_where)HoldingItem.tagWhere(holding,new_item);
+					int tmp_slot=backbag_slot<=inventory.getSize()?backbag_slot:inventory.getSize();
+					if(backbag_slot==-1) {
+						if((tmp_slot=inventory.firstEmpty())>-1) {
+							inventory.addItem(new_item);
+							setMetaVariable(old_item,holder,meta_name,tmp_slot);
+						}
+					} else {
+						if(override) {
+							inventory.setItem(tmp_slot,new_item);
+							setMetaVariable(old_item,holder,meta_name,tmp_slot);
+						} else if(inventory.getItem(tmp_slot)==null||inventory.getItem(tmp_slot).getType()==Material.AIR){
+							inventory.setItem(tmp_slot,new_item);
+							setMetaVariable(old_item,holder,meta_name,tmp_slot);
+						}
 					}
 				}
 			}
-			}
+		}
 		return true;
 	}
 	

@@ -57,18 +57,21 @@ INoTargetSkill
 	
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
-		if(item_name==null||!abstract_entity.isLiving()) return false;
-		holding.parseSlot(data,abstract_entity);
-		if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(this.bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
-		ItemStack item_stack=itemmanager.getItemStack(this.item_name);
-		if(item_stack!=null) {
-			item_stack.setAmount(amount);
-			if(this.click_skill!=null) {
-				item_stack=NMSUtils.makeReal(item_stack);
-				NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
+		HoldingItem holding=this.holding.clone();
+		if(holding!=null) {
+			if(item_name==null||!abstract_entity.isLiving()) return false;
+			holding.parseSlot(data,abstract_entity);
+			if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(this.bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			ItemStack item_stack=itemmanager.getItemStack(this.item_name);
+			if(item_stack!=null) {
+				item_stack.setAmount(amount);
+				if(this.click_skill!=null) {
+					item_stack=NMSUtils.makeReal(item_stack);
+					NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
+				}
+				HoldingItem.giveItem((LivingEntity)abstract_entity.getBukkitEntity(),holding,item_stack,override);
+				return true;
 			}
-			HoldingItem.giveItem((LivingEntity)abstract_entity.getBukkitEntity(),holding,item_stack,override);
-			return true;
 		}
 		return false;
 	}

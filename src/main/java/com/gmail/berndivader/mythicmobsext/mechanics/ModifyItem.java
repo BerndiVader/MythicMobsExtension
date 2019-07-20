@@ -47,7 +47,7 @@ ITargetedEntitySkill
 		RandomDouble amount=null;
 		List<Enchant>enchants=null;
 		String[]lore=null;
-		String name=null,bag_name=null;
+		String name=null,bag_name=null,duration=null;
 		
 		String temp=mlc.getString("material");
 		if(temp!=null) temp=temp.toUpperCase();
@@ -57,6 +57,7 @@ ITargetedEntitySkill
 		if((temp=SkillString.parseMessageSpecialChars(mlc.getString("name")))!=null) name=temp.substring(1,temp.length()-1);
 		if((temp=mlc.getString("amount"))!=null) amount=new RandomDouble(temp);
 		if((temp=mlc.getString("bagname"))!=null) bag_name=temp;
+		if((temp=mlc.getString("duration"))!=null) duration=temp;
 		if((temp=mlc.getString("enchants",null))!=null) {
 			String[]arr1=temp.toUpperCase().split(",");
 			int length=arr1.length;
@@ -81,16 +82,15 @@ ITargetedEntitySkill
 				}
 			}
 		}
-		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,bag_name);
+		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,duration,bag_name);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if(target.isLiving()) {
 			LivingEntity entity=(LivingEntity)target.getBukkitEntity();
-			modding_item.parseVars(data,target);
-			ItemStack item_stack=modding_item.getItemStackByWhere(entity);
-			if(item_stack!=null) item_stack=modding_item.applyMods(item_stack);
+			ItemStack item_stack=modding_item.getItemStackByWhere(data,target,entity);
+			if(item_stack!=null) item_stack=modding_item.applyMods(data,target,item_stack);
 			return true;
 		}
 		return false;

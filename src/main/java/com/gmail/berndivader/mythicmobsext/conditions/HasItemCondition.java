@@ -75,7 +75,7 @@ IEntityCondition
 			final LivingEntity target=(LivingEntity)t.getBukkitEntity();
 			for(int i1=0;i1<holdinglist.size();i1++) {
 				boolean bool=false;
-				HoldingItem holding=holdinglist.get(i1);
+				HoldingItem holding=holdinglist.get(i1).clone();
 				SkillMetadata data=new SkillMetadata(SkillTrigger.API,new GenericCaster(t),t);
 				holding.parseSlot(data,t);
 				String bag_name=holding.getBagName();

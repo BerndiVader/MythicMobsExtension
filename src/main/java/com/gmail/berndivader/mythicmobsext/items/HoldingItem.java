@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
@@ -29,6 +30,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 public 
 class
 HoldingItem
+implements
+Cloneable
 {
 	Enchantment enchantment;
 	Material material;
@@ -345,5 +348,15 @@ HoldingItem
 	public static void tagWhere(HoldingItem holding,ItemStack new_item) {
 		new_item=NMSUtils.makeReal(new_item);
 		NMSUtils.setMeta(new_item,Utils.meta_BACKBACKTAG,holding.getWhere().name());
+	}
+	
+	@Override
+	public HoldingItem clone() {
+		try {
+			return (HoldingItem)super.clone();
+		} catch (CloneNotSupportedException e) {
+			Main.logger.warning(e.getMessage());
+			return null;
+		}
 	}
 }
