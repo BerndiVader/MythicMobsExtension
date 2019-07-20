@@ -4,10 +4,12 @@ import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -115,6 +117,12 @@ Listener
 	}
 	
 	@EventHandler
+	public void ownerDeath(EntityDeathEvent e) {
+		Entity entity=e.getEntity();
+		if(entity.getType()!=EntityType.PLAYER&&entity==this.owner) viewer.closeInventory();
+	}
+	
+	@EventHandler
 	public void ownerQuit(PlayerQuitEvent e) {
 		if(e.getPlayer()==this.owner) viewer.closeInventory();
 	}
@@ -126,8 +134,9 @@ Listener
 	
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
-		if(e.getWhoClicked()==viewer&&e.getClickedInventory()!=null) {
-			if(e.getClickedInventory().getName().equals(this.inventory.getName())) {
+		if(e.getWhoClicked()==viewer) {
+			if(only_view) e.setCancelled(true);
+			if(e.getClickedInventory()!=null&&e.getClickedInventory().getName().equals(this.inventory.getName())) {
 				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
 				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.inventory.getName()));
 				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
@@ -136,9 +145,8 @@ Listener
 					am.signalMob(BukkitAdapter.adapt(e.getWhoClicked()),Utils.signal_BACKBAGCLICK);
 				}
 			}
-			if(only_view) e.setCancelled(true);
 			ItemStack clicked_stack=e.getCurrentItem();
-			if(NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
+			if(clicked_stack!=null&&NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
 				this.executeSkill(NMSUtils.getMetaString(clicked_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
 			}
 		}
