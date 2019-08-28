@@ -125,7 +125,7 @@ JavaPlugin
 			}
 			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
+			if (pluginmanager.getPlugin("ProtocolLib")!=null&&Utils.serverV<14) {
 				new ProtocolLibSupport(this);
 			}
 			if (Config.quests&&pluginmanager.getPlugin("Quests")!=null) new QuestsSupport(this);

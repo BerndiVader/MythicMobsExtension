@@ -102,7 +102,7 @@ Listener
 	public void setInventory(Inventory new_inv) {
 		this.inventory=new_inv;
 		this.size=new_inv.getSize();
-		BackBagHelper.replace(owner.getUniqueId(),this.inventory);
+		BackBagHelper.replace(owner.getUniqueId(),new BackBagInventory(this.name,this.size,this.inventory));
 	}
 	
 	void executeSkill(String skill_name,Entity owner,Player viewer) {
@@ -136,9 +136,9 @@ Listener
 	public void interact(InventoryClickEvent e) {
 		if(e.getWhoClicked()==viewer) {
 			if(only_view) e.setCancelled(true);
-			if(e.getClickedInventory()!=null&&e.getClickedInventory().getName().equals(this.inventory.getName())) {
+			if(e.getClickedInventory()!=null&&e.getView().getTitle().equals(this.name)) {
 				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
-				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.inventory.getName()));
+				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.name));
 				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
 				if(Utils.mobmanager.isActiveMob(owner.getUniqueId())) {
 					ActiveMob am=Utils.mobmanager.getMythicMobInstance(owner);

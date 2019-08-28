@@ -139,19 +139,6 @@ Listener
 		bags.get(uuid).add(bag_inventory);
 	}
 	
-	private static void addInventory(UUID uuid, Inventory inventory) {
-		if(bags.containsKey(uuid)) {
-			Iterator<BackBagInventory>inventory_iter=bags.get(uuid).iterator();
-			while(inventory_iter.hasNext()) {
-				BackBagInventory stored_inventory=inventory_iter.next();
-				if(stored_inventory.getName().equals(inventory.getName())) inventory_iter.remove();
-			}
-		} else {
-			bags.put(uuid,new ArrayList<>());
-		}
-		bags.get(uuid).add(new BackBagInventory(inventory.getName(),inventory.getSize(),inventory,false));
-	}
-	
 	public static boolean hasBackBag(UUID uuid) {
 		return bags.containsKey(uuid);
 	}
@@ -182,7 +169,7 @@ Listener
 		return null;
 	}
 	
-	public static void replace(UUID uuid,Inventory inventory) {
+	public static void replace(UUID uuid,BackBagInventory inventory) {
 		addInventory(uuid,inventory);
 	}
 	
@@ -239,7 +226,7 @@ Listener
 			if(!content.isEmpty()) contents=BukkitSerialization.itemStackArrayFromBase64(content);
 		    Inventory inventory=Bukkit.createInventory(null,contents.length,str_name);
 		    inventory.setContents(contents);
-		    bags=new BackBagInventory[] {new BackBagInventory(inventory.getName(),inventory.getSize(),inventory)};
+		    bags=new BackBagInventory[] {new BackBagInventory(str_name,inventory.getSize(),inventory)};
 		} catch (IOException e) {
 			Main.logger.info("Failed to load old backbag format return empty.");
 		}

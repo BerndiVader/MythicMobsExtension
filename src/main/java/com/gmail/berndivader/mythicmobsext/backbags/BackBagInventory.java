@@ -45,7 +45,6 @@ BackBagInventory
 		} else {
 			this.content_base64=BukkitSerialization.itemStackArrayToBase64(new ItemStack[0]);
 		}
-		this.name=this.inventory.getName();
 		this.size=this.inventory.getSize();
 	}
 	

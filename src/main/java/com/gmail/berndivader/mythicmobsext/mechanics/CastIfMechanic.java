@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -15,7 +16,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -129,7 +129,7 @@ ITargetedLocationSkill {
 	}
 
 	private static void renewTargets(String ts, SkillMetadata data) {
-		Optional<SkillTargeter> maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(ts));
+		Optional<SkillTargeter> maybeTargeter = Optional.of(NMSUtils.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter st=maybeTargeter.get();
             if (st instanceof CustomTargeter) {

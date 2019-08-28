@@ -34,6 +34,7 @@ ILocationSelector
     boolean use_relative;
 	
 	public ISelectorLocation(MythicLineConfig mlc) {
+		super(mlc);
 		filters=new ArrayList<FilterEnum>();
 		String[]parse=mlc.getString("filter","").toUpperCase().split(",");
         if(mlc.getBoolean("sortbydistance",false)) filters.add(FilterEnum.SORTBYDISTANCE);

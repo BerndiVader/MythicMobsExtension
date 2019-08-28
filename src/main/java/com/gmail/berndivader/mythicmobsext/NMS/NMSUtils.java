@@ -24,6 +24,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
 import io.lumine.xikage.mythicmobs.drops.Drop;
+import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 
 public
 class
@@ -36,10 +37,15 @@ CompatibilityUtils
 	
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
+	
 	protected static Class<?> class_Drop;
+	protected static Class<?> class_AbstractSkill;
+	
 	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	protected static Class<?> class_IInventory;
 	protected static Class<?> class_CraftInventory;
+	protected static Class<?> class_CraftInventoryCustom;
+	
 	protected static Class<?> class_MetadataStoreBase;
  	
     protected static Field class_Entity_lastXField;
@@ -62,9 +68,13 @@ CompatibilityUtils
     protected static Method class_EntitySnowman_setHasPumpkinMethod;
     protected static Method class_EntityLiving_getArrowCountMethod;
     protected static Method class_EntityLiving_setArrowCountMethod;
+    
     protected static Method class_Drop_getDropMethod;
+    protected static Method class_AbstractSkill_parseSkillTargeterMethod;
+    
     protected static Method class_EntityPlayer_openContainerMethod;
     protected static Method class_IInventory_getInventoryMethod;
+    protected static Method class_CraftInventoryCustom_getTitleMethod;
     protected static Method class_CraftServer_getEntityMetadataStoreMethod;
     protected static Method class_CraftServer_getPlayerMetadataStoreMethod;
     
@@ -73,8 +83,9 @@ CompatibilityUtils
         try {
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
+        	class_AbstractSkill=fixBukkitClass("io.lumine.xikage.mythicmobs.skills.AbstractSkill");
         	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
-        	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
+        	if(Utils.serverV<14) class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
         	class_IInventory=fixBukkitClass("net.minecraft.server.IInventory");
         	class_CraftInventory=fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventory");
         	class_MetadataStoreBase=fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
@@ -89,15 +100,19 @@ CompatibilityUtils
 	        class_Entity_lastPitchField.setAccessible(true);
 	        class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
 	        class_Entity_lastYawField.setAccessible(true);
-	        class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
-	        class_Entity_fireProof.setAccessible(true);
+	        if(Utils.serverV<14) {
+	        	class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
+		        class_Entity_fireProof.setAccessible(true);
+	        }
 	        class_MetadataStoreBase_metadataMapField=class_MetadataStoreBase.getDeclaredField("metadataMap");
 	        class_MetadataStoreBase_metadataMapField.setAccessible(true);
 	        
-	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("a");
-	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField.setAccessible(true);
-	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("b");
-	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.setAccessible(true);
+	        if(Utils.serverV<14) {
+		        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("a");
+		        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField.setAccessible(true);
+		        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("b");
+		        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField.setAccessible(true);
+	        }
 	        
 	        class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 	        class_MinecraftServer_currentTickField.setAccessible(true);
@@ -106,12 +121,12 @@ CompatibilityUtils
 	        class_IChatBaseComponent_ChatSerializer_aMethod=class_IChatBaseComponent_ChatSerializer.getMethod("a",String.class);
 	        class_EntityCreature_setGoalTargetMethod=class_EntityCreature.getMethod("setGoalTarget",class_EntityLiving,TargetReason.class,Boolean.TYPE);
 	        class_EntityPlayer_clearActiveItemMethod=class_EntityPlayer.getMethod("clearActiveItem");
-	        class_EntityPlayer_openContainerMethod=class_EntityPlayer.getMethod("openContainer",class_IInventory);
+	        if(Utils.serverV<14) class_EntityPlayer_openContainerMethod=class_EntityPlayer.getMethod("openContainer",class_IInventory);
 	        class_EntityLiving_getArmorStrengthMethod=class_EntityLiving.getMethod("getArmorStrength");
 	        class_EntitySnowman_setHasPumpkinMethod=class_EntitySnowman.getMethod("setHasPumpkin",Boolean.TYPE);
 	        class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
 	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
-	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getMethod("equals",Object.class);
+	        if(Utils.serverV<14) class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getMethod("equals",Object.class);
 	        
 	        class_IInventory_getInventoryMethod=class_CraftInventory.getMethod("getInventory");
 	        
@@ -126,11 +141,9 @@ CompatibilityUtils
 	        	ex.printStackTrace();
 	        	mm_version=45;
 	        }
-	        if(mm_version<45) {
-	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class);
-	        } else {
-	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class,String.class);
-	        }
+	        
+	        class_Drop_getDropMethod=mm_version<45?class_Drop.getMethod("getDrop",String.class):class_Drop.getMethod("getDrop",String.class,String.class);
+	        class_AbstractSkill_parseSkillTargeterMethod=class_AbstractSkill.getDeclaredMethod("parseSkillTargeter",String.class);
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -487,5 +500,19 @@ CompatibilityUtils
 		return metadata_map;
 	}
 	
+	/**
+	 * 
+	 * @param targeter_string {@link String}
+	 * @return skill_targeter {@link SkillTargeter}
+	 */
 	
+	public static SkillTargeter parseSkillTargeter(String targeter_string) {
+		SkillTargeter targeter=null;
+		try {
+			targeter=(SkillTargeter)class_AbstractSkill_parseSkillTargeterMethod.invoke(null,targeter_string);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return targeter;
+	}
 }

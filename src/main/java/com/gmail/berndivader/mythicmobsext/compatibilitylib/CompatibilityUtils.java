@@ -86,7 +86,6 @@ import java.util.logging.Level;
  * official release.
  */
 public class CompatibilityUtils extends NMSUtils {
-
     public static boolean USE_MAGIC_DAMAGE = true;
     public static int BLOCK_BREAK_RANGE = 64;
     public static boolean isDamaging = false;
@@ -135,7 +134,10 @@ public class CompatibilityUtils extends NMSUtils {
         return true;
     }
 
-    public static Inventory createInventory(InventoryHolder holder, final int size, final String name) {
+    public static Inventory createInventory(InventoryHolder holder, int size, final String name) {
+        size = (int)(Math.ceil((double)size / 9) * 9);
+        size = Math.min(size, 54);
+
         String shorterName = name;
         if (shorterName.length() > 32) {
             shorterName = shorterName.substring(0, 31);
@@ -651,9 +653,14 @@ public class CompatibilityUtils extends NMSUtils {
     public static void setEntityMotion(Entity entity, Vector motion) {
         try {
             Object handle = getHandle(entity);
-            class_Entity_motXField.set(handle, motion.getX());
-            class_Entity_motYField.set(handle, motion.getY());
-            class_Entity_motZField.set(handle, motion.getZ());
+            if (class_Entity_motField != null) {
+                Object vec = class_Vec3D_constructor.newInstance(motion.getX(), motion.getY(), motion.getZ());
+                class_Entity_motField.set(handle, vec);
+            } else if (class_Entity_motXField != null) {
+                class_Entity_motXField.set(handle, motion.getX());
+                class_Entity_motYField.set(handle, motion.getY());
+                class_Entity_motZField.set(handle, motion.getZ());
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -678,13 +685,18 @@ public class CompatibilityUtils extends NMSUtils {
 
     public static boolean setLock(Block block, String lockName)
     {
-        if (class_TileEntityContainer_setLock == null || class_ChestLock_Constructor == null) return false;
+        if (class_ChestLock_Constructor == null) return false;
+        if (class_TileEntityContainer_setLock == null && class_TileEntityContainer_lock == null) return false;
         Object tileEntity = getTileEntity(block.getLocation());
         if (tileEntity == null) return false;
         if (!class_TileEntityContainer.isInstance(tileEntity)) return false;
         try {
             Object lock = class_ChestLock_Constructor.newInstance(lockName);
-            class_TileEntityContainer_setLock.invoke(tileEntity, lock);
+            if (class_TileEntityContainer_lock != null) {
+                class_TileEntityContainer_lock.set(tileEntity, lock);
+            } else {
+                class_TileEntityContainer_setLock.invoke(tileEntity, lock);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
@@ -695,12 +707,16 @@ public class CompatibilityUtils extends NMSUtils {
 
     public static boolean clearLock(Block block)
     {
-        if (class_TileEntityContainer_setLock == null) return false;
+        if (class_TileEntityContainer_setLock == null && class_TileEntityContainer_lock == null) return false;
         Object tileEntity = getTileEntity(block.getLocation());
         if (tileEntity == null) return false;
         if (!class_TileEntityContainer.isInstance(tileEntity)) return false;
         try {
-            class_TileEntityContainer_setLock.invoke(tileEntity, new Object[] {null});
+            if (class_TileEntityContainer_lock != null) {
+                class_TileEntityContainer_lock.set(tileEntity, null);
+            } else {
+                class_TileEntityContainer_setLock.invoke(tileEntity, new Object[] {null});
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
@@ -711,14 +727,17 @@ public class CompatibilityUtils extends NMSUtils {
 
     public static boolean isLocked(Block block)
     {
-        if (class_TileEntityContainer_getLock == null || class_ChestLock_isEmpty == null) return false;
+        if (class_TileEntityContainer_getLock == null && class_TileEntityContainer_lock == null) return false;
         Object tileEntity = getTileEntity(block.getLocation());
         if (tileEntity == null) return false;
         if (!class_TileEntityContainer.isInstance(tileEntity)) return false;
         try {
-            Object lock = class_TileEntityContainer_getLock.invoke(tileEntity);
+            Object lock = class_TileEntityContainer_lock != null ? class_TileEntityContainer_lock.get(tileEntity) :
+                class_TileEntityContainer_getLock.invoke(tileEntity);
             if (lock == null) return false;
-            return !(Boolean)class_ChestLock_isEmpty.invoke(lock);
+            String key = class_ChestLock_key != null ? (String)class_ChestLock_key.get(lock) :
+                (String)class_ChestLock_getString.invoke(lock);
+            return key != null && !key.isEmpty();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -727,14 +746,17 @@ public class CompatibilityUtils extends NMSUtils {
 
     public static String getLock(Block block)
     {
-        if (class_TileEntityContainer_getLock == null || class_ChestLock_getString == null) return null;
+        if (class_ChestLock_getString == null && class_ChestLock_key == null) return null;
+        if (class_TileEntityContainer_getLock == null && class_TileEntityContainer_lock == null) return null;
         Object tileEntity = getTileEntity(block.getLocation());
         if (tileEntity == null) return null;
         if (!class_TileEntityContainer.isInstance(tileEntity)) return null;
         try {
-            Object lock = class_TileEntityContainer_getLock.invoke(tileEntity);
+            Object lock = class_TileEntityContainer_lock != null ? class_TileEntityContainer_lock.get(tileEntity) :
+                class_TileEntityContainer_getLock.invoke(tileEntity);
             if (lock == null) return null;
-            return (String)class_ChestLock_getString.invoke(lock);
+            return class_ChestLock_key != null ? (String)class_ChestLock_key.get(lock) :
+                (String)class_ChestLock_getString.invoke(lock);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -876,7 +898,16 @@ public class CompatibilityUtils extends NMSUtils {
         Object nmsWorld = getHandle(location.getWorld());
         Projectile projectile = null;
         try {
-            constructor = projectileType.getConstructor(class_World);
+            Object entityType = null;
+            if (entityTypes != null) {
+                constructor = projectileType.getConstructor(class_entityTypes, class_World);
+                entityType = entityTypes.get(projectileType.getSimpleName());
+                if (entityType == null) {
+                    throw new Exception("Failed to find entity type for projectile class " + projectileType.getName());
+                }
+            } else {
+                constructor = projectileType.getConstructor(class_World);
+            }
 
             if (class_EntityFireball.isAssignableFrom(projectileType)) {
                 dirXField = projectileType.getField("dirX");
@@ -893,7 +924,7 @@ public class CompatibilityUtils extends NMSUtils {
 
             Object nmsProjectile = null;
             try {
-                nmsProjectile = constructor.newInstance(nmsWorld);
+                nmsProjectile = entityType == null ? constructor.newInstance(nmsWorld) : constructor.newInstance(entityType, nmsWorld);
             } catch (Exception ex) {
                 nmsProjectile = null;
                 Bukkit.getLogger().log(Level.WARNING, "Error spawning projectile of class " + projectileType.getName(), ex);
@@ -1089,7 +1120,7 @@ public class CompatibilityUtils extends NMSUtils {
 
             String attributeName = toMinecraftAttribute(attribute);
             if (attributesNode == null) {
-                attributesNode = class_NBTTagList.newInstance();
+                attributesNode = class_NBTTagList_constructor.newInstance();
                 class_NBTTagCompound_setMethod.invoke(tag, "AttributeModifiers", attributesNode);
             } else {
                 int size = (Integer)class_NBTTagList_sizeMethod.invoke(attributesNode);
@@ -1103,7 +1134,7 @@ public class CompatibilityUtils extends NMSUtils {
                 }
             }
             if (attributeNode == null) {
-                attributeNode = class_NBTTagCompound.newInstance();
+                attributeNode = class_NBTTagCompound_constructor.newInstance();
                 setMeta(attributeNode, "AttributeName", attributeName);
                 setMeta(attributeNode, "Name", "Equipment Modifier");
                 setMetaInt(attributeNode, "Operation", attributeOperation);
@@ -1113,7 +1144,7 @@ public class CompatibilityUtils extends NMSUtils {
                     setMeta(attributeNode, "Slot", slot);
                 }
 
-                class_NBTTagList_addMethod.invoke(attributesNode, attributeNode);
+                addToList(attributesNode, attributeNode);
             }
             setMetaDouble(attributeNode, "Amount", value);
         } catch (Exception ex) {
@@ -1139,7 +1170,7 @@ public class CompatibilityUtils extends NMSUtils {
         try {
             Object nmsEntity = getHandle(entity);
             if (nmsEntity != null) {
-                data = class_NBTTagCompound.newInstance();
+                data = class_NBTTagCompound_constructor.newInstance();
                 class_Entity_saveMethod.invoke(nmsEntity, data);
             }
         } catch (Exception ex) {
@@ -1424,6 +1455,17 @@ public class CompatibilityUtils extends NMSUtils {
                     materialData.setData((byte)0);
                     converted = (Material)class_UnsafeValues_fromLegacyDataMethod.invoke(DeprecatedUtils.getUnsafe(), materialData);
                 }
+                // Converting legacy signs doesn't seem to work
+                // This fixes them, but the direction is wrong, and restoring text causes internal errors
+                // So I guess it's best to just let signs be broken for now.
+                /*
+                if (converted == Material.AIR) {
+                    String typeKey = materialData.getItemType().name();
+                    if (typeKey.equals("LEGACY_WALL_SIGN")) return Material.WALL_SIGN;
+                    if (typeKey.equals("LEGACY_SIGN_POST")) return Material.SIGN_POST;
+                    if (typeKey.equals("LEGACY_SIGN")) return Material.SIGN;
+                }
+                */
                 return converted;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1454,7 +1496,9 @@ public class CompatibilityUtils extends NMSUtils {
             Object[] allMaterials = Material.AIR.getDeclaringClass().getEnumConstants();
             for (Object o : allMaterials) {
                 Material material = (Material)o;
-                materialIdMap.put(material.getId(), material);
+                if (isLegacy(material)) {
+                    materialIdMap.put(material.getId(), material);
+                }
             }
         }
         return materialIdMap.get(id);
@@ -1492,7 +1536,7 @@ public class CompatibilityUtils extends NMSUtils {
     public static String migrateMaterial(String materialKey) {
         if (materialKey == null || materialKey.isEmpty()) return materialKey;
         byte data = 0;
-        String[] pieces = StringUtils.split(materialKey, ',');
+        String[] pieces = StringUtils.split(materialKey, ':');
         String textData = "";
         if (pieces.length > 1) {
             textData = pieces[1];

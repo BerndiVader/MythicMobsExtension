@@ -26,9 +26,10 @@ repositories {
  }
 
 dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
-    compileOnly  ("org.spigotmc:spigot-1.8.8:+") 
+    compileOnly  ("org.spigotmc:spigot-1.8.8:+")
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
     compileOnly  ("com.gmail.filoghost:holographicdisplays:+")

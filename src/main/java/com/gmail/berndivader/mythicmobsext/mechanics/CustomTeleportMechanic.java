@@ -215,7 +215,7 @@ ITargetedLocationSkill {
 	protected static HashSet<?>getDestination(String target, SkillMetadata skilldata) {
 		SkillMetadata data=new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter>maybeTargeter;
-		maybeTargeter=Optional.of(AbstractSkill.parseSkillTargeter(target));
+		maybeTargeter=Optional.of(NMSUtils.parseSkillTargeter(target));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter targeter = maybeTargeter.get();
             if (targeter instanceof CustomTargeter) {
