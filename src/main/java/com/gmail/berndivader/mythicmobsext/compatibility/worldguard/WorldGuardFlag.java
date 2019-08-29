@@ -18,7 +18,7 @@ Listener {
 
 	public WorldGuardFlag() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.getPlugin());
-		Main.logger.info("using "+pluginName);
+		Main.logger.info("using "+pluginName+" Version: "+Reflections.version);
 	}
 
 	@EventHandler

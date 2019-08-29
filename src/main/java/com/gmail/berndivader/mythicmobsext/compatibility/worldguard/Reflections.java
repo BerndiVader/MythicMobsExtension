@@ -75,7 +75,7 @@ Reflections
     	class_FlagRegistry=class_loader.loadClass("com.sk89q.worldguard.protection.flags.registry.FlagRegistry");
     	class_RegionManager=class_loader.loadClass("com.sk89q.worldguard.protection.managers.RegionManager");
     	class_ApplicableRegionSet=class_loader.loadClass("com.sk89q.worldguard.protection.ApplicableRegionSet");
-    	
+   	
     	switch(version) {
     	case 6:
     		class_WorldGuardPlugin=class_loader.loadClass("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
