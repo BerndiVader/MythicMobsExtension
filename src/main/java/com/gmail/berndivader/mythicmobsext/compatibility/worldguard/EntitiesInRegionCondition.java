@@ -15,12 +15,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BoundingBox;
 
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -118,31 +116,33 @@ ILocationCondition
 	}
 	
 	int sumEntityInRegion(World world,ProtectedRegion region) {
-		BlockVector min_point=region.getMinimumPoint();
-		BlockVector max_point=region.getMaximumPoint();
-		BoundingBox box=new BoundingBox(min_point.getX(),min_point.getY(),min_point.getZ(),max_point.getX(),max_point.getY(),max_point.getZ());
-		return world.getNearbyEntities(box,entities).size();
+//		BlockVector min_point=region.getMinimumPoint();
+//		BlockVector max_point=region.getMaximumPoint();
+//		BoundingBox box=new BoundingBox(min_point.getX(),min_point.getY(),min_point.getZ(),max_point.getX(),max_point.getY(),max_point.getZ());
+//		return world.getNearbyEntities(box,entities).size();
+		return 0;
 	}
 	
 	int sumEntityInRegions(World world,List<ProtectedRegion>regions) {
 		if(regions.isEmpty()) return 0;
 		ProtectedRegion first_region=regions.get(0);
-		BlockVector min_point=first_region.getMinimumPoint();
-		BlockVector max_point=first_region.getMaximumPoint();
-		double min_x=min_point.getX(),min_y=min_point.getY(),min_z=min_point.getZ(),max_x=max_point.getX(),max_y=max_point.getY(),max_z=max_point.getZ();
+//		BlockVector min_point=first_region.getMinimumPoint();
+//		BlockVector max_point=first_region.getMaximumPoint();
+//		double min_x=min_point.getX(),min_y=min_point.getY(),min_z=min_point.getZ(),max_x=max_point.getX(),max_y=max_point.getY(),max_z=max_point.getZ();
 		int size=regions.size();
 		for(int i1=1;i1<size;i1++) {
 			ProtectedRegion region=regions.get(i1);
-			min_point=region.getMinimumPoint();
-			max_point=region.getMaximumPoint();
-			if(min_point.getX()<min_x) min_x=min_point.getX();
-			if(min_point.getY()<min_y) min_y=min_point.getY();
-			if(min_point.getZ()<min_z) min_z=min_point.getZ();
-			if(max_point.getX()>max_x) max_x=max_point.getX();
-			if(max_point.getY()>max_y) max_y=max_point.getY();
-			if(max_point.getZ()>max_z) max_z=max_point.getZ();
+//			min_point=region.getMinimumPoint();
+//			max_point=region.getMaximumPoint();
+//			if(min_point.getX()<min_x) min_x=min_point.getX();
+//			if(min_point.getY()<min_y) min_y=min_point.getY();
+//			if(min_point.getZ()<min_z) min_z=min_point.getZ();
+//			if(max_point.getX()>max_x) max_x=max_point.getX();
+//			if(max_point.getY()>max_y) max_y=max_point.getY();
+//			if(max_point.getZ()>max_z) max_z=max_point.getZ();
 		}
-		BoundingBox box=new BoundingBox(min_x,min_y,min_z,max_x,max_y,max_z);
-		return world.getNearbyEntities(box,entities).size();
+//		BoundingBox box=new BoundingBox(min_x,min_y,min_z,max_x,max_y,max_z);
+//		return world.getNearbyEntities(box,entities).size();
+		return 0;
 	}
 }

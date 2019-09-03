@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.worldguard;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.sk89q.worldedit.Vector;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 class
@@ -23,6 +24,7 @@ Reflections
 	static Class<?>class_RegionManager;
 	static Class<?>class_ApplicableRegionSet;
 	static Class<?>class_EntityType;
+	static Class<?>class_Vector;
 	
 	static Method class_WorldGuardPlugin_getFlagRegistry;
 	static Method class_WorldGuard_getRegionContainer;
@@ -31,6 +33,9 @@ Reflections
 	static Method class_RegionManager_getRegion;
 	static Method class_ApplicationRegionSet_getRegions;
 	static Method class_EntityType_getName;
+	static Method class_Vector_at;
+	
+	static Constructor<?> class_Vector_constructor;
 
 	static Object worldguard,instance,flag_registry;
 	
@@ -83,6 +88,10 @@ Reflections
         	class_RegionContainer=class_loader.loadClass("com.sk89q.worldguard.bukkit.RegionContainer");
         	class_RegionContainer_getRegionManager=class_RegionContainer.getMethod("get",World.class);
         	class_EntityType=class_loader.loadClass("org.bukkit.entity.EntityType");
+        	class_Vector=class_loader.loadClass("com.sk89q.worldedit.Vector");
+        	
+        	class_Vector_constructor=class_Vector.getConstructor(Double.class,Double.class,Double.class);
+        	
     		break;
     	case 7:
     		class_WorldGuardPlugin=class_loader.loadClass("com.sk89q.worldguard.WorldGuard");
@@ -90,12 +99,16 @@ Reflections
         	class_RegionContainer=class_loader.loadClass("com.sk89q.worldguard.protection.regions.RegionContainer");
         	class_RegionContainer_getRegionManager=class_RegionContainer.getMethod("get",com.sk89q.worldedit.world.World.class);
         	class_EntityType=class_loader.loadClass("com.sk89q.worldedit.world.entity.EntityType");
+        	class_Vector=class_loader.loadClass("com.sk89q.worldedit.math.Vector3");
+        	
+        	class_Vector_at=class_Vector.getMethod("at",Double.class,Double.class,Double.class);
+        	
     		break;
     	}
     	
 		class_WorldGuardPlugin_getFlagRegistry=class_WorldGuardPlugin.getMethod("getFlagRegistry");
     	class_WorldGuard_getRegionContainer=class_WorldGuard.getMethod("getRegionContainer");
-    	class_RegionManager_getApplicableRegions=class_RegionManager.getMethod("getApplicableRegions",Vector.class);
+    	class_RegionManager_getApplicableRegions=class_RegionManager.getMethod("getApplicableRegions",class_Vector);
     	class_RegionManager_getRegion=class_RegionManager.getMethod("getRegion",String.class);
     	class_ApplicationRegionSet_getRegions=class_ApplicableRegionSet.getMethod("getRegions");
     	class_EntityType_getName=class_EntityType.getMethod("getName");
@@ -105,14 +118,29 @@ Reflections
 		return flag_registry;
 	}
 	
-	public static Object getApplicableRegions(World world,Vector vector) {
+	public static Object getApplicableRegions(World world,Vec3D vector) {
+		Object vector_object=null;
+		if(version==6) {
+			try {
+				vector_object=class_Vector_constructor.newInstance(vector.getX(),vector.getY(),vector.getZ());
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				vector_object=class_Vector_at.invoke(vector.getX(),vector.getY(),vector.getZ());
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
 		Object region_manager=null;
 		Object applicable_region_set=null;		
 		Object regions=null;
 		try {
 			region_manager=class_RegionContainer_getRegionManager.invoke(class_WorldGuard_getRegionContainer.invoke(worldguard),version>6?new BukkitWorld(world):world);
 			if(region_manager!=null) {
-				applicable_region_set=class_RegionManager_getApplicableRegions.invoke(region_manager,vector);
+				applicable_region_set=class_RegionManager_getApplicableRegions.invoke(region_manager,vector_object);
 				if(applicable_region_set!=null) {
 					regions=class_ApplicationRegionSet_getRegions.invoke(applicable_region_set);
 				}
