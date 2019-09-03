@@ -25,6 +25,8 @@ Reflections
 	static Class<?>class_ApplicableRegionSet;
 	static Class<?>class_EntityType;
 	static Class<?>class_Vector;
+	static Class<?>class_BlockVector;
+	static Class<?>class_ProtectedRegion;
 	
 	static Method class_WorldGuardPlugin_getFlagRegistry;
 	static Method class_WorldGuard_getRegionContainer;
@@ -34,6 +36,12 @@ Reflections
 	static Method class_ApplicationRegionSet_getRegions;
 	static Method class_EntityType_getName;
 	static Method class_Vector_at;
+	static Method class_BlockVector_getX;
+	static Method class_BlockVector_getY;
+	static Method class_BlockVector_getZ;
+	static Method class_ProtectedRegion_getMinimumPoint;
+	static Method class_ProtectedRegion_getMaximumPoint;
+	
 	
 	static Constructor<?> class_Vector_constructor;
 
@@ -80,6 +88,9 @@ Reflections
     	class_FlagRegistry=class_loader.loadClass("com.sk89q.worldguard.protection.flags.registry.FlagRegistry");
     	class_RegionManager=class_loader.loadClass("com.sk89q.worldguard.protection.managers.RegionManager");
     	class_ApplicableRegionSet=class_loader.loadClass("com.sk89q.worldguard.protection.ApplicableRegionSet");
+    	class_ProtectedRegion=class_loader.loadClass("com.sk89q.worldguard.protection.regions.ProtectedRegion");
+    	class_ProtectedRegion_getMinimumPoint=class_ProtectedRegion.getMethod("getMinimumPoint");
+    	class_ProtectedRegion_getMaximumPoint=class_ProtectedRegion.getMethod("getMaximumPoint");
    	
     	switch(version) {
     	case 6:
@@ -89,8 +100,13 @@ Reflections
         	class_RegionContainer_getRegionManager=class_RegionContainer.getMethod("get",World.class);
         	class_EntityType=class_loader.loadClass("org.bukkit.entity.EntityType");
         	class_Vector=class_loader.loadClass("com.sk89q.worldedit.Vector");
+        	class_BlockVector=class_loader.loadClass("com.sk89q.worldedit.BlockVector");
         	
-        	class_Vector_constructor=class_Vector.getConstructor(Double.class,Double.class,Double.class);
+        	class_Vector_constructor=class_Vector.getConstructor(double.class,double.class,double.class);
+        	
+        	class_BlockVector_getX=class_BlockVector.getMethod("getX");
+        	class_BlockVector_getX=class_BlockVector.getMethod("getY");
+        	class_BlockVector_getX=class_BlockVector.getMethod("getZ");
         	
     		break;
     	case 7:
@@ -100,15 +116,20 @@ Reflections
         	class_RegionContainer_getRegionManager=class_RegionContainer.getMethod("get",com.sk89q.worldedit.world.World.class);
         	class_EntityType=class_loader.loadClass("com.sk89q.worldedit.world.entity.EntityType");
         	class_Vector=class_loader.loadClass("com.sk89q.worldedit.math.Vector3");
+        	class_BlockVector=class_loader.loadClass("com.sk89q.worldedit.math.BlockVector3");
         	
-        	class_Vector_at=class_Vector.getMethod("at",Double.class,Double.class,Double.class);
+        	class_Vector_at=class_BlockVector.getMethod("at",double.class,double.class,double.class);
+        	
+        	class_BlockVector_getX=class_BlockVector.getMethod("getX");
+        	class_BlockVector_getY=class_BlockVector.getMethod("getY");
+        	class_BlockVector_getZ=class_BlockVector.getMethod("getZ");
         	
     		break;
     	}
     	
 		class_WorldGuardPlugin_getFlagRegistry=class_WorldGuardPlugin.getMethod("getFlagRegistry");
     	class_WorldGuard_getRegionContainer=class_WorldGuard.getMethod("getRegionContainer");
-    	class_RegionManager_getApplicableRegions=class_RegionManager.getMethod("getApplicableRegions",class_Vector);
+    	class_RegionManager_getApplicableRegions=class_RegionManager.getMethod("getApplicableRegions",class_BlockVector);
     	class_RegionManager_getRegion=class_RegionManager.getMethod("getRegion",String.class);
     	class_ApplicationRegionSet_getRegions=class_ApplicableRegionSet.getMethod("getRegions");
     	class_EntityType_getName=class_EntityType.getMethod("getName");
@@ -129,7 +150,7 @@ Reflections
 			}
 		}else {
 			try {
-				vector_object=class_Vector_at.invoke(vector.getX(),vector.getY(),vector.getZ());
+				vector_object=class_Vector_at.invoke(null,vector.getX(),vector.getY(),vector.getZ());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
@@ -173,5 +194,44 @@ Reflections
 		if(s1.startsWith("minecraft:"))s1=s1.substring(10);
 		return s1;
 	}
+	
+	public static Vec3D getMinimumPoint(Object protected_region) {
+		Object vector_object=null;
+		double dx=0,dy=0,dz=0;
+		try {
+			vector_object=class_ProtectedRegion_getMinimumPoint.invoke(protected_region);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		try {
+			dx=(int)class_BlockVector_getX.invoke(vector_object);
+			dy=(int)class_BlockVector_getY.invoke(vector_object);
+			dz=(int)class_BlockVector_getZ.invoke(vector_object);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Vec3D(dx,dy,dz);
+	}
+	
+	public static Vec3D getMaximumPoint(Object protected_region) {
+		Object vector_object=null;
+		double dx=0,dy=0,dz=0;
+		try {
+			vector_object=class_ProtectedRegion_getMaximumPoint.invoke(protected_region);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		try {
+			dx=(int)class_BlockVector_getX.invoke(vector_object);
+			dy=(int)class_BlockVector_getY.invoke(vector_object);
+			dz=(int)class_BlockVector_getZ.invoke(vector_object);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Vec3D(dx,dy,dz);
+	}
+	
 	
 }
