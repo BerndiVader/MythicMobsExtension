@@ -25,7 +25,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitPlayer;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
@@ -215,7 +214,7 @@ ITargetedLocationSkill {
 	protected static HashSet<?>getDestination(String target, SkillMetadata skilldata) {
 		SkillMetadata data=new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter>maybeTargeter;
-		maybeTargeter=Optional.of(NMSUtils.parseSkillTargeter(target));
+		maybeTargeter=Optional.of(Utils.parseSkillTargeter(target));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter targeter = maybeTargeter.get();
             if (targeter instanceof CustomTargeter) {

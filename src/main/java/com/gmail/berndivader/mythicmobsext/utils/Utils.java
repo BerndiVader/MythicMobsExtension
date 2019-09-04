@@ -58,12 +58,14 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
@@ -699,4 +701,18 @@ Listener
 		}
 		return threattable;
 	}
+	
+	/**
+	 * 
+	 * @param targeter_string {@link String}
+	 * @return skill_targeter {@link SkillTargeter}
+	 */
+	
+	public static SkillTargeter parseSkillTargeter(String targeter_string) {
+        String search = targeter_string.substring(1);
+        MythicLineConfig mlc = new MythicLineConfig(search);
+        String name = search.contains("{") ? search.substring(0, search.indexOf("{")) : search;
+        return SkillTargeter.getMythicTargeter(name, mlc);
+	}
+	
 }

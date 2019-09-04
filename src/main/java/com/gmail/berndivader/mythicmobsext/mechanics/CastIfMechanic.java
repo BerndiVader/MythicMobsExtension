@@ -129,7 +129,7 @@ ITargetedLocationSkill {
 	}
 
 	private static void renewTargets(String ts, SkillMetadata data) {
-		Optional<SkillTargeter> maybeTargeter = Optional.of(NMSUtils.parseSkillTargeter(ts));
+		Optional<SkillTargeter> maybeTargeter = Optional.of(Utils.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter st=maybeTargeter.get();
             if (st instanceof CustomTargeter) {
