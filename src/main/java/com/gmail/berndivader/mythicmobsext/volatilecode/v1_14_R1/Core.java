@@ -70,12 +70,12 @@ implements Handler,Listener {
     private static Field ai_pathfinderlist_b;
     private static Field ai_pathfinderlist_c;
 	
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sSet=new HashSet<>(Arrays.asList(
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>rot_set=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
 					EnumPlayerTeleportFlags.Y_ROT,
 					}));	
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>ssSet=new HashSet<>(Arrays.asList(
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>rot_pos_set=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X_ROT,
 					EnumPlayerTeleportFlags.Y_ROT,
@@ -83,7 +83,7 @@ implements Handler,Listener {
 					EnumPlayerTeleportFlags.Y,
 					EnumPlayerTeleportFlags.Z
 					}));	
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>sssSet=new HashSet<>(Arrays.asList(
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>pos_set=new HashSet<>(Arrays.asList(
 			new EnumPlayerTeleportFlags[] { 
 					EnumPlayerTeleportFlags.X,
 					EnumPlayerTeleportFlags.Y,
@@ -93,7 +93,7 @@ implements Handler,Listener {
 	static {
 	    nms_path="net.minecraft.server.v1_14_R1";
 	    try {
-			ai_pathfinderlist_b=PathfinderGoalSelector.class.getDeclaredField("b");
+			ai_pathfinderlist_b=PathfinderGoalSelector.class.getDeclaredField("d");
 			ai_pathfinderlist_c=PathfinderGoalSelector.class.getDeclaredField("c");
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
@@ -313,7 +313,7 @@ implements Handler,Listener {
 		net.minecraft.server.v1_14_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
 		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags>set=new HashSet<>();
 		if (f) {
-			set=sSet;
+			set=rot_set;
 			yaw=0.0F;pitch=0.0F;
 		}
 		if (g) {
@@ -336,13 +336,13 @@ implements Handler,Listener {
 	@Override
 	public void playerConnectionLookAt(Entity entity,float yaw,float pitch) {
 		net.minecraft.server.v1_14_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,yaw,pitch,sssSet,0));
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,yaw,pitch,pos_set,0));
 	}
 	
 	@Override
 	public void playerConnectionSpin(Entity entity,float s) {
 		net.minecraft.server.v1_14_R1.EntityPlayer me = ((CraftPlayer)entity).getHandle();
-        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,s,0,ssSet,0));
+        me.playerConnection.sendPacket(new PacketPlayOutPosition(0,0,0,s,0,rot_pos_set,0));
 	}
 
 	@Override
@@ -712,9 +712,8 @@ implements Handler,Listener {
         } else {
             if(i>-1) {
         		try {
-        			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-        			list.clear();
-                    list=(Set)ai_pathfinderlist_b.get((Object)goals);
+        			((Map)ai_pathfinderlist_c.get((Object)goals)).clear();
+                    LinkedHashSet<Object>list=(LinkedHashSet)ai_pathfinderlist_b.get((Object)goals);
                     Iterator<Object>iter=list.iterator();
                     while(iter.hasNext()) {
                     	Object object=iter.next();
@@ -724,6 +723,14 @@ implements Handler,Listener {
         		} catch (Exception ex) {
         			ex.printStackTrace();
         		}
+            } else {
+    			try {
+					((Map)ai_pathfinderlist_c.get((Object)goals)).clear();
+	                ((LinkedHashSet)ai_pathfinderlist_b.get((Object)goals)).clear();
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         }
 	}
@@ -733,9 +740,8 @@ implements Handler,Listener {
         EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
         PathfinderGoalSelector goals=entity.goalSelector;
 		try {
-			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-			list.clear();
-            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+			((Map)ai_pathfinderlist_c.get((Object)goals)).clear();
+            LinkedHashSet<Object>list=(LinkedHashSet)ai_pathfinderlist_b.get((Object)goals);
             Iterator<Object>iter=list.iterator();
             while(iter.hasNext()) {
             	Object object=iter.next();
@@ -754,9 +760,8 @@ implements Handler,Listener {
         EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
         PathfinderGoalSelector goals=entity.goalSelector;
 		try {
-			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
-			list.clear();
-            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+			((Map)ai_pathfinderlist_c.get((Object)goals)).clear();
+            LinkedHashSet<Object>list=(LinkedHashSet)ai_pathfinderlist_b.get((Object)goals);
             Iterator<Object>iter=list.iterator();
             while(iter.hasNext()) {
             	Object object=iter.next();

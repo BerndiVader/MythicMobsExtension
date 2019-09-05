@@ -29,7 +29,6 @@ dependencies {
     compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
-    compileOnly  ("org.spigotmc:spigot-1.8.8:+")
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
     compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
@@ -77,4 +76,8 @@ task copy132(type: Copy) {
 task copy122(type: Copy) {
 	from "build/libs/"+project.name+"-"+project.version+".jar"
     into "c:/DevServer 112/plugins/"
+}
+task copy144(type: Copy) {
+	from "build/libs/"+project.name+"-"+project.version+".jar"
+    into "c:/dev14/plugins/"
 }

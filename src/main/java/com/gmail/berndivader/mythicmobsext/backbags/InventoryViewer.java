@@ -55,7 +55,7 @@ Listener
 				break;
 			default:
 				this.inventory=Bukkit.createInventory(null,type);
-				NMSUtils.openContainer(caster,this.inventory);
+				caster.openInventory(this.inventory);
 				break;
 		}
 		Bukkit.getPluginManager().registerEvents(this,Main.getPlugin());

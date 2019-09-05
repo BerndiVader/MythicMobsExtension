@@ -543,6 +543,12 @@ Listener
 				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
 			}
 		}
+		if(s.contains("<trigger.mhp>")&&m.getTrigger()!=null) {
+			s=s.replaceAll("<trigger.mhp>",Double.toString(m.getTrigger().getMaxHealth()));
+		}
+		if(s.contains("<target.mhp>")) {
+			s=s.replaceAll("<target.mhp>",Double.toString(t.getMaxHealth()));
+		}
 		if (s.contains(".meta.")) s=parseMetaVar(s,m,c,t,l);
 		if(papi_ispresent) s=Papi.setPlaceHolders(t,s);
 		return s;
