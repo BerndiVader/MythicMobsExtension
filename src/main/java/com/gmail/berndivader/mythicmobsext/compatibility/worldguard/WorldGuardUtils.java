@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 
-import com.sk89q.worldedit.Vector;
+import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -29,7 +29,7 @@ WorldGuardUtils
 	 * @return Set<ProtectedRegion> - set of applicable regions
 	 */
 	static Set<ProtectedRegion> getRegionsByLocation(Location location) {
-		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vector(location.getX(),location.getY(),location.getZ()));
+		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vec3D(location.getX(),location.getY(),location.getZ()));
 		regions.add((ProtectedRegion)Reflections.getRegion(location.getWorld(), global_name));
 		return regions;
 	}
@@ -42,7 +42,7 @@ WorldGuardUtils
 	 */
 	public static boolean checkFlagAtLocation(Location location, String flag_name, String args) {
 		Flag<?>flag=flag_registery.get(flag_name);
-		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vector(location.getX(),location.getY(),location.getZ()));
+		Set<ProtectedRegion>regions=(Set<ProtectedRegion>)Reflections.getApplicableRegions(location.getWorld(),new Vec3D(location.getX(),location.getY(),location.getZ()));
 		if(regions.size()==0) regions.add((ProtectedRegion)Reflections.getRegion(location.getWorld(), global_name));
 		boolean bl1=false;
 		switch(flag.getClass().getSimpleName()) {

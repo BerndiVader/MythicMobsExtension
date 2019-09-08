@@ -7,7 +7,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue;
 import com.gmail.berndivader.mythicmobsext.utils.MetaTagValue.ValueTypes;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -18,6 +17,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="setmeta",author="BerndiVader")
 public class SetMetatagMechanic 
@@ -26,7 +26,7 @@ SkillMechanic
 implements
 ITargetedLocationSkill,
 ITargetedEntitySkill {
-	protected String tag;
+	protected PlaceholderString tag;
 	protected MetaTagValue mtv;
 	protected boolean useCaster;
 
@@ -50,18 +50,18 @@ ITargetedEntitySkill {
 			}
 		}
 		if (t != null) {
-			this.tag = t;
+			this.tag = new PlaceholderString(t);
 			mtv = new MetaTagValue(v, vt);
 		}
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (this.tag == null || this.tag.isEmpty())
-			return false;
-		String parsedTag=Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),target,null);
-		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ? Utils.parseMobVariables(
-				(String)this.mtv.getValue(),data,data.getCaster().getEntity(),target,null) : this.mtv.getValue();
+		String parsedTag=this.tag.get(data,target);
+		if (parsedTag==null||parsedTag.isEmpty()) return false;
+		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ?
+				new PlaceholderString((String)this.mtv.getValue()).get(data,target)
+				:this.mtv.getValue();
 		if (this.useCaster) {
 			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		} else {
@@ -73,13 +73,12 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
-		if (this.tag == null || this.tag.isEmpty())
-			return false;
-		String parsedTag = Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),null,location);
+		String parsedTag = this.tag.get(data);
+		if (parsedTag==null||parsedTag.isEmpty()) return false;
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
-				? Utils.parseMobVariables((String)this.mtv.getValue(),data,data.getCaster().getEntity(),null,location)
+				? new PlaceholderString((String)this.mtv.getValue()).get(data)
 				: this.mtv.getValue();
-		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(),vo));
 		return true;
 	}
 

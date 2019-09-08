@@ -14,6 +14,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="setmobhealth",author="BerndiVader")
 public class SetMobHealthMechanic 
@@ -22,13 +23,13 @@ SkillMechanic
 implements
 INoTargetSkill,
 ITargetedEntitySkill {
-	private String r;
+	private PlaceholderString r;
 	private char m;
 	private boolean b,b1;
 
 	public SetMobHealthMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.r=mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase();
+		this.r=new PlaceholderString(mlc.getString(new String[] { "amount", "a", "health", "h" }, "20").toLowerCase());
 		this.b=mlc.getBoolean(new String[] { "ignoremodifier", "im" }, true);
 		this.b1=mlc.getBoolean(new String[] {"setcurrenthealth","sch"},true);
 		this.m=mlc.getString(new String[] { "mode","m","set","s" }, "S").toUpperCase().charAt(0);
@@ -38,7 +39,7 @@ ITargetedEntitySkill {
 		if(t.isValid()&&t.isLiving()) {
 			ActiveMob am=Utils.mobmanager.getMythicMobInstance(t);
 			double h=20,mod=0;
-			h=MathUtils.randomRangeDouble(Utils.parseMobVariables(r,data,data.getCaster().getEntity(),t,null));
+			h=MathUtils.randomRangeDouble(this.r.get(data,t));
 			if (!b&&am!=null) {
 				mod=ConfigManager.defaultLevelModifierHealth.startsWith("+")
                 		? Double.valueOf(ConfigManager.defaultLevelModifierHealth.substring(1))

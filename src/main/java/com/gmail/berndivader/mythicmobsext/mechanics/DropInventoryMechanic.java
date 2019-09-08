@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 
@@ -16,6 +17,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="dropinventory",author="BerndiVader")
 public class DropInventoryMechanic 
@@ -41,36 +43,13 @@ ITargetedEntitySkill
 			this.holding.setName("ANY");
 			this.holding.setLore("ANY");
 			this.holding.setEnchantment("ANY");
+			this.holding.setBagName(BackBagHelper.str_name);
+			this.holding.setSlot("-7331");
 			this.holding.setAmount("1");
 		} else {
 			if(tmp.startsWith("\"")) tmp=tmp.substring(1,tmp.length()-1);
 			tmp=SkillString.parseMessageSpecialChars(tmp);
-			String[] p=tmp.split(",");
-			for(int a=0;a<p.length;a++) {
-				String parse1=p[a];
-				if(parse1.startsWith("material=")) {
-					parse1=parse1.substring(9, parse1.length());
-					this.holding.setMaterial(parse1);
-				} else if(parse1.startsWith("lore=")) {
-					parse1=parse1.substring(5, parse1.length());
-					this.holding.setLore(parse1);
-				} else if(parse1.startsWith("amount=")) {
-					parse1=parse1.substring(7, parse1.length());
-					this.holding.setAmount(parse1);
-				} else if(parse1.startsWith("where=")) {
-					parse1=parse1.substring(6,parse1.length());
-					this.holding.setWhere(parse1);
-				} else if(parse1.startsWith("name=")) {
-					parse1=parse1.substring(6,parse1.length());
-					this.holding.setName(parse1);
-				} else if(parse1.startsWith("slot=")) {
-					parse1=parse1.substring(5,parse1.length());
-					this.holding.setSlot(Integer.parseInt(parse1));
-				} else if(parse1.startsWith("enchant=")) {
-					parse1=parse1.substring(8,parse1.length());
-					holding.setEnchantment(parse1);
-				}
-			}
+			HoldingItem.parse(tmp,holding);
 		}
 		this.pd=mlc.getInteger(new String[] { "pickupdelay", "pd" }, 20);
 		this.p=mlc.getInteger(new String[] { "pieces", "amount", "a", "p" }, 1);
@@ -80,16 +59,21 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
-			final Location location=target.getBukkitEntity().getLocation();
-			for(int a=0;a<this.p;a++) {
-				List<ItemStack>contents=HoldingItem.getContents(this.holding,entity);
-				Collections.shuffle(contents);
-				for(int i1=0;i1<contents.size();i1++) {
-					ItemStack item_stack=contents.get(i1);
-					if(holding.stackMatch(item_stack,true)) {
-						HoldingItem.spawnItem(item_stack,holding,location,this.pd,this.c);
-						break;
+			HoldingItem holding=this.holding.clone();
+			if(holding!=null) {
+				holding.parseSlot(data,target);
+				if(this.holding.getBagName()!=null) holding.setBagName(new PlaceholderString(this.holding.getBagName()).get(data,target));
+				final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
+				final Location location=target.getBukkitEntity().getLocation();
+				for(int a=0;a<this.p;a++) {
+					List<ItemStack>contents=HoldingItem.getContents(this.holding,entity);
+					Collections.shuffle(contents);
+					for(int i1=0;i1<contents.size();i1++) {
+						ItemStack item_stack=contents.get(i1);
+						if(holding.stackMatch(item_stack,true)) {
+							HoldingItem.spawnItem(item_stack,holding,location,this.pd,this.c);
+							break;
+						}
 					}
 				}
 			}

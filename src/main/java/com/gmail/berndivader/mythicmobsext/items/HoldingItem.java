@@ -12,30 +12,42 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble.Operation;
+
+import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public 
 class
 HoldingItem
+implements
+Cloneable
 {
 	Enchantment enchantment;
 	Material material;
-	String lore,name;
+	String lore,name,bag_name;
 	RangedDouble amount;
-	int slot;
 	boolean material_any;
 	public WhereEnum where;
+	String slot;
 
 	public HoldingItem() {
-		this(null,"1","ANY","ANY",-1,"ANY","ANY");
+		this(null,"1","ANY","ANY","-7331","ANY","ANY",BackBagHelper.str_name);
 	}
 	
-	public HoldingItem(String material,String amount,String name,String lore,int slot,String where,String enchant) {
+	public HoldingItem(String material,String amount,String name,String lore,String slot,String where,String enchant,String bag_name) {
+		this.where=WhereEnum.ANY;
 		setMaterial(material);
 		this.setAmount(amount);
 		this.setLore(lore);
@@ -115,7 +127,6 @@ HoldingItem
 		} catch (Exception ex) {
 			return;
 		}
-		System.err.println(enchantment.getName());
 		this.enchantment=enchantment;
 	}
 	public Enchantment getEnchantment() {
@@ -136,18 +147,24 @@ HoldingItem
 		return name;
 	}
 	
-	public void setSlot(int slot) {
+	public void parseSlot(SkillMetadata data,AbstractEntity target) {
+		if(this.slot!=null) {
+			this.slot=new PlaceholderString(this.slot).get(data,target);
+		}
+	}
+	
+	public void setSlot(String slot) {
 		this.slot=slot;
 	}
 	public int getSlot() {
-		return this.slot;
+		return Integer.parseInt(this.slot);
 	}
 	
 	public void setWhere(WhereEnum where) {
 		this.where=where;
 	}
 	public void setWhere(String w) { 
-		this.where=WhereEnum.get(w); 
+		this.where=WhereEnum.getWhere(w); 
 	}
 	public WhereEnum getWhere() {
 		return where;
@@ -160,8 +177,46 @@ HoldingItem
 		this.amount=new RangedDouble(amount);
 	}
 	
+	public void setBagName(String bag_name) {
+		this.bag_name=bag_name;
+	}
+	public String getBagName() {
+		return this.bag_name;
+	}
+	
 	public Boolean isAnyMaterial(){
 		return this.material_any;
+	}
+	
+	public static void parse(String parse, HoldingItem holding) {
+		String[]p=parse.split(parse.contains(",")?",":";");
+		for(String parse1:p) {
+			if(parse1.startsWith("material=")) {
+				parse1=parse1.substring(9, parse1.length());
+				holding.setMaterial(parse1);
+			} else if(parse1.startsWith("lore=")) {
+				parse1=parse1.substring(5, parse1.length());
+				holding.setLore(parse1);
+			} else if(parse1.startsWith("name=")) {
+				parse1=parse1.substring(5, parse1.length());
+				holding.setName(parse1);
+			} else if(parse1.startsWith("amount=")) {
+				parse1=parse1.substring(7, parse1.length());
+				holding.setAmount(parse1);
+			} else if(parse1.startsWith("where=")) {
+				parse1=parse1.substring(6,parse1.length());
+				holding.setWhere(parse1);
+			} else if(parse1.startsWith("slot=")) {
+				parse1=parse1.substring(5,parse1.length());
+				holding.setSlot(parse1);
+			} else if(parse1.startsWith("bagname=")) {
+				parse1=parse1.substring(8,parse1.length());
+				holding.setBagName(parse1);
+			} else if(parse1.startsWith("enchant=")) {
+				parse1=parse1.substring(8,parse1.length());
+				holding.setEnchantment(parse1);
+			}
+		}
 	}
 	
 	public static List<ItemStack> getContents(HoldingItem holding, LivingEntity entity) {
@@ -169,51 +224,140 @@ HoldingItem
 		List<ItemStack>contents=new ArrayList<ItemStack>();
 		if (holding.getWhere().equals(WhereEnum.ANY)) {
 			if (is_player) {
-				contents=Arrays.asList(((Player)entity).getInventory().getContents());
+				contents.addAll(Arrays.asList(((Player)entity).getInventory().getContents()));
 			} else {
-				contents=Arrays.asList(entity.getEquipment().getArmorContents());
+				contents.addAll(Arrays.asList(entity.getEquipment().getArmorContents()));
 				contents.add(entity.getEquipment().getItemInMainHand());
 				contents.add(entity.getEquipment().getItemInOffHand());
 			}
 		} else if(holding.getWhere().equals(WhereEnum.SLOT)) {
 			if(is_player) {
-				ItemStack itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
+				ItemStack itemstack=new ItemStack(Material.AIR);
+				if(holding.getSlot()>-1) itemstack=((Player)entity).getInventory().getItem(holding.getSlot());
 				contents.add(itemstack);
 			}
 		} else if(holding.getWhere().equals(WhereEnum.BACKBAG)) {
 			if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				contents=Arrays.asList(BackBagHelper.getInventory(entity.getUniqueId()).getContents());
+				Inventory inventroy=BackBagHelper.getInventory(entity.getUniqueId(),holding.getBagName());
+				if(inventroy!=null) {
+					if(holding.getSlot()>-1) {
+						contents.add(inventroy.getItem(holding.getSlot()));
+					} else {
+						contents=Arrays.asList(inventroy.getContents());
+					}
+				}
 			}
 		} else {
 			if (is_player&&holding.getWhere().equals(WhereEnum.INVENTORY)) {
-				contents=Arrays.asList(((Player)entity).getInventory().getStorageContents());
+				contents.addAll(Arrays.asList(((Player)entity).getInventory().getStorageContents()));
 				contents.remove(((Player)entity).getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.HAND)) {
 				contents.add(entity.getEquipment().getItemInMainHand());
 			} else if (holding.getWhere().equals(WhereEnum.OFFHAND)) {
 				contents.add(entity.getEquipment().getItemInOffHand());
+			} else if (holding.getWhere().equals(WhereEnum.HELMET)) {
+				contents.add(entity.getEquipment().getHelmet());
+			} else if (holding.getWhere().equals(WhereEnum.CHESTPLATE)) {
+				contents.add(entity.getEquipment().getChestplate());
+			} else if (holding.getWhere().equals(WhereEnum.LEGGINGS)) {
+				contents.add(entity.getEquipment().getLeggings());
+			} else if (holding.getWhere().equals(WhereEnum.BOOTS)) {
+				contents.add(entity.getEquipment().getBoots());
 			} else if (holding.getWhere().equals(WhereEnum.ARMOR)) {
-				contents=Arrays.asList(entity.getEquipment().getArmorContents());
+				contents.addAll(Arrays.asList(entity.getEquipment().getArmorContents()));
 			}
+		}
+		for(int i1=0;i1<contents.size();i1++) {
+			ItemStack stack=contents.get(i1);
 		}
 		return contents;
 	}
 	
-	public static boolean spawnItem(ItemStack item_stack,HoldingItem holding,Location location,int pickup_delay,boolean no_drop) {
-		ItemStack drop_stack=item_stack.clone();
-		int amount=(int)(item_stack.getAmount()<holding.amount.getMin()?item_stack.getAmount():holding.getAmount().getMin());
-		drop_stack.setAmount(amount);
-		if (!no_drop) {
-			Item dropped_item=location.getWorld().dropItem(location,drop_stack);
-			dropped_item.setPickupDelay(pickup_delay);
-		}
-		if (item_stack.getAmount()<=holding.getAmount().getMin()) {
-			item_stack.setAmount(0);
-			item_stack.setType(Material.AIR);
-		} else {
-			item_stack.setAmount(item_stack.getAmount()-amount);
+	public static boolean giveItem(LivingEntity entity,HoldingItem holding,ItemStack item_stack,boolean override) {
+		switch(holding.where) {
+		case SLOT:
+		case INVENTORY:
+			if(entity instanceof Player) {
+				Player player=(Player)entity;
+				PlayerInventory inventory=player.getInventory();
+				if(holding.getSlot()>-1) {
+					if(override||(inventory.getItem(holding.getSlot())==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+						inventory.setItem(holding.getSlot(),item_stack.clone());
+					}
+				} else if(inventory.firstEmpty()>-1){
+					inventory.addItem(item_stack.clone());
+				}
+			}
+			break;
+			case BACKBAG:
+				if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
+					Inventory inventory=BackBagHelper.getInventory(entity.getUniqueId(),holding.getBagName());
+					if(inventory!=null) {
+						if(holding.getSlot()>-1) {
+							if(override||(inventory.getItem(holding.getSlot())==null||inventory.getItem(holding.getSlot()).getType()==Material.AIR)) {
+								inventory.setItem(holding.getSlot(),item_stack.clone());
+							}
+						} else if(inventory.firstEmpty()>-1){
+							inventory.addItem(item_stack.clone());
+						}
+					}
+				}
+				break;
+			case HELMET:
+				if(override||entity.getEquipment().getHelmet()==null) entity.getEquipment().setHelmet(item_stack.clone());
+				break;
+			case CHESTPLATE:
+				if(override||entity.getEquipment().getChestplate()==null) entity.getEquipment().setChestplate(item_stack.clone());
+				break;
+			case LEGGINGS:
+				if(override||entity.getEquipment().getLeggings()==null) entity.getEquipment().setLeggings(item_stack.clone());
+				break;
+			case BOOTS:
+				if(override||entity.getEquipment().getBoots()==null) entity.getEquipment().setBoots(item_stack.clone());
+				break;
+			case HAND:
+				if(override||entity.getEquipment().getItemInMainHand()==null) entity.getEquipment().setItemInMainHand(item_stack.clone());
+				break;
+			case OFFHAND:
+				if(override||entity.getEquipment().getItemInOffHand()==null) entity.getEquipment().setItemInOffHand(item_stack.clone());
+				break;
+			default:
+				break;
 		}
 		return true;
 	}
-		
+	
+	public static boolean spawnItem(ItemStack item_stack,HoldingItem holding,Location location,int pickup_delay,boolean no_drop) {
+		ItemStack drop_stack=new ItemStack(item_stack);
+		int amount=(int)(item_stack.getAmount()<holding.amount.getMin()?item_stack.getAmount():holding.getAmount().getMin());
+		drop_stack.setAmount(amount);
+		if(amount>0&&drop_stack.getType()!=Material.AIR) {
+			if (!no_drop) {
+				Item dropped_item=location.getWorld().dropItem(location,drop_stack);
+				dropped_item.setPickupDelay(pickup_delay);
+			}
+			if (item_stack.getAmount()<=holding.getAmount().getMin()) {
+				item_stack.setAmount(0);
+				item_stack.setType(Material.AIR);
+			} else {
+				item_stack.setAmount(item_stack.getAmount()-amount);
+			}
+		}
+		return true;
+	}
+	
+	public static void tagWhere(HoldingItem holding,ItemStack new_item) {
+		new_item=NMSUtils.makeReal(new_item);
+		NMSUtils.setMeta(new_item,Utils.meta_BACKBACKTAG,holding.getWhere().name());
+	}
+	
+	@Override
+	public HoldingItem clone() {
+		try {
+			return (HoldingItem)super.clone();
+		} catch (CloneNotSupportedException e) {
+			Main.logger.warning(e.getMessage());
+			return null;
+		}
+	}
 }

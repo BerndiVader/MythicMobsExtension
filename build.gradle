@@ -16,31 +16,33 @@ task processbuildnumber {
 }
 
 repositories {
-    jcenter()
-    mavenCentral()
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
-    }    
-}
-
+    }
+    maven {
+        name = "placeholderapi"
+        url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+ }
 
 dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
-    compileOnly  ("org.spigotmc:spigot-1.8.8:+") 
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
     compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
     compileOnly  ("com.comphenix:protocol:+")
     compileOnly  ("com.garbagemule:mobarena:+")
-    compileOnly  ("com.sk89q:worldedit:+")
-    compileOnly  ("com.sk89q:worldguard:+")
+    compileOnly  ("com.sk89q:worldedit:6.1")
+    compileOnly  ("com.sk89q:worldguard:6.2.1")
     compileOnly  ("fr.neatmonster:nocheatplus:+")
-    compileOnly  ("io.lumine.xikage:mythicmobs:4.5.7")
+    compileOnly  ("io.lumine.xikage:mythicmobs:+")
     compileOnly  ("me.blackvein:quests:+")
     compileOnly  ("me.libraryaddict:disguise:+")
     compileOnly  ("net.citizensnpcs:citizens:+")
     compileOnly  ("think:rpgitems:+")
+    compileOnly  group: "me.clip", name: "placeholderapi" ,version: "+"
 }
 
 processResources {
@@ -74,4 +76,8 @@ task copy132(type: Copy) {
 task copy122(type: Copy) {
 	from "build/libs/"+project.name+"-"+project.version+".jar"
     into "c:/DevServer 112/plugins/"
+}
+task copy144(type: Copy) {
+	from "build/libs/"+project.name+"-"+project.version+".jar"
+    into "c:/dev14/plugins/"
 }

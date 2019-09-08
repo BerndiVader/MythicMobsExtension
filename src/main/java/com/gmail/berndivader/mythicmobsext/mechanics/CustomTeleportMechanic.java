@@ -25,13 +25,13 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitPlayer;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
@@ -47,11 +47,10 @@ SkillMechanic
 implements 
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
-	String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
+	PlaceholderString stargeter;
+	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
 	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
-	AbstractEntity entityTarget;
-	AbstractLocation startLocation;
 
 	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
 		super(line,mlc);
@@ -79,8 +78,9 @@ ITargetedLocationSkill {
 		s = s.replaceAll("<&cm>", ",");
 		s = s.replaceAll("<&lb>", "[");
 		s = s.replaceAll("<&rb>", "]");
-		this.stargeter=s=s.substring(1,s.length()-1);
-		if (!this.stargeter.startsWith("@")) this.stargeter="@"+this.stargeter;
+		String parse=s=s.substring(1,s.length()-1);
+		if (!parse.startsWith("@")) parse="@"+parse;
+		this.stargeter=new PlaceholderString(parse);
 	}
 
 	@Override
@@ -95,11 +95,13 @@ ITargetedLocationSkill {
 
 	@SuppressWarnings("unchecked")
 	private boolean doMechanic(SkillMetadata data, Object target) {
-		String targeter = this.stargeter;
+		AbstractEntity entityTarget;
+		AbstractLocation startLocation;
+		String targeter = this.stargeter.get(data);
 		if (target.getClass().equals(BukkitEntity.class)||target.getClass().equals(BukkitPlayer.class)) {
-			targeter=Utils.parseMobVariables(this.stargeter,data,data.getCaster().getEntity(),(AbstractEntity)target,null);
-			this.entityTarget = (AbstractEntity) target;
-			this.startLocation = ((AbstractEntity) target).getLocation();
+			targeter=this.stargeter.get(data,(AbstractEntity)target);
+			entityTarget = (AbstractEntity) target;
+			startLocation = ((AbstractEntity) target).getLocation();
 		} else {
 			Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
 			return false;
@@ -215,7 +217,7 @@ ITargetedLocationSkill {
 	protected static HashSet<?>getDestination(String target, SkillMetadata skilldata) {
 		SkillMetadata data=new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter>maybeTargeter;
-		maybeTargeter=Optional.of(AbstractSkill.parseSkillTargeter(target));
+		maybeTargeter=Optional.of(Utils.parseSkillTargeter(target));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter targeter = maybeTargeter.get();
             if (targeter instanceof CustomTargeter) {

@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Creature;
@@ -12,11 +14,16 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.metadata.MetadataStoreBase;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 
 public
@@ -30,9 +37,16 @@ CompatibilityUtils
 	
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
-	protected static Class<?> class_Drop;
-	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
 	
+	protected static Class<?> class_Drop;
+	
+	protected static Class<?> class_PathfinderGoalSelector_PathfinderGoalSelectorItem;
+	protected static Class<?> class_IInventory;
+	protected static Class<?> class_CraftInventory;
+	protected static Class<?> class_CraftInventoryCustom;
+	
+	protected static Class<?> class_MetadataStoreBase;
+ 	
     protected static Field class_Entity_lastXField;
     protected static Field class_Entity_lastYField;
     protected static Field class_Entity_lastZField;
@@ -42,6 +56,7 @@ CompatibilityUtils
     protected static Field class_Entity_fireProof;
 	protected static Field class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField;
 	protected static Field class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PriorityField;
+	protected static Field class_MetadataStoreBase_metadataMapField;
     
     protected static Method class_Entity_getFlagMethod;
     protected static Method class_IChatBaseComponent_ChatSerializer_aMethod;
@@ -52,8 +67,11 @@ CompatibilityUtils
     protected static Method class_EntitySnowman_setHasPumpkinMethod;
     protected static Method class_EntityLiving_getArrowCountMethod;
     protected static Method class_EntityLiving_setArrowCountMethod;
+    
     protected static Method class_Drop_getDropMethod;
     
+    protected static Method class_CraftServer_getEntityMetadataStoreMethod;
+    protected static Method class_CraftServer_getPlayerMetadataStoreMethod;
     
 	public static boolean initialize() {
 		boolean bool=com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
@@ -61,7 +79,10 @@ CompatibilityUtils
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
         	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
-        	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
+        	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass(Utils.serverV<14?"net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem":"net.minecraft.server.PathfinderGoalWrapped");
+        	class_IInventory=fixBukkitClass("net.minecraft.server.IInventory");
+        	class_CraftInventory=fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventory");
+        	class_MetadataStoreBase=fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
         	
 			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
 	        class_Entity_lastXField.setAccessible(true);
@@ -73,8 +94,13 @@ CompatibilityUtils
 	        class_Entity_lastPitchField.setAccessible(true);
 	        class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
 	        class_Entity_lastYawField.setAccessible(true);
-	        class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
-	        class_Entity_fireProof.setAccessible(true);
+	        
+	        if(Utils.serverV<14) {
+	        	class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
+		        class_Entity_fireProof.setAccessible(true);
+	        }
+	        class_MetadataStoreBase_metadataMapField=class_MetadataStoreBase.getDeclaredField("metadataMap");
+	        class_MetadataStoreBase_metadataMapField.setAccessible(true);
 	        
 	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getDeclaredField("a");
 	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_PathfinderField.setAccessible(true);
@@ -94,18 +120,19 @@ CompatibilityUtils
 	        class_EntityLiving_setArrowCountMethod=class_EntityLiving.getMethod("setArrowCount",Integer.TYPE);
 	        class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod=class_PathfinderGoalSelector_PathfinderGoalSelectorItem.getMethod("equals",Object.class);
 	        
+	        class_CraftServer_getEntityMetadataStoreMethod=class_CraftServer.getMethod("getEntityMetadata");
+	        class_CraftServer_getPlayerMetadataStoreMethod=class_CraftServer.getMethod("getPlayerMetadata");
+	        
 	        mm_version=45;
+	        
 	        try {
 	        	mm_version=Integer.parseInt(Utils.mythicmobs.getVersion().replaceAll("\\.","").substring(0,2));
 	        } catch(Exception ex) {
 	        	ex.printStackTrace();
 	        	mm_version=45;
 	        }
-	        if(mm_version<45) {
-	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class);
-	        } else {
-	        	class_Drop_getDropMethod=class_Drop.getMethod("getDrop",String.class,String.class);
-	        }
+	        
+	        class_Drop_getDropMethod=mm_version<45?class_Drop.getMethod("getDrop",String.class):class_Drop.getMethod("getDrop",String.class,String.class);
 	        
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -395,6 +422,10 @@ CompatibilityUtils
 	 * @param bool {@link Boolean}
 	 */
 	public static void setFireProofEntity(Entity entity,boolean bool) {
+		if(Utils.serverV>13) {
+			Main.logger.warning("nosunburn not avail for 14.x or heigher!");
+			return;
+		}
 		try {
 			class_Entity_fireProof.set(getHandle(entity),bool);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -414,6 +445,40 @@ CompatibilityUtils
 			e.printStackTrace();
 		}
 		return drop;
+	}
+	
+	/**
+	 * @param entity {@link Entity}
+	 * @return Map<String,Map<Plugin,MetadataValue>> {@link MetadataStoreBase}
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<String,Map<Plugin,MetadataValue>> getEntityMetadataMap(Entity entity) {
+		Map<String,Map<Plugin,MetadataValue>>metadata_map=new HashMap<String, Map<Plugin,MetadataValue>>();
+		try {
+            Object craft_server=entity.getServer();
+            Object entity_metadata_store=class_CraftServer_getEntityMetadataStoreMethod.invoke(craft_server);
+            metadata_map=(Map<String,Map<Plugin,MetadataValue>>)class_MetadataStoreBase_metadataMapField.get(entity_metadata_store);
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return metadata_map;
+	}
+	
+	/**
+	 * @param player {@link Player}
+	 * @return Map<String,Map<Plugin,MetadataValue>> {@link MetadataStoreBase}
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<String,Map<Plugin,MetadataValue>> getPlayerMetadataMap(Entity entity) {
+		Map<String,Map<Plugin,MetadataValue>>metadata_map=new HashMap<String, Map<Plugin,MetadataValue>>();
+		try {
+            Object craft_server=entity.getServer();
+            Object entity_metadata_store=class_CraftServer_getPlayerMetadataStoreMethod.invoke(craft_server);
+            metadata_map=(Map<String,Map<Plugin,MetadataValue>>)class_MetadataStoreBase_metadataMapField.get(entity_metadata_store);
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return metadata_map;
 	}
 	
 }

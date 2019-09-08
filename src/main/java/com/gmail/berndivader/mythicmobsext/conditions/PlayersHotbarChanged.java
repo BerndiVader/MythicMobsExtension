@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="hotbar",author="BerndiVader")
+@ExternalAnnotation(name="hotbar,hotbarchanged",author="BerndiVader")
 public class PlayersHotbarChanged 
 extends 
 AbstractCustomCondition 

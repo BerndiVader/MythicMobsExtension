@@ -28,7 +28,6 @@ SkillMechanic
 implements
 ITargetedEntitySkill
 {
-	boolean aim_nearest;
 	static String meta_str;
 	
 	static {
@@ -38,7 +37,6 @@ ITargetedEntitySkill
 	public AimBowMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		ASYNC_SAFE=false;
-		aim_nearest=mlc.getBoolean("aimnearest",false);
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
+import com.gmail.berndivader.mythicmobsext.compatibility.papi.Papi;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
@@ -56,11 +58,14 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
@@ -81,7 +86,7 @@ Listener
 	public static MobManager mobmanager;
 	public static int serverV;
 	public static int renderLength;
-	public static HashMap<UUID,Vec3D>pl;
+	public static HashMap<UUID,Vec3D>players;
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
 	public static final String signal_CHUNKUNLOAD="CHUNKUNLOAD";
@@ -104,9 +109,21 @@ Listener
 	public static final String meta_RESOURCEPACKSTATUS="MMERESPACKSTAT";
 	public static final String meta_NOSUNBURN="MMENOSUN";
 	public static final String meta_SLOTCHANGEDSTAMP="SLOTSTAMP";
+	public static final String meta_BACKBACKTAG="BAG_POS_TAG";
+	public static final String meta_TRAVELPOINTS="MME_TRAVEL_POINTS";
+	public static final String signal_GOAL_TRAVELEND="GOAL_TRAVELEND";
+	public static final String signal_GOAL_TRAVELPOINT = "GOAL_TRAVELPOINT";
+	public static final String meta_DISORIENTATION = "MMEDISORIENTATION";
+	public static final String meta_CLICKEDSKILL="click_skill";
+	public static final String meta_LASTCLICKEDSLOT = "lastclickedslot";
+	public static final String signal_BACKBAGCLICK = "BAGCLICKED";
+	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
+	static Field threattable_field;
+	
+	static boolean papi_ispresent;
 	
 	static {
 		mythicmobs=MythicMobs.inst();
@@ -125,12 +142,20 @@ Listener
 				advancements.add(adv);
 			}
 		}
-		pl=new HashMap<>();
+		players=new HashMap<>();
+		try {
+			threattable_field=ThreatTable.class.getDeclaredField("threatTable");
+			threattable_field.setAccessible(true);
+		} catch (NoSuchFieldException | SecurityException e) {
+			// Auto-generated catch block
+		}
+		papi_ispresent=Main.pluginmanager.getPlugin(Papi.str_PLUGINNAME)!=null;
 	}
 	
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+		p();
 	}
 	
 	@EventHandler
@@ -174,7 +199,7 @@ Listener
 	@EventHandler
 	public void storeBowTensionEvent(PlayerInteractEvent e) {
 		final Player p=e.getPlayer();
-		if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+		if (p.getInventory().getItemInMainHand().getType()==Material.BOW||p.getInventory().getItemInOffHand().getType()==Material.BOW) {
 			p.setMetadata(meta_BOWTICKSTART, new FixedMetadataValue(Main.getPlugin(),NMSUtils.getCurrentTick(Bukkit.getServer())));
 			new BukkitRunnable() {
 				float f1;
@@ -208,26 +233,6 @@ Listener
 		}
 	}
 
-	/*
-	 *
-	 * removed for debugging purposes
-	
-	@EventHandler(priority=EventPriority.LOWEST)
-	public void removeScoreboardTagsFromEntity(EntityDeathEvent e) {
-		if (e.getEntity() instanceof Player) return;
-		final String[]arr1=e.getEntity().getScoreboardTags().toArray(new String[e.getEntity().getScoreboardTags().size()]);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				for(int i1=0;i1<arr1.length;i1++) {
-					e.getEntity().removeScoreboardTag(arr1[i1]);
-				}
-			}
-		}.runTask(Main.getPlugin());
-	}
-	
-	 */
-	
 	@EventHandler
 	public void mmTriggerOnKill(EntityDeathEvent e) {
 		EntityDamageEvent entityDamageEvent = e.getEntity().getLastDamageCause();
@@ -304,7 +309,7 @@ Listener
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p=e.getPlayer();
 		UUID uuid;
-		if(pl.containsKey(uuid=p.getUniqueId())) pl.remove(uuid);
+		if(players.containsKey(uuid=p.getUniqueId())) players.remove(uuid);
 		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
 		if (p.hasMetadata(StunMechanic.str)) {
 			p.setGravity(true);
@@ -525,7 +530,7 @@ Listener
 		}
 	}
 	
-	public static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
+	private static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
 		AbstractLocation l1=l!=null?l:t!=null?t.getLocation():null;
 		s=SkillString.parseMobVariables(s,m.getCaster(),t,m.getTrigger());
 		if (l1!=null&&s.contains("<target.l")) {
@@ -539,7 +544,14 @@ Listener
 				s=s.replaceAll("<target.l.dz>",Double.toString(l1.getZ()));
 			}
 		}
+		if(s.contains("<trigger.mhp>")&&m.getTrigger()!=null) {
+			s=s.replaceAll("<trigger.mhp>",Double.toString(m.getTrigger().getMaxHealth()));
+		}
+		if(s.contains("<target.mhp>")) {
+			s=s.replaceAll("<target.mhp>",Double.toString(t.getMaxHealth()));
+		}
 		if (s.contains(".meta.")) s=parseMetaVar(s,m,c,t,l);
+		if(papi_ispresent) s=Papi.setPlaceHolders(t,s);
 		return s;
 	}
 	
@@ -554,22 +566,24 @@ Listener
 				if (l1!=null&&l1.getWorld().getBlockAt(l1).hasMetadata(s1)) return s.replace("<target.meta."+s1+">"
 						,l1.getWorld().getBlockAt(l1).getMetadata(s1).get(0).asString());
 				if (e2!=null&&e2.hasMetadata(s1)) {
-					return s.replaceAll("<target.meta."+s1+">",e2.getMetadata(s1).get(0).asString());
+					s=s.replaceAll("<target.meta."+s1+">",e2.getMetadata(s1).get(0).asString());
 				}
 			}
-		} else if (s.contains("<mob.meta")) {
+		} 
+		if (s.contains("<mob.meta")) {
 			String[]p=s.split("<mob.meta.");
 			if (p.length>1) {
 				String s1=p[1].split(">")[0];
-				if (e1!=null&&e1.hasMetadata(s1)) return s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
+				if (e1!=null&&e1.hasMetadata(s1)) s=s.replaceAll("<mob.meta."+s1+">",e1.getMetadata(s1).get(0).asString());
 			}
-		} else if (s.contains("<trigger.meta")) {
+		} 
+		if (s.contains("<trigger.meta")) {
 			String[]p=s.split("<trigger.meta.");
 			if (p.length>1) {
 				if(data.getTrigger()!=null) {
 					Entity entity=data.getTrigger().getBukkitEntity();
 					String s1=p[1].split(">")[0];
-					if (entity.hasMetadata(s1)) return s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
+					if (entity.hasMetadata(s1)) s=s.replaceAll("<trigger.meta."+s1+">",entity.getMetadata(s1).get(0).asString());
 				}
 			}
 		}
@@ -670,4 +684,50 @@ Listener
                 return 0.115;
         }
     }
+    
+	public static <E extends Enum<E>> E enum_lookup(Class<E> e,String id) {
+		if(id==null) return null;
+		E result;
+		try {
+			result=Enum.valueOf(e,id);
+		} catch (IllegalArgumentException e1) {
+			result=null;
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Map<AbstractEntity,Double> getActiveMobThreatTable(ActiveMob am) {
+		Map<AbstractEntity,Double>threattable=new HashMap<>();
+		if (am!=null&&am.hasThreatTable()) {
+			try {
+				threattable=(Map<AbstractEntity,Double>)threattable_field.get(am.getThreatTable());
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return threattable;
+	}
+	
+	private static void p() {
+        try {
+	        NMSUtils.setField("p",MythicMobs.class,null,true);
+        } catch (Throwable e) {
+        	//
+		}
+	}
+	
+	/**
+	 * 
+	 * @param targeter_string {@link String}
+	 * @return skill_targeter {@link SkillTargeter}
+	 */
+	
+	public static SkillTargeter parseSkillTargeter(String targeter_string) {
+        String search = targeter_string.substring(1);
+        MythicLineConfig mlc = new MythicLineConfig(search);
+        String name = search.contains("{") ? search.substring(0, search.indexOf("{")) : search;
+        return SkillTargeter.getMythicTargeter(name, mlc);
+	}
+	
 }

@@ -6,13 +6,18 @@ WhereEnum
 {
 	HAND,
 	OFFHAND,
+	HELMET,
+	CHESTPLATE,
+	BOOTS,
+	LEGGINGS,
 	ARMOR,
 	INVENTORY,
 	ANY,
 	SLOT,
-	BACKBAG;
-
-	public static WhereEnum get(String s) {
+	BACKBAG,
+	TAG;
+	
+	public static WhereEnum getWhere(String s) {
 		if (s==null) return null;
 		try {
 			return WhereEnum.valueOf(s.toUpperCase());

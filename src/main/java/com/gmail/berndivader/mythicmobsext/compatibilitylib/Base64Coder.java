@@ -1,3 +1,5 @@
+package com.gmail.berndivader.mythicmobsext.compatibilitylib;
+
 // Copyright 2003-2010 Christian d'Heureuse, Inventec Informatik AG, Zurich, Switzerland
 // www.source-code.biz, www.inventec.ch/chdh
 //
@@ -16,8 +18,6 @@
 // This module is provided "as is", without warranties of any kind.
 //
 // Project home page: www.source-code.biz/base64coder/java
-
-package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
 import java.nio.charset.StandardCharsets;
 

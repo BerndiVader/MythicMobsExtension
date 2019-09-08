@@ -5,7 +5,6 @@ import java.util.HashSet;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
@@ -22,10 +21,7 @@ ISelectorLocation {
 	public HashSet<AbstractLocation> getLocations(SkillMetadata data) {
 		HashSet<AbstractLocation>targets=new HashSet<>();
 		if (data.getCaster().getEntity().isLiving()) {
-			AbstractLocation l=data.getCaster().getEntity().getEyeLocation();
-			AbstractVector v=l.getDirection().clone().multiply(this.length);
-			l.add(v);
-			targets.add(l);
+			targets.add(data.getCaster().getEntity().getEyeLocation());
 		}
 		return applyOffsets(targets);
 	}

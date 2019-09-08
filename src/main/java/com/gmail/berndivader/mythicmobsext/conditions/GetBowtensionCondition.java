@@ -38,7 +38,7 @@ IEntityCondition {
 					d1=p.getMetadata(Utils.meta_BOWTENSIONLAST).get(0).asDouble();
 				}
 			} else {
-				if (p.getInventory().getItemInMainHand().getType()==Material.BOW) {
+				if (p.getInventory().getItemInMainHand().getType()==Material.BOW||p.getInventory().getItemInOffHand().getType()==Material.BOW) {
 					d1=(double)Utils.getBowTension((Player)e.getBukkitEntity());
 				}
 			}

@@ -144,8 +144,7 @@ public class PlayerManager implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMythicPlayerDeath(PlayerDeathEvent e) {
-		if (!this.isActivePlayer(e.getEntity().getUniqueId()))
-			return;
+		if (!this.isActivePlayer(e.getEntity().getUniqueId())) return;
 		ActivePlayer ap = this.getActivePlayer(e.getEntity().getUniqueId()).get();
 		ap.signalMob(ap.getEntity(), signal_DEATH);
 		this.removeAllEffectsFromPlayer(ap.getEntity());

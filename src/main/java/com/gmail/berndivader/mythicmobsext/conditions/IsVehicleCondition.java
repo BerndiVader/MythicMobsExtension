@@ -13,7 +13,8 @@ public class IsVehicleCondition
 extends
 AbstractCustomCondition
 implements
-IEntityComparisonCondition {
+IEntityComparisonCondition 
+{
 
 	public IsVehicleCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -21,10 +22,8 @@ IEntityComparisonCondition {
 
 	@Override
 	public boolean check(AbstractEntity caster, AbstractEntity target) {
-		Entity e1;
-		if ((e1=caster.getBukkitEntity()).getVehicle()!=null) {
-			return e1.getVehicle().equals(target.getBukkitEntity());
-		}
+		Entity e1=caster.getBukkitEntity();
+		if (e1.getVehicle()!=null) return e1.getVehicle().equals(target.getBukkitEntity());
 		return false;
 	}
 }

@@ -24,6 +24,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="mathex",author="BerndiVader")
 public 
@@ -35,7 +36,7 @@ implements
 ITargetedEntitySkill,
 INoTargetSkill
 {
-	String eval;
+	PlaceholderString eval;
 	String[]parse;
 	HashMap<String,Double>variables;
 
@@ -43,9 +44,11 @@ INoTargetSkill
 		super(skill, mlc);
 		this.ASYNC_SAFE=true;
 		variables=new HashMap<>();
-		if ((eval=mlc.getString(new String[] {"evaluate","eval","e"},"")).startsWith("\"")) {
-			eval=SkillString.unparseMessageSpecialChars(eval.substring(1,eval.length()-1));
+		String temp;
+		if ((temp=mlc.getString(new String[] {"evaluate","eval","e"},"")).startsWith("\"")) {
+			temp=SkillString.unparseMessageSpecialChars(temp.substring(1,temp.length()-1));
 		};
+		eval=new PlaceholderString(temp);
 		String s1=mlc.getString(new String[] {"storage","store","s"},"<mob.meta.test>");
 		parse=(s1.substring(1,s1.length()-1)).split(Pattern.quote("."));
 	}
@@ -62,9 +65,10 @@ INoTargetSkill
 	
 	boolean eval(SkillMetadata data,Entity e1,Location l1) {
 		Entity target=null;
-		double s1=MathInterpreter.parse(Utils.parseMobVariables(eval,data,data.getCaster().getEntity(),BukkitAdapter.adapt(e1),BukkitAdapter.adapt(l1)),variables).eval();
+		double s1=MathInterpreter.parse(this.eval.get(data,BukkitAdapter.adapt(e1)),variables).eval();
 		switch(parse[0]) {
 		case "mob":
+		case "caster":
 			target=data.getCaster().getEntity().getBukkitEntity();
 			break;
 		case "target":

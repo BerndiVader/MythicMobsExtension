@@ -1,7 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -9,6 +8,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="custommessage,mmemessage,sendmessage",author="BerndiVader")
 public class MessageMechanic 
@@ -16,23 +16,24 @@ extends
 SkillMechanic
 implements 
 ITargetedEntitySkill {
-	String msg;
+	PlaceholderString msg;
 
 	public MessageMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		this.target_creative=true;
-		msg=mlc.getString(new String[]{"msg","m"},null);
-		if (msg!=null&&(msg.startsWith("\"")&&msg.endsWith("\""))) {
-			msg=msg.substring(1,msg.length()-1);
-			msg=SkillString.parseMessageSpecialChars(msg);
+		String tmp=mlc.getString(new String[]{"msg","m"},null);
+		if (tmp!=null&&(tmp.startsWith("\"")&&tmp.endsWith("\""))) {
+			tmp=tmp.substring(1,tmp.length()-1);
+			tmp=SkillString.parseMessageSpecialChars(tmp);
 		} else {
-			msg="Invalid msg format in config of: "+line;
+			tmp="Invalid msg format in config of: "+line;
 		}
+		msg=new PlaceholderString(tmp);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity e1) {
-		if (e1.isPlayer()) e1.getBukkitEntity().sendMessage(Utils.parseMobVariables(msg,data,data.getCaster().getEntity(),e1,null));
+		if (e1.isPlayer()) e1.getBukkitEntity().sendMessage(this.msg.get(data,e1));
 		return true;
 	}
 }

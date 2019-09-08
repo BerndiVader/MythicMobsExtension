@@ -149,20 +149,20 @@ public class InventoryUtils extends NMSUtils
         } else if (value instanceof Long) {
             wrappedValue = class_NBTTagLong_constructor.newInstance((Long)value);
         } else if (value instanceof ConfigurationSection) {
-            wrappedValue = class_NBTTagCompound.newInstance();
+            wrappedValue = class_NBTTagCompound_constructor.newInstance();
             saveTagsToNBT((ConfigurationSection)value, wrappedValue, null);
         } else if (value instanceof Map) {
-            wrappedValue = class_NBTTagCompound.newInstance();
+            wrappedValue = class_NBTTagCompound_constructor.newInstance();
             @SuppressWarnings("unchecked")
             Map<String, Object> valueMap = (Map<String, Object>)value;
             saveTagsToNBT(valueMap, wrappedValue, null);
         } else if (value instanceof Collection) {
             @SuppressWarnings("unchecked")
             Collection<Object> list = (Collection<Object>)value;
-            Object listMeta = class_NBTTagList.newInstance();
+            Object listMeta = class_NBTTagList_constructor.newInstance();
             for (Object item : list) {
                 if (item != null) {
-                    class_NBTTagList_addMethod.invoke(listMeta, wrapInTag(item));
+                    addToList(listMeta, wrapInTag(item));
                 }
             }
             wrappedValue = listMeta;
@@ -307,14 +307,14 @@ public class InventoryUtils extends NMSUtils
 
             Object properties = createNode(skullOwner, "Properties");
 
-            Object listMeta = class_NBTTagList.newInstance();
-            Object textureNode = class_NBTTagCompound.newInstance();
+            Object listMeta = class_NBTTagList_constructor.newInstance();
+            Object textureNode = class_NBTTagCompound_constructor.newInstance();
 
             String textureJSON = "{textures:{SKIN:{url:\"" + url + "\"}}}";
             String encoded = Base64Coder.encodeString(textureJSON);
 
             setMeta(textureNode, "Value", encoded);
-            class_NBTTagList_addMethod.invoke(listMeta, textureNode);
+            addToList(listMeta, textureNode);
             class_NBTTagCompound_setMethod.invoke(properties, "textures", listMeta);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -514,6 +514,7 @@ public class InventoryUtils extends NMSUtils
         return propertyString;
     }
 
+    @SuppressWarnings("EqualsReference")
     public static boolean isSameInstance(ItemStack one, ItemStack two) {
         return one == two;
     }

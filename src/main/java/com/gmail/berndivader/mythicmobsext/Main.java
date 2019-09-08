@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
@@ -30,6 +31,7 @@ import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import com.gmail.berndivader.mythicmobsext.placeholders.PlaceholderRegistery;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
@@ -55,14 +57,15 @@ JavaPlugin
 	public static Random random;
 	public static boolean hasRpgItems = false;
 	public static boolean slappyNewBorn = true;
+	public static boolean server_running;
 	
 	public Thiefs thiefs;
 	
-	
 	public Internals internals;
 	public Externals externals;
-
+	
 	public void onEnable() {
+		server_running=true;
 		plugin = this;
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
@@ -123,20 +126,24 @@ JavaPlugin
 			}
 			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if (pluginmanager.getPlugin("ProtocolLib")!=null) new ProtocolLibSupport(this);
-			if (Config.quests&&QuestsSupport.isPresent()) new QuestsSupport(this);
-			if (LibsDisguisesSupport.isPresent()) new LibsDisguisesSupport();
-			if (Config.ncp&&NoCheatPlusSupport.isPresent()) new NoCheatPlusSupport(this);
+			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
+				new ProtocolLibSupport(this);
+			}
+			if (Config.quests&&pluginmanager.getPlugin("Quests")!=null) new QuestsSupport(this);
+			if (pluginmanager.getPlugin("LibsDisguise")!=null) new LibsDisguisesSupport();
+			if (Config.ncp&&pluginmanager.getPlugin("NoCheatPlus")!=null) new NoCheatPlusSupport(this);
 			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
 			if (Config.pre44spawn) new Pre44MobSpawnEvent();
 			
 			entityCacheHandler=new EntityCacheHandler();
 			new BackBagHelper();
+			new BossBars();
 			
 	        new BukkitRunnable() {
 				@Override
 				public void run() {
 					Utils.mythicmobs.getRandomSpawningManager().reload();
+					new PlaceholderRegistery();
 				}
 			}.runTask(this);
 		}
@@ -144,6 +151,7 @@ JavaPlugin
 
 	@Override
 	public void onDisable() {
+		server_running=false;
 		if(entityCacheHandler!=null) entityCacheHandler.stop();
 		if (healthbarhandler!=null) {
 			Main.healthbarhandler.removeHealthbars();

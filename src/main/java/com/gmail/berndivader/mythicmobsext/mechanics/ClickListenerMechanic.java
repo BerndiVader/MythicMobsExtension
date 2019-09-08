@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
@@ -18,8 +17,6 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.utils.tasks.Scheduler;
-import io.lumine.utils.tasks.Scheduler.Task;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -69,14 +66,7 @@ ITargetedEntitySkill
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!arg1.isPlayer()) return false;
 		if (!arg1.getBukkitEntity().hasMetadata(str)) {
-			try {
-				ClickTracker ct=new ClickTracker(this,arg0,(Player)arg1.getBukkitEntity());
-				Field f=ct.getClass().getSuperclass().getDeclaredField("task");
-				f.setAccessible(true);
-				ct.task1=(Task)f.get(ct);
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			new ClickTracker(this,arg0,(Player)arg1.getBukkitEntity());
 			return true;
 		}
 		return false;
@@ -90,7 +80,6 @@ ITargetedEntitySkill
 	IParentSkill,
 	Listener {
         final ClickListenerMechanic buff;
-        Scheduler.Task task1;
         public int ticksRemaining;
         String actionString;
         boolean hasEnded,finish,crouch;
@@ -182,7 +171,7 @@ ITargetedEntitySkill
             }
         	HandlerList.unregisterAll(this);
         	p.removeMetadata(str,Main.getPlugin());
-        	return task1.terminate();
+        	return true;
         }
 	}
 	

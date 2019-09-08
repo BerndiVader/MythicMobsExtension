@@ -1,21 +1,20 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
-
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class LineSpeechBubbleMechanic 
 extends 
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String oline;
-	private String nline;
+	private PlaceholderString oline;
+	private PlaceholderString nline;
 	private String id;
 	private String cmp;
 
@@ -28,19 +27,19 @@ ITargetedEntitySkill {
 		String nl=mlc.getString(new String[] { "newline", "nl" }, null);
 		if (nl!=null) {
 			if (nl.startsWith("\"") && nl.endsWith("\"")) {
-				this.nline=SkillString.parseMessageSpecialChars((nl.substring(1,nl.length()-1)));
+				this.nline=new PlaceholderString(SkillString.parseMessageSpecialChars((nl.substring(1,nl.length()-1))));
 			} else {
-				this.nline=nl;
+				this.nline=new PlaceholderString(nl);
 			}
 		}
 		if (ol!=null) {
 			if (ol.startsWith("\"") && ol.endsWith("\"")) {
-				this.oline=SkillString.unparseMessageSpecialChars(ol.substring(1,ol.length()-1));
+				this.oline=new PlaceholderString(SkillString.unparseMessageSpecialChars(ol.substring(1,ol.length()-1)));
 			} else {
-				this.oline=ol;
+				this.oline=new PlaceholderString(ol);
 			}
 		} else {
-			this.oline="";
+			this.oline=new PlaceholderString("");
 		}
 	}
 
@@ -50,8 +49,8 @@ ITargetedEntitySkill {
 			SpeechBubble sb=HealthbarHandler.speechbubbles.get(data.getCaster().getEntity().getUniqueId().toString()+this.id);
 			if (this.oline!=null) {
 				String s2="";
-				String s1=Utils.parseMobVariables(this.oline,data,target,data.getTrigger(),null);
-				if (this.nline!=null) s2=Utils.parseMobVariables(this.nline,data,target,data.getTrigger(),null);
+				String s1=this.oline.get(data,target);
+				if (this.nline!=null) s2=this.nline.get(data,target);
 				if (this.cmp.equals("append")) {
 					String[]arr1=sb.template;
 					String[]arr2=new String[]{s2};

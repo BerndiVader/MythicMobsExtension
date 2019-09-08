@@ -378,6 +378,10 @@ public final class MathUtils {
 		d.multiply(o);
 		return d;
 	}
+	
+	public static Vector getForwardOffsetVector(Location location, double length) {
+		return location.getDirection().clone().multiply(length);
+	}
 
 	public static float lookAtYaw(Location loc, Location lookat) {
 		loc = loc.clone();
@@ -559,7 +563,7 @@ public final class MathUtils {
 	}
 	
 	public static boolean playerInMotion(Player p) {
-		Vec3D v3=Utils.pl.get(p.getUniqueId());
+		Vec3D v3=Utils.players.get(p.getUniqueId());
 		return Math.abs(v3.getX())>0||Math.abs(v3.getY())>0||Math.abs(v3.getZ())>=0;
 	}
 	

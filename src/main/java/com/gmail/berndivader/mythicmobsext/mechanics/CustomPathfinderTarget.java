@@ -3,7 +3,6 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
@@ -13,6 +12,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="custompathfindertarget",author="BerndiVader")
 public class CustomPathfinderTarget 
@@ -22,7 +22,7 @@ implements
 ITargetedEntitySkill {
 	
 	Handler vh=Volatile.handler;
-	String g;
+	PlaceholderString g;
 	
 	public CustomPathfinderTarget(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -31,7 +31,7 @@ ITargetedEntitySkill {
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
 			parse=parse.substring(1, parse.length()-1);
 		}
-		this.g=SkillString.parseMessageSpecialChars(parse);
+		this.g=new PlaceholderString(SkillString.parseMessageSpecialChars(parse));
 	}
 
 	@Override
@@ -44,7 +44,7 @@ ITargetedEntitySkill {
 			lS = (LivingEntity)data.getCaster().getEntity().getBukkitEntity();
 		}
 		if (lS!=null) {
-			String pG=Utils.parseMobVariables(this.g, data, data.getCaster().getEntity(),t,null);
+			String pG=this.g.get(data,t);
 			vh.aiTargetSelector(lS,pG,lT);
 			return true;
 		}

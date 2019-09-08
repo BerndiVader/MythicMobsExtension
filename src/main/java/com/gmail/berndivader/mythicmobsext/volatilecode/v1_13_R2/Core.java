@@ -57,6 +57,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalNotifyOnCollide;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalTravelAround;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalVexD;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -632,6 +633,34 @@ implements Handler,Listener {
                 	break;
             	}
             }
+            case "travelaround": {
+            	if (e instanceof EntityCreature) {
+            		double speed = 1.0d;
+            		double mR=50.0D;
+            		double tR=1100.0D;
+            		boolean iT=false;
+                	if (data!=null) speed=Double.parseDouble(data);
+                	if (data1!=null) {
+    	        		String[]p=data1.split(",");
+    	        		for (int a=0;a<p.length;a++) {
+    	        			if (MathUtils.isNumeric(p[a])) {
+    	        				switch(a) {
+    	        				case 0:
+    	        					mR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				case 1:
+    	        					tR=Double.parseDouble(p[a]);
+    	        					break;
+    	        				}
+    	        			} else if (a==2) {
+    	        				iT=Boolean.parseBoolean(p[a].toUpperCase());
+    	        			}
+    	        		}
+                	}
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalTravelAround(e,speed,mR,tR,iT));
+                	break;
+            	}
+            }
             case "doorsopen": {
             	if(e instanceof EntityInsentient) {
             		boolean bl1=data!=null?Boolean.parseBoolean(data):false;
@@ -699,6 +728,48 @@ implements Handler,Listener {
         		}
             }
         }
+	}
+	
+	@Override
+	public void addTravelPoint(Entity bukkit_entity,Vec3D vector,boolean remove) {
+        EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
+        PathfinderGoalSelector goals=entity.goalSelector;
+		try {
+			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+			list.clear();
+            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+            Iterator<Object>iter=list.iterator();
+            while(iter.hasNext()) {
+            	Object object=iter.next();
+            	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
+            	if(goal instanceof PathfinderGoalTravelAround) {
+            		((PathfinderGoalTravelAround)goal).addTravelPoint(vector,remove);
+            	}
+    		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void clearTravelPoints(Entity bukkit_entity) {
+        EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
+        PathfinderGoalSelector goals=entity.goalSelector;
+		try {
+			Set<Object>list=(Set)ai_pathfinderlist_c.get((Object)goals);
+			list.clear();
+            list=(Set)ai_pathfinderlist_b.get((Object)goals);
+            Iterator<Object>iter=list.iterator();
+            while(iter.hasNext()) {
+            	Object object=iter.next();
+            	PathfinderGoal goal=(PathfinderGoal)NMSUtils.getPathfinderGoalFromPathFinderSelectorItem(object);
+            	if(goal instanceof PathfinderGoalTravelAround) {
+            		((PathfinderGoalTravelAround)goal).clearTravelPoints();
+            	}
+    		}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -1037,6 +1108,11 @@ implements Handler,Listener {
             PathPoint pp=pe.c();
             return pp!=null;
         }
+	}
+
+	@Override
+	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {
+		this.addTravelPoint(bukkit_entity,vector,true);
 	}
 
 }

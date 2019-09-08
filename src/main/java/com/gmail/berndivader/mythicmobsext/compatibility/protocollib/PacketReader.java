@@ -40,7 +40,7 @@ PacketListener {
 						PacketType.Play.Server.ENTITY_METADATA,
 						PacketType.Play.Server.ENTITY_STATUS,
 					})
-				.gamePhase(GamePhase.PLAYING)
+				.gamePhase(GamePhase.BOTH)
 				.options(new ListenerOptions[0])
 				.build();
 	}
@@ -73,6 +73,7 @@ PacketListener {
 			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
 			if(entity_status.getEntityStatus()==37) {
 				if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
+					e.setFireTicks(0);
 					NMSUtils.setFireProofEntity(e,true);;
 					packet_event.setCancelled(true);
 				}

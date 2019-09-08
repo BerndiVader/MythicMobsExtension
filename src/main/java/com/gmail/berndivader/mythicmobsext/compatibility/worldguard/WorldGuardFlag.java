@@ -35,6 +35,8 @@ Listener {
 			e.register(new WorldGuardRegionCondition(e.getConditionName(),e.getConfig()));
 		} else if(e.getConditionName().toLowerCase().equals("entitiesinregion")) {
 			e.register(new EntitiesInRegionCondition(e.getConditionName(),e.getConfig()));
+		} else if(e.getConditionName().toLowerCase().equals("memberregion")) {
+			e.register(new MemberRegion(e.getConditionName(),e.getConfig()));
 		}
 	}
 }

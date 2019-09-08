@@ -15,7 +15,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -26,6 +25,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.conditions.InvalidCondition;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
@@ -40,8 +40,8 @@ INoTargetSkill,
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 
-	private String meetAction;
-	private String elseAction;
+	private PlaceholderString meetAction;
+	private PlaceholderString elseAction;
 	private String cConditionLine;
 	private String tConditionLine;
 	private boolean breakOnMeet;
@@ -66,13 +66,13 @@ ITargetedLocationSkill {
 		this.parseConditionLines(ms, false);
 		ms = mlc.getString(new String[] { "targetconditions", "tc" });
 		this.parseConditionLines(ms, true);
-		this.meetAction = mlc.getString(new String[] { "meet", "m" });
-		this.elseAction = mlc.getString(new String[] { "else", "e" });
+		this.meetAction = new PlaceholderString(SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "meet", "m" })));
+		this.elseAction = new PlaceholderString(SkillString.parseMessageSpecialChars(mlc.getString(new String[] { "else", "e" })));;
 		this.meetTargeter = Optional.ofNullable(mlc.getString(new String[] { "meettargeter", "mt" }));
 		this.elseTargeter = Optional.ofNullable(mlc.getString(new String[] { "elsetargeter", "et" }));
 		if (!this.RTskill) {
-			if (this.meetAction!=null) this.meetSkill = Utils.mythicmobs.getSkillManager().getSkill(this.meetAction);
-			if (this.elseAction!=null) this.elseSkill = Utils.mythicmobs.getSkillManager().getSkill(this.elseAction);
+			if (this.meetAction!=null) this.meetSkill = Utils.mythicmobs.getSkillManager().getSkill(this.meetAction.get());
+			if (this.elseAction!=null) this.elseSkill = Utils.mythicmobs.getSkillManager().getSkill(this.elseAction.get());
 		}
 		if (this.cConditionLines!=null && !this.cConditionLines.isEmpty()) this.casterConditions = this.getConditions(this.cConditionLines);
 		if (this.tConditionLines != null && !this.tConditionLines.isEmpty()) this.targetConditions = this.getConditions(this.tConditionLines);
@@ -101,10 +101,10 @@ ITargetedLocationSkill {
 			if (sdata.getEntityTargets()!=null&&sdata.getEntityTargets().size()>0) at=sdata.getEntityTargets().iterator().next();
 			if (sdata.getLocationTargets()!=null&&sdata.getLocationTargets().size()>0) al=sdata.getLocationTargets().iterator().next();
 			if (this.meetAction!=null) {
-				mSkill=Utils.mythicmobs.getSkillManager().getSkill(Utils.parseMobVariables(SkillString.parseMessageSpecialChars(this.meetAction),sdata,sdata.getCaster().getEntity(),at,al));
+				mSkill=Utils.mythicmobs.getSkillManager().getSkill(this.meetAction.get(data,at));
 			}
 			if (this.elseAction!=null) {
-				eSkill=Utils.mythicmobs.getSkillManager().getSkill(Utils.parseMobVariables(SkillString.parseMessageSpecialChars(this.elseAction),sdata,sdata.getCaster().getEntity(),at,al));
+				eSkill=Utils.mythicmobs.getSkillManager().getSkill(this.elseAction.get(data,at));
 			}
 		} else {
 			mSkill=this.meetSkill;
@@ -129,7 +129,7 @@ ITargetedLocationSkill {
 	}
 
 	private static void renewTargets(String ts, SkillMetadata data) {
-		Optional<SkillTargeter> maybeTargeter = Optional.of(AbstractSkill.parseSkillTargeter(ts));
+		Optional<SkillTargeter> maybeTargeter = Optional.of(Utils.parseSkillTargeter(ts));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter st=maybeTargeter.get();
             if (st instanceof CustomTargeter) {
