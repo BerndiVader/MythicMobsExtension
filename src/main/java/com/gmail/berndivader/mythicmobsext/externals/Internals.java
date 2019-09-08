@@ -1,6 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.externals;
 
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
@@ -28,7 +31,15 @@ Listener {
    	public static int m,c,t,ml,cl,tl;
    	
    	static {
-   		filename=Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20"," ");
+   		try {
+			filename=URLDecoder.decode(Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath(),StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			try {
+				filename=URLDecoder.decode(Main.getPlugin().getClass().getProtectionDomain().getCodeSource().getLocation().getPath(),StandardCharsets.ISO_8859_1.toString());
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+		}
    		mechanics=new HashMap<>();
    		conditions=new HashMap<>();
    		targeters=new HashMap<>();
