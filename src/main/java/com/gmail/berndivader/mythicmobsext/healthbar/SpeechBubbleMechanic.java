@@ -14,13 +14,14 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class SpeechBubbleMechanic
 extends
 SkillMechanic 
 implements
 ITargetedEntitySkill {
-	private String text;
+	private PlaceholderString text;
 	private String id;
 	private double offset;
 	private double so;
@@ -41,10 +42,11 @@ ITargetedEntitySkill {
 		this.time=mlc.getInteger(new String[] { "counter", "c","time" }, 200);
 		this.b1=mlc.getBoolean(new String[] { "animation", "anim", "a" }, true);  
 		this.b2=mlc.getBoolean(new String[] { "usecounter", "uc" }, true);
-		this.text=mlc.getString(new String[] { "display","text","t" }, " ");
-		if (text.startsWith("\"") && text.endsWith("\"")) {
-			this.text=text.substring(1,text.length()-1);
+		String txt=mlc.getString(new String[] { "display","text","t" }, " ");
+		if (txt.startsWith("\"") && txt.endsWith("\"")) {
+			txt=txt.substring(1,txt.length()-1);
 		}
+		text=new PlaceholderString(SkillString.unparseMessageSpecialChars(txt));
 	}
 
 	@Override
@@ -55,9 +57,7 @@ ITargetedEntitySkill {
 			sb.remove();
 		}
 		LivingEntity entity=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
-		String txt=this.text;
-		txt=SkillString.unparseMessageSpecialChars(txt);
-		txt=Utils.parseMobVariables(txt,data,data.getCaster().getEntity(),target,null);
+		String txt=this.text.get(data,target);
 		Location l1=entity.getLocation().clone();
 		ArrayList<String>li1=new ArrayList<String>();
 		String[]a2=txt.split("<nl>");

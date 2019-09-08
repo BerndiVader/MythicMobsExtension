@@ -26,6 +26,7 @@ import com.gmail.berndivader.mythicmobsext.utils.RangedDouble.Operation;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public 
 class
@@ -148,7 +149,7 @@ Cloneable
 	
 	public void parseSlot(SkillMetadata data,AbstractEntity target) {
 		if(this.slot!=null) {
-			this.slot=Utils.parseMobVariables(this.slot,data,data.getCaster().getEntity(),target,null);
+			this.slot=new PlaceholderString(this.slot).get(data,target);
 		}
 	}
 	

@@ -16,7 +16,6 @@ import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
@@ -24,6 +23,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="math",author="BerndiVader")
 public class EvalMechanic 
@@ -31,14 +31,17 @@ extends
 SkillMechanic
 implements
 INoTargetSkill,
-ITargetedEntitySkill {
-	String eval,js="mme_eval";
+ITargetedEntitySkill 
+{
+	PlaceholderString eval;
+	String js="mme_eval";
 	String[]parse;
 
 	public EvalMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		if ((eval=mlc.getString(new String[] {"evaluate","eval","e"},"")).startsWith("\"")) {
-			eval=SkillString.unparseMessageSpecialChars(eval.substring(1,eval.length()-1));
+		String temp=mlc.getString(new String[] {"evaluate","eval","e"},"");
+		if ((temp.startsWith("\""))) {
+			temp=SkillString.unparseMessageSpecialChars(temp.substring(1,temp.length()-1));
 		};
 		String s1=mlc.getString(new String[] {"storage","store","s"},"<mob.meta.test>");
 		parse=(s1.substring(1,s1.length()-1)).split(Pattern.quote("."));
@@ -57,13 +60,14 @@ ITargetedEntitySkill {
 	boolean eval(SkillMetadata data,Entity e1,Location l1) {
 		double s1=0d;
 		try {
-			s1=((Number)Nashorn.get().invoc.invokeFunction(js,Utils.parseMobVariables(eval,data,data.getCaster().getEntity(),BukkitAdapter.adapt(e1),BukkitAdapter.adapt(l1)))).doubleValue();
+			s1=((Number)Nashorn.get().invoc.invokeFunction(js,eval.get(data))).doubleValue();
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}
 		Entity target=null;
 		switch(parse[0]) {
 		case "mob":
+		case "caster":
 			target=data.getCaster().getEntity().getBukkitEntity();
 			break;
 		case "target":

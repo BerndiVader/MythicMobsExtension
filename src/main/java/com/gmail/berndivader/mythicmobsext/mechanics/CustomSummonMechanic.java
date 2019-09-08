@@ -17,6 +17,7 @@ import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
 import io.lumine.xikage.mythicmobs.skills.*;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="customsummon",author="BerndiVader")
 public 
@@ -43,7 +44,7 @@ ITargetedEntitySkill
 		if (this.amount.startsWith("-")) this.amount = "1";
 		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
 		this.invisible=mlc.getBoolean(new String[] {"invisible","inv"},false);
-		this.tag = mlc.getString(new String[] { "addtag", "tag", "at" } );
+		this.tag = SkillString.unparseMessageSpecialChars(mlc.getString(new String[] { "addtag", "tag", "at" },"" ));
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
 		this.yNoise = mlc.getInteger(new String[] { "ynoise", "yn", "yradius", "yr" }, this.noise);
 		this.yUpOnly = mlc.getBoolean(new String[] { "yradiusuponly", "ynoiseuponly", "yruo", "ynuo", "yu" }, false);
@@ -95,10 +96,8 @@ ITargetedEntitySkill
 				}
 				if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
 				Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
-				if (this.tag!=null) {
-					String tt = SkillString.unparseMessageSpecialChars(this.tag);
-					tt=Utils.parseMobVariables(tt,data,data.getCaster().getEntity(),te,null);
-					ams.getEntity().addScoreboardTag(tt);
+				if (this.tag.length()>0) {
+					ams.getEntity().addScoreboardTag(new PlaceholderString(this.tag).get(data,te));
 				}
 				if (this.setowner) {
 					ams.setOwner(data.getCaster().getEntity().getUniqueId());

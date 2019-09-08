@@ -5,7 +5,6 @@ import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -25,9 +24,8 @@ SetMetatagMechanic {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (this.tag == null || this.tag.isEmpty())
-			return false;
-		String parsedTag=Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),target,null);
+		String parsedTag=this.tag.get(data,target);
+		if (parsedTag==null||parsedTag.isEmpty()) return false;
 		Entity bEntity = target.getBukkitEntity();
 		if (bEntity.hasMetadata(parsedTag)) {
 			bEntity.removeMetadata(parsedTag, Main.getPlugin());
@@ -38,9 +36,9 @@ SetMetatagMechanic {
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
+		String parsedTag=this.tag.get(data);
+		if (parsedTag==null||parsedTag.isEmpty()) return false;
 		Block target = BukkitAdapter.adapt(location).getBlock();
-		if (this.tag == null || this.tag.isEmpty()) return false;
-		String parsedTag=Utils.parseMobVariables(this.tag,data,data.getCaster().getEntity(),null,location);
 		if (target.hasMetadata(parsedTag)) {
 			target.removeMetadata(parsedTag, Main.getPlugin());
 			return true;

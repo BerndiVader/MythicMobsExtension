@@ -9,7 +9,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.jboolexpr.BooleanExpression;
 import com.gmail.berndivader.mythicmobsext.jboolexpr.MalformedBooleanException;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.externals.*;
@@ -22,6 +21,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="testitemfor,ownsitem,ownsitemsimple,iteminhand",author="BerndiVader")
 public class HasItemCondition 
@@ -79,7 +79,7 @@ IEntityCondition
 				SkillMetadata data=new SkillMetadata(SkillTrigger.API,new GenericCaster(t),t);
 				holding.parseSlot(data,t);
 				String bag_name=holding.getBagName();
-				if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(bag_name,data,t,t,null));
+				if(bag_name!=null) holding.setBagName(new PlaceholderString(bag_name).get(data,t));
 				List<ItemStack>contents=HoldingItem.getContents(holding,target);
 				for(int i2=0;i2<contents.size();i2++) {
 					if(bool=holding.stackMatch(contents.get(i2),false)) {

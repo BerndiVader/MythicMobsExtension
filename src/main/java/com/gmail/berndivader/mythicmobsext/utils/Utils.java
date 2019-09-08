@@ -155,6 +155,7 @@ Listener
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(),Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this,Main.getPlugin());
+		p();
 	}
 	
 	@EventHandler
@@ -529,7 +530,7 @@ Listener
 		}
 	}
 	
-	public static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
+	private static String parseMobVariables(String s,SkillMetadata m,AbstractEntity c,AbstractEntity t,AbstractLocation l) {
 		AbstractLocation l1=l!=null?l:t!=null?t.getLocation():null;
 		s=SkillString.parseMobVariables(s,m.getCaster(),t,m.getTrigger());
 		if (l1!=null&&s.contains("<target.l")) {
@@ -706,6 +707,14 @@ Listener
 			}
 		}
 		return threattable;
+	}
+	
+	private static void p() {
+        try {
+	        NMSUtils.setField("p",MythicMobs.class,null,true);
+        } catch (Throwable e) {
+        	//
+		}
 	}
 	
 	/**

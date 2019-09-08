@@ -20,6 +20,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public
 class
@@ -33,17 +34,17 @@ ITargetedEntitySkill
 	int to_slot;
 	WhereEnum what;
 	boolean override;
-	String meta_name,from_slot,bag_name;
+	PlaceholderString meta_name,from_slot,bag_name;
 	HoldingItem holding;
 	
 	public RestoreFromBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		ASYNC_SAFE=false;
-		from_slot=mlc.getString("fromslot","-1");
+		from_slot=mlc.getPlaceholderString("fromslot","-1");
 		to_slot=mlc.getInteger("toslot",-1);
 		override=mlc.getBoolean("override",true);
 		what=WhereEnum.getWhere(mlc.getString("to"));
-		bag_name=mlc.getString(new String[] {"title","name"},BackBagHelper.str_name);
+		bag_name=mlc.getPlaceholderString(new String[] {"title","name"},BackBagHelper.str_name);
 	}
 
 	@Override
@@ -55,13 +56,13 @@ ITargetedEntitySkill
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		int inventory_slot=-1;
 		try {
-			inventory_slot=Integer.parseInt(Utils.parseMobVariables(from_slot, data, data.getCaster().getEntity(), abstract_entity, null));
+			inventory_slot=Integer.parseInt(from_slot.get(data,abstract_entity));
 		} catch (Exception ex) {
 			Main.logger.warning("Invalid Integer for slot (reset to default -1) in skillline: "+this.line);
 		}
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			BackBag bag=new BackBag(holder,bag_name.get(data,abstract_entity));
 			holding.parseSlot(data,abstract_entity);
 			if(bag.getInventory()==null) return false;
 			Inventory inventory=bag.getInventory();

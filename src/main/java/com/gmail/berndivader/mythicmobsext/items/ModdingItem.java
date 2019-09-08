@@ -15,10 +15,10 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public 
 class
@@ -62,8 +62,8 @@ Cloneable
 	
 	public int getSlot(SkillMetadata data,AbstractEntity target) {
 		return data!=null
-				?this.slot.isPresent()?Integer.parseInt(Utils.parseMobVariables(this.slot.get(),data,data.getCaster().getEntity(),target,null)):-1
-				:this.slot.isPresent()?Integer.parseInt(this.slot.get()):-1;
+				?this.slot.isPresent()?Integer.parseInt(new PlaceholderString(this.slot.get()).get(data,target)):-1
+				:this.slot.isPresent()?Integer.parseInt(new PlaceholderString(this.slot.get()).get(target)):-1;
 	}
 	
 	public void setBagName(String bag_name) {
@@ -79,25 +79,24 @@ Cloneable
 	}
 	
 	private void parseVars(SkillMetadata data,AbstractEntity target) {
-		AbstractEntity caster=data.getCaster().getEntity();
 		if(name.isPresent()) {
-			this.name=Optional.of(Utils.parseMobVariables(this.name.get(),data,caster,target,null));
+			this.name=Optional.of(new PlaceholderString(this.name.get()).get(data,target));
 		}
 		if(lore.isPresent()) {
 			String[]lores=lore.get();
 			int size=lores.length;
 			for(int i1=0;i1<size;i1++) {
-				lores[i1]=Utils.parseMobVariables(lores[i1],data,caster,target,null);
+				lores[i1]=new PlaceholderString(lores[i1]).get(data,target);
 			}
 			this.lore=Optional.of(lores);
 		}
 		if(durability.isPresent()) {
-			setDurability(Utils.parseMobVariables(this.durability.get(),data,caster,target,null));
+			setDurability(new PlaceholderString(this.durability.get()).get(data,target));
 		}
 		if(bag_name.isPresent()) {
-			this.bag_name=Optional.of(Utils.parseMobVariables(this.bag_name.get(),data,caster,target,null));
+			this.bag_name=Optional.of(new PlaceholderString(this.bag_name.get()).get(data,target));
 		}
-		if(this.slot.isPresent()) setSlot(Utils.parseMobVariables(this.slot.get(),data,caster,target,null));
+		if(this.slot.isPresent()) setSlot(new PlaceholderString(this.slot.get()).get(data,target));
 	}
 	
 	public ItemStack applyMods(SkillMetadata data,AbstractEntity target,ItemStack item_stack) {
@@ -108,7 +107,7 @@ Cloneable
 				if(material.isPresent()) item_stack.setType(material.get());
 				if(amount.isPresent()) item_stack.setAmount(amount.get().rollInteger());
 				if(name.isPresent()) {
-					String name=Utils.parseMobVariables(this.name.get(),data,caster,target,null);
+					String name=new PlaceholderString(this.name.get()).get(data,target);
 					ItemMeta item_meta=item_stack.getItemMeta();
 					item_meta.setDisplayName(name);
 					item_stack.setItemMeta(item_meta);
@@ -117,7 +116,7 @@ Cloneable
 					String[]lore=this.lore.get();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
-						lore[i1]=Utils.parseMobVariables(lore[i1],data,caster,target,null);
+						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);
 					}
 					ItemMeta item_meta=item_stack.getItemMeta();
 					item_meta.setLore(Arrays.asList(lore));
@@ -134,7 +133,7 @@ Cloneable
 				}
 				if(durability.isPresent()) {
 					short duration=item_stack.getDurability();
-					String durability=Utils.parseMobVariables(this.durability.get(),data,caster,target,null);
+					String durability=new PlaceholderString(this.durability.get()).get(data,target);
 					try {
 						duration=Short.parseShort(durability);
 					} catch (Exception ex) {
@@ -146,7 +145,7 @@ Cloneable
 			case ADD:
 				if(amount.isPresent()) item_stack.setAmount(item_stack.getAmount()+amount.get().rollInteger());
 				if(name.isPresent()) {
-					String name=Utils.parseMobVariables(this.name.get(),data,caster,target,null);
+					String name=new PlaceholderString(this.name.get()).get(data,target);
 					ItemMeta item_meta=item_stack.getItemMeta();
 					String old_name=item_meta.hasDisplayName()?item_meta.getDisplayName():"";
 					item_meta.setDisplayName(old_name+name);
@@ -156,7 +155,7 @@ Cloneable
 					String[]lore=this.lore.get();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
-						lore[i1]=Utils.parseMobVariables(lore[i1],data,caster,target,null);
+						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);
 					}
 					ItemMeta item_meta=item_stack.getItemMeta();
 					if(item_meta.hasLore()) {
@@ -178,7 +177,7 @@ Cloneable
 				}
 				if(durability.isPresent()) {
 					short duration=0;
-					String durability=Utils.parseMobVariables(this.durability.get(),data,caster,target,null);
+					String durability=new PlaceholderString(this.durability.get()).get(data,target);
 					try {
 						duration=Short.parseShort(durability);
 					} catch (Exception ex) {
@@ -195,7 +194,7 @@ Cloneable
 					item_stack.setAmount(new_size);
 				}
 				if(name.isPresent()&&item_stack.getItemMeta().hasDisplayName()) {
-					String name=Utils.parseMobVariables(this.name.get(),data,caster,target,null);
+					String name=new PlaceholderString(this.name.get()).get(data,target);
 					ItemMeta item_meta=item_stack.getItemMeta();
 					String new_name=name;
 					String old_name=item_meta.getDisplayName();
@@ -206,7 +205,7 @@ Cloneable
 					String[]lore=this.lore.get();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
-						lore[i1]=Utils.parseMobVariables(lore[i1],data,caster,target,null);
+						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);
 					}
 					ItemMeta item_meta=item_stack.getItemMeta();
 					String[]lores=lore;
@@ -226,7 +225,7 @@ Cloneable
 				}
 				if(durability.isPresent()) {
 					short duration=0;
-					String durability=Utils.parseMobVariables(this.durability.get(),data,caster,target,null);
+					String durability=new PlaceholderString(this.durability.get()).get(data,target);
 					try {
 						duration=Short.parseShort(durability);
 					} catch (Exception ex) {

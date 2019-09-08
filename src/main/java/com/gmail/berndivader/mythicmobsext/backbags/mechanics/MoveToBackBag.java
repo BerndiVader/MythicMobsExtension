@@ -13,7 +13,6 @@ import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -21,6 +20,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public
 class
@@ -34,7 +34,8 @@ ITargetedEntitySkill
 	int backbag_slot;
 	WhereEnum what;
 	boolean override,tag_where;
-	String meta_name,bag_name,slot;
+	PlaceholderString bag_name;
+	String meta_name,slot;
 	HoldingItem holding;
 	
 	public MoveToBackBag(String skill, MythicLineConfig mlc) {
@@ -46,7 +47,7 @@ ITargetedEntitySkill
 		override=mlc.getBoolean("override",true);
 		tag_where=mlc.getBoolean("tag",false);
 		meta_name=mlc.getString("meta","");
-		bag_name=mlc.getString(new String[] {"title","name"},BackBagHelper.str_name);
+		bag_name=mlc.getPlaceholderString(new String[] {"title","name"},BackBagHelper.str_name);
 		
 		holding=new HoldingItem();
 		holding.setWhere(what);
@@ -65,7 +66,7 @@ ITargetedEntitySkill
 			if(holding!=null) {
 				holding.parseSlot(data,abstract_entity);
 				LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-				BackBag bag=new BackBag(holder,Utils.parseMobVariables(bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+				BackBag bag=new BackBag(holder,bag_name.get(data,abstract_entity));
 				if(bag.getInventory()==null) return false;
 				Inventory inventory=bag.getInventory();
 				List<ItemStack>stack=HoldingItem.getContents(holding,holder);

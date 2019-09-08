@@ -983,7 +983,7 @@ implements Handler,Listener {
         if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
         	eh.getCooldownTracker().cooldowns.remove(i);
         };
-       	eh.getCooldownTracker().a(i,j1);
+       	eh.getCooldownTracker().setCooldown(i,j1);
 		return true;
 	}
 	

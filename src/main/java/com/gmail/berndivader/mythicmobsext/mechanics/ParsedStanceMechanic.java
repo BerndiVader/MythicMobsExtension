@@ -13,6 +13,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="parsedstance,pstance",author="BerndiVader")
 public class ParsedStanceMechanic extends SkillMechanic
@@ -21,14 +22,14 @@ ITargetedEntitySkill,
 ITargetedLocationSkill,
 INoTargetSkill {
 	
-	protected String stance;
+	protected PlaceholderString stance;
 
 	public ParsedStanceMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		String s = mlc.getString(new String[]{"stance","s"});
 		if (s.startsWith("\"") && s.endsWith("\"")) s=s.substring(1,s.length()-1);
 		s=SkillString.parseMessageSpecialChars(s);
-		this.stance=s;
+		this.stance=new PlaceholderString(s);
 	}
 
 	@Override
@@ -49,7 +50,7 @@ INoTargetSkill {
 	private boolean castCast(SkillMetadata data,AbstractEntity e1,AbstractLocation l1) {
 		if (Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
 			ActiveMob am = Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity());
-			String s=Utils.parseMobVariables(this.stance,data,data.getCaster().getEntity(),e1,l1);
+			String s=this.stance.get(data,e1);
 			am.setStance(s);
 			return true;
 		}

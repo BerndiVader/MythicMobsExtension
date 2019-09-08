@@ -15,6 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="giveitem",author="BerndiVader")
 public 
@@ -28,10 +29,12 @@ INoTargetSkill
 {
 	
 	static ItemManager itemmanager=Utils.mythicmobs.getItemManager();
-	
-	String item_name,bag_name,click_skill;
+	public final static String str_viewonly="view_only";
+
+	PlaceholderString bag_name;
+	String item_name,click_skill;
 	HoldingItem holding;
-	boolean override;
+	boolean override,view_only;
 	int amount;
 	
 	public CreateItem(String skill, MythicLineConfig mlc) {
@@ -47,6 +50,7 @@ INoTargetSkill
 		this.amount=mlc.getInteger("amount",1);
 		this.override=mlc.getBoolean("override",true);
 		this.click_skill=mlc.getString("clickskill");
+		this.view_only=mlc.getBoolean("viewonly",false);
 	}
 
 	@Override
@@ -61,13 +65,14 @@ INoTargetSkill
 		if(holding!=null) {
 			if(item_name==null||!abstract_entity.isLiving()) return false;
 			holding.parseSlot(data,abstract_entity);
-			if(bag_name!=null) holding.setBagName(Utils.parseMobVariables(this.bag_name,data,data.getCaster().getEntity(),abstract_entity,null));
+			if(bag_name!=null) holding.setBagName(this.bag_name.get(data,abstract_entity));
 			ItemStack item_stack=itemmanager.getItemStack(this.item_name);
 			if(item_stack!=null) {
 				item_stack.setAmount(amount);
-				if(this.click_skill!=null) {
-					item_stack=NMSUtils.makeReal(item_stack);
-					NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
+				item_stack=NMSUtils.makeReal(item_stack);
+				if(this.click_skill!=null) NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
+				if(this.view_only) {
+					NMSUtils.setMeta(item_stack,str_viewonly," ");
 				}
 				HoldingItem.giveItem((LivingEntity)abstract_entity.getBukkitEntity(),holding,item_stack,override);
 				return true;

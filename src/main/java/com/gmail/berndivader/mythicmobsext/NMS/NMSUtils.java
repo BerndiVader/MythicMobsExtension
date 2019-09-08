@@ -18,10 +18,12 @@ import org.bukkit.metadata.MetadataStoreBase;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 
 public
@@ -77,11 +79,7 @@ CompatibilityUtils
         	class_IChatBaseComponent_ChatSerializer = fixBukkitClass("net.minecraft.server.IChatBaseComponent$ChatSerializer");
         	class_EntitySnowman=fixBukkitClass("net.minecraft.server.EntitySnowman");
         	class_Drop=fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
-        	if(Utils.serverV<14) {
-        		class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem");
-        	} else {
-        		class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass("net.minecraft.server.PathfinderGoalWrapped");
-        	}
+        	class_PathfinderGoalSelector_PathfinderGoalSelectorItem=fixBukkitClass(Utils.serverV<14?"net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem":"net.minecraft.server.PathfinderGoalWrapped");
         	class_IInventory=fixBukkitClass("net.minecraft.server.IInventory");
         	class_CraftInventory=fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventory");
         	class_MetadataStoreBase=fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
@@ -96,6 +94,7 @@ CompatibilityUtils
 	        class_Entity_lastPitchField.setAccessible(true);
 	        class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
 	        class_Entity_lastYawField.setAccessible(true);
+	        
 	        if(Utils.serverV<14) {
 	        	class_Entity_fireProof=class_Entity.getDeclaredField("fireProof");
 		        class_Entity_fireProof.setAccessible(true);
@@ -423,6 +422,10 @@ CompatibilityUtils
 	 * @param bool {@link Boolean}
 	 */
 	public static void setFireProofEntity(Entity entity,boolean bool) {
+		if(Utils.serverV>13) {
+			Main.logger.warning("nosunburn not avail for 14.x or heigher!");
+			return;
+		}
 		try {
 			class_Entity_fireProof.set(getHandle(entity),bool);
 		} catch (IllegalArgumentException | IllegalAccessException e) {

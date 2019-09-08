@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -35,6 +34,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="dropmythicitem",author="BerndiVader")
 public class DropMythicItemMechanic
@@ -44,7 +44,7 @@ implements
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
 	String[]tags;
-	String str_types;
+	PlaceholderString str_types;
 	String dropname;
 	boolean tag,give,stackable,silent;
 	String amount;
@@ -52,7 +52,7 @@ ITargetedLocationSkill {
  	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE=false;
-		this.str_types=mlc.getString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },"");
+		this.str_types=mlc.getPlaceholderString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },"");
 		this.tags=mlc.getString(new String[] {"tags","tag"},"").split(",");
 		this.silent=mlc.getBoolean("silent",false);
 		this.tag=tags[0].length()>0;
@@ -62,7 +62,7 @@ ITargetedLocationSkill {
 	
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
-		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),null,target).split(",");
+		String[]types=this.str_types.get(data).split(",");
 		LootBag loot=makeLootBag(data,types,data.getTrigger(),tag,tags,this.stackable);
 		giveOrDrop(BukkitAdapter.adapt(target),null,loot,give,tag,stackable,tags,silent);
 		return true;
@@ -70,7 +70,7 @@ ITargetedLocationSkill {
 	
  	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		String[]types=Utils.parseMobVariables(this.str_types,data,data.getCaster().getEntity(),target,null).split(",");
+		String[]types=this.str_types.get(data,target).split(",");
  		LootBag loot=makeLootBag(data,types,target,tag,tags,this.stackable);
  		if(target.isPlayer()) {
  			Player player=(Player)target.getBukkitEntity();

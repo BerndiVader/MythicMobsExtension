@@ -31,6 +31,7 @@ import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
 import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import com.gmail.berndivader.mythicmobsext.placeholders.PlaceholderRegistery;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
@@ -125,7 +126,7 @@ JavaPlugin
 			}
 			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
 			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if (pluginmanager.getPlugin("ProtocolLib")!=null&&Utils.serverV<14) {
+			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
 				new ProtocolLibSupport(this);
 			}
 			if (Config.quests&&pluginmanager.getPlugin("Quests")!=null) new QuestsSupport(this);
@@ -142,6 +143,7 @@ JavaPlugin
 				@Override
 				public void run() {
 					Utils.mythicmobs.getRandomSpawningManager().reload();
+					new PlaceholderRegistery();
 				}
 			}.runTask(this);
 		}

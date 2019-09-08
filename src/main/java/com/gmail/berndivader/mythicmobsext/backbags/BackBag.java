@@ -20,6 +20,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.mechanics.CreateItem;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -146,8 +147,13 @@ Listener
 				}
 			}
 			ItemStack clicked_stack=e.getCurrentItem();
-			if(clicked_stack!=null&&NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
-				this.executeSkill(NMSUtils.getMetaString(clicked_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
+			if(clicked_stack!=null) {
+				if(NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
+					this.executeSkill(NMSUtils.getMetaString(clicked_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
+				}
+				if (NMSUtils.hasMeta(clicked_stack,CreateItem.str_viewonly)) {
+					e.setCancelled(false);
+				}
 			}
 		}
 	}

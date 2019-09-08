@@ -9,13 +9,13 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.IMetaSkill;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillManager;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="customrandomskill,advrandomskill",author="BerndiVader")
 public class CustomRandomSkillMechanic extends SkillMechanic 
@@ -70,13 +70,13 @@ IMetaSkill {
 	}
 	
 	public class SkillEntry {
-		String chance;
+		PlaceholderString chance;
 		int priority;
 		Optional<Skill> skill = Optional.empty();
 		
 		public SkillEntry(int priority, String chance, String skill) {
 			this.skill = skillmanager.getSkill(skill);
-			this.chance = chance;
+			this.chance = new PlaceholderString(chance);
 			this.priority = priority;
 		}
 		public boolean isSkillPresent() {
@@ -87,12 +87,10 @@ IMetaSkill {
 		}
 		public double getChance(SkillMetadata data) {
 			double c;
-			if (Character.isDigit(this.chance.charAt(0))) return Double.parseDouble(this.chance);
-			AbstractEntity caster=data.getCaster().getEntity();
+			if (Character.isDigit(this.chance.get().charAt(0))) return Double.parseDouble(this.chance.get());
 			AbstractEntity t=data.getEntityTargets()!=null&&data.getEntityTargets().iterator().hasNext()?data.getEntityTargets().iterator().next():null;
-			AbstractLocation l=data.getLocationTargets()!=null&&data.getLocationTargets().iterator().hasNext()?data.getLocationTargets().iterator().next():null;
 			try {
-				c=Double.parseDouble(Utils.parseMobVariables(this.chance,data,caster,t,l))/100;
+				c=Double.parseDouble(this.chance.get(data,t))/100;
 			} catch (Exception e) {
 				c=0d;
 			}

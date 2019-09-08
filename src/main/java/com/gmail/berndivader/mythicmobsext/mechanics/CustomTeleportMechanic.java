@@ -31,6 +31,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
@@ -46,7 +47,8 @@ SkillMechanic
 implements 
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
-	String stargeter, FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
+	PlaceholderString stargeter;
+	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
 	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
 
@@ -76,8 +78,9 @@ ITargetedLocationSkill {
 		s = s.replaceAll("<&cm>", ",");
 		s = s.replaceAll("<&lb>", "[");
 		s = s.replaceAll("<&rb>", "]");
-		this.stargeter=s=s.substring(1,s.length()-1);
-		if (!this.stargeter.startsWith("@")) this.stargeter="@"+this.stargeter;
+		String parse=s=s.substring(1,s.length()-1);
+		if (!parse.startsWith("@")) parse="@"+parse;
+		this.stargeter=new PlaceholderString(parse);
 	}
 
 	@Override
@@ -94,9 +97,9 @@ ITargetedLocationSkill {
 	private boolean doMechanic(SkillMetadata data, Object target) {
 		AbstractEntity entityTarget;
 		AbstractLocation startLocation;
-		String targeter = this.stargeter;
+		String targeter = this.stargeter.get(data);
 		if (target.getClass().equals(BukkitEntity.class)||target.getClass().equals(BukkitPlayer.class)) {
-			targeter=Utils.parseMobVariables(this.stargeter,data,data.getCaster().getEntity(),(AbstractEntity)target,null);
+			targeter=this.stargeter.get(data,(AbstractEntity)target);
 			entityTarget = (AbstractEntity) target;
 			startLocation = ((AbstractEntity) target).getLocation();
 		} else {

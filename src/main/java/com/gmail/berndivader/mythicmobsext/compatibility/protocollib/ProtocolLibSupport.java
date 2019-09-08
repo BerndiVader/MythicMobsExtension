@@ -30,6 +30,14 @@ ProtocolLibSupport
 	public ProtocolLibSupport(Plugin plugin) {
 		core=this;
 		this.plugin=plugin;
+		
+		try {
+			Class.forName("com.comphenix.protocol.injector.server.TemporaryPlayer");
+		} catch (ClassNotFoundException e) {
+			Main.logger.warning("Incompatible ProtocolLib found! Update to 4.4 or heigher.");
+			return;
+		}
+		
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketReader());
 		new GuardianBeam(plugin);
 		Main.logger.info("using "+pluginName);

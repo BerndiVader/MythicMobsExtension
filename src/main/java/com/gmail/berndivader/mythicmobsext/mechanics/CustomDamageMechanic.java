@@ -15,6 +15,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="customdamage",author="BerndiVader")
 public class CustomDamageMechanic
@@ -36,7 +37,7 @@ ITargetedEntitySkill {
 	boolean strict;
 	double dbd;
 	DamageCause cause;
-	String amount;
+	PlaceholderString amount;
 	String ca;
 	List<EntityType>pi_ignores;
 
@@ -45,8 +46,9 @@ ITargetedEntitySkill {
 
 		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
- 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
-		if (this.amount.startsWith("-")) { this.amount = "1"; }
+ 		String value=mlc.getString(new String[] { "amount", "a" }, "1");
+		if (value.startsWith("-")) value="1";
+		this.amount=new PlaceholderString(value);
 		this.ia = mlc.getBoolean(new String[] { "ignorearmor", "ignorearmour", "ia", "i" }, false);
 		this.pi = mlc.getBoolean(new String[] { "preventimmunity", "pi" }, false);
 		this.iabs = mlc.getBoolean(new String[] { "ignoreabsorbtion", "ignoreabs", "iabs" }, false);
@@ -85,7 +87,7 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		if (!t.isValid()||t.isDead()||t.getHealth()<=0.0||data.getCaster().isUsingDamageSkill()) return false;
 		AbstractEntity c=data.getCaster().getEntity();
-		double dmg=MathUtils.randomRangeDouble(Utils.parseMobVariables(this.amount,data,data.getCaster().getEntity(),t,null));
+		double dmg=MathUtils.randomRangeDouble(this.amount.get(data,t));
 		if (this.p) dmg=this.pcur?uc?c.getHealth()*dmg:t.getHealth()*dmg:ploss?uc?(c.getMaxHealth()-c.getHealth())*dmg:(t.getMaxHealth()-t.getHealth())*dmg:uc?c.getMaxHealth()*dmg:t.getMaxHealth()*dmg;
 		if (!this.ip) dmg=dmg*data.getPower();
 		if (this.dbd>0) {

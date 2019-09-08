@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 import org.bukkit.event.EventHandler;
@@ -18,8 +17,6 @@ import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
-import io.lumine.utils.tasks.Scheduler;
-import io.lumine.utils.tasks.Scheduler.Task;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -30,6 +27,7 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="chatlistener",author="BerndiVader")
 public class ChatListenerMechanic 
@@ -86,14 +84,7 @@ ITargetedEntitySkill {
 	public boolean castAtEntity(SkillMetadata arg0, AbstractEntity arg1) {
 		if (!ignoreTrigger&&!arg1.isPlayer()) return false;
 		if ((multi&&!arg1.getBukkitEntity().hasMetadata(str+this.auraName))||(!multi&&!arg0.getCaster().hasAura(auraName.get()))) {
-			try {
-				AuraTracker ff=new ChatListener(this,arg0,arg1);
-				Field f=ff.getClass().getSuperclass().getDeclaredField("task");
-				f.setAccessible(true);
-				((ChatListener)ff).task1=(Task)f.get(ff);
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			new ChatListener(this,arg0,arg1);
 			return true;
 		}
 		if (inuseSkill.isPresent()) {
@@ -112,7 +103,6 @@ ITargetedEntitySkill {
 	IParentSkill,
 	Listener {
         final ChatListenerMechanic buff;
-        Scheduler.Task task1;        
         int ticksRemaining;
         boolean hasEnded=false,bot=false;
         AbstractEntity p;
@@ -149,13 +139,13 @@ ITargetedEntitySkill {
 			if (!buff.ignoreTrigger&&e.getPlayer().getUniqueId()!=p.getUniqueId()) return;
         	boolean bl1=phrases.length==0;
         	String s2,s22;
-        	final String s222=s2=s22=Utils.parseMobVariables(e.getMessage(),skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
+        	final String s222=s2=s22=new PlaceholderString(e.getMessage()).get(skillMetadata,p);
         	if (!sense) s2=s2.toLowerCase();
         	Skill sk=null;
         	if(ChatListenerMechanic.this.radius.equals((double)Math.sqrt(MathUtils.distance3D(this.skillMetadata.getCaster().getEntity().getBukkitEntity().getLocation().toVector(),e.getPlayer().getLocation().toVector())))) {
         		if(!bot) {
             		for(int i1=0;i1<phrases.length;i1++) {
-            			String s4=Utils.parseMobVariables(phrases[i1],skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
+            			String s4=new PlaceholderString(phrases[i1]).get(skillMetadata,p);
             			if (!sense) s4=s4.toLowerCase();
             			if(bl1=buff.strict?s2.equals(s4):s2.contains(s4)) {
             				if (removephrase) s22=s22.replace(phrases[i1],"");
@@ -165,7 +155,7 @@ ITargetedEntitySkill {
             		if (bl1) {
             			if (cancelMatch) e.setCancelled(true);
             			if (storage!=null) {
-            				String s3=Utils.parseMobVariables(storage,skillMetadata,skillMetadata.getCaster().getEntity(),p,null);
+            				String s3=new PlaceholderString(storage).get(skillMetadata,p);
             				skillMetadata.getCaster().getEntity().getBukkitEntity().setMetadata(s3,new FixedMetadataValue(Main.getPlugin(),s22));
             			}
             			if (matchSkill.isPresent()) {
@@ -227,7 +217,7 @@ ITargetedEntitySkill {
             }
         	HandlerList.unregisterAll(this);
         	p.getBukkitEntity().removeMetadata(str+this.buff.auraName,Main.getPlugin());
-        	return task1.terminate();
+        	return true;
         }
 	}
 	
