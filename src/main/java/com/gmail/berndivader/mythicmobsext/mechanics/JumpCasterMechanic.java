@@ -15,7 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="jumpex",author="BerndiVader")
+@ExternalAnnotation(name="jump_ex",author="BerndiVader")
 public 
 class 
 JumpCasterMechanic 

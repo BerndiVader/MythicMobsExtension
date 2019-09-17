@@ -1099,11 +1099,11 @@ implements Handler,Listener {
 	}
 
 	@Override
-    public boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
+    public boolean isReachable1(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
 		EntityLiving target=((CraftLivingEntity)bukkit_target).getHandle();
 		EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
     	if (target==null) return true;
-        PathEntity pe=(entity).getNavigation().a(target,0);
+        PathEntity pe=entity.getNavigation().a(target,16);
         if (pe==null) {
         	return entity.onGround!=true;
         } else {
@@ -1111,6 +1111,22 @@ implements Handler,Listener {
             return pp!=null;
         }
 	}
+	
+	@Override
+    public PathEntity getPathEntity(Set<BlockPosition> position,EntityInsentient entity,int range,boolean is_entity,int length) {
+    	net.minecraft.server.v1_14_R1.World world=entity.getWorld();
+        if (position.isEmpty()||entity.locY<0.0d) return null;
+        world.getMethodProfiler().enter("pathfind");
+        float var4=entity.getNavigation().i();
+        BlockPosition var5=is_entity?new BlockPosition(entity).up():new BlockPosition(entity);
+        int var6=(int)(var4+(float)range);
+        ChunkCache chunk_cache=new ChunkCache(world,var5.b(-var6,-var6,-var6),var5.b(var6,var6,var6));
+        Pathfinder pathfinder=new Pathfinder(entity.getNavigation().q(),(int)entity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).getValue());
+        PathEntity path_entity=pathfinder.a(chunk_cache,entity,position,var4,range);
+        world.getMethodProfiler().exit();
+        return path_entity;
+    }
+	
 
 	@Override
 	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {

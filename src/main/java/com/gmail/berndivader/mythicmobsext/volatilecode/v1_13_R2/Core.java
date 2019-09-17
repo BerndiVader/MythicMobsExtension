@@ -1097,7 +1097,7 @@ implements Handler,Listener {
 	}
 
 	@Override
-    public boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
+    public boolean isReachable1(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
 		EntityLiving target=((CraftLivingEntity)bukkit_target).getHandle();
 		EntityInsentient entity=(EntityInsentient)((CraftLivingEntity)bukkit_entity).getHandle();
     	if (target==null) return true;
@@ -1113,6 +1113,14 @@ implements Handler,Listener {
 	@Override
 	public void addTravelPoint(Entity bukkit_entity, Vec3D vector) {
 		this.addTravelPoint(bukkit_entity,vector,true);
+	}
+
+	@Override
+	public net.minecraft.server.v1_14_R1.PathEntity getPathEntity(
+			Set<net.minecraft.server.v1_14_R1.BlockPosition> position,
+			net.minecraft.server.v1_14_R1.EntityInsentient entity, int range, boolean is_entity, int length) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

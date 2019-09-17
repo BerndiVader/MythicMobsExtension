@@ -25,7 +25,7 @@ IEntityComparisonCondition
 
 	@Override
 	public boolean check(AbstractEntity e, AbstractEntity t) {
-		if(e.isLiving()&&t.isLiving()) return Volatile.handler.isReachable((LivingEntity)e.getBukkitEntity(),(LivingEntity)t.getBukkitEntity());
+		if(e.isLiving()&&t.isLiving()) return Volatile.handler.isReachable1((LivingEntity)e.getBukkitEntity(),(LivingEntity)t.getBukkitEntity());
 		return false;
 	}
 }

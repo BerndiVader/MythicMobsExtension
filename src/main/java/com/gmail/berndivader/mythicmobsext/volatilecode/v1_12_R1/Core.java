@@ -1091,7 +1091,7 @@ implements Handler,Listener {
 	}
 	
 	@Override
-    public boolean isReachable(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
+    public boolean isReachable1(LivingEntity bukkit_entity, LivingEntity bukkit_target) {
 		if(bukkit_entity==null||bukkit_target==null) return false;
 		EntityLiving target=((CraftLivingEntity)bukkit_target).getHandle();
 		EntityLiving entity=((CraftLivingEntity)bukkit_entity).getHandle();
@@ -1151,6 +1151,14 @@ implements Handler,Listener {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	public net.minecraft.server.v1_14_R1.PathEntity getPathEntity(
+			Set<net.minecraft.server.v1_14_R1.BlockPosition> position,
+			net.minecraft.server.v1_14_R1.EntityInsentient entity, int range, boolean is_entity, int length) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

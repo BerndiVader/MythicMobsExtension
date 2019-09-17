@@ -5,8 +5,6 @@ import java.util.HashSet;
 import net.minecraft.server.v1_14_R1.BlockPosition;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.EntityLiving;
-import net.minecraft.server.v1_14_R1.PathEntity;
-import net.minecraft.server.v1_14_R1.PathPoint;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
 
 import org.bukkit.Material;
@@ -21,13 +19,20 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-public class PathfinderGoalBreakBlocks extends PathfinderGoal {
+public 
+class 
+PathfinderGoalBreakBlocks
+extends
+PathfinderGoal
+{
 	protected EntityInsentient entity;
 	protected boolean isBreaking;
 	protected int chance;
 	protected HashSet<Material>materials;
+	Block[] blocks;
 
 	public PathfinderGoalBreakBlocks(EntityInsentient entity, String mL, int chance) {
+		this.blocks=new Block[2];
 		this.isBreaking=false;
 		this.entity=entity;
 		this.materials=new HashSet<>();
@@ -58,14 +63,16 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
 	}
 
 	public void e() {
-		if (!this.canContinue()) return;
+		if (!this.canContinue()) {
+			return;
+		}
 		EntityLiving target=this.entity.getGoalTarget();
-		Block[] blocks=new Block[2];
         blocks[1] = this.getBreakableTargetBlock(target);
         blocks[0] = blocks[1].getRelative(BlockFace.UP);
-        int size=blocks.length;
-        for (int a=0;a<size;a++) {
-        	if (this.materials.isEmpty()||this.materials.contains(blocks[a].getType())) this.attemptBreakBlock(blocks[a]);
+        for (int a=0;a<2;a++) {
+        	if (this.materials.isEmpty()||this.materials.contains(blocks[a].getType())) {
+        		this.attemptBreakBlock(blocks[a]);
+        	}
         }
 	}
 	
@@ -116,12 +123,6 @@ public class PathfinderGoalBreakBlocks extends PathfinderGoal {
     }
     private boolean isReachable(EntityLiving target) {
     	if (target==null) return true;
-        PathEntity pe=this.entity.getNavigation().a(target,0);
-        if (pe==null) {
-        	return this.entity.onGround!=true;
-        } else {
-            PathPoint pp=pe.c();
-            return pp!=null;
-        }
+    	return this.entity.hasLineOfSight(target);
     }
 }

@@ -21,7 +21,12 @@ import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
-public class PathfinderGoalBreakBlocks extends PathfinderGoal {
+public 
+class 
+PathfinderGoalBreakBlocks 
+extends
+PathfinderGoal
+{
 	protected EntityInsentient entity;
 	protected boolean isBreaking;
 	protected int chance;
