@@ -433,7 +433,7 @@ implements Handler,Listener {
 	        default:
 	        	List<String>gList=new ArrayList<String>();
 	        	gList.add(uGoal);
-	        	Utils.mythicmobs.getVolatileCodeHandler().aiTargetSelectorHandler(entity, gList);
+	        	Utils.mythicmobs.getVolatileCodeHandler().getAIHandler().addTargetGoals(entity, gList);
 	        }
 	        
 		} catch (Exception e1) {
@@ -709,7 +709,7 @@ implements Handler,Listener {
            	} else {
                	List<String>gList=new ArrayList<String>();
                	gList.add(uGoal);
-               	Utils.mythicmobs.getVolatileCodeHandler().aiGoalSelectorHandler(entity,gList);
+               	Utils.mythicmobs.getVolatileCodeHandler().getAIHandler().addPathfinderGoals(entity,gList);
            	}
         } else {
             if(i>-1) {
