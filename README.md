@@ -9,7 +9,6 @@
 
 
 ## [DOWNLOAD](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/) [![Build Status](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/badge/icon)] <br>
-## [REPOSITORIES](https://mc.hackerzlair.org/repo) for the repos.
 
 
 ### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki) VERY OUTDATED
