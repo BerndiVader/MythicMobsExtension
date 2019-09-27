@@ -1,9 +1,13 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 
@@ -29,6 +33,7 @@ ITargetedEntitySkill
 	ItemStack[] default_items;
 	boolean view_only,temporary;
 	PlaceholderString bag_name;
+	List<Integer>excluded_slots;
 
 	public OpenBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -39,6 +44,18 @@ ITargetedEntitySkill
 		default_items=BackBagHelper.createDefaultItemStack(mlc.getString("items",null));
 		bag_name=mlc.getPlaceholderString(new String[] {"name","title"},"BackBag");
 		temporary=mlc.getBoolean("temporary",false);
+		String[]temp=mlc.getString("excludedslots","").split(",");
+		excluded_slots=new ArrayList<>();
+		for(int i1=0;i1<temp.length;i1++) {
+			try {
+				if(!temp[i1].isEmpty()) {
+					int slot=Integer.parseInt(temp[i1]);
+					excluded_slots.add(slot);
+				}
+			} catch (Exception ex) {
+				Main.logger.warning("Ignoring "+temp[i1]+" in skill "+skill+" its not a valid slot number.");
+			}
+		}
 	}
 
 	@Override
@@ -46,7 +63,7 @@ ITargetedEntitySkill
 		if(data.getCaster().getEntity().isPlayer()) {
 			Player player=(Player)data.getCaster().getEntity().getBukkitEntity();
 			BackBag bag=new BackBag(player,size,default_items,bag_name.get(data),temporary);
-			bag.viewBackBag(player);
+			bag.viewBackBag(player,view_only,this.excluded_slots);
 			return true;
 		}
 		return false;
@@ -58,7 +75,7 @@ ITargetedEntitySkill
 			Entity holder=data.getCaster().getEntity().getBukkitEntity();
 			Player viewer=(Player)abstract_entity.getBukkitEntity();
 			BackBag bag=new BackBag(holder,size,default_items,bag_name.get(data,abstract_entity),temporary);
-			bag.viewBackBag(viewer,view_only);
+			bag.viewBackBag(viewer,view_only,this.excluded_slots);
 			return true;
 		}
 		return false;

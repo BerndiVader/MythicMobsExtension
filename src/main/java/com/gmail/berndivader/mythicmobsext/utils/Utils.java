@@ -115,9 +115,10 @@ Listener
 	public static final String signal_GOAL_TRAVELPOINT = "GOAL_TRAVELPOINT";
 	public static final String meta_DISORIENTATION = "MMEDISORIENTATION";
 	public static final String meta_CLICKEDSKILL="click_skill";
+	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
+	public static final String meta_LASTCLICKUSED = "lastclickused";
 	public static final String meta_LASTCLICKEDSLOT = "lastclickedslot";
 	public static final String signal_BACKBAGCLICK = "BAGCLICKED";
-	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;

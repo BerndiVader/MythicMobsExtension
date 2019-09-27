@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.backbags;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -43,6 +45,7 @@ Listener
 	private int size;
 	String name;
 	boolean only_view;
+	List<Integer>excludes_slots;
 	
 	public BackBag(Entity onwer) {
 		this(onwer,9);
@@ -63,8 +66,13 @@ Listener
 	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary) {
 		this(owner,size,default_content,name,temporary,false);
 	}
-
+	
 	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override) {
+		this(owner,size,default_content,name,temporary,override,new ArrayList<>());
+	}
+	
+
+	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override,List<Integer>excluded_slots) {
 		if(name==null) name=BackBagHelper.str_name;
 		size=size%9>0?size+(9-size%9):size;
 		this.owner=owner;
@@ -74,19 +82,26 @@ Listener
 		}
 		this.size=inventory.getSize();
 		if(default_content!=null&&default_content.length<=this.size) inventory.setContents(default_content);
+		this.excludes_slots=excluded_slots;
 	}
 	
 	
 	public void viewBackBag(Player player) {
-		viewBackBag(player,false);
+		viewBackBag(player,this.only_view,this.excludes_slots);
 	}
 	
 	public void viewBackBag(Player player,boolean bool) {
+		viewBackBag(player,bool,this.excludes_slots);
+	}
+	
+	public void viewBackBag(Player player,boolean bool,List<Integer> excludes_slots) {
 		this.only_view=bool;
+		this.excludes_slots=excludes_slots;
 		Main.pluginmanager.registerEvents(this,Main.getPlugin());
 		this.viewer=player;
 		player.openInventory(inventory);
 	}
+	
 	
 	public boolean isPresent() {
 		return this.inventory!=null;
@@ -136,7 +151,7 @@ Listener
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
 		if(e.getWhoClicked()==viewer) {
-			if(only_view) e.setCancelled(true);
+			if(only_view&&!excludes_slots.contains(e.getRawSlot())) e.setCancelled(true);
 			if(e.getClickedInventory()!=null&&e.getView().getTitle().equals(this.name)) {
 				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
 				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.name));

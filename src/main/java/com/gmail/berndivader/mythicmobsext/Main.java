@@ -161,7 +161,6 @@ JavaPlugin
 			CachedOwnerHandler.cleanUp();
 			CachedOwnerHandler.saveCachedOwners();
 		}
-		BackBagHelper.saveBags();
 		Main.mythicplayers = null;
 		Main.cachedOwnerHandler = null;
 		pluginmanager.disablePlugin(this);
