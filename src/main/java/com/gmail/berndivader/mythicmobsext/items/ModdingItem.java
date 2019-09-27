@@ -78,30 +78,7 @@ Cloneable
 		this.durability=Optional.ofNullable(durability);
 	}
 	
-	private void parseVars(SkillMetadata data,AbstractEntity target) {
-		if(name.isPresent()) {
-			this.name=Optional.of(new PlaceholderString(this.name.get()).get(data,target));
-		}
-		if(lore.isPresent()) {
-			String[]lores=lore.get();
-			int size=lores.length;
-			for(int i1=0;i1<size;i1++) {
-				lores[i1]=new PlaceholderString(lores[i1]).get(data,target);
-			}
-			this.lore=Optional.of(lores);
-		}
-		if(durability.isPresent()) {
-			setDurability(new PlaceholderString(this.durability.get()).get(data,target));
-		}
-		if(bag_name.isPresent()) {
-			this.bag_name=Optional.of(new PlaceholderString(this.bag_name.get()).get(data,target));
-		}
-		if(this.slot.isPresent()) setSlot(new PlaceholderString(this.slot.get()).get(data,target));
-	}
-	
 	public ItemStack applyMods(SkillMetadata data,AbstractEntity target,ItemStack item_stack) {
-		boolean use_vars=data!=null;
-		AbstractEntity caster=use_vars?data.getCaster().getEntity():null;
 		switch(action) {
 			case SET:
 				if(material.isPresent()) item_stack.setType(material.get());
@@ -113,10 +90,11 @@ Cloneable
 					item_stack.setItemMeta(item_meta);
 				}
 				if(lore.isPresent()) {
-					String[]lore=this.lore.get();
+					String[]lore=this.lore.get().clone();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
-						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);
+						String temp=new PlaceholderString(lore[i1]).get(data,target);
+						lore[i1]=temp;
 					}
 					ItemMeta item_meta=item_stack.getItemMeta();
 					item_meta.setLore(Arrays.asList(lore));
@@ -152,7 +130,7 @@ Cloneable
 					item_stack.setItemMeta(item_meta);
 				}
 				if(lore.isPresent()) {
-					String[]lore=this.lore.get();
+					String[]lore=this.lore.get().clone();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
 						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);
@@ -202,7 +180,7 @@ Cloneable
 					item_stack.setItemMeta(item_meta);
 				}
 				if(lore.isPresent()&&item_stack.getItemMeta().hasLore()) {
-					String[]lore=this.lore.get();
+					String[]lore=this.lore.get().clone();
 					int size=lore.length;
 					for(int i1=0;i1<size;i1++) {
 						lore[i1]=new PlaceholderString(lore[i1]).get(data,target);

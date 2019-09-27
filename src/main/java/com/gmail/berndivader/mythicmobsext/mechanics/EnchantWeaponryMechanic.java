@@ -111,7 +111,7 @@ ITargetedEntitySkill {
 		if(!target.isLiving()) return false;
 		LivingEntity entity=(LivingEntity)target.getBukkitEntity();
 		ItemStack stack;
-		for(int i1=0;i1<8;i1++) {
+		for(int i1=0;i1<6;i1++) {
 			if(((what>>i1)&1)==1) {
 				switch(i1) {
 					case 0:

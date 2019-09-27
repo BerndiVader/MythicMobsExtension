@@ -62,11 +62,11 @@ ITargetedEntitySkill
 			HoldingItem holding=this.holding.clone();
 			if(holding!=null) {
 				holding.parseSlot(data,target);
-				if(this.holding.getBagName()!=null) holding.setBagName(new PlaceholderString(this.holding.getBagName()).get(data,target));
+				if(holding.getBagName()!=null) holding.setBagName(new PlaceholderString(holding.getBagName()).get(data,target));
 				final LivingEntity entity=(LivingEntity)target.getBukkitEntity();
 				final Location location=target.getBukkitEntity().getLocation();
 				for(int a=0;a<this.p;a++) {
-					List<ItemStack>contents=HoldingItem.getContents(this.holding,entity);
+					List<ItemStack>contents=HoldingItem.getContents(holding,entity);
 					Collections.shuffle(contents);
 					for(int i1=0;i1<contents.size();i1++) {
 						ItemStack item_stack=contents.get(i1);

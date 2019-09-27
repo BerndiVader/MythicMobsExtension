@@ -32,8 +32,9 @@ ITargetedEntitySkill
 	MythicMob mm;
 	MythicEntity me;
 	String tag,amount;
-	int noise,yNoise,yaw;
+	int noise,yNoise;
 	boolean yUpOnly,onSurface,inheritThreatTable,copyThreatTable,useEyeDirection,setowner,invisible,leashtocaster;
+	float yaw;
 	double addx,addy,addz,inFrontBlocks;
 	String reason;
 
@@ -54,7 +55,7 @@ ITargetedEntitySkill
 		this.addx = mlc.getDouble(new String[] { "addx", "ax", "relx", "rx" }, 0);
 		this.addy = mlc.getDouble(new String[] { "addy", "ay", "rely", "ry" }, 0);
 		this.addz = mlc.getDouble(new String[] { "addz", "az", "relz", "rz" }, 0);
-		this.yaw=mlc.getInteger("yaw",-1337);
+		this.yaw=mlc.getFloat("yaw",-1337);
 		this.useEyeDirection = mlc.getBoolean(new String[] { "useeyedirection", "eyedirection", "ued" }, false);
 		this.inFrontBlocks = mlc.getDouble(new String[] { "infrontblocks", "infront", "ifb" }, 0D);
 		this.setowner = mlc.getBoolean(new String[] { "setowner", "so" }, false);
