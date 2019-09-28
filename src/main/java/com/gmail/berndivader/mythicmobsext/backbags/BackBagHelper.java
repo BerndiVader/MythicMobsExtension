@@ -211,7 +211,7 @@ Listener
 				BackBagInventory bag_inventory=bag_inventories[i2];
 				Inventory inventory=Bukkit.createInventory(null,bag_inventory.getSize(),bag_inventory.getName());
 				inventory.setContents(bag_inventory.getContentBase64());
-				bag_inventory.setInventory(inventory);
+				bag_inventory.setInventory(bag_inventory.getName(),inventory);
 				bag_inventory.setTemporary(false);
 				BackBagHelper.addInventory(uuid,bag_inventory);
 			}
@@ -317,7 +317,7 @@ Listener
 		if(BackBagHelper.hasBackBag(owner.getUniqueId())) {
 			BackBag bag=new BackBag(owner,bag_name);
 			if(bag.getSize()>size) {
-				List<ItemStack>content=Arrays.asList(bag.inventory.getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
+				List<ItemStack>content=Arrays.asList(bag.inventory.getInventory().getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
 				if(content.size()>size) {
 					for(int i1=content.size()-1;i1>=size;i1--) {
 						content.remove(i1);
@@ -325,11 +325,11 @@ Listener
 				}
 				Inventory new_inv=Bukkit.createInventory(null,size);
 				new_inv.setContents(content.toArray(new ItemStack[content.size()]));
-				bag.setInventory(new_inv);
+				bag.setInventory(bag_name,new_inv);
 			} else {
 				Inventory new_inv=Bukkit.createInventory(null,size);
-				new_inv.setContents(bag.inventory.getContents());
-				bag.setInventory(new_inv);
+				new_inv.setContents(bag.inventory.getInventory().getContents());
+				bag.setInventory(bag_name,new_inv);
 			}
 		}
 	}

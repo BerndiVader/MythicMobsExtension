@@ -41,7 +41,7 @@ Listener
 {
 	Entity owner;
 	Player viewer;
-	Inventory inventory;
+	BackBagInventory inventory;
 	private int size;
 	String name;
 	boolean only_view;
@@ -76,12 +76,13 @@ Listener
 		if(name==null) name=BackBagHelper.str_name;
 		size=size%9>0?size+(9-size%9):size;
 		this.owner=owner;
-		if((inventory=BackBagHelper.getInventory(owner.getUniqueId(),name))==null||override) {
-			inventory=Bukkit.createInventory(null,size,name);
-			BackBagHelper.addInventory(owner.getUniqueId(),new BackBagInventory(name,size,inventory,temporary));
+		if((inventory=BackBagHelper.getBagInventory(owner.getUniqueId(),name))==null||override) {
+			inventory=new BackBagInventory(name,size,Bukkit.createInventory(null,size,name),temporary);
+			BackBagHelper.addInventory(owner.getUniqueId(),inventory);
 		}
-		this.size=inventory.getSize();
-		if(default_content!=null&&default_content.length<=this.size) inventory.setContents(default_content);
+		this.size=inventory.getInventory().getSize();
+		this.name=inventory.getName();
+		if(default_content!=null&&default_content.length<=this.size) inventory.getInventory().setContents(default_content);
 		this.excludes_slots=excluded_slots;
 	}
 	
@@ -99,7 +100,7 @@ Listener
 		this.excludes_slots=excludes_slots;
 		Main.pluginmanager.registerEvents(this,Main.getPlugin());
 		this.viewer=player;
-		player.openInventory(inventory);
+		player.openInventory(inventory.getInventory());
 	}
 	
 	
@@ -112,13 +113,13 @@ Listener
 	}
 	
 	public Inventory getInventory() {
-		return this.inventory;
+		return this.inventory.getInventory();
 	}
 	
-	public void setInventory(Inventory new_inv) {
-		this.inventory=new_inv;
+	public void setInventory(String name,Inventory new_inv) {
+		this.inventory.setInventory(name,new_inv);
 		this.size=new_inv.getSize();
-		BackBagHelper.replace(owner.getUniqueId(),new BackBagInventory(this.name,this.size,this.inventory));
+		BackBagHelper.replace(owner.getUniqueId(),new BackBagInventory(this.name,this.size,this.inventory.getInventory()));
 	}
 	
 	void executeSkill(String skill_name,Entity owner,Player viewer) {
@@ -153,9 +154,9 @@ Listener
 		if(e.getWhoClicked()==viewer) {
 			if(only_view&&!excludes_slots.contains(e.getRawSlot())) e.setCancelled(true);
 			if(e.getClickedInventory()!=null&&e.getView().getTitle().equals(this.name)) {
-				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
+				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getRawSlot()));
 				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.name));
-				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getSlot()));
+				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getRawSlot()));
 				if(Utils.mobmanager.isActiveMob(owner.getUniqueId())) {
 					ActiveMob am=Utils.mobmanager.getMythicMobInstance(owner);
 					am.signalMob(BukkitAdapter.adapt(e.getWhoClicked()),Utils.signal_BACKBAGCLICK);
