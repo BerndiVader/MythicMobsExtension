@@ -63,7 +63,8 @@ BackBagInventory
 		return this.size;
 	}
 	
-	public void setInventory(Inventory inventory) {
+	public void setInventory(String name,Inventory inventory) {
+		this.name=name;
 		this.inventory=inventory;
 	}
 	

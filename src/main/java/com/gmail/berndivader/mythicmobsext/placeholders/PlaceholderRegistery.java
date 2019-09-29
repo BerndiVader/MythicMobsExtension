@@ -1,5 +1,9 @@
 package com.gmail.berndivader.mythicmobsext.placeholders;
 
+import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
+
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
@@ -30,6 +34,15 @@ PlaceholderRegistery
         manager.register("caster.l.dz",Placeholder.meta((meta,arg)-> {
         	return Double.toString(meta.getCaster().getLocation().getZ());
         }));
+        manager.register("caster.holding",Placeholder.meta((meta,arg)-> {
+        	if(meta.getCaster().getEntity().isLiving()) {
+            	LivingEntity entity=(LivingEntity)meta.getCaster().getEntity().getBukkitEntity();
+            	ItemStack item_stack=entity.getEquipment().getItemInMainHand();
+            	Material material=item_stack==null?Material.AIR:item_stack.getType();
+            	return material.name();
+        	}
+        	return null;
+        }));
         manager.register("trigger.l.dx",Placeholder.meta((meta,arg)-> {
         	return Double.toString(meta.getTrigger().getLocation().getX());
         }));
@@ -39,6 +52,15 @@ PlaceholderRegistery
         manager.register("trigger.l.dz",Placeholder.meta((meta,arg)-> {
         	return Double.toString(meta.getTrigger().getLocation().getZ());
         }));
+        manager.register("trigger.holding",Placeholder.meta((meta,arg)-> {
+        	if(meta.getTrigger().isLiving()) {
+            	LivingEntity entity=(LivingEntity)meta.getTrigger().getBukkitEntity();
+            	ItemStack item_stack=entity.getEquipment().getItemInMainHand();
+            	Material material=item_stack==null?Material.AIR:item_stack.getType();
+            	return material.name();
+        	}
+        	return null;
+        }));
         manager.register("target.l.dx",Placeholder.entity((entity,arg)-> {
         	return Double.toString(entity.getLocation().getX());
         }));
@@ -47,6 +69,15 @@ PlaceholderRegistery
         }));
         manager.register("target.l.dz",Placeholder.entity((entity,arg)-> {
         	return Double.toString(entity.getLocation().getZ());
+        }));
+        manager.register("target.holding",Placeholder.entity((target,arg)-> {
+        	if(target.isLiving()) {
+            	LivingEntity entity=(LivingEntity)target.getBukkitEntity();
+            	ItemStack item_stack=entity.getEquipment().getItemInMainHand();
+            	Material material=item_stack==null?Material.AIR:item_stack.getType();
+            	return material.name();
+        	}
+        	return null;
         }));
 		
 		

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 
@@ -26,6 +27,7 @@ INoTargetSkill
 	ItemStack[] default_items=null;
 	PlaceholderString bag_name;
 	boolean temporary,override,flood;
+	List<Integer>excluded_slots;
 
 	public CreateBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -43,11 +45,25 @@ INoTargetSkill
 		bag_name=mlc.getPlaceholderString(new String[] {"title","name"},BackBagHelper.str_name);
 		temporary=mlc.getBoolean("temporary",false);
 		override=mlc.getBoolean("override",true);
+		String[]temp=mlc.getString("excludedslots","").split(",");
+		excluded_slots=new ArrayList<>();
+		for(int i1=0;i1<temp.length;i1++) {
+			try {
+				if(!temp[i1].isEmpty()) {
+					int slot=Integer.parseInt(temp[i1]);
+					excluded_slots.add(slot);
+				}
+			} catch (Exception ex) {
+				Main.logger.warning("Ignoring "+temp[i1]+" in skill "+skill+" its not a valid slot number.");
+			}
+		}
 	}
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		return (new BackBag(data.getCaster().getEntity().getBukkitEntity(),size,default_items,bag_name.get(data),temporary,override))!=null;
+		BackBag bag=new BackBag(data.getCaster().getEntity().getBukkitEntity(),size,default_items,bag_name.get(data),temporary,override,excluded_slots);
+		if(bag!=null) bag=null;
+		return true;
 	}
 
 }
