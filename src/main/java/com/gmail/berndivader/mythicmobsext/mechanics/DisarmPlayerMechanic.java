@@ -46,6 +46,7 @@ ITargetedEntitySkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+		ItemStack equipped_item=null;
 		HashMap<WhereEnum,ItemStack>stores=new HashMap<>();
 		if (!target.isPlayer()) {
 			if (target.isLiving()) {
@@ -54,30 +55,42 @@ ITargetedEntitySkill
 					WhereEnum what=whats.get(i1);
 					switch(what) {
 					case HAND:
-						stores.put(WhereEnum.HAND,unequipHand(e));
+						equipped_item=unequipHand(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.HAND,equipped_item);
 						break;
 					case OFFHAND:
-						stores.put(WhereEnum.OFFHAND,unequipOffHand(e));
+						equipped_item=unequipOffHand(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.OFFHAND,equipped_item);
 						break;
 					case HELMET:
-						stores.put(WhereEnum.HELMET,unequipHelmet(e));
+						equipped_item=unequipHelmet(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.HELMET,equipped_item);
 						break;
 					case CHESTPLATE:
-						stores.put(WhereEnum.CHESTPLATE,unequipChest(e));
+						equipped_item=unequipChest(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.CHESTPLATE,equipped_item);
 						break;
 					case LEGGINGS:
-						stores.put(WhereEnum.LEGGINGS,unequipLeggings(e));
+						equipped_item=unequipLeggings(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.LEGGINGS,equipped_item);
 						break;
 					case BOOTS:
-						stores.put(WhereEnum.BOOTS,unequipBoots(e));
+						equipped_item=unequipBoots(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.BOOTS,equipped_item);
 						break;
 					default:
-						stores.put(WhereEnum.HAND,unequipHand(e));
-						stores.put(WhereEnum.OFFHAND,unequipOffHand(e));
-						stores.put(WhereEnum.HELMET,unequipHelmet(e));
-						stores.put(WhereEnum.CHESTPLATE,unequipChest(e));
-						stores.put(WhereEnum.LEGGINGS,unequipLeggings(e));
-						stores.put(WhereEnum.BOOTS,unequipBoots(e));
+						equipped_item=unequipHand(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.HAND,equipped_item);
+						equipped_item=unequipOffHand(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.OFFHAND,equipped_item);
+						equipped_item=unequipHelmet(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.HELMET,equipped_item);
+						equipped_item=unequipChest(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.CHESTPLATE,equipped_item);
+						equipped_item=unequipLeggings(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.LEGGINGS,equipped_item);
+						equipped_item=unequipBoots(e);
+						if(equipped_item.getType()!=Material.AIR) stores.put(WhereEnum.BOOTS,equipped_item);
 					}
 				}
 				new BukkitRunnable() {
