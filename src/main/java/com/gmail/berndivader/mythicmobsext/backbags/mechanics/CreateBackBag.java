@@ -61,7 +61,9 @@ INoTargetSkill
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		return (new BackBag(data.getCaster().getEntity().getBukkitEntity(),size,default_items,bag_name.get(data),temporary,override,excluded_slots))!=null;
+		BackBag bag=new BackBag(data.getCaster().getEntity().getBukkitEntity(),size,default_items,bag_name.get(data),temporary,override,excluded_slots);
+		if(bag!=null) bag=null;
+		return true;
 	}
 
 }
