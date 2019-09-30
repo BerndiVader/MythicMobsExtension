@@ -43,6 +43,7 @@ ITargetedEntitySkill
 		if ((temp.startsWith("\""))) {
 			temp=SkillString.unparseMessageSpecialChars(temp.substring(1,temp.length()-1));
 		};
+		eval=new PlaceholderString(temp);
 		String s1=mlc.getString(new String[] {"storage","store","s"},"<mob.meta.test>");
 		parse=(s1.substring(1,s1.length()-1)).split(Pattern.quote("."));
 	}

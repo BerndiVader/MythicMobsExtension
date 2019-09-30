@@ -9,6 +9,7 @@ public class MathInterpreter {
 	Map<String,Object>variables=new HashMap<>();
 	
 	static {
+		functions.put("log",x->Math.log(x));
 	    functions.put("sqrt",x->Math.sqrt(x));
 	    functions.put("sin",x->Math.sin(x));
 	    functions.put("cos",x->Math.cos(x));
