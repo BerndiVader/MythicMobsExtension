@@ -2,7 +2,8 @@ package com.gmail.berndivader.mythicmobsext.utils;
 
 public
 class
-RangedDouble {
+RangedDouble 
+{
 	protected final Operation op;
 	protected double min;
 	protected double max;

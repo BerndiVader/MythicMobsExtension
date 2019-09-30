@@ -15,7 +15,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="stun",author="BerndiVader")
+@ExternalAnnotation(name="stun,stun_ext",author="BerndiVader")
 public class StunMechanic 
 extends
 SkillMechanic 
@@ -41,11 +41,13 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+		if(target.getBukkitEntity().hasMetadata(str+"Time")) target.getBukkitEntity().removeMetadata(str+"Time", Main.getPlugin());
 		final AbstractEntity t = target;
 		final AbstractLocation l = target.getLocation().clone();
 		final int dur = this.duration;
 		final boolean facing=this.f,gravity=this.g,ai=this.ai;
-		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
+		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(),true));
+		target.getBukkitEntity().setMetadata(str+"Time", new FixedMetadataValue(Main.getPlugin(),duration));
 		final boolean aai=t.isLiving()?((LivingEntity)t.getBukkitEntity()).hasAI():false;
 		new BukkitRunnable() {
 			long count=0;
@@ -59,6 +61,7 @@ ITargetedEntitySkill {
 						||!t.getBukkitEntity().hasMetadata(str)) {
 					if (t!=null&&!t.isDead()) {
 						t.getBukkitEntity().removeMetadata(str, Main.getPlugin());
+						t.getBukkitEntity().removeMetadata(str+"Time", Main.getPlugin());
 						if (t.isLiving()) ((LivingEntity)t.getBukkitEntity()).setAI(aai);
 					}
 					this.cancel();
@@ -72,6 +75,8 @@ ITargetedEntitySkill {
 					}
 					if (gravity) y=t.getLocation().getY();
 					Volatile.handler.forceSetPositionRotation(target.getBukkitEntity(),x,y,z,yaw,pitch,facing,gravity);
+					t.getBukkitEntity().removeMetadata(str+"Time",Main.getPlugin());;
+					t.getBukkitEntity().setMetadata(str+"Time",new FixedMetadataValue(Main.getPlugin(),(int)dur-count));
 				}
 				if(useDuration) count++;
 			}

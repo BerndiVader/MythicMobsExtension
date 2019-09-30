@@ -10,14 +10,14 @@ AbstractCustomCondition
 extends 
 SkillCondition 
 {
-	boolean dba;
+	boolean dba,debug;
 
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		String action="TRUE";
 		String actionVar="0";
 		String a=mlc.getString("action","");
-		dba=mlc.getBoolean("debug",false);
+		debug=dba=mlc.getBoolean("debug",false);
 		for(int i=0;i<ConditionAction.values().length;i++){
 			String aa=ConditionAction.values()[i].toString();
 			if (aa.toUpperCase().equals("CAST")&&a.toUpperCase().startsWith("CASTINSTEAD")) continue;

@@ -47,6 +47,8 @@ Listener
 	boolean only_view;
 	List<Integer>excludes_slots;
 	
+	static int backbag_counter=0;
+	
 	public BackBag(Entity onwer) {
 		this(onwer,9);
 	}
@@ -70,9 +72,9 @@ Listener
 	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override) {
 		this(owner,size,default_content,name,temporary,override,new ArrayList<>());
 	}
-	
 
 	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override,List<Integer>excluded_slots) {
+		backbag_counter++;
 		if(name==null) name=BackBagHelper.str_name;
 		size=size%9>0?size+(9-size%9):size;
 		this.owner=owner;
@@ -146,7 +148,7 @@ Listener
 	
 	@EventHandler
 	public void inventoryOpen(InventoryOpenEvent e) {
-		if(e.isCancelled()&&e.getInventory().equals(inventory)) HandlerList.unregisterAll(this);
+		if(e.isCancelled()&&e.getInventory().equals(inventory.getInventory())) HandlerList.unregisterAll(this);
 	}
 	
 	@EventHandler
@@ -176,7 +178,15 @@ Listener
 	
 	@EventHandler
 	public void inventoryClose(InventoryCloseEvent e) {
-		if(e.getPlayer()==viewer&&e.getInventory().equals(inventory)) HandlerList.unregisterAll(this);
+		if(e.getPlayer()==viewer&&e.getInventory().equals(inventory.getInventory())) {
+			HandlerList.unregisterAll(this);
+		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		backbag_counter--;
+		super.finalize();
 	}
 	
 }

@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDespawnEvent;
 import io.lumine.xikage.mythicmobs.items.ItemManager;
 
 public 
@@ -195,7 +196,6 @@ Listener
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 	
-	
 	public static void loadBags(File file) {
 		Gson gson=new Gson();
 		BackBagInventory[]bag_inventories=null;
@@ -278,6 +278,26 @@ Listener
 		}
 	}
 	
+	@EventHandler
+	public void onEntityDespawn(MythicMobDespawnEvent e) {
+		if(e.getEntity().getType()!=EntityType.PLAYER) {
+			final UUID uuid=e.getEntity().getUniqueId();
+			if(BackBagHelper.hasBackBag(uuid)) {
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						Iterator<UUID>bag_iter=bags.keySet().iterator();
+						while(bag_iter.hasNext()) {
+							if(uuid==bag_iter.next()) {
+								bag_iter.remove();
+							}
+						}
+					}
+				}.runTaskAsynchronously(Main.getPlugin());
+			}
+		}
+	}
+	
 	public static void saveBags(UUID uuid,List<BackBagInventory>backbags) {
 		Iterator<BackBagInventory>inventory_iter=backbags.iterator();
 		if(inventory_iter==null) return;
@@ -305,7 +325,7 @@ Listener
 	public static void saveBags() {
 		if(bags==null) return;
 		Iterator<Entry<UUID,List<BackBagInventory>>>bag_iterator=bags.entrySet().iterator();
-		while(bag_iterator.hasNext()) {
+		while(bag_iterator!=null&&bag_iterator.hasNext()) {
 			Map.Entry<UUID,List<BackBagInventory>>entry=bag_iterator.next();
 			UUID uuid=entry.getKey();
 			if(Bukkit.getOfflinePlayer(uuid)!=null) saveBags(uuid,entry.getValue());
