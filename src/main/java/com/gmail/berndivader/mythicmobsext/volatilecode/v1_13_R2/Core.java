@@ -1115,12 +1115,4 @@ implements Handler,Listener {
 		this.addTravelPoint(bukkit_entity,vector,true);
 	}
 
-	@Override
-	public net.minecraft.server.v1_14_R1.PathEntity getPathEntity(
-			Set<net.minecraft.server.v1_14_R1.BlockPosition> position,
-			net.minecraft.server.v1_14_R1.EntityInsentient entity, int range, boolean is_entity, int length) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

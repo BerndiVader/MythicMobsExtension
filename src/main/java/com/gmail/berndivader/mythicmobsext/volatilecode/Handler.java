@@ -1,7 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode;
 
-import java.util.Set;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -12,10 +10,6 @@ import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
-
-import net.minecraft.server.v1_14_R1.BlockPosition;
-import net.minecraft.server.v1_14_R1.EntityInsentient;
-import net.minecraft.server.v1_14_R1.PathEntity;
 
 public interface Handler {
     public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
@@ -64,6 +58,4 @@ public interface Handler {
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector);
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove);
 	void clearTravelPoints(Entity bukkit_entity);
-	PathEntity getPathEntity(Set<BlockPosition> position, EntityInsentient entity, int range, boolean is_entity,
-			int length);
 }
