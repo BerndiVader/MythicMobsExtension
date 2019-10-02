@@ -31,10 +31,13 @@ IEntitySelector {
     float yaw_offset,pitch_offset;
     double side_offset,forward_offset,y_offset;
     boolean use_relative;
+    List<String>excludes,includes;
 	
 	public ISelectorEntity(MythicLineConfig mlc) {
 		super(mlc);
 		filters=new ArrayList<FilterEnum>();
+		excludes=new ArrayList<String>();
+		includes=new ArrayList<String>();
 		String[]parse=mlc.getString("filter","").toUpperCase().split(",");
         if(mlc.getBoolean("sortbydistance",false)) filters.add(FilterEnum.SORTBYDISTANCE);
         if(mlc.getBoolean("nearest",false)) filters.add(FilterEnum.NEAREST);

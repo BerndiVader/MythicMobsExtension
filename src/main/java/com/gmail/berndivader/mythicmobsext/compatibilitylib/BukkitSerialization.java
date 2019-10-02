@@ -63,6 +63,33 @@ BukkitSerialization
             throw new IllegalStateException("Unable to save item stacks.", e);
         }
     }
+
+    /**
+     * 
+     * A method to serialize an {@link ItemStack} to Base64 String.
+     * 
+     * <p />
+     * 
+     * Based off of {@link #toBase64(Inventory)}.
+     * 
+     * @param ItemStack to turn into a Base64 String.
+     * @return Base64 string of the ItemStack.
+     * @throws IllegalStateException
+     */
+    public static String itemStackToBase64(ItemStack item) throws IllegalStateException {
+    	try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            
+            dataOutput.writeObject(item);
+            dataOutput.close();
+            
+            // Serialize that item
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to save item stacks.", e);
+        }
+    }
     
     /**
      * A method to serialize an inventory to Base64 string.
@@ -156,6 +183,31 @@ BukkitSerialization
             
             dataInput.close();
             return items;
+        } catch (ClassNotFoundException e) {
+            throw new IOException("Unable to decode class type.", e);
+        }
+    }	
+    
+    /**
+     * Gets an ItemStack from Base64 string.
+     * 
+     * <p />
+     * 
+     * Base off of {@link #fromBase64(String)}.
+     * 
+     * @param data Base64 string to convert to ItemStack.
+     * @return ItemStack created from the Base64 string.
+     * @throws IOException
+     */
+    public static ItemStack itemStackFromBase64(String data) throws IOException {
+    	try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            
+            ItemStack item_stack=(ItemStack)dataInput.readObject();
+            dataInput.close();
+            return item_stack;
+            
         } catch (ClassNotFoundException e) {
             throw new IOException("Unable to decode class type.", e);
         }

@@ -15,6 +15,7 @@ public class MathInterpreter {
 	    functions.put("cos",x->Math.cos(x));
 	    functions.put("tan",x->Math.tan(x));
 	    functions.put("rnd",x->Math.random()*x);
+	    functions.put("round",x->Math.round(x));
 	    functions.put("floor",x->Math.floor(x));
 	    functions.put("int",x->(int)x);
 	}

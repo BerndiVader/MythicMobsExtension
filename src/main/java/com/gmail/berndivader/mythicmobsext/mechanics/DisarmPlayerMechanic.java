@@ -37,7 +37,7 @@ ITargetedEntitySkill
 		this.dt=mlc.getLong(new String[] {"duration", "dur" }, 180);
 
 		whats=new ArrayList<>();
-		String[]temp=mlc.getString("what","ANY").toUpperCase().split(",");
+		String[]temp=mlc.getString("what","HAND").toUpperCase().split(",");
 		int size=temp.length;
 		for(int i1=0;i1<size;i1++) {
 			whats.add(WhereEnum.getWhere(temp[i1]));

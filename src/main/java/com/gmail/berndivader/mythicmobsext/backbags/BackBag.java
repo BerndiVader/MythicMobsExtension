@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -149,6 +150,11 @@ Listener
 	@EventHandler
 	public void inventoryOpen(InventoryOpenEvent e) {
 		if(e.isCancelled()&&e.getInventory().equals(inventory.getInventory())) HandlerList.unregisterAll(this);
+	}
+	
+	@EventHandler
+	public void drag(InventoryDragEvent e) {
+		if(e.getWhoClicked()==viewer) if(only_view) e.setCancelled(true);
 	}
 	
 	@EventHandler

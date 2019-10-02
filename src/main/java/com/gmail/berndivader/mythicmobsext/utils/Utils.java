@@ -48,6 +48,7 @@ import org.bukkit.util.Vector;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.papi.Papi;
+import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
@@ -86,6 +87,7 @@ Listener
 	public static int serverV;
 	public static int renderLength;
 	public static HashMap<UUID,Vec3D>players;
+	public static final String SERIALIZED_ITEM="_b64i";
 	public static final String signal_AISHOOT="AISHOOT";
 	public static final String signal_AIHIT="AIHIT";
 	public static final String signal_CHUNKUNLOAD="CHUNKUNLOAD";
@@ -177,6 +179,8 @@ Listener
 		if(new_cursor==null) new_cursor=new ItemStack(Material.AIR);
 		if(old_cursor==null) old_cursor=new ItemStack(Material.AIR);
 		
+		clicker.setMetadata(meta_INVCLICKNEWCURSOR,new FixedMetadataValue(Main.getPlugin(),SERIALIZED_ITEM+BukkitSerialization.itemStackToBase64(new_cursor)));
+		clicker.setMetadata(meta_INVCLICKOLDCURSOR,new FixedMetadataValue(Main.getPlugin(),SERIALIZED_ITEM+BukkitSerialization.itemStackToBase64(old_cursor)));
 	}
 	
 	@EventHandler

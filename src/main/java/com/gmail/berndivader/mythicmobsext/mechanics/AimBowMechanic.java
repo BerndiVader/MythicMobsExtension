@@ -58,7 +58,7 @@ ITargetedEntitySkill
 						} else {
 							float velocity=Utils.getBowTension(player);
 							if(velocity>0.1f) {
-								Vec3D target_position=Volatile.handler.getPredictedMotion(player,target,5.0f);
+								Vec3D target_position=Volatile.handler.getPredictedMotion(player,target,1.0f);
 								Vec2D direction=MathUtils.calculateDirectionVec2D(target_position,velocity,0.006f);
 								float yaw=(float)direction.getX();
 								float pitch=(float)direction.getY();

@@ -48,7 +48,7 @@ implements
 ITargetedEntitySkill, 
 ITargetedLocationSkill {
 	PlaceholderString stargeter;
-	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal;
+	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal,stricts[],excludes[];
 	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
 	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
 
@@ -69,6 +69,8 @@ ITargetedLocationSkill {
 		this.inBetweenLastSignal = mlc.getString(new String[] { "betweenlastentitysignal", "bls" }, null);
 		this.inBetweenNextSignal = mlc.getString(new String[] { "betweennextentitysignal", "bns" }, null);
 		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "final", "fs" }, null);
+		this.excludes=mlc.getString("exclude","").split(",");
+		this.stricts=mlc.getString("stricts","").split(",");
 
 		String s = mlc.getString(new String[] { "destination", "dest", "d", "location", "loc", "l" }, "@self").toLowerCase();
 		s = s.replaceAll("<&lc>", "{");
@@ -123,10 +125,12 @@ ITargetedLocationSkill {
 				c++;
 			}
 		}
-		if (!this.isLocations && this.ignoreOwner && data.getCaster() instanceof ActiveMob
-				&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
-			World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
-			osources.remove(BukkitAdapter.adapt(NMSUtils.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
+		if(!this.isLocations) {
+			if (this.ignoreOwner && data.getCaster() instanceof ActiveMob
+					&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
+				World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
+				osources.remove(BukkitAdapter.adapt(NMSUtils.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
+			}
 		}
 
 		new BukkitRunnable() {

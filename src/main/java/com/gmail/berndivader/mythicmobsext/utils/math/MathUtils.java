@@ -339,8 +339,9 @@ public final class MathUtils {
 		return getDirection((float)vec2d.getX(),(float)vec2d.getY());
 	}
 
-	private static Vector getDirection(float yaw,float pitch) {
+	public static Vector getDirection(float yaw,float pitch) {
         Vector vector=new Vector();
+        
         double rotX=DEGTORAD*yaw;
         double rotY=DEGTORAD*pitch;
         vector.setY(-Math.sin(rotY));
