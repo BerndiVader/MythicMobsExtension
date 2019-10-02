@@ -25,7 +25,7 @@ EntityPlaceholder
 	@Override
 	public BiFunction<AbstractEntity, String, String> transformer() {
 	    return (abstract_entity,tag) -> {
-	    	String[]tags=tag.split("\\.");
+	    	String[] tags=tag.split("\\.");
 	    	String tag_name=tags[0];
 			String result="<"+placeholder_name+"."+tag_name+error;
 			Entity entity=abstract_entity.getBukkitEntity();

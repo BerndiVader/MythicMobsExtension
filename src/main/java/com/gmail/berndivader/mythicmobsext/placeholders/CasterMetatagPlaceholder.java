@@ -25,7 +25,7 @@ MetatagPlaceholder
 	@Override
 	public BiFunction<PlaceholderMeta, String, String> transformer() {
 	    return (meta,tag) -> {
-	    	String[]tags=tag.split("\\.");
+	    	String[] tags=tag.split("\\.");
 	    	String tag_name=tags[0];
 			String result="<"+placeholder_name+"."+tag_name+error;
 			Entity entity=meta.getCaster().getEntity().getBukkitEntity();
