@@ -5,6 +5,8 @@ import net.minecraft.server.v1_14_R1.EntityLiving;
 import net.minecraft.server.v1_14_R1.EnumHand;
 import net.minecraft.server.v1_14_R1.PathfinderGoalMeleeAttack;
 
+import java.util.Optional;
+
 import org.bukkit.entity.Monster;
 
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
@@ -19,15 +21,24 @@ extends
 PathfinderGoalMeleeAttack {
 	protected float r;
 	boolean is_monster;
+	Optional<ActiveMob>am;
 	
     public PathfinderGoalAttack(EntityCreature e,double d,boolean b,float r) {
 		super(e,d,b);
 		is_monster=e.getBukkitEntity() instanceof Monster;
 		this.r=r;
+		am=Utils.mobmanager.getActiveMob(e.getUniqueID());
 	}
     
     @Override
     protected void a(EntityLiving entityLiving,double d2) {
+    	if(am.isPresent()) {
+    		ActiveMob active_mob=am.get();
+    		if(active_mob.getOwner().isPresent()) {
+    			if(active_mob.getOwner().get()==entityLiving.getUniqueID()) return;
+    		}
+    	}
+    	
         double d3 = this.a(entityLiving);
         if (d2 <= d3 && this.b <= 0) {
             this.b = 20;
