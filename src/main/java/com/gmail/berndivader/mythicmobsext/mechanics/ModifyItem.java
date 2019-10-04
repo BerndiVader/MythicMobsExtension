@@ -48,7 +48,6 @@ ITargetedEntitySkill
 		List<Enchant>enchants=null;
 		String[]lore=null;
 		String name=null,bag_name=null,duration=null;
-		
 		String temp=mlc.getString("material");
 		if(temp!=null) temp=temp.toUpperCase();
 		material=Utils.enum_lookup(Material.class,temp);

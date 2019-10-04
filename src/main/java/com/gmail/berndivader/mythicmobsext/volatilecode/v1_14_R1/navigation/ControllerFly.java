@@ -13,8 +13,6 @@ extends
 ControllerMove {
     public ControllerFly(EntityInsentient entityInsentient) {
         super(entityInsentient);
-//        a.getAttributeMap().b(GenericAttributes.MOVEMENT_SPEED);
-//        a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(2);
     }
 
     @Override

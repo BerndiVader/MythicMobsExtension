@@ -12,9 +12,14 @@ import net.minecraft.server.v1_12_R1.PathfinderGoalTarget;
 import net.minecraft.server.v1_12_R1.ScoreboardTeam;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class PathfinderGoalOtherTeams<T extends EntityLiving> 
+public 
+class
+PathfinderGoalOtherTeams
+<T extends EntityLiving> 
 extends 
-PathfinderGoalNearestAttackableTarget<T> {
+PathfinderGoalNearestAttackableTarget
+<T>
+{
 	ScoreboardTeam team1,team2;
 	int i;
 	

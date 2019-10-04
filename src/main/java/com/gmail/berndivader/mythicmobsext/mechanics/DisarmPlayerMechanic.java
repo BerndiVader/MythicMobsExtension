@@ -132,7 +132,7 @@ ITargetedEntitySkill
 			int first_empty=p.getInventory().firstEmpty();
 			if (first_empty>-1) {
 				for(int i1=0;i1<whats.size();i1++) {
-					if(p.getInventory().firstEmpty()==-1) break;
+					if((first_empty=p.getInventory().firstEmpty())==-1) break;
 					WhereEnum what=whats.get(i1);
 					switch(what) {
 					case HAND:
@@ -218,7 +218,7 @@ ITargetedEntitySkill
 		}
 	}
 	static ItemStack unequipBoots(LivingEntity entity) {
-		if(entity.getEquipment().getHelmet()!=null) {
+		if(entity.getEquipment().getBoots()!=null) {
 			ItemStack item_stack=entity.getEquipment().getBoots().clone();
 			entity.getEquipment().setBoots(new ItemStack(Material.AIR));
 			return item_stack;

@@ -18,16 +18,31 @@ RangedDouble
             this.min=Double.valueOf(split[0]);
             this.max=Double.valueOf(split[1]);
             this.op=Operation.RANGE;
+        } else if (value.startsWith(">=")) {
+            String s=value.substring(2);
+            this.min=Double.MIN_VALUE;
+            this.max=Double.valueOf(s);
+            this.op=Operation.EQUAL_OR_GREATER_THAN;
         } else if (value.startsWith(">")) {
             String s=value.substring(1);
             this.min=Double.valueOf(s);
             this.max=Double.MAX_VALUE;
             this.op=Operation.GREATER_THAN;
+        } else if (value.startsWith("<=")) {
+            String s=value.substring(2);
+            this.min=Double.MIN_VALUE;
+            this.max=Double.valueOf(s);
+            this.op=Operation.EQUAL_OR_LESS_THAN;
         } else if (value.startsWith("<")) {
             String s=value.substring(1);
             this.min=Double.MIN_VALUE;
             this.max=Double.valueOf(s);
             this.op=Operation.LESS_THAN;
+        } else if (value.startsWith("=")) {
+            String s=value.substring(1);
+            this.min=Double.valueOf(s);
+            this.max=Double.valueOf(s);
+            this.op=Operation.EQUALS;
         } else {
             this.min=Double.valueOf(value);
             this.max=Double.valueOf(value);
@@ -61,8 +76,14 @@ RangedDouble
                 case GREATER_THAN: {
                     return d > this.min;
                 }
+                case EQUAL_OR_GREATER_THAN: {
+                    return d >= this.min;
+                }
                 case LESS_THAN: {
                     return d < this.max;
+                }
+                case EQUAL_OR_LESS_THAN: {
+                    return d <= this.max;
                 }
                 case RANGE: {
                     return d >= this.min && d <= this.max;
@@ -76,7 +97,9 @@ RangedDouble
     public static enum Operation {
         EQUALS,
         GREATER_THAN,
+        EQUAL_OR_GREATER_THAN,
         LESS_THAN,
+        EQUAL_OR_LESS_THAN,
         RANGE;
     	
         private Operation() {

@@ -14,12 +14,9 @@ TargetMetatagPlaceholder
 extends
 EntityPlaceholder
 {
-	static {
-		placeholder_name="target.meta";
-	}
-	
 	public TargetMetatagPlaceholder() {
-		super();
+		placeholder_name="target.meta";
+		this.register();
 	}
 	
 	@Override

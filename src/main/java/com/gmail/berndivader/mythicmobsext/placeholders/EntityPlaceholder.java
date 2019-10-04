@@ -11,10 +11,13 @@ implements
 IPlaceHolder
 <AbstractEntity>
 {
-	static String placeholder_name;
+	String placeholder_name;
 	static final String error="#NOTFOUND>";
 	
 	public EntityPlaceholder() {
+	}
+	
+	void register() {
 		PlaceholderRegistery.manager.register(placeholder_name,new io.lumine.xikage.mythicmobs.skills.placeholders.types.EntityPlaceholder(this.transformer()));
 	}
 

@@ -14,12 +14,9 @@ TriggerMetatagPlaceholder
 extends
 MetatagPlaceholder
 {
-	static {
-		placeholder_name="trigger.meta";
-	}
-	
 	public TriggerMetatagPlaceholder() {
-		super();
+		placeholder_name="trigger.meta";
+		this.register();
 	}
 	
 	@Override

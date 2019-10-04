@@ -14,12 +14,9 @@ CasterMetatagPlaceholder
 extends
 MetatagPlaceholder
 {
-	static {
-		placeholder_name="caster.meta";
-	}
-	
 	public CasterMetatagPlaceholder() {
-		super();
+		placeholder_name="caster.meta";
+		this.register();
 	}
 	
 	@Override

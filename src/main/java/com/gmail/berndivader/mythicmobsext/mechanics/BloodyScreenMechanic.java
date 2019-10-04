@@ -14,7 +14,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="bloodyscreen",author="BerndiVader")
+@ExternalAnnotation(name="bloodyscreen,bloodyscreen_ext",author="BerndiVader")
 public class BloodyScreenMechanic
 extends 
 SkillMechanic 

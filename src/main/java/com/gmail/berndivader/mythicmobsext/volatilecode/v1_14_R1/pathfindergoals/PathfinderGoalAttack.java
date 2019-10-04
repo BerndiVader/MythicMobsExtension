@@ -32,6 +32,7 @@ PathfinderGoalMeleeAttack {
     
     @Override
     protected void a(EntityLiving entityLiving,double d2) {
+    	
     	if(am.isPresent()) {
     		ActiveMob active_mob=am.get();
     		if(active_mob.getOwner().isPresent()) {

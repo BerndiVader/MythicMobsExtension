@@ -12,10 +12,13 @@ implements
 IPlaceHolder
 <PlaceholderMeta>
 {
-	static String placeholder_name;
+	String placeholder_name;
 	static final String error="#NOTFOUND>";
 	
 	public MetatagPlaceholder() {
+	}
+	
+	void register() {
 		PlaceholderRegistery.manager.register(placeholder_name,new MetaPlaceholder(this.transformer()));
 	}
 
