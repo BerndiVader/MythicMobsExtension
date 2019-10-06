@@ -35,8 +35,15 @@ import io.lumine.xikage.mythicmobs.util.BlockUtil;
 import io.lumine.xikage.mythicmobs.util.HitBox;
 
 @ExternalAnnotation(name="mythicorbitalprojectile",author="BerndiVader")
-public class MythicOrbitalProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
-
+public
+class
+MythicOrbitalProjectile
+extends 
+CustomProjectile
+implements
+ITargetedEntitySkill,
+ITargetedLocationSkill
+{
 	protected String pEntityName;
 	protected float pEntitySpin;
 	protected int pEntityPitchOffset;

@@ -138,12 +138,12 @@ JavaPlugin
 			entityCacheHandler=new EntityCacheHandler();
 			new BackBagHelper();
 			new BossBars();
+			new PlaceholderRegistery();
 			
 	        new BukkitRunnable() {
 				@Override
 				public void run() {
 					Utils.mythicmobs.getRandomSpawningManager().reload();
-					new PlaceholderRegistery();
 				}
 			}.runTask(this);
 		}

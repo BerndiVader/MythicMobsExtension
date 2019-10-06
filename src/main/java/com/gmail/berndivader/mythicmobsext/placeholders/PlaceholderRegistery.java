@@ -79,8 +79,7 @@ PlaceholderRegistery
         	}
         	return null;
         }));
-		
-		
+        manager.recheckForPlaceholders();
 	}
 	
 
