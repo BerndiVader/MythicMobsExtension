@@ -14,7 +14,9 @@ import net.minecraft.server.v1_14_R1.PathEntity;
 import net.minecraft.server.v1_14_R1.PathPoint;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
 
-public class PathfinderGoalInteractDoor 
+public 
+class 
+PathfinderGoalInteractDoor 
 extends
 PathfinderGoal {
 	protected EntityInsentient a;

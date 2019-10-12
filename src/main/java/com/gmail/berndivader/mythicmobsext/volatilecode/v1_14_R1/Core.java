@@ -52,6 +52,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalNotifyHeal;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalOtherTeams;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalReturnHome;
@@ -59,8 +60,6 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalVexA;
 import com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals.PathfinderGoalVexD;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
 
 public class Core 
 implements Handler,Listener {
@@ -580,12 +579,18 @@ implements Handler,Listener {
             	}
             	break;
             }
+            case "notifyheal": {
+            	if (e instanceof EntityLiving) {
+                	pathfindergoal=Optional.ofNullable(new PathfinderGoalNotifyHeal(e,"mme_heal"));
+            	}
+            	break;
+            }
             case "notifygrow":
             case "grownotify": {
             	if(e instanceof EntityAgeable) {
                 	pathfindergoal=Optional.ofNullable(new PathfinderGoalEntityGrowNotify(e,data));
             	} else {
-            		MythicMobs.error("No ageable entity");
+            		Main.logger.warning("No ageable entity");
             	}
             	break;
             }

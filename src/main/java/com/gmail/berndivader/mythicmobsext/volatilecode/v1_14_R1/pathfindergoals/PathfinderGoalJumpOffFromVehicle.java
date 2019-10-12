@@ -20,6 +20,6 @@ PathfinderGoal {
 	@Override
 	public boolean b() {
 		if (e.getGoalTarget()!=null) e.stopRiding();
-		return true;
+		return false;
 	}
 }

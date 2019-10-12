@@ -121,6 +121,7 @@ Listener
 	public static final String meta_LASTCLICKEDSLOT = "lastclickedslot";
 	public static final String signal_BACKBAGCLICK = "BAGCLICKED";
 	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
+	public static final String meta_LASTHEALAMOUNT="mmelastheal";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;

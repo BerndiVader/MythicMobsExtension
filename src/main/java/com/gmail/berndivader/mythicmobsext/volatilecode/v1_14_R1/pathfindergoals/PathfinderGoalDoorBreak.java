@@ -64,7 +64,7 @@ PathfinderGoalInteractDoor {
                 this.c();
                 return;
             }
-//            this.a.world.setAir(this.b);
+            this.a.world.a(this.b, false);
             this.a.world.triggerEffect(1021,this.b,0);
             this.a.world.triggerEffect(2001,this.b,Block.getCombinedId(this.a.world.getType(this.b)));
         }

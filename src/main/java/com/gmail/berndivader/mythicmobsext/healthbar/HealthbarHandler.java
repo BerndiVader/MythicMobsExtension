@@ -109,6 +109,10 @@ Listener {
 				skill = new ChangeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
+			case "updatehealthbar": 
+				skill = new UpdateHealthbar(e.getContainer().getConfigLine(),e.getConfig());
+				e.register(skill);
+				break;
 			case "speechbubble": 
 				skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);

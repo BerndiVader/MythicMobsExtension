@@ -23,7 +23,6 @@ import com.gmail.berndivader.mythicmobsext.compatibilitylib.CompatibilityUtils;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 
 public

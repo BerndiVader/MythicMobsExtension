@@ -1,9 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.protocollib;
 
-import java.util.List;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import com.comphenix.protocol.PacketType;
@@ -14,18 +12,17 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.injector.GamePhase;
 import com.comphenix.protocol.injector.server.TemporaryPlayer;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
-import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityMetadata;
-import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerEntityStatus;
+import com.gmail.berndivader.mythicmobsext.compatibility.protocollib.wrapper.WrapperPlayServerUpdateHealth;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public
 class
 PacketReader
 implements
-PacketListener {
+PacketListener 
+{
+	static final String tag="mme_last_health";
 	
 	ListeningWhitelist outgoing;
 	ListeningWhitelist incoming;
@@ -37,8 +34,8 @@ PacketListener {
 		this.outgoing=ListeningWhitelist.newBuilder()
 				.priority(ListenerPriority.LOWEST)
 				.types(new PacketType[] {
+						PacketType.Play.Server.UPDATE_HEALTH,
 						PacketType.Play.Server.ENTITY_METADATA,
-						PacketType.Play.Server.ENTITY_STATUS,
 					})
 				.gamePhase(GamePhase.BOTH)
 				.options(new ListenerOptions[0])
@@ -67,33 +64,20 @@ PacketListener {
 	@Override
 	public void onPacketSending(PacketEvent packet_event) {
 		if(packet_event.isCancelled()||packet_event.getPlayer() instanceof TemporaryPlayer) return;
-		Entity e=null;
 		switch(packet_event.getPacketType().getCurrentId()) {
-		case 28:
-			WrapperPlayServerEntityStatus entity_status=new WrapperPlayServerEntityStatus(packet_event.getPacket().deepClone());
-			if(entity_status.getEntityStatus()==37) {
-				if((e=entity_status.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-					e.setFireTicks(0);
-					NMSUtils.setFireProofEntity(e,true);;
-					packet_event.setCancelled(true);
+			case 72:
+				WrapperPlayServerUpdateHealth health_packet=new WrapperPlayServerUpdateHealth(packet_event.getPacket());
+				Player player=packet_event.getPlayer();
+				float last_health=0f;
+				if(player.hasMetadata(tag)) {
+					last_health=player.getMetadata(tag).get(0).asFloat();
+				} else {
+					last_health=health_packet.getHealth();
+					player.setMetadata(tag,new FixedMetadataValue(Main.getPlugin(),last_health));
 				}
-			}
-			break;
-		case 63:
-			WrapperPlayServerEntityMetadata entity_meta=new WrapperPlayServerEntityMetadata(packet_event.getPacket().deepClone());
-			if((e=entity_meta.getEntity(packet_event))!=null&&(e instanceof LivingEntity)&&e.hasMetadata(Utils.meta_NOSUNBURN)) {
-				List<WrappedWatchableObject>watchables=entity_meta.getMetadata();
-				if(watchables.size()>0) {
-					WrappedWatchableObject watchable=watchables.get(0);
-					if(watchable.getValue() instanceof Byte) {
-						byte b=(byte)((byte)watchable.getValue()&~0x1);
-						watchable.setValue(b);
-						entity_meta.setMetadata(watchables);
-						packet_event.setPacket(entity_meta.getHandle());
-					}
-				}
-			};
-			break;
+				player.setMetadata(Utils.meta_LASTHEALAMOUNT,new FixedMetadataValue(Main.getPlugin(),health_packet.getHealth()-last_health));
+				player.setMetadata(tag,new FixedMetadataValue(Main.getPlugin(),health_packet.getHealth()));
+				break;
 		}
 	}
 
