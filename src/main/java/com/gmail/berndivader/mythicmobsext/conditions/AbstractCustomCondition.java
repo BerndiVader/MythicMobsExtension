@@ -1,8 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public 
 class
@@ -11,29 +14,43 @@ extends
 SkillCondition 
 {
 	boolean dba,debug;
-
+	static boolean use_placeholder_actionvar;
+	
+	static {
+		use_placeholder_actionvar=Utils.action_var_field.getAnnotatedType().getType().getTypeName().endsWith("PlaceholderString");
+	}
+	
+	
+	
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
+		
 		String action="TRUE";
-		String actionVar="0";
+		String action_var="0";
 		String a=mlc.getString("action","");
 		debug=dba=mlc.getBoolean("debug",false);
-		for(int i=0;i<ConditionAction.values().length;i++){
+		int size=ConditionAction.values().length;
+		for(int i=0;i<size;i++){
 			String aa=ConditionAction.values()[i].toString();
 			if (aa.toUpperCase().equals("CAST")&&a.toUpperCase().startsWith("CASTINSTEAD")) continue;
 			if (a.toUpperCase().startsWith(aa)) {
 				action=aa;
-				actionVar=a.substring(action.length(),a.length());
+				action_var=a.substring(action.length(),a.length());
 				break;
 			}
 		}
 		try {
-			this.ACTION = ConditionAction.valueOf(action.toUpperCase());
-			this.actionVar=actionVar;
+			this.ACTION=ConditionAction.valueOf(action.toUpperCase());
+			Utils.action_var_field.set(this,use_placeholder_actionvar?new PlaceholderString(action_var):action_var);
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
-		if (dba) System.err.println(this.ACTION.toString()+":"+this.actionVar);
+		if (dba)
+			try {
+				System.err.println(this.ACTION.toString()+":"+Utils.action_var_field.get(this));
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 	}
 
 }

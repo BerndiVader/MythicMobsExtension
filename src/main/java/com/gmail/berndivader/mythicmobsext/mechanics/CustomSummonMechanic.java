@@ -116,8 +116,7 @@ ITargetedEntitySkill
 						}
 						continue;
 					}
-					if (!this.inheritThreatTable)
-						continue;
+					if (!this.inheritThreatTable||am.getThreatTable()==null) continue;
 					ams.importThreatTable(am.getThreatTable());
 					ams.getThreatTable().targetHighestThreat();
 				}

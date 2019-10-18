@@ -11,6 +11,7 @@ import java.util.jar.JarInputStream;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 
@@ -133,6 +134,14 @@ Listener {
 			m=mechanics.size();
 			c=conditions.size();
 			t=targeters.size();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					Main.logger.info(m+" mechanics loaded.");
+					Main.logger.info(c+" conditions loaded.");
+					Main.logger.info(t+" targeters loaded.");
+				}
+			}.runTaskLaterAsynchronously(Main.getPlugin(),15);
 		}
 		
 		public Class<? extends SkillMechanic> loadM(String s1) {

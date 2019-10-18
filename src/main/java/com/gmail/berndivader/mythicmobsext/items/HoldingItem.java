@@ -76,7 +76,7 @@ Cloneable
 		if(this.lore.equals("ANY")) return true;
 		if(meta!=null&&meta.hasLore()) {
 			for(Iterator<String>it=meta.getLore().iterator();it.hasNext();) {
-				if (it.next().contains(this.lore)) return true; 					
+				if (it.next().contains(this.lore)) return true;
 			}
 		}
 		return false;

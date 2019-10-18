@@ -65,6 +65,7 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob.ThreatTable;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
+import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
@@ -126,6 +127,7 @@ Listener
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
 	static Field threattable_field;
+	public static Field action_var_field;
 	
 	static boolean papi_ispresent;
 	
@@ -150,6 +152,8 @@ Listener
 		try {
 			threattable_field=ThreatTable.class.getDeclaredField("threatTable");
 			threattable_field.setAccessible(true);
+			action_var_field=SkillCondition.class.getDeclaredField("actionVar");
+			action_var_field.setAccessible(true);
 		} catch (NoSuchFieldException | SecurityException e) {
 			// Auto-generated catch block
 		}

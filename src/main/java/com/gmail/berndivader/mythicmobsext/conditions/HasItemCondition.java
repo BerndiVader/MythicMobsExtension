@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.conditions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -32,18 +33,15 @@ IEntityCondition
 {
 	
 	private String conditionLine,meta_var;
-	private boolean is,store_result;
+	private boolean store_result;
 	private List<HoldingItem>holdinglist;
 
 	public HasItemCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.is=line.toLowerCase().startsWith("ownsitemsimple");
 		this.holdinglist=new ArrayList<>();
 		store_result=!(this.meta_var=mlc.getString("var","")).isEmpty();
-		String tmp=null;
-		if (!is) {
-			tmp=mlc.getString(new String[]{"list","l"},null);
-		} else {
+		String tmp=mlc.getString(new String[]{"list","l"},null);
+		if(tmp==null) {
 			tmp="\"where="+mlc.getString("where","ANY");
 			tmp+=";material="+mlc.getString("material","ANY");
 			tmp+=";amount="+mlc.getString("amount",">0");
@@ -55,16 +53,14 @@ IEntityCondition
 			tmp=SkillString.unparseMessageSpecialChars(tmp);
 		}
 		this.conditionLine=SkillString.parseMessageSpecialChars(tmp);
-		if (tmp!=null) {
-			String[]list=tmp.split("&&|\\|\\|");
-			for (int a=0;a<list.length;a++) {
-				String parse=list[a];
-				HoldingItem holding=new HoldingItem();
-				parse=SkillString.parseMessageSpecialChars(parse);
-				this.conditionLine=this.conditionLine.replaceFirst(parse,"\\$"+Integer.toString(a));
-				if (parse.startsWith("\"")&&parse.endsWith("\"")) HoldingItem.parse(parse.substring(1,parse.length()-1),holding);
-				this.holdinglist.add(holding);
-			}
+		String[]list=tmp.split("&&|\\|\\|");
+		for (int a=0;a<list.length;a++) {
+			String parse=list[a];
+			HoldingItem holding=new HoldingItem();
+			parse=SkillString.parseMessageSpecialChars(parse);
+			this.conditionLine=this.conditionLine.replaceFirst(Pattern.quote(parse),"\\$"+Integer.toString(a));
+			if (parse.startsWith("\"")&&parse.endsWith("\"")) HoldingItem.parse(parse.substring(1,parse.length()-1),holding);
+			this.holdinglist.add(holding);
 		}
 	}
 
