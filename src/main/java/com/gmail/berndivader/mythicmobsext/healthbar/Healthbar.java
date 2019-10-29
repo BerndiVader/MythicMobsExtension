@@ -42,7 +42,7 @@ CraftHologram {
 			this.getLocation().add(foV);
 		}
 		this.uuid = entity.getUniqueId();
-		HealthbarHandler.healthbars.put(this.uuid, this);
+		HealthbarHandler.healthbars.put(this.uuid,this);
 		if (showCounter == -1) {
 			this.showCounterDefault = -1;
 			this.getVisibilityManager().setVisibleByDefault(true);

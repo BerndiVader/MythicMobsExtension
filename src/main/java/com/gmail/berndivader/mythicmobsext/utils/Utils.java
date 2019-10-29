@@ -53,7 +53,6 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerSpinMechanic;
-import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
@@ -123,6 +122,7 @@ Listener
 	public static final String signal_BACKBAGCLICK = "BAGCLICKED";
 	public static final String meta_LASTCLICKEDBAG = "lastclickedbag";
 	public static final String meta_LASTHEALAMOUNT="mmelastheal";
+	public static final String meta_STUNNED="mmeStunned";
 	public static String scripts;
 	public static String str_PLUGINPATH;
 	public static HashSet<Advancement>advancements;
@@ -341,9 +341,9 @@ Listener
 		UUID uuid;
 		if(players.containsKey(uuid=p.getUniqueId())) players.remove(uuid);
 		if (p.hasMetadata(NoDamageTicksMechanic.str)) e.getPlayer().removeMetadata(NoDamageTicksMechanic.str,Main.getPlugin());
-		if (p.hasMetadata(StunMechanic.str)) {
+		if (p.hasMetadata(meta_STUNNED)) {
 			p.setGravity(true);
-			p.removeMetadata(StunMechanic.str,Main.getPlugin());
+			p.removeMetadata(meta_STUNNED,Main.getPlugin());
 		}
 		if (p.hasMetadata(PlayerSpinMechanic.str)) {
 			p.removeMetadata(PlayerSpinMechanic.str,Main.getPlugin());

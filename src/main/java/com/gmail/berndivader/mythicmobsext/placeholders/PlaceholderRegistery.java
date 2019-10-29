@@ -43,6 +43,9 @@ PlaceholderRegistery
         	}
         	return null;
         }));
+        manager.register("caster.nbt",Placeholder.meta((meta,arg)-> {
+        	return null;
+        }));
         manager.register("trigger.l.dx",Placeholder.meta((meta,arg)-> {
         	return Double.toString(meta.getTrigger().getLocation().getX());
         }));
@@ -61,6 +64,9 @@ PlaceholderRegistery
         	}
         	return null;
         }));
+        manager.register("trigger.nbt",Placeholder.meta((meta,arg)-> {
+        	return null;
+        }));
         manager.register("target.l.dx",Placeholder.entity((entity,arg)-> {
         	return Double.toString(entity.getLocation().getX());
         }));
@@ -77,6 +83,9 @@ PlaceholderRegistery
             	Material material=item_stack==null?Material.AIR:item_stack.getType();
             	return material.name();
         	}
+        	return null;
+        }));
+        manager.register("target.nbt",Placeholder.entity((target,arg)-> {
         	return null;
         }));
         manager.recheckForPlaceholders();

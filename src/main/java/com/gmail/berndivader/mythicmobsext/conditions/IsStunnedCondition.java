@@ -1,7 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
-import com.gmail.berndivader.mythicmobsext.mechanics.StunMechanic;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -20,7 +20,7 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity target) {
-		return target.getBukkitEntity().hasMetadata(StunMechanic.str);
+		return target.getBukkitEntity().hasMetadata(Utils.meta_STUNNED);
 	}
 
 }

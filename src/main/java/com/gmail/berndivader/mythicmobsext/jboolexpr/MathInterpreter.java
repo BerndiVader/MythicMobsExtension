@@ -18,6 +18,7 @@ public class MathInterpreter {
 	    functions.put("round",x->Math.round(x));
 	    functions.put("floor",x->Math.floor(x));
 	    functions.put("int",x->(int)x);
+	    functions.put("unixtime",x->((int)(System.currentTimeMillis()/1000)));
 	}
 
 	public static Expression parse(String str,Map<String,Double>variables) {

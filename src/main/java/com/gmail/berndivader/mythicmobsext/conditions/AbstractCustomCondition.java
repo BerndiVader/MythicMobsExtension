@@ -20,8 +20,6 @@ SkillCondition
 		use_placeholder_actionvar=Utils.action_var_field.getAnnotatedType().getType().getTypeName().endsWith("PlaceholderString");
 	}
 	
-	
-	
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		
@@ -45,12 +43,13 @@ SkillCondition
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
-		if (dba)
+		if (dba) {
 			try {
 				System.err.println(this.ACTION.toString()+":"+Utils.action_var_field.get(this));
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
+		}
 	}
 
 }
