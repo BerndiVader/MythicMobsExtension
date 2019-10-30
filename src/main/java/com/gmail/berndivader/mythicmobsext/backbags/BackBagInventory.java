@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.backbags;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -18,6 +19,18 @@ BackBagInventory
 	
 	private transient Inventory inventory;
 	private transient boolean temporary;
+	
+	public BackBagInventory(UUID owner,String name,int size,ItemStack[]default_content,boolean temporary,boolean override) {
+		this.name=name;
+		size=size%9>0?size+(9-size%9):size;
+		this.size=size;
+		this.temporary=temporary;
+		if(override||(inventory=BackBagHelper.getInventory(owner,name))==null) {
+			inventory=Bukkit.createInventory(null,size,name);
+			BackBagHelper.addInventory(owner,this);
+		}
+		if(default_content!=null&&default_content.length<=this.size) inventory.setContents(default_content);
+	}
 	
 	public BackBagInventory(String name,int size,Inventory inventory) {
 		this(name,size,inventory,false);

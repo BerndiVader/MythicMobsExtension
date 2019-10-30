@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 
 public 
 class
-BackBag
+BackBagViewer
 implements
 Listener
 {
@@ -50,36 +51,36 @@ Listener
 	
 	static int backbag_counter=0;
 	
-	public BackBag(Entity onwer) {
+	public BackBagViewer(Entity onwer) {
 		this(onwer,9);
 	}
 
-	public BackBag(Entity onwer,String name) {
+	public BackBagViewer(Entity onwer,String name) {
 		this(onwer,9,null,name,false);
 	}
 
-	public BackBag(Entity owner,int size) {
+	public BackBagViewer(Entity owner,int size) {
 		this(owner,size,null);
 	}
 	
-	public BackBag(Entity owner,int size,ItemStack[]default_content) {
+	public BackBagViewer(Entity owner,int size,ItemStack[]default_content) {
 		this(owner,size,default_content,null,false);
 	}
 	
-	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary) {
+	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary) {
 		this(owner,size,default_content,name,temporary,false);
 	}
 	
-	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override) {
+	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override) {
 		this(owner,size,default_content,name,temporary,override,new ArrayList<>());
 	}
 
-	public BackBag(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override,List<Integer>excluded_slots) {
+	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override,List<Integer>excluded_slots) {
 		backbag_counter++;
 		if(name==null) name=BackBagHelper.str_name;
 		size=size%9>0?size+(9-size%9):size;
 		this.owner=owner;
-		if((inventory=BackBagHelper.getBagInventory(owner.getUniqueId(),name))==null||override) {
+		if(override||(inventory=BackBagHelper.getBagInventory(owner.getUniqueId(),name))==null) {
 			inventory=new BackBagInventory(name,size,Bukkit.createInventory(null,size,name),temporary);
 			BackBagHelper.addInventory(owner.getUniqueId(),inventory);
 		}
@@ -91,11 +92,11 @@ Listener
 	
 	
 	public void viewBackBag(Player player) {
-		viewBackBag(player,this.only_view,this.excludes_slots);
+		viewBackBag(player,false,new ArrayList<>());
 	}
 	
 	public void viewBackBag(Player player,boolean bool) {
-		viewBackBag(player,bool,this.excludes_slots);
+		viewBackBag(player,bool,new ArrayList<>());
 	}
 	
 	public void viewBackBag(Player player,boolean bool,List<Integer> excludes_slots) {
@@ -171,12 +172,23 @@ Listener
 				}
 			}
 			ItemStack clicked_stack=e.getCurrentItem();
+			ItemStack current_stack=e.getCursor();
 			if(clicked_stack!=null) {
 				if(NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
 					this.executeSkill(NMSUtils.getMetaString(clicked_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
 				}
-				if (NMSUtils.hasMeta(clicked_stack,CreateItem.str_viewonly)) {
-					e.setCancelled(false);
+				if(NMSUtils.hasMeta(clicked_stack,CreateItem.str_viewonly)) {
+					e.setCancelled(NMSUtils.getMetaBoolean(clicked_stack,CreateItem.str_viewonly,false));
+				}
+			}
+			if(current_stack!=null) {
+				if(clicked_stack==null||clicked_stack.getType()==Material.AIR) {
+					if(NMSUtils.hasMeta(current_stack,Utils.meta_CLICKEDSKILL)) {
+						this.executeSkill(NMSUtils.getMetaString(current_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
+					}
+					if(NMSUtils.hasMeta(current_stack,CreateItem.str_viewonly)) {
+						e.setCancelled(NMSUtils.getMetaBoolean(current_stack,CreateItem.str_viewonly,false));
+					}
 				}
 			}
 		}

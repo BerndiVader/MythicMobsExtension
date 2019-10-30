@@ -6,8 +6,8 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
@@ -61,8 +61,7 @@ INoTargetSkill
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		BackBag bag=new BackBag(data.getCaster().getEntity().getBukkitEntity(),size,default_items,bag_name.get(data),temporary,override,excluded_slots);
-		if(bag!=null) bag=null;
+		new BackBagInventory(data.getCaster().getEntity().getUniqueId(),bag_name.get(data),size,default_items,temporary,override);
 		return true;
 	}
 

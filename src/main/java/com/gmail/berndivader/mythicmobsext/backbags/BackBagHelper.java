@@ -335,9 +335,9 @@ Listener
 	public static void expandBackBag(Entity owner,String bag_name,int size) {
 		size=size%9>0?size+(9-size%9):size;
 		if(BackBagHelper.hasBackBag(owner.getUniqueId())) {
-			BackBag bag=new BackBag(owner,bag_name);
+			BackBagInventory bag=BackBagHelper.getBagInventory(owner.getUniqueId(),bag_name);
 			if(bag.getSize()>size) {
-				List<ItemStack>content=Arrays.asList(bag.inventory.getInventory().getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
+				List<ItemStack>content=Arrays.asList(bag.getInventory().getContents()).stream().filter(p->p!=null&&p.getType()!=Material.AIR).collect(Collectors.toList());
 				if(content.size()>size) {
 					for(int i1=content.size()-1;i1>=size;i1--) {
 						content.remove(i1);
@@ -348,7 +348,7 @@ Listener
 				bag.setInventory(bag_name,new_inv);
 			} else {
 				Inventory new_inv=Bukkit.createInventory(null,size);
-				new_inv.setContents(bag.inventory.getInventory().getContents());
+				new_inv.setContents(bag.getInventory().getContents());
 				bag.setInventory(bag_name,new_inv);
 			}
 		}

@@ -1,12 +1,15 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
@@ -33,22 +36,23 @@ SkillMechanic
 implements
 ITargetedEntitySkill 
 {
-	String slot;
 	ModdingItem modding_item;
 	
 	public ModifyItem(String skill, MythicLineConfig mlc) {
 		super(skill,mlc);
 		
 		WhereEnum where=Utils.enum_lookup(WhereEnum.class,mlc.getString("what","HAND").toUpperCase());
-		slot=mlc.getString("slot","-7331");
-		
 		ACTION action=Utils.enum_lookup(ACTION.class,mlc.getString("action","SET").toUpperCase());
 		Material material=null;
 		RandomDouble amount=null;
 		List<Enchant>enchants=null;
 		String[]lore=null;
 		String name=null,bag_name=null,duration=null;
+		
+		String slot=mlc.getString("slot","-7331");
 		String temp=mlc.getString("material");
+		SimpleEntry<String,FixedMetadataValue>meta_entry=null;
+		
 		if(temp!=null) temp=temp.toUpperCase();
 		material=Utils.enum_lookup(Material.class,temp);
 		temp=SkillString.parseMessageSpecialChars(mlc.getString("lore"));
@@ -81,7 +85,13 @@ ITargetedEntitySkill
 				}
 			}
 		}
-		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,duration,bag_name);
+		if((temp=mlc.getString("meta",null))!=null) {
+			String[]parse=temp.split(",");
+			if(parse.length==2) {
+				meta_entry=new SimpleEntry<String,FixedMetadataValue>(parse[0],new FixedMetadataValue(Main.getPlugin(),parse[1]));
+			}
+		}
+		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,duration,bag_name,meta_entry);
 	}
 
 	@Override

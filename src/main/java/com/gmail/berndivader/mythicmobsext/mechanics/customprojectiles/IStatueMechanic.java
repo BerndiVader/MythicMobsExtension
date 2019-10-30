@@ -32,6 +32,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -49,7 +50,7 @@ ITargetedLocationSkill {
     		onHitSkill=Optional.empty(),
     		onEndSkill=Optional.empty(),
     		onStartSkill=Optional.empty();
-    Material material;
+    ItemStack item_stack;
     String onTickSkillName,
     		onHitSkillName,
     		onEndSkillName,
@@ -71,11 +72,16 @@ ITargetedLocationSkill {
     public IStatueMechanic(String skill, MythicLineConfig mlc) {
         super(skill, mlc);
         this.ASYNC_SAFE=false;
-		String i=mlc.getString(new String[] {"item","i"},"DIRT").toUpperCase();
-		try {
-			this.material=Material.valueOf(i);
-		} catch (Exception e){
-			this.material=Material.DIRT;
+		String i=mlc.getString(new String[] {"item","i"},"DIRT");
+		Optional<MythicItem>optional=Utils.mythicmobs.getItemManager().getItem(i);
+		if(optional.isPresent()) {
+			item_stack=BukkitAdapter.adapt(optional.get().generateItemStack(1));
+		} else {
+			try {
+				item_stack=new ItemStack(Material.valueOf(i.toUpperCase()));
+			} catch (Exception e){
+				item_stack=new ItemStack(Material.DIRT);
+			}
 		}
         this.onTickSkillName=mlc.getString(new String[]{"ontickskill","ontick","ot","skill","s","meta","m"});
         this.onHitSkillName=mlc.getString(new String[]{"onhitskill","onhit","oh"});
@@ -184,7 +190,7 @@ ITargetedLocationSkill {
     		}
             this.targets=new HashSet<LivingEntity>();
             this.immune=new HashMap<LivingEntity,Long>();
-            this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.material));
+            this.item=this.currentLocation.getWorld().dropItem(this.currentLocation, new ItemStack(IStatueMechanic.this.item_stack));
             EntityCacheHandler.add(this.item);
 			this.item.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.item.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));

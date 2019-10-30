@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.items;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
@@ -8,11 +9,12 @@ import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 
@@ -42,8 +44,9 @@ Cloneable
 	Optional<String>durability;
 	Optional<String>bag_name;
 	Optional<String>slot;
+	Optional<SimpleEntry<String,FixedMetadataValue>>meta_entry;
 	
-	public ModdingItem(WhereEnum where,String slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String durability,String bag_name) {
+	public ModdingItem(WhereEnum where,String slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String durability,String bag_name,SimpleEntry<String,FixedMetadataValue>meta_entry) {
 		this.where=where;
 		this.action=action;
 		this.material=Optional.ofNullable(material);
@@ -54,6 +57,7 @@ Cloneable
 		this.setDurability(durability);
 		this.bag_name=Optional.ofNullable(bag_name);
 		this.slot=Optional.ofNullable(slot);
+		this.meta_entry=Optional.ofNullable(meta_entry);
 	}
 	
 	public void setSlot(String slot) {
@@ -247,11 +251,11 @@ Cloneable
 			break;
 		case BACKBAG:
 			if(BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				BackBag bag=bag_name.isPresent()?new BackBag(entity,bag_name.get()):new BackBag(entity);
-				if(bag!=null) {
+				Inventory inventory=BackBagHelper.getInventory(entity.getUniqueId(),bag_name.isPresent()?bag_name.get():BackBagHelper.str_name);
+				if(inventory!=null) {
 					int slot=this.getSlot(data,target);
-					if(bag.getSize()>=slot&&slot>-1) {
-						if((output=bag.getInventory().getItem(slot))!=null&&output.getType()!=Material.AIR) return output;
+					if(inventory.getSize()>=slot&&slot>-1) {
+						if((output=inventory.getItem(slot))!=null&&output.getType()!=Material.AIR) return output;
 					}
 				}
 			}

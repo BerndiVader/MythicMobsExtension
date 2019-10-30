@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.Optional;
+
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,7 +36,8 @@ INoTargetSkill
 	PlaceholderString bag_name;
 	String item_name,click_skill;
 	HoldingItem holding;
-	boolean override,view_only;
+	boolean override;
+	Optional<Boolean>view_only=Optional.empty();
 	int amount;
 	
 	public CreateItem(String skill, MythicLineConfig mlc) {
@@ -50,7 +53,9 @@ INoTargetSkill
 		this.amount=mlc.getInteger("amount",1);
 		this.override=mlc.getBoolean("override",true);
 		this.click_skill=mlc.getString("clickskill");
-		this.view_only=mlc.getBoolean("viewonly",false);
+		if(mlc.getLine().contains("viewonly")) {
+			this.view_only=Optional.ofNullable(mlc.getBoolean("viewonly"));
+		}
 	}
 
 	@Override
@@ -71,9 +76,7 @@ INoTargetSkill
 				item_stack.setAmount(amount);
 				item_stack=NMSUtils.makeReal(item_stack);
 				if(this.click_skill!=null) NMSUtils.setMeta(item_stack,Utils.meta_CLICKEDSKILL,this.click_skill);
-				if(this.view_only) {
-					NMSUtils.setMeta(item_stack,str_viewonly," ");
-				}
+				if(this.view_only.isPresent()) NMSUtils.setMetaBoolean(item_stack,str_viewonly,view_only.get());
 				HoldingItem.giveItem((LivingEntity)abstract_entity.getBukkitEntity(),holding,item_stack,override);
 				return true;
 			}

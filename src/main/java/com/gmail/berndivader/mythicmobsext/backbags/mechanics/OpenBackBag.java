@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagViewer;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -62,7 +62,7 @@ ITargetedEntitySkill
 	public boolean cast(SkillMetadata data) {
 		if(data.getCaster().getEntity().isPlayer()) {
 			Player player=(Player)data.getCaster().getEntity().getBukkitEntity();
-			BackBag bag=new BackBag(player,size,default_items,bag_name.get(data),temporary);
+			BackBagViewer bag=new BackBagViewer(player,size,default_items,bag_name.get(data),temporary);
 			bag.viewBackBag(player,view_only,this.excluded_slots);
 			return true;
 		}
@@ -74,7 +74,7 @@ ITargetedEntitySkill
 		if(abstract_entity.isPlayer()) {
 			Entity holder=data.getCaster().getEntity().getBukkitEntity();
 			Player viewer=(Player)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder,size,default_items,bag_name.get(data,abstract_entity),temporary);
+			BackBagViewer bag=new BackBagViewer(holder,size,default_items,bag_name.get(data,abstract_entity),temporary);
 			bag.viewBackBag(viewer,view_only,this.excluded_slots);
 			return true;
 		}

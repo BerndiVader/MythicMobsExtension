@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +33,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
@@ -48,7 +50,7 @@ implements
 ITargetedEntitySkill,
 ITargetedLocationSkill {
 
-	protected String pEntityName;
+	ItemStack item_stack;
 	protected float pEntitySpin;
 	protected float pEntityPitchOffset;
 	short durability;
@@ -56,7 +58,17 @@ ITargetedLocationSkill {
 	public ItemProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
-		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT").toUpperCase();
+		String i=mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT");
+		Optional<MythicItem>optional=Utils.mythicmobs.getItemManager().getItem(i);
+		if(optional.isPresent()) {
+			item_stack=BukkitAdapter.adapt(optional.get().generateItemStack(1));
+		} else {
+			try {
+				item_stack=new ItemStack(Material.valueOf(i.toUpperCase()));
+			} catch (Exception e){
+				item_stack=new ItemStack(Material.DIRT);
+			}
+		}
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
 		this.tickInterval=2;
@@ -67,7 +79,7 @@ ITargetedLocationSkill {
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
-			new ProjectileRunner(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
+			new ProjectileRunner(data,this.item_stack,target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
 			this.mythicmobs.handleException(ex);
@@ -103,7 +115,7 @@ ITargetedLocationSkill {
 		private boolean pFaceDir, targetable, eyedir;
 		private float currentBounce, bounceReduce;
 
-		public ProjectileRunner(SkillMetadata data, String customItemName, AbstractLocation target) {
+		public ProjectileRunner(SkillMetadata data,ItemStack item_stack, AbstractLocation target) {
 
 			float noise;
 			this.cancelled = false;
@@ -229,7 +241,7 @@ ITargetedLocationSkill {
 				sData.setOrigin(this.currentLocation.clone());
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
-			ItemStack i = new ItemStack(Material.valueOf(customItemName));
+			ItemStack i=new ItemStack(item_stack);
 			if(durability>Short.MIN_VALUE) i.setDurability(ItemProjectile.this.durability);
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
 			this.pItem = l.getWorld().dropItem(l,i);

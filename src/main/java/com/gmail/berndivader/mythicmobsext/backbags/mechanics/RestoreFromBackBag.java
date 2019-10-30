@@ -7,8 +7,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
@@ -62,9 +62,8 @@ ITargetedEntitySkill
 		}
 		if(abstract_entity.isLiving()&&BackBagHelper.hasBackBag(abstract_entity.getUniqueId())) {
 			LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-			BackBag bag=new BackBag(holder,bag_name.get(data,abstract_entity));
+			BackBagInventory bag=BackBagHelper.getBagInventory(holder.getUniqueId(),bag_name.get(data,abstract_entity));
 			holding.parseSlot(data,abstract_entity);
-			if(bag.getInventory()==null) return false;
 			Inventory inventory=bag.getInventory();
 			if(inventory.getSize()>=inventory_slot&&inventory_slot>-1) {
 				ItemStack old_item=inventory.getItem(inventory_slot);

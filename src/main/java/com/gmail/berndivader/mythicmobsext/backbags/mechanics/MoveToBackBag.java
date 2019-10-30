@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
-import com.gmail.berndivader.mythicmobsext.backbags.BackBag;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
+import com.gmail.berndivader.mythicmobsext.backbags.BackBagInventory;
 import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 
@@ -66,8 +66,8 @@ ITargetedEntitySkill
 			if(holding!=null) {
 				holding.parseSlot(data,abstract_entity);
 				LivingEntity holder=(LivingEntity)abstract_entity.getBukkitEntity();
-				BackBag bag=new BackBag(holder,bag_name.get(data,abstract_entity));
-				if(bag.getInventory()==null) return false;
+				BackBagInventory bag=BackBagHelper.getBagInventory(holder.getUniqueId(),bag_name.get(data,abstract_entity));
+				if(bag==null) return false;
 				Inventory inventory=bag.getInventory();
 				List<ItemStack>stack=HoldingItem.getContents(holding,holder);
 				for(int i1=0;i1<stack.size();i1++) {
