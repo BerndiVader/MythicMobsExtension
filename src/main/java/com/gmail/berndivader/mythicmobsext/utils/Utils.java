@@ -71,6 +71,8 @@ import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import think.rpgitems.item.ItemManager;
 import think.rpgitems.item.RPGItem;
@@ -698,6 +700,21 @@ Listener
         MythicLineConfig mlc = new MythicLineConfig(search);
         String name = search.contains("{") ? search.substring(0, search.indexOf("{")) : search;
         return SkillTargeter.getMythicTargeter(name, mlc);
+	}
+	
+	public static Object getTagValue(Object nbt,JsonElement json_element) {
+		Object nbt_value=null;
+		if(nbt!=null) {
+			JsonElement nbt_element=new JsonParser().parse(nbt.toString());
+			System.err.println("element:"+json_element.toString());
+			System.err.println("nbt:"+nbt_element.toString());
+			
+			if(json_element.isJsonArray()) System.err.println("array");
+			if(json_element.isJsonNull()) System.err.println("null");
+			if(json_element.isJsonObject()) System.err.println("object");
+			if(json_element.isJsonPrimitive()) System.err.println("primitive");
+		}
+		return nbt_value;
 	}
 	
 }

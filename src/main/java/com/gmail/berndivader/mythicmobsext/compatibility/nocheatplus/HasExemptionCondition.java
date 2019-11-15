@@ -2,11 +2,11 @@ package com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus;
 
 import org.bukkit.entity.Player;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
@@ -31,7 +31,7 @@ IEntityCondition {
 			try {
 				c1=CheckType.valueOf(arr1[i1]);
 			} catch (Exception ex) {
-				MythicMobs.error("Unable to add NCP CheckType: "+arr1[i1]+" because the tpye is invalid!");
+				Main.logger.warning("Unable to add NCP CheckType: "+arr1[i1]+" because the tpye is invalid!");
 				continue;
 			}
 			if (c1==CheckType.ALL) {

@@ -1,15 +1,12 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
@@ -19,6 +16,8 @@ import com.gmail.berndivader.mythicmobsext.items.ModdingItem.ACTION;
 import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
@@ -51,7 +50,7 @@ ITargetedEntitySkill
 		
 		String slot=mlc.getString("slot","-7331");
 		String temp=mlc.getString("material");
-		SimpleEntry<String,FixedMetadataValue>meta_entry=null;
+		JsonElement json_element=null;
 		
 		if(temp!=null) temp=temp.toUpperCase();
 		material=Utils.enum_lookup(Material.class,temp);
@@ -85,13 +84,11 @@ ITargetedEntitySkill
 				}
 			}
 		}
-		if((temp=mlc.getString("meta",null))!=null) {
-			String[]parse=temp.split(",");
-			if(parse.length==2) {
-				meta_entry=new SimpleEntry<String,FixedMetadataValue>(parse[0],new FixedMetadataValue(Main.getPlugin(),parse[1]));
-			}
+		if((temp=mlc.getString("nbt",null))!=null) {
+			temp=SkillString.parseMessageSpecialChars(temp.substring(1,temp.length()-1));
+			json_element=new JsonParser().parse(temp);
 		}
-		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,duration,bag_name,meta_entry);
+		modding_item=new ModdingItem(where,slot,action,material,lore,name,amount,enchants,duration,bag_name,json_element);
 	}
 
 	@Override

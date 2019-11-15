@@ -480,4 +480,14 @@ CompatibilityUtils
 		return metadata_map;
 	}
 	
+	public static Object getTagValue(Object nbt) {
+		try {
+			return class_NBTTagString_dataField.get(nbt);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.items;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
@@ -12,11 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.utils.RandomDouble;
+import com.gmail.berndivader.mythicmobsext.utils.Utils;
+import com.google.gson.JsonElement;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -44,9 +45,9 @@ Cloneable
 	Optional<String>durability;
 	Optional<String>bag_name;
 	Optional<String>slot;
-	Optional<SimpleEntry<String,FixedMetadataValue>>meta_entry;
+	Optional<JsonElement>json_element;
 	
-	public ModdingItem(WhereEnum where,String slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String durability,String bag_name,SimpleEntry<String,FixedMetadataValue>meta_entry) {
+	public ModdingItem(WhereEnum where,String slot,ACTION action,Material material,String[]lore_array,String name,RandomDouble amount,List<Enchant>enchants,String durability,String bag_name,JsonElement json_element) {
 		this.where=where;
 		this.action=action;
 		this.material=Optional.ofNullable(material);
@@ -57,7 +58,7 @@ Cloneable
 		this.setDurability(durability);
 		this.bag_name=Optional.ofNullable(bag_name);
 		this.slot=Optional.ofNullable(slot);
-		this.meta_entry=Optional.ofNullable(meta_entry);
+		this.json_element=Optional.ofNullable(json_element);
 	}
 	
 	public void setSlot(String slot) {
@@ -123,6 +124,10 @@ Cloneable
 					}
 					item_stack.setDurability(duration);
 				}
+				if(json_element.isPresent()) {
+					Object nbt=NMSUtils.getTag(item_stack);
+					Utils.getTagValue(nbt,this.json_element.get());
+				}
 				break;
 			case ADD:
 				if(amount.isPresent()) item_stack.setAmount(item_stack.getAmount()+amount.get().rollInteger());
@@ -172,8 +177,11 @@ Cloneable
 			case DEL:
 				if(amount.isPresent()) {
 					int new_size=amount.get().rollInteger();
-					if(new_size>item_stack.getAmount()) new_size=item_stack.getAmount();
-					item_stack.setAmount(new_size);
+					if(new_size>=item_stack.getAmount()) {
+						item_stack.setAmount(0);
+					} else {
+						item_stack.setAmount(item_stack.getAmount()-new_size);
+					}
 				}
 				if(name.isPresent()&&item_stack.getItemMeta().hasDisplayName()) {
 					String name=new PlaceholderString(this.name.get()).get(data,target);
