@@ -12,6 +12,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="sendtoast",author="BerndiVader")
 public 
@@ -40,7 +41,8 @@ ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity a_target) {
 		if(!a_target.isPlayer()) return false;
-		Volatile.handler.sendPlayerAdvancement((Player)a_target.getBukkitEntity(),material,message,new String(),frame);
+		String msg=new PlaceholderString(this.message).get(data, a_target);
+		Volatile.handler.sendPlayerAdvancement((Player)a_target.getBukkitEntity(),material,msg,new String(),frame);
 		return true;
 	}
 	

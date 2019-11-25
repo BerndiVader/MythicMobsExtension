@@ -72,7 +72,7 @@ ITargetedLocationSkill {
 		this.excludes=mlc.getString("exclude","").split(",");
 		this.stricts=mlc.getString("stricts","").split(",");
 
-		String s = mlc.getString(new String[] { "destination", "dest", "d", "location", "loc", "l" }, "@self").toLowerCase();
+		String s = mlc.getString(new String[] { "destination", "dest", "d", "location", "loc", "l" }, "@self");
 		s = s.replaceAll("<&lc>", "{");
 		s = s.replaceAll("<&rc>", "}");
 		s = s.replaceAll("<&eq>", "=");
@@ -132,7 +132,7 @@ ITargetedLocationSkill {
 				osources.remove(BukkitAdapter.adapt(NMSUtils.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
 			}
 		}
-
+		
 		new BukkitRunnable() {
 			AbstractEntity sourceEntity = entityTarget;
 			AbstractEntity lastEntity;
@@ -149,7 +149,7 @@ ITargetedLocationSkill {
 			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
 			AbstractLocation start = startLocation;
-
+			
 			@Override
 			public void run() {
 				block: {
