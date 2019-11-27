@@ -26,7 +26,7 @@ ILocationCondition {
 
 	@Override
 	public boolean check(AbstractLocation var1) {
-		return range.equals(dateTime.format(System.currentTimeMillis()));
+		return range.equals(Integer.parseInt(dateTime.format(System.currentTimeMillis())));
 	}
 	
 }

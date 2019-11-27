@@ -24,7 +24,8 @@ implements
 ITargetedEntitySkill
 {
 	Material material;
-	String message,frame;
+	PlaceholderString message;
+	String frame;
 	
 	public DisplayAdvancementMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -34,14 +35,14 @@ ITargetedEntitySkill
 		} catch (Exception e) {
 			Main.logger.warning("Wrong material type. Set to stone");
 		}
-		message=mlc.getString("message","Title");
+		message=mlc.getPlaceholderString("message","Title");
 		frame=mlc.getString("frame","GOAL").toUpperCase();
 	}
 	
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity a_target) {
 		if(!a_target.isPlayer()) return false;
-		String msg=new PlaceholderString(this.message).get(data, a_target);
+		String msg=this.message.get(data, a_target);
 		Volatile.handler.sendPlayerAdvancement((Player)a_target.getBukkitEntity(),material,msg,new String(),frame);
 		return true;
 	}
