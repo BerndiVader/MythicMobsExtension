@@ -49,7 +49,7 @@ ITargetedEntitySkill {
 				break;
 			case"NEXTSTAGE":
 				if(quest!=null) {
-					quest.nextStage(q);
+					quest.nextStage(q,false);
 					quest.updateCompass(q,q.getCurrentStage(quest));
 				}
 				break;

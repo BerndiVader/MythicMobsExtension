@@ -39,7 +39,7 @@ SkillCondition
 		}
 		try {
 			this.ACTION=ConditionAction.valueOf(action.toUpperCase());
-			Utils.action_var_field.set(this,use_placeholder_actionvar?new PlaceholderString(action_var):action_var);
+			this.actionVar=new PlaceholderString(action_var);
 		} catch (Exception ex) {
 			this.ACTION = ConditionAction.TRUE;
 		}
