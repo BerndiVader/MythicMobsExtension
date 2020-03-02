@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -34,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +163,11 @@ public class NMSUtils {
     protected static Class<Enum> class_ParrotVariant;
     protected static Class<?> class_KnowledgeBookMeta;
     protected static Class<?> class_entityTypes;
+    protected static Class<?> class_Powerable;
+    protected static Class<?> class_Bisected;
+    protected static Class<Enum> class_BisectedHalf;
+    protected static Enum<?> enum_BisectedHalf_TOP;
+    protected static Class<?> class_Sittable;
 
     protected static Method class_NBTTagList_addMethod;
     protected static Method class_NBTTagList_getMethod;
@@ -170,6 +177,8 @@ public class NMSUtils {
     protected static Method class_NBTTagCompound_getKeysMethod;
     protected static Method class_NBTTagCompound_setMethod;
     protected static Method class_World_getEntitiesMethod;
+    protected static Method class_Sitting_setSittingMethod;
+    protected static Method class_Sitting_isSittingMethod;
     protected static Method class_Entity_setSilentMethod;
     protected static Method class_Entity_isSilentMethod;
     protected static Method class_Entity_setYawPitchMethod;
@@ -258,6 +267,10 @@ public class NMSUtils {
     protected static Method class_KnowledgeBookMeta_addRecipeMethod;
     protected static Method class_World_getTileEntityMethod;
     protected static Method class_Bukkit_getMapMethod;
+    protected static Method class_Powerable_setPoweredMethod;
+    protected static Method class_Powerable_isPoweredMethod;
+    protected static Method class_Bisected_setHalfMethod;
+
     protected static boolean legacyMaps;
 
     protected static Constructor class_CraftInventoryCustom_constructor;
@@ -279,12 +292,6 @@ public class NMSUtils {
     protected static Constructor class_ItemStack_consructor;
     protected static Constructor class_NBTTagCompound_constructor;
     protected static Constructor class_NBTTagList_constructor;
-    protected static Constructor class_NBTTagString_consructor;
-    protected static Constructor class_NBTTagByte_constructor;
-    protected static Constructor class_NBTTagDouble_constructor;
-    protected static Constructor class_NBTTagInt_constructor;
-    protected static Constructor class_NBTTagFloat_constructor;
-    protected static Constructor class_NBTTagLong_constructor;
     protected static Constructor class_PacketPlayOutChat_constructor;
     protected static Constructor class_ChatComponentText_constructor;
     protected static Constructor class_NamespacedKey_constructor;
@@ -343,6 +350,7 @@ public class NMSUtils {
     protected static Field class_ChestLock_key;
 
     protected static Object object_magicSource;
+    protected static Object object_emptyChestLock;
     protected static Map<String, Object> damageSources;
     protected static Map<String, Object> entityTypes;
 
@@ -490,12 +498,6 @@ public class NMSUtils {
 
             class_NBTTagCompound_constructor = class_NBTTagCompound.getConstructor();
             class_NBTTagList_constructor = class_NBTTagList.getConstructor();
-            class_NBTTagString_consructor = class_NBTTagString.getConstructor(String.class);
-            class_NBTTagByte_constructor = class_NBTTagByte.getConstructor(Byte.TYPE);
-            class_NBTTagDouble_constructor = class_NBTTagDouble.getConstructor(Double.TYPE);
-            class_NBTTagInt_constructor = class_NBTTagInt.getConstructor(Integer.TYPE);
-            class_NBTTagFloat_constructor = class_NBTTagFloat.getConstructor(Float.TYPE);
-            class_NBTTagLong_constructor = class_NBTTagLong.getConstructor(Long.TYPE);
 
             class_NBTTagList_list = class_NBTTagList.getDeclaredField("list");
             class_NBTTagList_list.setAccessible(true);
@@ -572,6 +574,15 @@ public class NMSUtils {
 
             // Particularly volatile methods that we can live without
 
+            try {
+                class_Sittable = Class.forName("org.bukkit.entity.Sittable");
+                class_Sitting_isSittingMethod = class_Sittable.getMethod("isSitting");
+                class_Sitting_setSittingMethod = class_Sittable.getMethod("setSitting", Boolean.TYPE);
+            } catch (Throwable ex) {
+                class_Sittable = null;
+                Bukkit.getLogger().warning("Could not bind to Sittable interface, can't make mobs sit/stand");
+            }
+
             // 1.13 Support
             Class<?> class_MinecraftKey = null;
             Class<?> class_Vec3D = null;
@@ -611,6 +622,21 @@ public class NMSUtils {
                     Bukkit.getLogger().warning("Could not bind to getMap method, magic maps will not work");
                     class_Bukkit_getMapMethod = null;
                 }
+            }
+            try {
+                class_Powerable = Class.forName("org.bukkit.block.data.Powerable");
+                class_Powerable_setPoweredMethod = class_Powerable.getMethod("setPowered", Boolean.TYPE);
+                class_Powerable_isPoweredMethod = class_Powerable.getMethod("isPowered");
+            } catch (Exception ignore) {
+                class_Powerable = null;
+            }
+            try {
+                class_Bisected = Class.forName("org.bukkit.block.data.Bisected");
+                class_BisectedHalf = (Class<Enum>)Class.forName("org.bukkit.block.data.Bisected$Half");
+                enum_BisectedHalf_TOP =  Enum.valueOf(class_BisectedHalf, "TOP");
+                class_Bisected_setHalfMethod = class_Bisected.getMethod("setHalf", class_BisectedHalf);
+            } catch (Exception ignore) {
+                class_Bisected = null;
             }
 
             // 1.14 Support
@@ -896,59 +922,76 @@ public class NMSUtils {
             }
 
             try {
-                // 1.14
                 try {
                     if (!isCurrentVersion) {
-                        throw new Exception("Not 1.14");
+                        throw new Exception("Not 1.15");
                     }
                     class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
                     class_Entity_jumpingField.setAccessible(true);
-                    class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bb");
-                    class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bd");
-                } catch (Throwable not14) {
-                    // 1.13
+                    class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("aZ");
+                    class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bb");
+                    if (!isPublic(class_Entity_moveStrafingField) || !isPublic(class_Entity_moveForwardField)) {
+                        throw new Exception("Not 1.1.5");
+                    }
+                } catch (Throwable not15) {
+                    // 1.14
                     try {
-                        if (!isModernVersion) {
-                            throw new Exception("Not 1.13");
+                        if (!isCurrentVersion) {
+                            throw new Exception("Not 1.14");
                         }
-                        class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bg");
+                        class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
                         class_Entity_jumpingField.setAccessible(true);
-                        class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bh");
-                        class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bj");
-                    } catch (Throwable not13) {
-                        // 1.12
+                        class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bb");
+                        class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bd");
+                    } catch (Throwable not14) {
+                        // 1.13
                         try {
-                            if (!current) {
-                                throw new Exception("Not 1.12");
+                            if (!isModernVersion) {
+                                throw new Exception("Not 1.13");
                             }
-                            class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
+                            class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bg");
                             class_Entity_jumpingField.setAccessible(true);
-                            class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
-                            class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
-                        } catch (Throwable not12) {
-                            // 1.11
-                            current = false;
+                            class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bh");
+                            class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bj");
+                        } catch (Throwable not13) {
+                            // 1.12
                             try {
+                                if (!current) {
+                                    throw new Exception("Not 1.12");
+                                }
                                 class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
                                 class_Entity_jumpingField.setAccessible(true);
                                 class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
-                                class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bf");
-                            } catch (Throwable not11) {
-                                // 1.10
+                                class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
+                            } catch (Throwable not12) {
+                                // 1.11
+                                current = false;
                                 try {
-                                    class_Entity_jumpingField = class_EntityLiving.getDeclaredField("be");
+                                    class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
                                     class_Entity_jumpingField.setAccessible(true);
-                                    class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bf");
-                                    class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
-                                } catch (Throwable not10) {
-                                    class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bc");
-                                    class_Entity_jumpingField.setAccessible(true);
-                                    class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bd");
-                                    class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("be");
+                                    class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
+                                    class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bf");
+                                } catch (Throwable not11) {
+                                    // 1.10
+                                    try {
+                                        class_Entity_jumpingField = class_EntityLiving.getDeclaredField("be");
+                                        class_Entity_jumpingField.setAccessible(true);
+                                        class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bf");
+                                        class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
+                                    } catch (Throwable not10) {
+                                        class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bc");
+                                        class_Entity_jumpingField.setAccessible(true);
+                                        class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bd");
+                                        class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("be");
+                                    }
                                 }
                             }
                         }
                     }
+                }
+
+                if (!isPublic(class_Entity_moveStrafingField) || !isPublic(class_Entity_moveForwardField)) {
+                    throw new Exception("Could not find accessible methods");
                 }
             } catch (Throwable ex) {
                 Bukkit.getLogger().log(Level.WARNING, "An error occurred while registering entity movement accessors, vehicle control will not work", ex);
@@ -1105,6 +1148,12 @@ public class NMSUtils {
                     // 1.14 only
                     class_TileEntityContainer_lock = class_TileEntityContainer.getField("chestLock");
                     class_ChestLock_key = class_ChestLock.getField("key");
+                    Field class_ChestLock_defaultField = class_ChestLock.getField("a");
+                    if (class_ChestLock.isAssignableFrom(class_ChestLock_defaultField.getType())) {
+                        object_emptyChestLock = class_ChestLock_defaultField.get(null);
+                    } else {
+                        Bukkit.getLogger().log(Level.WARNING, "An error occurred, chest unlocking will not work");
+                    }
                 } catch (Throwable not14) {
                     try {
                         // 1.12 and below
@@ -1178,8 +1227,19 @@ public class NMSUtils {
             }
 
             try {
-                // 1.9 and up
-                class_EntityDamageSource_setThornsMethod = class_EntityDamageSource.getMethod("w");
+                // 1.13 and up
+                try {
+                    class_EntityDamageSource_setThornsMethod = class_EntityDamageSource.getMethod("x");
+                    if (!class_EntityDamageSource_setThornsMethod.getReturnType().isAssignableFrom(class_EntityDamageSource)) {
+                        throw new Exception ("Wrong return type");
+                    }
+                } catch (Throwable not13) {
+                    // 1.9 and up
+                    class_EntityDamageSource_setThornsMethod = class_EntityDamageSource.getMethod("w");
+                    if (!class_EntityDamageSource_setThornsMethod.getReturnType().isAssignableFrom(class_EntityDamageSource)) {
+                        throw new Exception ("Wrong return type");
+                    }
+                }
             } catch (Throwable ex) {
                 Bukkit.getLogger().log(Level.WARNING, "An error occurred, thorn damage override to hurt ender dragon will not work", ex);
                 class_EntityDamageSource_setThornsMethod = null;
@@ -1974,42 +2034,8 @@ public class NMSUtils {
         return unbreakableFlag != null && unbreakableFlag;
     }
 
-    public static void makeUnbreakable(ItemStack stack) {
-        if (NMSUtils.isEmpty(stack)) return;
-
-        try {
-            Object craft = getHandle(stack);
-            if (craft == null) return;
-            Object tagObject = getTag(craft);
-            if (tagObject == null) return;
-
-            Object unbreakableFlag = null;
-            unbreakableFlag = class_NBTTagByte_constructor.newInstance((byte) 1);
-            class_NBTTagCompound_setMethod.invoke(tagObject, "Unbreakable", unbreakableFlag);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public static void removeUnbreakable(ItemStack stack) {
         removeMeta(stack, "Unbreakable");
-    }
-
-    public static void hideFlags(ItemStack stack, byte flags) {
-        if (NMSUtils.isEmpty(stack)) return;
-
-        try {
-            Object craft = getHandle(stack);
-            if (craft == null) return;
-            Object tagObject = getTag(craft);
-            if (tagObject == null) return;
-
-            Object hideFlag = null;
-            hideFlag = class_NBTTagByte_constructor.newInstance(flags);
-            class_NBTTagCompound_setMethod.invoke(tagObject, "HideFlags", hideFlag);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
     }
 
     public static boolean createExplosion(Entity entity, World world, double x, double y, double z, float power, boolean setFire, boolean breakBlocks) {
@@ -2079,35 +2105,6 @@ public class NMSUtils {
             ex.printStackTrace();
         }
         return replacement;
-    }
-
-    protected static Object getTagString(String value) {
-        try {
-            return class_NBTTagString_consructor.newInstance(value);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-        }
-        return null;
-    }
-
-    public static Object setStringList(Object nbtBase, String tag, Collection<String> values) {
-        if (nbtBase == null) return null;
-        Object listMeta = null;
-        try {
-            listMeta = class_NBTTagList_constructor.newInstance();
-
-            for (String value : values) {
-                Object nbtString = getTagString(value);
-                addToList(listMeta, nbtString);
-            }
-
-            class_NBTTagCompound_setMethod.invoke(nbtBase, tag, listMeta);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return listMeta;
     }
 
     public static ItemStack getItem(Object itemTag) {
@@ -2362,5 +2359,11 @@ public class NMSUtils {
         } else {
             class_NBTTagList_addMethod.invoke(listObject, node);
         }
+    }
+
+    public static boolean isPublic(Field field) {
+        if (field == null) return false;
+        int modifiers = field.getModifiers();
+        return Modifier.isPublic(modifiers);
     }
 }

@@ -11,7 +11,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@SuppressWarnings("deprecation")
 @ExternalAnnotation(name="achievement,achievements,hasachievement,hasachievements",author="BerndiVader")
 public class AchievementsCondition
 extends
@@ -35,12 +34,13 @@ IEntityCondition {
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		if (entity.isPlayer()) {
+/*		if (entity.isPlayer()) {
 			Player p=(Player)entity.getBukkitEntity();
 			for(Achievement ach:achs) {
 				if (p.hasAchievement(ach)) return true;
 			}
 		}
+*/
 		return false;
 	}
 }

@@ -23,8 +23,6 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.ComplexLivingEntity;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -36,15 +34,11 @@ import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.Witch;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
@@ -58,12 +52,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +80,6 @@ import java.util.logging.Level;
 public class CompatibilityUtils extends NMSUtils {
     public static boolean USE_MAGIC_DAMAGE = true;
     public static int BLOCK_BREAK_RANGE = 64;
-    public static boolean isDamaging = false;
     public final static int MAX_ENTITY_RANGE = 72;
     private final static Map<World.Environment, Integer> maxHeights = new HashMap<>();
     public static Map<Integer, Material> materialIdMap;
@@ -185,6 +176,27 @@ public class CompatibilityUtils extends NMSUtils {
         try {
             Object handle = getHandle(entity);
             return (boolean)class_Entity_isSilentMethod.invoke(handle);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void setSitting(Entity entity, boolean flag) {
+        if (class_Sittable == null) return;
+        if (!class_Sittable.isAssignableFrom(entity.getClass())) return;
+        try {
+            class_Sitting_setSittingMethod.invoke(entity, flag);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static boolean isSitting(Entity entity) {
+        if (class_Sittable == null) return false;
+        if (!class_Sittable.isAssignableFrom(entity.getClass())) return false;
+        try {
+            return (boolean)class_Sitting_isSittingMethod.invoke(entity);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -486,116 +498,6 @@ public class CompatibilityUtils extends NMSUtils {
         }
     }
 
-    private static WeakReference<ThrownPotion> potionReference = null;
-
-    public static void damage(Damageable target, double amount, Entity source) {
-        if (target == null || target.isDead()) return;
-        while (target instanceof ComplexEntityPart) {
-            target = ((ComplexEntityPart)target).getParent();
-        }
-        if (USE_MAGIC_DAMAGE && target.getType() == EntityType.ENDER_DRAGON) {
-            magicDamage(target, amount, source);
-            return;
-        }
-        isDamaging = true;
-        try {
-            if (target instanceof ArmorStand) {
-                double newHealth = Math.max(0, target.getHealth() - amount);
-                if (newHealth <= 0) {
-                    EntityDeathEvent deathEvent = new EntityDeathEvent((ArmorStand)target, new ArrayList<ItemStack>());
-                    Bukkit.getPluginManager().callEvent(deathEvent);
-                    target.remove();
-                } else {
-                    target.setHealth(newHealth);
-                }
-            } else {
-                target.damage(amount, source);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        isDamaging = false;
-    }
-
-    public static void damage(Damageable target, double amount, Entity source, String damageType) {
-        if (target == null || target.isDead()) return;
-        if (damageType.equalsIgnoreCase("magic")) {
-            magicDamage(target, amount, source);
-            return;
-        }
-        Object damageSource = (damageSources == null) ? null : damageSources.get(damageType.toUpperCase());
-        if (damageSource == null || class_EntityLiving_damageEntityMethod == null) {
-            magicDamage(target, amount, source);
-            return;
-        }
-
-        try {
-            Object targetHandle = getHandle(target);
-            if (targetHandle == null) return;
-
-            isDamaging = true;
-            class_EntityLiving_damageEntityMethod.invoke(targetHandle, damageSource, (float) amount);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        isDamaging = false;
-    }
-
-    public static void magicDamage(Damageable target, double amount, Entity source) {
-        try {
-            if (target == null || target.isDead()) return;
-
-            if (class_EntityLiving_damageEntityMethod == null || object_magicSource == null || class_DamageSource_getMagicSourceMethod == null) {
-                damage(target, amount, source);
-                return;
-            }
-
-            // Special-case for witches .. witches are immune to magic damage :\
-            // And endermen are immune to indirect damage .. or something.
-            // Also armor stands suck.
-            // Might need to config-drive this, or just go back to defaulting to normal damage
-            if (!USE_MAGIC_DAMAGE || target instanceof Witch || target instanceof Enderman || target instanceof ArmorStand || !(target instanceof LivingEntity))
-            {
-                damage(target, amount, source);
-                return;
-            }
-
-            Object targetHandle = getHandle(target);
-            if (targetHandle == null) return;
-
-            isDamaging = true;
-            Object sourceHandle = getHandle(source);
-
-            // Bukkit won't allow magic damage from anything but a potion..
-            if (sourceHandle != null && source instanceof LivingEntity) {
-                ThrownPotion potion = potionReference == null ? null : potionReference.get();
-                Location location = target.getLocation();
-                if (potion == null) {
-                    potion = (ThrownPotion) location.getWorld().spawnEntity(location, EntityType.SPLASH_POTION);
-                    potion.remove();
-                    potionReference = new WeakReference<>(potion);
-                }
-                potion.teleport(location);
-                potion.setShooter((LivingEntity)source);
-                Object potionHandle = getHandle(potion);
-                Object damageSource = class_DamageSource_getMagicSourceMethod.invoke(null, potionHandle, sourceHandle);
-
-                // This is a bit of hack that lets us damage the ender dragon, who is a weird and annoying collection
-                // of various non-living entity pieces.
-                if (class_EntityDamageSource_setThornsMethod != null) {
-                    class_EntityDamageSource_setThornsMethod.invoke(damageSource);
-                }
-
-                class_EntityLiving_damageEntityMethod.invoke(targetHandle, damageSource, (float)amount);
-            } else {
-                class_EntityLiving_damageEntityMethod.invoke(targetHandle, object_magicSource, (float) amount);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        isDamaging = false;
-    }
-
     public static Location getEyeLocation(Entity entity)
     {
         if (entity instanceof LivingEntity)
@@ -635,6 +537,9 @@ public class CompatibilityUtils extends NMSUtils {
             configuration.load(file);
         } catch (FileNotFoundException fileNotFound) {
 
+        } catch (Throwable ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "Error reading configuration file '" + file.getAbsolutePath() + "'");
+            throw ex;
         }
         return configuration;
     }
@@ -713,7 +618,10 @@ public class CompatibilityUtils extends NMSUtils {
         if (!class_TileEntityContainer.isInstance(tileEntity)) return false;
         try {
             if (class_TileEntityContainer_lock != null) {
-                class_TileEntityContainer_lock.set(tileEntity, null);
+                if (object_emptyChestLock == null) {
+                    return false;
+                }
+                class_TileEntityContainer_lock.set(tileEntity, object_emptyChestLock);
             } else {
                 class_TileEntityContainer_setLock.invoke(tileEntity, new Object[] {null});
             }
@@ -1422,30 +1330,6 @@ public class CompatibilityUtils extends NMSUtils {
         return null;
     }
 
-    public static ShapedRecipe createShapedRecipe(Plugin plugin, String key, ItemStack item) {
-        if (class_NamespacedKey == null) {
-            return new ShapedRecipe(item);
-        }
-
-        try {
-            Object namespacedKey = class_NamespacedKey_constructor.newInstance(plugin, key.toLowerCase());
-            return (ShapedRecipe)class_ShapedRecipe_constructor.newInstance(namespacedKey, item);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ShapedRecipe(item);
-        }
-    }
-
-    public static double getMaxHealth(Damageable li) {
-        // return li.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-        return li.getMaxHealth();
-    }
-
-    public static void setMaxHealth(Damageable li, double maxHealth) {
-        // li.getAttribute(Attribute.GENERIC_MAX_HEALTH).setValue(maxHealth);
-        li.setMaxHealth(maxHealth);
-    }
-
     @SuppressWarnings("deprecation")
     public static Material fromLegacy(org.bukkit.material.MaterialData materialData) {
         if (class_UnsafeValues_fromLegacyDataMethod != null) {
@@ -1553,7 +1437,7 @@ public class CompatibilityUtils extends NMSUtils {
             return material.name().toLowerCase();
         }
 
-        Material legacyMaterial = getLegacyMaterial(materialName);
+        Material legacyMaterial = data == 0 ? getLegacyMaterial(materialName) : Material.getMaterial("LEGACY_" + materialName);
         if (legacyMaterial != null) {
             org.bukkit.material.MaterialData materialData = new org.bukkit.material.MaterialData(legacyMaterial, data);
             legacyMaterial = fromLegacy(materialData);
@@ -1788,6 +1672,28 @@ public class CompatibilityUtils extends NMSUtils {
             return false;
         }
 
+        return true;
+    }
+
+    public static boolean setTopHalf(Block block) {
+        if (class_Bisected == null) {
+            return setTopHalfLegacy(block);
+        }
+        try {
+            Object blockData = class_Block_getBlockDataMethod.invoke(block);
+            if (blockData == null || !class_Bisected.isAssignableFrom(blockData.getClass())) return false;
+            class_Bisected_setHalfMethod.invoke(blockData, enum_BisectedHalf_TOP);
+            class_Block_setBlockDataMethod.invoke(block, blockData);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    protected static boolean setTopHalfLegacy(Block block) {
+        byte data = DeprecatedUtils.getData(block);
+        DeprecatedUtils.setTypeAndData(block, block.getType(), (byte)(data | 8), false);
         return true;
     }
 }

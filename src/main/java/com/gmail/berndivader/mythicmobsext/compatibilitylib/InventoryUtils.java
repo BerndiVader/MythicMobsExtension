@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.compatibilitylib;
 
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +43,16 @@ public class InventoryUtils extends NMSUtils
         return saveTagsToNBT(tags, tag, null);
     }
 
+    public static boolean saveTagsToItem(Map<String, Object> tags, ItemStack item)
+    {
+        Object handle = getHandle(item);
+        if (handle == null) return false;
+        Object tag = getTag(handle);
+        if (tag == null) return false;
+
+        return addTagsToNBT(tags, tag);
+    }
+
     public static boolean configureSkillItem(ItemStack skillItem, String skillClass, ConfigurationSection skillConfig) {
         if (skillItem == null) return false;
         Object handle = getHandle(skillItem);
@@ -51,6 +62,10 @@ public class InventoryUtils extends NMSUtils
 
         setMetaBoolean(tag, "skill", true);
 
+        Object spellNode = InventoryUtils.getNode(skillItem, "spell");
+        if (skillClass != null && spellNode != null) {
+            InventoryUtils.setMeta(spellNode, "class", skillClass);
+        }
         if (skillConfig == null) {
             return true;
         }
@@ -62,16 +77,8 @@ public class InventoryUtils extends NMSUtils
             setMetaBoolean(tag, "keep", true);
         }
         boolean quickCast = skillConfig.getBoolean("quick_cast", true);
-        if (skillClass != null || !quickCast) {
-            Object spellNode = InventoryUtils.getNode(skillItem, "spell");
-            if (spellNode != null) {
-                if (skillClass != null) {
-                    InventoryUtils.setMeta(spellNode, "class", skillClass);
-                }
-                if (!quickCast) {
-                    InventoryUtils.setMetaBoolean(spellNode, "quick_cast", false);
-                }
-            }
+        if (!quickCast && spellNode != null) {
+            InventoryUtils.setMetaBoolean(spellNode, "quick_cast", false);
         }
 
         return true;
@@ -85,6 +92,31 @@ public class InventoryUtils extends NMSUtils
     public static boolean saveTagsToNBT(ConfigurationSection tags, Object node, Set<String> tagNames)
     {
         return saveTagsToNBT(getMap(tags), node, tagNames);
+    }
+
+    public static boolean addTagsToNBT(Map<String, Object> tags, Object node)
+    {
+        if (node == null) {
+            Bukkit.getLogger().warning("Trying to save tags to a null node");
+            return false;
+        }
+        if (!class_NBTTagCompound.isAssignableFrom(node.getClass())) {
+            Bukkit.getLogger().warning("Trying to save tags to a non-CompoundTag");
+            return false;
+        }
+
+        for (Map.Entry<String, Object> tag : tags.entrySet()) {
+            Object value = tag.getValue();
+            try {
+                Object wrappedTag = wrapInTag(value);
+                if (wrappedTag == null) continue;
+                class_NBTTagCompound_setMethod.invoke(node, tag.getKey(), wrappedTag);
+            } catch (Exception ex) {
+                org.bukkit.Bukkit.getLogger().log(Level.WARNING, "Error saving item data tag " + tag.getKey(), ex);
+            }
+        }
+
+        return true;
     }
     
     public static boolean saveTagsToNBT(Map<String, Object> tags, Object node, Set<String> tagNames)
@@ -138,38 +170,6 @@ public class InventoryUtils extends NMSUtils
         throws IllegalAccessException, InvocationTargetException, InstantiationException {
         if (value == null) return null;
         Object wrappedValue = null;
-        if (value instanceof Boolean) {
-            wrappedValue = class_NBTTagByte_constructor.newInstance((byte)((boolean)value ? 1 : 0));
-        } else if (value instanceof Double) {
-            wrappedValue = class_NBTTagDouble_constructor.newInstance((Double)value);
-        } else if (value instanceof Float) {
-            wrappedValue = class_NBTTagFloat_constructor.newInstance((Float)value);
-        } else if (value instanceof Integer) {
-            wrappedValue = class_NBTTagInt_constructor.newInstance((Integer)value);
-        } else if (value instanceof Long) {
-            wrappedValue = class_NBTTagLong_constructor.newInstance((Long)value);
-        } else if (value instanceof ConfigurationSection) {
-            wrappedValue = class_NBTTagCompound_constructor.newInstance();
-            saveTagsToNBT((ConfigurationSection)value, wrappedValue, null);
-        } else if (value instanceof Map) {
-            wrappedValue = class_NBTTagCompound_constructor.newInstance();
-            @SuppressWarnings("unchecked")
-            Map<String, Object> valueMap = (Map<String, Object>)value;
-            saveTagsToNBT(valueMap, wrappedValue, null);
-        } else if (value instanceof Collection) {
-            @SuppressWarnings("unchecked")
-            Collection<Object> list = (Collection<Object>)value;
-            Object listMeta = class_NBTTagList_constructor.newInstance();
-            for (Object item : list) {
-                if (item != null) {
-                    addToList(listMeta, wrapInTag(item));
-                }
-            }
-            wrappedValue = listMeta;
-        } else {
-            wrappedValue = class_NBTTagString_consructor.newInstance(value.toString());
-        }
-
         return wrappedValue;
     }
 
@@ -514,6 +514,7 @@ public class InventoryUtils extends NMSUtils
         return propertyString;
     }
 
+    @SuppressWarnings("EqualsReference")
     public static boolean isSameInstance(ItemStack one, ItemStack two) {
         return one == two;
     }
@@ -531,6 +532,27 @@ public class InventoryUtils extends NMSUtils
             setMetaInt(mapItem, "map", id);
         } else {
             mapItem.setDurability((short)id);
+        }
+    }
+
+    public static void convertIntegers(Map<String, Object> m) {
+        for (Map.Entry<String, Object> entry : m.entrySet()) {
+            Object value = entry.getValue();
+            if (value != null && value instanceof Double) {
+                double d = (Double) value;
+                if (d == (int)d) {
+                    entry.setValue((int)d);
+                }
+            } else if (value != null && value instanceof Float) {
+                float f = (Float) value;
+                if (f == (int)f) {
+                    entry.setValue((int)f);
+                }
+            } else if (value != null && value instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>)value;
+                convertIntegers(map);
+            }
         }
     }
 }

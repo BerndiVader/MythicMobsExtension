@@ -26,13 +26,14 @@ repositories {
  }
 
 dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.15.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
-    compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
-    compileOnly  ("com.comphenix:protocol:+")
+    compileOnly  ("com.gmail.filoghost:holographicdisplays:2.4.2")
+    compileOnly  ("com.comphenix:protocol:4.5.0")
     compileOnly  ("com.garbagemule:mobarena:+")
     compileOnly  ("com.sk89q:worldedit:6.1")
     compileOnly  ("com.sk89q:worldguard:6.2.1")
@@ -69,15 +70,7 @@ task createPom  {
     }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
 }
 
-task copy132(type: Copy) {
+task copy15(type: Copy) {
 	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/DevServer13/plugins/"
-}
-task copy122(type: Copy) {
-	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/DevServer 112/plugins/"
-}
-task copy144(type: Copy) {
-	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/dev14/plugins/"
+    into "c:/dev15/plugins/"
 }
