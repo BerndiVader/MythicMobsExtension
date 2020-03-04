@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1;
 
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -9,14 +9,14 @@ import com.gmail.berndivader.mythicmobsext.conditions.GetLastDamageIndicatorCond
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
-import net.minecraft.server.v1_14_R1.EntityPlayer;
-import net.minecraft.server.v1_14_R1.Packet;
-import net.minecraft.server.v1_14_R1.PacketPlayInArmAnimation;
-import net.minecraft.server.v1_14_R1.PacketPlayInBlockDig;
-import net.minecraft.server.v1_14_R1.PacketPlayInFlying;
-import net.minecraft.server.v1_14_R1.PacketPlayInFlying.PacketPlayInPosition;
-import net.minecraft.server.v1_14_R1.PacketPlayInResourcePackStatus;
-import net.minecraft.server.v1_14_R1.PacketPlayInSteerVehicle;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.Packet;
+import net.minecraft.server.v1_15_R1.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_15_R1.PacketPlayInBlockDig;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying.PacketPlayInPosition;
+import net.minecraft.server.v1_15_R1.PacketPlayInResourcePackStatus;
+import net.minecraft.server.v1_15_R1.PacketPlayInSteerVehicle;
 
 public 
 class 
@@ -54,8 +54,8 @@ IPacketReceivingHandler
 
 	@Override
 	public Packet<?> handle(PacketPlayInFlying packet) {
-		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(entity_player.locX,entity_player.locY,entity_player.locZ);
-		double dx=packet.a(entity_player.locX),dy=packet.b(entity_player.locY),dz=packet.c(entity_player.locZ);
+		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(entity_player.locX(),entity_player.locY(),entity_player.locZ());
+		double dx=packet.a(entity_player.locX()),dy=packet.b(entity_player.locY()),dz=packet.c(entity_player.locZ());
 		v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
 				?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
 				:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);

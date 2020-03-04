@@ -2,7 +2,7 @@ package com.gmail.berndivader.mythicmobsext.volatilecode.v1_15_R1.advancement;
 
 import com.gmail.berndivader.mythicmobsext.utils.JSONMessage;
 import javax.annotation.Nullable;
-import net.minecraft.server.v1_14_R1.AdvancementFrameType;
+import net.minecraft.server.v1_15_R1.AdvancementFrameType;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

@@ -14,35 +14,28 @@ extends
 SkillCondition 
 {
 	boolean dba,debug;
-	static boolean use_placeholder_actionvar;
-	
-	static {
-		use_placeholder_actionvar=Utils.action_var_field.getAnnotatedType().getType().getTypeName().endsWith("PlaceholderString");
-	}
 	
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 		
-		String action="TRUE";
-		String action_var="0";
-		String a=mlc.getString("action","");
 		debug=dba=mlc.getBoolean("debug",false);
-		int size=ConditionAction.values().length;
-		for(int i=0;i<size;i++){
-			String aa=ConditionAction.values()[i].toString();
-			if (aa.toUpperCase().equals("CAST")&&a.toUpperCase().startsWith("CASTINSTEAD")) continue;
-			if (a.toUpperCase().startsWith(aa)) {
-				action=aa;
-				action_var=a.substring(action.length(),a.length());
-				break;
-			}
+		String a=mlc.getString("action","");
+		
+		if(a.length()!=0) {
+	        String[]arr=a.split(" ");
+	        if(arr.length<2) return;
+	        if(ConditionAction.isAction(arr[1])) {
+	            this.ACTION=ConditionAction.valueOf(arr[1].toUpperCase());
+	            if(arr.length>2) this.actionVar=PlaceholderString.of(arr[2]);
+	        }else{
+	            this.conditionVar=arr[1];
+	            if (arr.length>2&&ConditionAction.isAction(arr[2])){
+	                this.ACTION=ConditionAction.valueOf(arr[2].toUpperCase());
+	                if(arr.length>3) this.actionVar=PlaceholderString.of(arr[3]);
+	            }
+	        }
 		}
-		try {
-			this.ACTION=ConditionAction.valueOf(action.toUpperCase());
-			this.actionVar=new PlaceholderString(action_var);
-		} catch (Exception ex) {
-			this.ACTION = ConditionAction.TRUE;
-		}
+		
 		if (dba) {
 			try {
 				System.err.println(this.ACTION.toString()+":"+Utils.action_var_field.get(this));

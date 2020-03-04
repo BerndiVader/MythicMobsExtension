@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import net.minecraft.server.v1_14_R1.Packet;
-import net.minecraft.server.v1_14_R1.PacketPlayInArmAnimation;
-import net.minecraft.server.v1_14_R1.PacketPlayInBlockDig;
-import net.minecraft.server.v1_14_R1.PacketPlayInFlying;
-import net.minecraft.server.v1_14_R1.PacketPlayInResourcePackStatus;
+import net.minecraft.server.v1_15_R1.Packet;
+import net.minecraft.server.v1_15_R1.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_15_R1.PacketPlayInBlockDig;
+import net.minecraft.server.v1_15_R1.PacketPlayInFlying;
+import net.minecraft.server.v1_15_R1.PacketPlayInResourcePackStatus;
 
 public 
 class

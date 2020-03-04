@@ -5,17 +5,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import net.minecraft.server.v1_14_R1.Advancement;
-import net.minecraft.server.v1_14_R1.AdvancementDisplay;
-import net.minecraft.server.v1_14_R1.AdvancementProgress;
-import net.minecraft.server.v1_14_R1.AdvancementRewards;
-import net.minecraft.server.v1_14_R1.Criterion;
-import net.minecraft.server.v1_14_R1.CriterionInstance;
-import net.minecraft.server.v1_14_R1.IChatBaseComponent;
-import net.minecraft.server.v1_14_R1.MinecraftKey;
-import net.minecraft.server.v1_14_R1.PacketPlayOutAdvancements;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_15_R1.Advancement;
+import net.minecraft.server.v1_15_R1.AdvancementDisplay;
+import net.minecraft.server.v1_15_R1.AdvancementProgress;
+import net.minecraft.server.v1_15_R1.AdvancementRewards;
+import net.minecraft.server.v1_15_R1.Criterion;
+import net.minecraft.server.v1_15_R1.CriterionInstance;
+import net.minecraft.server.v1_15_R1.IChatBaseComponent;
+import net.minecraft.server.v1_15_R1.MinecraftKey;
+import net.minecraft.server.v1_15_R1.PacketPlayOutAdvancements;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class FakeAdvancement {
