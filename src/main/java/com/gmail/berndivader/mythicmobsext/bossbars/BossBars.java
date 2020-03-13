@@ -93,12 +93,15 @@ Listener
 	public void loadMechanicsEvent(MythicMechanicLoadEvent e) {
 		switch(e.getMechanicName().toLowerCase()) {
 		case "createbossbar":
+		case "createbossbar_ext":
 			e.register(new CreateBossBar(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "removebossbar":
+		case "removebossbar_ext":
 			e.register(new RemoveBossBar(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "progressbossbar":
+		case "progressbossbar_ext":
 			e.register(new ProgressBossBar(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}
@@ -108,6 +111,7 @@ Listener
 	public void loadConditionsEvent(MythicConditionLoadEvent e) {
 		switch(e.getConditionName().toLowerCase()) {
 		case "progressbossbar":
+		case "progressbossbar_ext":
 			e.register(new com.gmail.berndivader.mythicmobsext.bossbars.conditions.ProgressBossBar(e.getConfig().getLine(),e.getConfig()));
 			break;
 		}

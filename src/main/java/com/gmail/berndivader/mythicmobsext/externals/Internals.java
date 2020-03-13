@@ -93,6 +93,7 @@ Listener {
 									for(int i1=0;i1<arr1.length;i1++) {
 										if (!mechanics.containsKey(arr1[i1])) {
 											mechanics.put(arr1[i1],cn1);
+											mechanics.put(arr1[i1]+"_ext",cn1);
 										}
 									}
 								}
@@ -105,6 +106,7 @@ Listener {
 									for(int i1=0;i1<arr1.length;i1++) {
 										if (!conditions.containsKey(arr1[i1])) {
 											conditions.put(arr1[i1],cn1);
+											conditions.put(arr1[i1]+"_ext",cn1);
 										}
 									}
 								}
@@ -117,6 +119,7 @@ Listener {
 		            				for(int i1=0;i1<arr1.length;i1++) {
 		            					if (!targeters.containsKey(arr1[i1])) {
 		            						targeters.put(arr1[i1],cn1);
+		            						targeters.put(arr1[i1]+"_ext",cn1);
 		            					}
 		            				}
 			            		}
@@ -131,9 +134,9 @@ Listener {
 		    } catch (Exception e) {
 				e.printStackTrace();
 			}
-			m=mechanics.size();
-			c=conditions.size();
-			t=targeters.size();
+			m=mechanics.size()/2;
+			c=conditions.size()/2;
+			t=targeters.size()/2;
 			new BukkitRunnable() {
 				@Override
 				public void run() {

@@ -206,7 +206,6 @@ implements Handler,Listener {
         NMSUtils.setFinalField("playersByName",playerList.getClass().getSuperclass(),playerList,ppn);
         entityplayer.getWorldServer().removePlayer(entityplayer);
         EntityPlayer entityplayer1 = entityplayer;
-        org.bukkit.World fromWorld = entityplayer.getBukkitEntity().getWorld();
         entityplayer.viewingCredits = false;
         entityplayer1.playerConnection = entityplayer.playerConnection;
         entityplayer1.copyFrom(entityplayer,true);

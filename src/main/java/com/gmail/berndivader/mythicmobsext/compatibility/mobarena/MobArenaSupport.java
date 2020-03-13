@@ -7,7 +7,6 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
 
 public
 class 
@@ -31,9 +30,13 @@ Listener
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
 		String conditionName = e.getConditionName().toLowerCase();
-		if (conditionName.equals("inmobarena")) {
-			SkillCondition c = new InMobArenaCondition(e.getConfig().getLine(), e.getConfig());
-			e.register(c);
+		switch(conditionName)
+		{
+			case "inmobarena":
+			case "inmobarena_ext":
+			{
+				e.register(new InMobArenaCondition(e.getConfig().getLine(), e.getConfig()));
+			}
 		}
 	}
 }

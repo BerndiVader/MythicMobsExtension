@@ -102,30 +102,37 @@ Listener {
 		SkillMechanic skill;
 		switch (mechanic) {
 			case "createhealthbar": 
+			case "createhealthbar_ext": 
 				skill = new CreateHealthbar(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "changehealthbar": 
+			case "changehealthbar_ext": 
 				skill = new ChangeHealthbar(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "updatehealthbar": 
+			case "updatehealthbar_ext": 
 				skill = new UpdateHealthbar(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "speechbubble": 
+			case "speechbubble_ext": 
 				skill = new SpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "removebubble": 
+			case "removebubble_ext": 
 				skill = new RemoveSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "modifybubble": 
+			case "modifybubble_ext": 
 				skill = new ModifySpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;
 			case "linebubble": 
+			case "linebubble_ext": 
 				skill = new LineSpeechBubbleMechanic(e.getContainer().getConfigLine(),e.getConfig());
 				e.register(skill);
 				break;

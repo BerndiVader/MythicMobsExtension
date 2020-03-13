@@ -94,20 +94,30 @@ Listener
 		switch(e.getConditionName().toLowerCase()) {
 		case "infactionsregion":
 		case "infactionsregions":
+		case "infactionsregion_ext":
+		case "infactionsregions_ext":
 			e.register(new FactionsRegionCondition(e.getConfig().getLine(),e.getConfig()));
 			break;
 		case "factionsflag":
 		case "factionsflags":
+		case "factionsflag_ext":
+		case "factionsflags_ext":
 			e.register(new FactionsFlagCondition(e.getConfig().getLine(),e.getConfig()));
 			break;
 		case "playerinfaction":
 		case "playerinfactions":
 		case "playerfaction":
 		case "playersfaction":
+		case "playerinfaction_ext":
+		case "playerinfactions_ext":
+		case "playerfaction_ext":
+		case "playersfaction_ext":
 			e.register(new PlayerInFactionsCondition(e.getConfig().getLine(), e.getConfig()));
 			break;
 		case "playershomefaction":
 		case "playerinhomefaction":
+		case "playershomefaction_ext":
+		case "playerinhomefaction_ext":
 			e.register(new PlayerInHomeFactionCondition(e.getConfig().getLine(), e.getConfig()));
 			break;
 		}

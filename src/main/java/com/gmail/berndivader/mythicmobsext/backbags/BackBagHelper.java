@@ -71,26 +71,35 @@ Listener
 	public void loadMechanicsEvent(MythicMechanicLoadEvent e) {
 		switch(e.getMechanicName().toLowerCase()) {
 		case "openbackbag":
+		case "openbackbag_ext":
 			e.register(new OpenBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "createbackbag":
+		case "createbackbag_ext":
 			e.register(new CreateBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "removebackbag":
+		case "removebackbag_ext":
 			e.register(new RemoveBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "expandbackbag":
+		case "expandbackbag_ext":
 			e.register(new ExpandBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "movetobackbag":
 		case "savetobackbag":
+		case "movetobackbag_ext":
+		case "savetobackbag_ext":
 			e.register(new MoveToBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "takefrombackbag":
 		case "loadfrombackbag":
+		case "takefrombackbag_ext":
+		case "loadfrombackbag_ext":
 			e.register(new RestoreFromBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		case "renamebackbag":
+		case "renamebackbag_ext":
 			e.register(new RenameBackBag(e.getContainer().getConfigLine(),e.getConfig()));
 			break;
 		}

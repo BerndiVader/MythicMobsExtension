@@ -38,17 +38,30 @@ Listener {
 	@EventHandler
 	public void onMechanicLoadEvent(MythicMechanicLoadEvent e) {
 		String s1=e.getMechanicName().toLowerCase();
-		if (s1.equals("jsmechanic")) {
-			e.register(new JavascriptMechanic(e.getContainer().getConfigLine(),e.getConfig()));
-		} else if (s1.equals("math")) {
-			e.register(new EvalMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+		switch(s1)
+		{
+			case "jsmechanic":
+			case "jsmechanic_ext":
+			{
+				e.register(new JavascriptMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+			}
+			case "math":
+			case "math_ext":
+			{
+				e.register(new EvalMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+			}
 		}
 	}
 	
 	@EventHandler
 	public void onConditionLoadEvent(MythicConditionLoadEvent e) {
-		if (e.getConditionName().toLowerCase().equals("jscondition")) {
-			e.register(new JavascriptCondition(e.getConfig().getLine(), e.getConfig()));
+		switch(e.getConditionName().toLowerCase())
+		{
+			case "jscondition":
+			case "jscondition_ext":
+			{
+				e.register(new JavascriptCondition(e.getConfig().getLine(), e.getConfig()));
+			}
 		}
 	}
 

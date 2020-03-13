@@ -16,20 +16,30 @@ public class MythicPlayerMythicMobsLoadEvent implements Listener {
 	public void onMythicMobsLoad(MythicMechanicLoadEvent e) {
 		SkillMechanic skill;
 		String mech = e.getMechanicName().toLowerCase();
-		switch (mech) {
-		case "activeplayer": {
-			skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(), e.getConfig());
-			e.register(skill);
-			break;
-		} case "normalplayer": {
-			skill = new mmNormalPlayer(e.getContainer().getConfigLine(), e.getConfig());
-			e.register(skill);
-			break;
-		} case "settarget": {
-			skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
-			e.register(skill);
-			break;
-		}}
+		switch (mech) 
+		{
+			case "activeplayer": 
+			case "activeplayer_ext": 
+			{
+				skill = new mmCreateActivePlayer(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
+			}
+			case "normalplayer": 
+			case "normalplayer_ext": 
+			{
+				skill = new mmNormalPlayer(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
+			}
+			case "settarget": 
+			case "settarget_ext": 
+			{
+				skill = new mmSetTarget(e.getContainer().getConfigLine(), e.getConfig());
+				e.register(skill);
+				break;
+			}
+		}
 	}
 
 }

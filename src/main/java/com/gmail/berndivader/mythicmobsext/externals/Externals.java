@@ -95,18 +95,21 @@ Listener {
 							SkillAnnotation skill=extClass.getAnnotation(SkillAnnotation.class);
 							if (skill!=null&&!mechanics.containsKey(skill.name())) {
 								mechanics.put(skill.name(),extClass);
+								mechanics.put(skill.name()+"_ext",extClass);
 							}
 						} else if (SkillCondition.class.isAssignableFrom(c1)) {
 							Class<? extends SkillCondition>extClass=c1.asSubclass(SkillCondition.class);
 							ConditionAnnotation cond=extClass.getAnnotation(ConditionAnnotation.class);
 							if (cond!=null&&!conditions.containsKey(cond.name())) {
 								conditions.put(cond.name(),extClass);
+								conditions.put(cond.name()+"_ext",extClass);
 							}
 						} else if (SkillTargeter.class.isAssignableFrom(c1)) {
 							Class<? extends SkillTargeter>extClass=c1.asSubclass(SkillTargeter.class);
 							TargeterAnnotation tar=extClass.getAnnotation(TargeterAnnotation.class);
 							if (tar!=null&&!targeters.containsKey(tar.name())) {
 								targeters.put(tar.name(),extClass);
+								targeters.put(tar.name()+"_ext",extClass);
 							}
 						}
 					} catch (Exception ex) {

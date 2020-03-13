@@ -50,17 +50,32 @@ Listener {
 	@EventHandler
 	public void onMythicMechanic(MythicMechanicLoadEvent e) {
 		String s1=e.getMechanicName().toLowerCase();
-		if (s1.equals("exemptplayer")) {
-			e.register(new ExemptPlayerMechanic(e.getConfig().getLine(),e.getConfig()));
-		} else if (s1.equals("unexemptplayer")) {
-			e.register(new UnExemptPlayerMechanic(e.getConfig().getLine(),e.getConfig()));
+		switch(s1)
+		{
+			case "exemptplayer":
+			case "exemptplayer_ext":
+			{
+				e.register(new ExemptPlayerMechanic(e.getConfig().getLine(),e.getConfig()));
+			}
+			case "unexemptplayer":
+			case "unexemptplayer_ext":
+			{
+				e.register(new UnExemptPlayerMechanic(e.getConfig().getLine(),e.getConfig()));
+			}
 		}
 	}
 	
 	@EventHandler	
 	public void onMythicCondition(MythicConditionLoadEvent e) {
 		String s1=e.getConditionName().toLowerCase();
-		if (s1.equals("hasexemption")) e.register(new HasExemptionCondition(e.getConfig().getLine(),e.getConfig()));
+		switch(s1)
+		{
+			case "hasexemption":
+			case "hasexemption_ext":
+			{
+				e.register(new HasExemptionCondition(e.getConfig().getLine(),e.getConfig()));
+			}
+		}
 	}
 	
 	@EventHandler

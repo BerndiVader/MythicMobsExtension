@@ -23,8 +23,13 @@ Listener
 	public void registerMechanics(MythicMechanicLoadEvent e) {
 		String mechanic=e.getMechanicName().toLowerCase();
 		
-		if(mechanic.equals("guardianbeam")) {
-			e.register(new GuardianBeamMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+		switch(mechanic)
+		{
+			case "guardianbeam":
+			case "guardianbeam_ext":
+			{
+				e.register(new GuardianBeamMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			}
 		}
 	}
 

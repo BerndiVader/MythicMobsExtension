@@ -48,8 +48,13 @@ Listener {
 	
 	@EventHandler
 	public void onMythicMechanicLoad(MythicMechanicLoadEvent e) {
-		if (e.getMechanicName().toLowerCase().equals("parseddisguise")) {
-			e.register(new ParsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+		switch(e.getMechanicName().toLowerCase())
+		{
+			case "parseddisguise":
+			case "parseddisguise_ext":
+			{
+				e.register(new ParsedDisguiseMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+			}
 		}
 	}
 	

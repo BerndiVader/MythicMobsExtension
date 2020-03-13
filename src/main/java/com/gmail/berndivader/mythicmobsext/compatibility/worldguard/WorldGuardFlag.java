@@ -23,20 +23,40 @@ Listener {
 
 	@EventHandler
 	public void onMythicMobsConditionsLoadEvent(MythicConditionLoadEvent e) {
-		if (e.getConditionName().toLowerCase().equals("wgstateflag")) {
-			SkillCondition c = new WorldGuardStateFlagCondition(e.getConditionName(), e.getConfig());
-			e.register(c);
-		} else if (e.getConditionName().toLowerCase().equals("wgdenyspawnflag")) {
-			SkillCondition c = new WorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
-			e.register(c);
-		} else if(e.getConditionName().toLowerCase().equals("worldguardflag")) {
-			e.register(new WorldGuardFlagCondition(e.getConditionName(),e.getConfig()));
-		} else if(e.getConditionName().toLowerCase().equals("regionname")) {
-			e.register(new WorldGuardRegionCondition(e.getConditionName(),e.getConfig()));
-		} else if(e.getConditionName().toLowerCase().equals("entitiesinregion")) {
-			e.register(new EntitiesInRegionCondition(e.getConditionName(),e.getConfig()));
-		} else if(e.getConditionName().toLowerCase().equals("memberregion")) {
-			e.register(new MemberRegion(e.getConditionName(),e.getConfig()));
+		switch(e.getConditionName().toLowerCase())
+		{
+			case "wgstateflag":
+			case "wgstateflag_ext":
+			{
+				SkillCondition c = new WorldGuardStateFlagCondition(e.getConditionName(), e.getConfig());
+				e.register(c);
+			}
+			case "wgdenyspawnflag":
+			case "wgdenyspawnflag_ext":
+			{
+				SkillCondition c = new WorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
+				e.register(c);
+			}
+			case "worldguardflag":
+			case "worldguardflag_ext":
+			{
+				e.register(new WorldGuardFlagCondition(e.getConditionName(),e.getConfig()));
+			}
+			case "regionname":
+			case "regionname_ext":
+			{
+				e.register(new WorldGuardRegionCondition(e.getConditionName(),e.getConfig()));
+			}
+			case "entitiesinregion":
+			case "entitiesinregion_ext":
+			{
+				e.register(new EntitiesInRegionCondition(e.getConditionName(),e.getConfig()));
+			}
+			case "memberregion":
+			case "memberregion_ext":
+			{
+				e.register(new MemberRegion(e.getConditionName(),e.getConfig()));
+			}
 		}
 	}
 }

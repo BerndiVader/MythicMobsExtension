@@ -54,20 +54,40 @@ Listener {
 	@EventHandler
 	public void onQuestConditionsLoad(MythicConditionLoadEvent e) {
 		String s1=e.getConditionName().toLowerCase();
-		if (s1.equals("activequest")) {
-			e.register(new QuestRunningCondition(e.getConfig().getLine(),e.getConfig()));
-		} else if(s1.equals("completedquest")) {
-			e.register(new QuestCompleteCondition(e.getConfig().getLine(),e.getConfig()));
-		} else if(s1.equals("testrequirement")) {
-			e.register(new TestRequirementCondition(e.getConfig().getLine(),e.getConfig()));
+		switch(s1)
+		{
+			case "activequest":
+			case "activequest_ext":
+			{
+				e.register(new QuestRunningCondition(e.getConfig().getLine(),e.getConfig()));
+			}
+			case "completedquest":
+			case "completedquest_ext":
+			{
+				e.register(new QuestCompleteCondition(e.getConfig().getLine(),e.getConfig()));
+			}
+			case "testrequirement":
+			case "testrequirement_ext":
+			{
+				e.register(new TestRequirementCondition(e.getConfig().getLine(),e.getConfig()));
+			}
 		}
 	}
 	
 	@EventHandler
 	public void onQuestMechanicsLoad(MythicMechanicLoadEvent e) {
 		String s1=e.getMechanicName().toLowerCase();
-		if (s1.equals("completequest")||s1.equals("takequest")||s1.equals("failquest")) {
-			e.register(new QuestsMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+		switch(s1)
+		{
+			case "completequest":
+			case "takequest":
+			case "failquest":
+			case "completequest_ext":
+			case "takequest_ext":
+			case "failquest_ext":
+			{
+				e.register(new QuestsMechanic(e.getContainer().getConfigLine(),e.getConfig()));
+			}
 		}
 	}
 	

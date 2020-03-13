@@ -34,10 +34,12 @@ Listener {
 		s1=e.getMechanicName().toLowerCase();
 		switch (s1) {
 		case "dropstolenitems":
+		case "dropstolenitems_et":
 			sm = new DropStolenItemsMechanic(e.getContainer().getConfigLine(),e.getConfig());
 			e.register(sm);
 			break;
 		case "steal": 
+		case "steal_ext": 
 			sm=new StealMechanic(e.getContainer().getConfigLine(), e.getConfig());
 			e.register(sm);
 			break;
