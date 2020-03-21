@@ -20,6 +20,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
+import com.gmail.berndivader.mythicmobsext.utils.MythicHitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
@@ -37,7 +38,6 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.HitBox;
 
 @ExternalAnnotation(name="blockprojectile",author="BerndiVader")
 public class BlockProjectile 
@@ -358,7 +358,7 @@ ITargetedLocationSkill {
 			this.pBlock.setVelocity(loc.toVector().subtract(eloc.toVector()).multiply(0.5));
 			this.targets.clear();
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.currentLocation, BlockProjectile.this.hitRadius,
+				MythicHitBox hitBox = new MythicHitBox(this.currentLocation, BlockProjectile.this.hitRadius,
 						BlockProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
 					if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0)))

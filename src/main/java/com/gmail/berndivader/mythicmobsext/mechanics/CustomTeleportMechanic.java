@@ -36,9 +36,9 @@ import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.MTOrigin;
-import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
 import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
+import io.lumine.xikage.mythicmobs.skills.targeters.OriginTargeter;
+import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
 
 @ExternalAnnotation(name="customteleport",author="BerndiVader")
 public class CustomTeleportMechanic 
@@ -228,7 +228,7 @@ ITargetedLocationSkill {
                 String s1=target.substring(1);
                 MythicLineConfig mlc=new MythicLineConfig(s1);
                 String s2=s1.contains("{")?s1.substring(0,s1.indexOf("{")):s1;
-            	if ((targeter=CustomTargeters.getCustomTargeter(s2,mlc))==null) targeter=new MTTrigger(mlc);
+            	if ((targeter=CustomTargeters.getCustomTargeter(s2,mlc))==null) targeter=new TriggerTargeter(mlc);
             }
 			if (targeter instanceof IEntitySelector) {
 				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));
@@ -238,8 +238,8 @@ ITargetedLocationSkill {
 			if (targeter instanceof ILocationSelector) {
 				data.setLocationTargets(((ILocationSelector) targeter).getLocations(data));
 				((ILocationSelector) targeter).filter(data);
-			} else if (targeter instanceof MTOrigin) {
-				data.setLocationTargets(((MTOrigin) targeter).getLocation(data.getOrigin()));
+			} else if (targeter instanceof OriginTargeter) {
+				data.setLocationTargets(((OriginTargeter) targeter).getLocation(data.getOrigin()));
 			} else if (targeter instanceof MTTriggerLocation) {
 				HashSet<AbstractLocation> lTargets = new HashSet<AbstractLocation>();
 				lTargets.add(data.getTrigger().getLocation());

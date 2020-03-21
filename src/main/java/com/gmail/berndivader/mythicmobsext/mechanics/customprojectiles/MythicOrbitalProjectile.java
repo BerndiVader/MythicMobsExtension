@@ -14,6 +14,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.mechanics.customprojectiles.CustomProjectile;
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.utils.MythicHitBox;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
@@ -32,7 +33,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
-import io.lumine.xikage.mythicmobs.util.HitBox;
 
 @ExternalAnnotation(name="mythicorbitalprojectile",author="BerndiVader")
 public
@@ -265,7 +265,7 @@ ITargetedLocationSkill
 				}
 			}
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.currentLocation, MythicOrbitalProjectile.this.hitRadius,
+				MythicHitBox hitBox = new MythicHitBox(this.currentLocation, MythicOrbitalProjectile.this.hitRadius,
 						MythicOrbitalProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
 					if (e.isDead() || !hitBox.contains(e.getLocation().add(0.0, 0.6, 0.0)))

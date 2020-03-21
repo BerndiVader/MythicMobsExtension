@@ -52,7 +52,7 @@ ITargetedEntitySkill {
 		if(am!=null) {
 	        if (mob_type.hasFaction()) {
 	            am.setFaction(mob_type.getFaction());
-	            am.getLivingEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,mob_type.getFaction()));
+	            am.getEntity().getBukkitEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,mob_type.getFaction()));
 	        }
 	    	Utils.mobmanager.registerActiveMob(am);
 			new TriggeredSkill(SkillTrigger.SPAWN,am,data.getCaster().getEntity(),new Pair[0]);

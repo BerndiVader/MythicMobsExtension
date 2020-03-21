@@ -29,7 +29,7 @@ import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.MTTrigger;
+import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
 
 @ExternalAnnotation(name="castif",author="BerndiVader")
 public class CastIfMechanic
@@ -136,7 +136,7 @@ ITargetedLocationSkill {
                 String s1=ts.substring(1);
                 MythicLineConfig mlc=new MythicLineConfig(s1);
                 String s2=s1.contains("{")?s1.substring(0,s1.indexOf("{")):s1;
-            	if ((st=CustomTargeters.getCustomTargeter(s2,mlc))==null) st=new MTTrigger(mlc);
+            	if ((st=CustomTargeters.getCustomTargeter(s2,mlc))==null) st=new TriggerTargeter(mlc);
             }
 			if (st instanceof IEntitySelector) {
 				if (data.getEntityTargets()==null) data.setEntityTargets(new HashSet<>());

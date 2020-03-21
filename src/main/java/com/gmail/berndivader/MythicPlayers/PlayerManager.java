@@ -38,11 +38,9 @@ import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.mobs.MobManager.QueuedMobCleanup;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
@@ -96,7 +94,7 @@ public class PlayerManager implements Listener {
 	public void addMythicPlayerToFaction(MythicMob mm, ActivePlayer ap) {
 		if (mm.hasFaction()) {
 			ap.setFaction(mm.getFaction());
-			ap.getLivingEntity().setMetadata(meta_FACTION,
+			ap.getEntity().getBukkitEntity().setMetadata(meta_FACTION,
 					new FixedMetadataValue(MythicPlayers.mythicmobs, mm.getFaction()));
 		}
 	}
@@ -176,7 +174,6 @@ public class PlayerManager implements Listener {
 			this.removeAllEffectsFromPlayer(ap.getEntity());
 			ap.signalMob(ap.getEntity(), signal_QUIT);
 			this.removeActivePlayer(ap);
-			TaskManager.get().runAsyncLater(new QueuedMobCleanup(ap), 0);
 		}
 	}
 

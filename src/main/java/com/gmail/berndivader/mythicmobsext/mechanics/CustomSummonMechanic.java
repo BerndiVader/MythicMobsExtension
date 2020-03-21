@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -95,7 +96,7 @@ ITargetedEntitySkill
 					Creature c=(Creature)ams.getEntity().getBukkitEntity();
 					c.setLeashHolder(data.getCaster().getEntity().getBukkitEntity());
 				}
-				if (this.invisible) Utils.applyInvisible(ams.getLivingEntity(),0);
+				if (this.invisible) Utils.applyInvisible((LivingEntity)ams.getEntity().getBukkitEntity(),0);
 				Utils.mythicmobs.getEntityManager().registerMob(ams.getEntity().getWorld(), ams.getEntity());
 				if (this.tag.length()>0) {
 					ams.getEntity().addScoreboardTag(new PlaceholderString(this.tag).get(data,te));

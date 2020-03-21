@@ -39,7 +39,7 @@ Cancellable {
         return this.am.getEntity().getBukkitEntity();
     }
 
-    public int getMobLevel() {
+    public double getMobLevel() {
         return this.am.getLevel();
     }
 

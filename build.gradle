@@ -38,7 +38,7 @@ dependencies {
     compileOnly  ("com.sk89q:worldedit:6.1")
     compileOnly  ("com.sk89q:worldguard:6.2.1")
     compileOnly  ("fr.neatmonster:nocheatplus:+")
-    compileOnly  ("io.lumine.xikage:mythicmobs:4.7.2")
+    compileOnly  ("io.lumine.xikage:mythicmobs:+")
     compileOnly  ("me.blackvein:quests:+")
     compileOnly  ("me.libraryaddict:disguise:+")
     compileOnly  ("net.citizensnpcs:citizens:+")
