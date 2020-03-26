@@ -71,6 +71,7 @@ import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
+import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -468,7 +469,7 @@ Listener
 	
 	public static LivingEntity getTargetedEntity(Player player,int range) {
 		BlockIterator bi;
-		List<Entity>ne=player.getNearbyEntities(range, range, range);
+		List<Entity>ne=Volatile.handler.getNearbyEntities(player, range);
 		List<LivingEntity> entities = new ArrayList<>();
 		for (Entity en:ne) {
 			if ((en instanceof LivingEntity) && !en.hasMetadata(Utils.noTargetVar)) {

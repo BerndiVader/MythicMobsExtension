@@ -1,5 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.volatilecode;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -58,4 +60,5 @@ public interface Handler {
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector);
 	void addTravelPoint(Entity bukkit_entity, Vec3D vector, boolean remove);
 	void clearTravelPoints(Entity bukkit_entity);
+	List<Entity> getNearbyEntities(Entity bukkit_entity, int range); 	
 }

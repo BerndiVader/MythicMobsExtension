@@ -163,6 +163,19 @@ implements Handler,Listener {
 	}
 	
 	@Override
+	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) 
+	{
+		net.minecraft.server.v1_15_R1.Entity entity = ((CraftLivingEntity)bukkit_entity).getHandle();
+        List<net.minecraft.server.v1_15_R1.Entity>list =entity.getWorld().getEntities(entity,entity.getBoundingBox().grow(range,range,range), null);
+        ArrayList<Entity> bukkitEntityList = new ArrayList<Entity>(list.size());
+        for (net.minecraft.server.v1_15_R1.Entity e2 : list)
+        {
+            bukkitEntityList.add(e2.getBukkitEntity());
+        }
+        return bukkitEntityList;
+	}
+	
+	@Override
     public void setFieldOfViewPacketSend(Player player, float f1) {
 		net.minecraft.server.v1_15_R1.EntityPlayer me=((CraftPlayer)player).getHandle();
 		PlayerAbilities arg1=(PlayerAbilities)Utils.cloneObject(me.abilities);

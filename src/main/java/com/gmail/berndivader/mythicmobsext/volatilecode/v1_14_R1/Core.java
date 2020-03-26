@@ -1122,4 +1122,9 @@ implements Handler,Listener {
 		this.addTravelPoint(bukkit_entity,vector,true);
 	}
 
+	@Override
+	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
+		return bukkit_entity.getNearbyEntities(range, range, range);
+	}
+
 }
