@@ -8,21 +8,14 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="cleartravelpoints",author="BerndiVader")
-public 
-class
-ClearTravelPoints 
-extends
-SkillMechanic
-implements
-INoTargetSkill
-{
+@ExternalAnnotation(name = "cleartravelpoints", author = "BerndiVader")
+public class ClearTravelPoints extends SkillMechanic implements INoTargetSkill {
 	boolean remove_points;
-	
+
 	public ClearTravelPoints(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		
-		this.remove_points=mlc.getBoolean("removeagain",true);
+
+		this.remove_points = mlc.getBoolean("removeagain", true);
 	}
 
 	@Override

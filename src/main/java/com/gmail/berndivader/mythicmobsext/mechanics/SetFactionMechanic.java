@@ -11,21 +11,16 @@ import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.*;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
-@ExternalAnnotation(name="setfaction",author="BerndiVader")
-public class SetFactionMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill,
-INoTargetSkill 
-{
+@ExternalAnnotation(name = "setfaction", author = "BerndiVader")
+public class SetFactionMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	protected PlaceholderString faction;
+
 	public SetFactionMechanic(String line, MythicLineConfig mlc) {
-		
+
 		super(line, mlc);
-		String f=mlc.getString(new String[] { "faction", "f" }, null);
-		if (f!=null) {
-			this.faction=new PlaceholderString(SkillString.unparseMessageSpecialChars(f));
+		String f = mlc.getString(new String[] { "faction", "f" }, null);
+		if (f != null) {
+			this.faction = new PlaceholderString(SkillString.unparseMessageSpecialChars(f));
 		}
 	}
 
@@ -36,11 +31,12 @@ INoTargetSkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		System.err.println("faction:"+this.faction);
+		System.err.println("faction:" + this.faction);
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
-		String f=this.faction.get(data,target);
-		if (am!=null) am.setFaction(f);
-        target.getBukkitEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,f));
+		String f = this.faction.get(data, target);
+		if (am != null)
+			am.setFaction(f);
+		target.getBukkitEntity().setMetadata("Faction", new FixedMetadataValue(Utils.mythicmobs, f));
 		return true;
 	}
 }

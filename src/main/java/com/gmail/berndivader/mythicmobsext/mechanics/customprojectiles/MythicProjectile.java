@@ -39,13 +39,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="mythicprojectile",author="BerndiVader")
-public class MythicProjectile 
-extends
-CustomProjectile
-implements 
-ITargetedEntitySkill, 
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "mythicprojectile", author = "BerndiVader")
+public class MythicProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	public MythicProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -127,7 +122,8 @@ ITargetedLocationSkill {
 					this.gravity = this.gravity > 0.0f ? this.gravity / MythicProjectile.this.ticksPerSecond : 0.0f;
 				} else {
 					this.gravity = MythicProjectile.this.projectileGravity > 0.0f
-							? MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond : 0.0f;
+							? MythicProjectile.this.projectileGravity / MythicProjectile.this.ticksPerSecond
+							: 0.0f;
 				}
 				velocity = 0.0;
 			} else {
@@ -138,18 +134,22 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + MythicProjectile.this.startYOffset);
 				}
 				if (MythicProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),MythicProjectile.this.startForwardOffset);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getFrontBackOffsetVector(
+							BukkitAdapter.adapt(this.startLocation).getDirection(),
+							MythicProjectile.this.startForwardOffset);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 				if (MythicProjectile.this.startSideOffset != 0.0f) {
-					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), MythicProjectile.this.startSideOffset,false);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(),
+							MythicProjectile.this.startSideOffset, false);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 			}
 			this.currentLocation = this.startLocation.clone();
-			if (this.currentLocation == null) return;
+			if (this.currentLocation == null)
+				return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -201,8 +201,8 @@ ITargetedLocationSkill {
 						this.pLocation.add(0.0D, this.pVOff, 0.0D));
 				this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 				if (!this.targetable)
-					Volatile.handler.changeHitBox(this.pEntity,0,0,0);
-					this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
+					Volatile.handler.changeHitBox(this.pEntity, 0, 0, 0);
+				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();
 				return;
@@ -366,8 +366,8 @@ ITargetedLocationSkill {
 			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY() + this.pVOff,
 					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {
-				HitBox hitBox = new HitBox(this.pam.getEntity().getBukkitEntity().getLocation(), MythicProjectile.this.hitRadius,
-						MythicProjectile.this.verticalHitRadius);
+				HitBox hitBox = new HitBox(this.pam.getEntity().getBukkitEntity().getLocation(),
+						MythicProjectile.this.hitRadius, MythicProjectile.this.verticalHitRadius);
 				for (AbstractEntity e : this.inRange) {
 					if (e.isDead() || !hitBox.contains(e.getBukkitEntity().getLocation().add(0.0, 0.6, 0.0)))
 						continue;

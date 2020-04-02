@@ -10,27 +10,26 @@ import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
 
-public class TestRequirementCondition 
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
-	Quests quests=QuestsSupport.inst().quests();
+public class TestRequirementCondition extends AbstractCustomCondition implements IEntityCondition {
+	Quests quests = QuestsSupport.inst().quests();
 	String s1;
-	
+
 	public TestRequirementCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		s1=mlc.getString("quest","").toLowerCase();
-		if(!s1.isEmpty()&&s1.charAt(0)=='"') s1=SkillString.parseMessageSpecialChars(s1.substring(1,s1.length()-1));
+		s1 = mlc.getString("quest", "").toLowerCase();
+		if (!s1.isEmpty() && s1.charAt(0) == '"')
+			s1 = SkillString.parseMessageSpecialChars(s1.substring(1, s1.length() - 1));
 	}
 
 	@Override
 	public boolean check(AbstractEntity e) {
-		if (!e.isPlayer()||s1.isEmpty()||quests.checkQuester(e.getUniqueId())) return false;
-		boolean bl1=false;
-		Quester quester=quests.getQuester(e.getUniqueId());
-		Quest quest=quests.getQuest(s1);
-		if (quest!=null) bl1=quest.testRequirements(quester);
+		if (!e.isPlayer() || s1.isEmpty() || quests.checkQuester(e.getUniqueId()))
+			return false;
+		boolean bl1 = false;
+		Quester quester = quests.getQuester(e.getUniqueId());
+		Quest quest = quests.getQuest(s1);
+		if (quest != null)
+			bl1 = quest.testRequirements(quester);
 		return bl1;
 	}
 }

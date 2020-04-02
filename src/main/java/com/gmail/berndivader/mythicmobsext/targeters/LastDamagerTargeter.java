@@ -12,10 +12,8 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="lastdamager",author="BerndiVader")
-public class LastDamagerTargeter
-extends
-ISelectorEntity {
+@ExternalAnnotation(name = "lastdamager", author = "BerndiVader")
+public class LastDamagerTargeter extends ISelectorEntity {
 
 	public LastDamagerTargeter(MythicLineConfig mlc) {
 		super(mlc);
@@ -23,10 +21,10 @@ ISelectorEntity {
 
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
-		HashSet<AbstractEntity>targets=new HashSet<>();
-		EntityDamageEvent e=data.getCaster().getEntity().getBukkitEntity().getLastDamageCause();
+		HashSet<AbstractEntity> targets = new HashSet<>();
+		EntityDamageEvent e = data.getCaster().getEntity().getBukkitEntity().getLastDamageCause();
 		if (e instanceof EntityDamageByEntityEvent) {
-			targets.add(BukkitAdapter.adapt(((EntityDamageByEntityEvent)e).getDamager()));
+			targets.add(BukkitAdapter.adapt(((EntityDamageByEntityEvent) e).getDamager()));
 		}
 		return this.applyOffsets(targets);
 	}

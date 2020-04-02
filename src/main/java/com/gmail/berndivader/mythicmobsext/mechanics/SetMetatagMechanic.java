@@ -19,13 +19,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
-@ExternalAnnotation(name="setmeta",author="BerndiVader")
-public class SetMetatagMechanic 
-extends 
-SkillMechanic 
-implements
-ITargetedLocationSkill,
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "setmeta", author = "BerndiVader")
+public class SetMetatagMechanic extends SkillMechanic implements ITargetedLocationSkill, ITargetedEntitySkill {
 	protected PlaceholderString tag;
 	protected MetaTagValue mtv;
 	protected boolean useCaster;
@@ -33,14 +28,15 @@ ITargetedEntitySkill {
 	public SetMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		this.ASYNC_SAFE = false;
-		this.useCaster=mlc.getBoolean(new String[] { "usecaster", "uc" },false);
-		String ms = mlc.getString(new String[] { "meta", "m" },"");
-		if (ms.startsWith("\"") && ms.endsWith("\"")) ms = ms.substring(1, ms.length() - 1);
+		this.useCaster = mlc.getBoolean(new String[] { "usecaster", "uc" }, false);
+		String ms = mlc.getString(new String[] { "meta", "m" }, "");
+		if (ms.startsWith("\"") && ms.endsWith("\""))
+			ms = ms.substring(1, ms.length() - 1);
 		ms = SkillString.parseMessageSpecialChars(ms);
 		String parse[] = ms.split(";");
 		String t = null, v = null, vt = null;
-		for (int a=0;a<parse.length;a++) {
-			String p=parse[a];
+		for (int a = 0; a < parse.length; a++) {
+			String p = parse[a];
 			if (p.startsWith("tag=")) {
 				t = p.substring(4);
 			} else if (p.startsWith("value=")) {
@@ -57,13 +53,15 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		String parsedTag=this.tag.get(data,target);
-		if (parsedTag==null||parsedTag.isEmpty()) return false;
-		Object vo = this.mtv.getType().equals(ValueTypes.STRING) ?
-				new PlaceholderString((String)this.mtv.getValue()).get(data,target)
-				:this.mtv.getValue();
+		String parsedTag = this.tag.get(data, target);
+		if (parsedTag == null || parsedTag.isEmpty())
+			return false;
+		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
+				? new PlaceholderString((String) this.mtv.getValue()).get(data, target)
+				: this.mtv.getValue();
 		if (this.useCaster) {
-			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
+			data.getCaster().getEntity().getBukkitEntity().setMetadata(parsedTag,
+					new FixedMetadataValue(Main.getPlugin(), vo));
 		} else {
 			target.getBukkitEntity().setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		}
@@ -74,11 +72,12 @@ ITargetedEntitySkill {
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
 		Block target = BukkitAdapter.adapt(location).getBlock();
 		String parsedTag = this.tag.get(data);
-		if (parsedTag==null||parsedTag.isEmpty()) return false;
+		if (parsedTag == null || parsedTag.isEmpty())
+			return false;
 		Object vo = this.mtv.getType().equals(ValueTypes.STRING)
-				? new PlaceholderString((String)this.mtv.getValue()).get(data)
+				? new PlaceholderString((String) this.mtv.getValue()).get(data)
 				: this.mtv.getValue();
-		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(),vo));
+		target.setMetadata(parsedTag, new FixedMetadataValue(Main.getPlugin(), vo));
 		return true;
 	}
 

@@ -7,12 +7,8 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="isspinning",author="BerndiVader")
-public class IsSpinningCondition 
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "isspinning", author = "BerndiVader")
+public class IsSpinningCondition extends AbstractCustomCondition implements IEntityCondition {
 
 	public IsSpinningCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);

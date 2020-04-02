@@ -39,13 +39,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="entityprojectile",author="BerndiVader")
-public class EntityProjectile 
-extends 
-CustomProjectile 
-implements 
-ITargetedEntitySkill, 
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "entityprojectile", author = "BerndiVader")
+public class EntityProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	protected String pEntityName;
 	protected float pEntitySpin;
@@ -132,7 +127,8 @@ ITargetedLocationSkill {
 					this.gravity = this.gravity > 0.0f ? this.gravity / EntityProjectile.this.ticksPerSecond : 0.0f;
 				} else {
 					this.gravity = EntityProjectile.this.projectileGravity > 0.0f
-							? EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond : 0.0f;
+							? EntityProjectile.this.projectileGravity / EntityProjectile.this.ticksPerSecond
+							: 0.0f;
 				}
 				velocity = 0.0;
 			} else {
@@ -143,13 +139,16 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + EntityProjectile.this.startYOffset);
 				}
 				if (EntityProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),EntityProjectile.this.startForwardOffset);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getFrontBackOffsetVector(
+							BukkitAdapter.adapt(this.startLocation).getDirection(),
+							EntityProjectile.this.startForwardOffset);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 				if (EntityProjectile.this.startSideOffset != 0.0f) {
-					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), EntityProjectile.this.startSideOffset,false);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(),
+							EntityProjectile.this.startSideOffset, false);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 			}
@@ -214,7 +213,7 @@ ITargetedLocationSkill {
 			if (!this.targetable)
 				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			this.pEntity.setGravity(false);
-			Volatile.handler.changeHitBox(this.pEntity,0,0,0);
+			Volatile.handler.changeHitBox(this.pEntity, 0, 0, 0);
 			this.taskId = TaskManager.get().scheduleTask(this, 0, EntityProjectile.this.tickInterval);
 			if (EntityProjectile.this.hitPlayers || EntityProjectile.this.hitNonPlayers) {
 				this.inRange
@@ -356,8 +355,10 @@ ITargetedLocationSkill {
 			}
 			Location eloc = this.pEntity.getLocation();
 			float yaw = eloc.getYaw();
-			if (this.pFaceDir) yaw=MathUtils.lookAtYaw(eloc,BukkitAdapter.adapt(currentLocation));
-			if (this.pSpin != 0.0) yaw=((yaw+this.pSpin)%360.0F);
+			if (this.pFaceDir)
+				yaw = MathUtils.lookAtYaw(eloc, BukkitAdapter.adapt(currentLocation));
+			if (this.pSpin != 0.0)
+				yaw = ((yaw + this.pSpin) % 360.0F);
 			NMSUtils.setLocation(this.pEntity, this.currentLocation.getX(), this.currentLocation.getY(),
 					this.currentLocation.getZ(), yaw, eloc.getPitch());
 			if (this.inRange != null) {

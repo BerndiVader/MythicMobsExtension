@@ -22,13 +22,8 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="grenade",author="BerndiVader")
-public class GrenadeMechanic 
-extends 
-SkillMechanic
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "grenade", author = "BerndiVader")
+public class GrenadeMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	private Plugin plugin = Main.getPlugin();
 	private int size;
 	private int amount;
@@ -45,40 +40,43 @@ ITargetedLocationSkill {
 	public GrenadeMechanic(String h, MythicLineConfig mlc) {
 		super(h, mlc);
 		ASYNC_SAFE = false;
-		this.size=mlc.getInteger(new String[] { "size", "s" }, 2);
-		this.amount=mlc.getInteger(new String[] { "amount", "a" }, 1);
-		this.fuse=mlc.getInteger(new String[] { "fuse", "f" }, 80);
-		this.fire=mlc.getBoolean(new String[] { "fire", "burn", "bf" }, false);
-		this.utime=mlc.getInteger(new String[] { "undotime", "utime", "ut" }, 60);
-		this.ueffect=mlc.getBoolean(new String[] { "effect", "undoeffect", "ueffect", "ue" }, true);
-		this.breakBlocks=mlc.getBoolean(new String[] { "break", "breakblocks", "b" }, false);
-		this.undotnt=mlc.getBoolean(new String[] { "undotnt", "undo", "u" }, true);
-		this.ued=mlc.getBoolean(new String[] { "useeyedirection", "ued" }, false);
-		this.hGain=mlc.getDouble(new String[] { "heightgain", "hg" }, 3.0D);
-		this.gravity=mlc.getDouble(new String[] { "gravity", "g" }, 0.0975);
+		this.size = mlc.getInteger(new String[] { "size", "s" }, 2);
+		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
+		this.fuse = mlc.getInteger(new String[] { "fuse", "f" }, 80);
+		this.fire = mlc.getBoolean(new String[] { "fire", "burn", "bf" }, false);
+		this.utime = mlc.getInteger(new String[] { "undotime", "utime", "ut" }, 60);
+		this.ueffect = mlc.getBoolean(new String[] { "effect", "undoeffect", "ueffect", "ue" }, true);
+		this.breakBlocks = mlc.getBoolean(new String[] { "break", "breakblocks", "b" }, false);
+		this.undotnt = mlc.getBoolean(new String[] { "undotnt", "undo", "u" }, true);
+		this.ued = mlc.getBoolean(new String[] { "useeyedirection", "ued" }, false);
+		this.hGain = mlc.getDouble(new String[] { "heightgain", "hg" }, 3.0D);
+		this.gravity = mlc.getDouble(new String[] { "gravity", "g" }, 0.0975);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		return this.castAtLocation(data,target.getLocation());
+		return this.castAtLocation(data, target.getLocation());
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation t) {
-		if (!data.getCaster().getEntity().isLiving()||!data.getCaster().getEntity().getWorld().equals(t.getWorld())) return false;
-		Location source=data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
-		Location target=BukkitAdapter.adapt(t);
-		Vector v=this.ued?((LivingEntity)data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().getDirection()
-				:MathUtils.calculateVelocity(source.toVector(),target.toVector(),this.gravity,this.hGain);
+		if (!data.getCaster().getEntity().isLiving() || !data.getCaster().getEntity().getWorld().equals(t.getWorld()))
+			return false;
+		Location source = data.getCaster().getEntity().getBukkitEntity().getLocation().clone();
+		Location target = BukkitAdapter.adapt(t);
+		Vector v = this.ued
+				? ((LivingEntity) data.getCaster().getEntity().getBukkitEntity()).getEyeLocation().getDirection()
+				: MathUtils.calculateVelocity(source.toVector(), target.toVector(), this.gravity, this.hGain);
 		try {
 			v.checkFinite();
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
-		for (int a=0;a<this.amount;a++) {
-			Location sl=source.clone();
-			final TNTPrimed grenade=(TNTPrimed)sl.getWorld().spawnEntity(sl,EntityType.PRIMED_TNT);
-			if (grenade==null) continue;
+		for (int a = 0; a < this.amount; a++) {
+			Location sl = source.clone();
+			final TNTPrimed grenade = (TNTPrimed) sl.getWorld().spawnEntity(sl, EntityType.PRIMED_TNT);
+			if (grenade == null)
+				continue;
 			grenade.setVelocity(v);
 			grenade.setYield(size);
 			grenade.setFuseTicks(this.fuse);

@@ -14,5 +14,5 @@ public class JavaScript {
 			}
 		}.runTask(Main.getPlugin());
 	}
-	
+
 }

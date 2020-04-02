@@ -9,20 +9,19 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="tth,topthreatholder",author="BerndiVader")
-public class TopThreatHolder 
-extends 
-ISelectorEntity {
-	
+@ExternalAnnotation(name = "tth,topthreatholder", author = "BerndiVader")
+public class TopThreatHolder extends ISelectorEntity {
+
 	public TopThreatHolder(MythicLineConfig mlc) {
 		super(mlc);
 	}
 
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
-		HashSet<AbstractEntity>targets=new HashSet<>();
-		ActiveMob am=(ActiveMob)data.getCaster();
-		if (am!=null&&am.hasThreatTable()) targets.add(am.getThreatTable().getTopThreatHolder());
+		HashSet<AbstractEntity> targets = new HashSet<>();
+		ActiveMob am = (ActiveMob) data.getCaster();
+		if (am != null && am.hasThreatTable())
+			targets.add(am.getThreatTable().getTopThreatHolder());
 		return this.applyOffsets(targets);
 	}
 }

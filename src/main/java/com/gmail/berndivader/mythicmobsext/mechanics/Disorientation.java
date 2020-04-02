@@ -13,36 +13,29 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="disorientation",author="BerndiVader")
-public 
-class
-Disorientation 
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill
-{
-	
-	byte state=0;
-	
+@ExternalAnnotation(name = "disorientation", author = "BerndiVader")
+public class Disorientation extends SkillMechanic implements ITargetedEntitySkill {
+
+	byte state = 0;
+
 	public Disorientation(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		state|=mlc.getBoolean("look",true)?0b1:0b0;
-		state|=mlc.getBoolean("position",true)?0b10:0b00;
+		state |= mlc.getBoolean("look", true) ? 0b1 : 0b0;
+		state |= mlc.getBoolean("position", true) ? 0b10 : 0b00;
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
-		if(abstract_entity.isPlayer()) {
-			Player player=(Player)abstract_entity.getBukkitEntity();
-			if(player.hasMetadata(Utils.meta_DISORIENTATION)) {
-				player.removeMetadata(Utils.meta_DISORIENTATION,Main.getPlugin());
+		if (abstract_entity.isPlayer()) {
+			Player player = (Player) abstract_entity.getBukkitEntity();
+			if (player.hasMetadata(Utils.meta_DISORIENTATION)) {
+				player.removeMetadata(Utils.meta_DISORIENTATION, Main.getPlugin());
 			} else {
-				player.setMetadata(Utils.meta_DISORIENTATION,new FixedMetadataValue(Main.getPlugin(),state));
+				player.setMetadata(Utils.meta_DISORIENTATION, new FixedMetadataValue(Main.getPlugin(), state));
 			}
 			return true;
 		}
 		return false;
 	}
-	
+
 }

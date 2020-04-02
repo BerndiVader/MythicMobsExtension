@@ -13,7 +13,7 @@ import com.gmail.berndivader.mythicmobsext.Main;
 
 public class Config {
 
-	static String name="config.yml";
+	static String name = "config.yml";
 	public static boolean debug;
 	public static boolean update;
 	public static boolean nan;
@@ -34,18 +34,19 @@ public class Config {
 	final static YamlConfiguration config;
 
 	static {
-		Plugin plugin=Main.getPlugin();
-		config=new YamlConfiguration();
+		Plugin plugin = Main.getPlugin();
+		config = new YamlConfiguration();
 		File configFile = new File(plugin.getDataFolder(), name);
 		if (!configFile.exists()) {
-			plugin.getLogger().info("Generating "+name+"...");
-			plugin.saveResource(name,false);
+			plugin.getLogger().info("Generating " + name + "...");
+			plugin.saveResource(name, false);
 		}
 		try {
 			config.load(configFile);
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
-			plugin.getLogger().warning("The configuration is not a valid YAML file! Please check it with a tool like http://yaml-online-parser.appspot.com/");
+			plugin.getLogger().warning(
+					"The configuration is not a valid YAML file! Please check it with a tool like http://yaml-online-parser.appspot.com/");
 		} catch (IOException e) {
 			e.printStackTrace();
 			plugin.getLogger().warning("Error while reading the file. Is it in use?");
@@ -65,10 +66,7 @@ public class Config {
 			}
 
 			// check for old entry's
-			List<String> entryToRemove = Arrays.asList(
-					"Old_Entry1",
-					"Old_Entry2"
-			);
+			List<String> entryToRemove = Arrays.asList("Old_Entry1", "Old_Entry2");
 
 			for (String oldEntry : entryToRemove) {
 				if (config.isSet(oldEntry)) {
@@ -95,11 +93,11 @@ public class Config {
 		rpgitems = config.getBoolean(ConfigValue.RPGITEMS.getPath());
 		mobarena = config.getBoolean(ConfigValue.MOBARENA.getPath());
 		h_displays = config.getBoolean(ConfigValue.H_DISPLAYS.getPath());
-		externals=config.getBoolean(ConfigValue.EXTERNALS.getPath());
-		javascript=config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
-		quests=config.getBoolean(ConfigValue.QUESTS.getPath());
-		ncp=config.getBoolean(ConfigValue.NCP.getPath());
-		pre44spawn=config.getBoolean(ConfigValue.PRE44SPAWN.getPath());
+		externals = config.getBoolean(ConfigValue.EXTERNALS.getPath());
+		javascript = config.getBoolean(ConfigValue.JAVASCRIPT.getPath());
+		quests = config.getBoolean(ConfigValue.QUESTS.getPath());
+		ncp = config.getBoolean(ConfigValue.NCP.getPath());
+		pre44spawn = config.getBoolean(ConfigValue.PRE44SPAWN.getPath());
 	}
-	
+
 }

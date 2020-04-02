@@ -17,12 +17,8 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="endereffect",author="BerndiVader")
-public class EnderDragonDeathEffect 
-extends SkillMechanic 
-implements 
-ITargetedEntitySkill, 
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "endereffect", author = "BerndiVader")
+public class EnderDragonDeathEffect extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	public EnderDragonDeathEffect(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -41,7 +37,7 @@ ITargetedLocationSkill {
 	}
 
 	private void playEnderEffect(Location l) {
-		EnderDragon e=l.getWorld().spawn(l,EnderDragon.class);
+		EnderDragon e = l.getWorld().spawn(l, EnderDragon.class);
 		e.playEffect(EntityEffect.DEATH);
 		e.setHealth(0);
 		return;

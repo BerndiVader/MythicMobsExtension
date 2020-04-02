@@ -11,21 +11,17 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="sunresist",author="BerndiVader")
-public class ResistSunMechanic 
-extends 
-SkillMechanic 
-implements 
-INoTargetSkill
-{
+@ExternalAnnotation(name = "sunresist", author = "BerndiVader")
+public class ResistSunMechanic extends SkillMechanic implements INoTargetSkill {
 	public ResistSunMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE = false;
 	}
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		data.getCaster().getEntity().getBukkitEntity().setMetadata(Utils.meta_NOSUNBURN,new FixedMetadataValue(Main.getPlugin(),true));
+		data.getCaster().getEntity().getBukkitEntity().setMetadata(Utils.meta_NOSUNBURN,
+				new FixedMetadataValue(Main.getPlugin(), true));
 		return true;
 	}
 

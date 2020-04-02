@@ -40,15 +40,10 @@ import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Pre44MobSpawnEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-public
-class
-Main
-extends
-JavaPlugin
-{
+public class Main extends JavaPlugin {
 	private static Main plugin;
 	private static MythicPlayers mythicplayers;
-	
+
 	public static PluginManager pluginmanager;
 	public static HealthbarHandler healthbarhandler;
 	public static CachedOwnerHandler cachedOwnerHandler;
@@ -58,38 +53,39 @@ JavaPlugin
 	public static boolean hasRpgItems = false;
 	public static boolean slappyNewBorn = true;
 	public static boolean server_running;
-	
+
 	public Thiefs thiefs;
-	
+
 	public Internals internals;
 	public Externals externals;
-	
+
 	public void onEnable() {
-		server_running=true;
+		server_running = true;
 		plugin = this;
 		random = new Random();
 		pluginmanager = plugin.getServer().getPluginManager();
 		logger = plugin.getLogger();
-		
+
 		if (Config.update) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					String version=new String();
+					String version = new String();
 					PluginDescriptionFile pdf = getDescription();
 					try {
-						URL url = new URL("https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
-						try (InputStream in=url.openStream();
-						BufferedReader br=new BufferedReader( new InputStreamReader(in))) {
-							version=br.readLine().toString();
+						URL url = new URL(
+								"https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
+						try (InputStream in = url.openStream();
+								BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+							version = br.readLine().toString();
 						}
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
 						logger.warning("Could not read version file!");
 					}
-					if (!pdf.getVersion().endsWith("SNAPSHOT")&&!pdf.getVersion().equals(version)) {
-						logger.info("MythicMobsExtension v"+version+" is available, get it here:");
+					if (!pdf.getVersion().endsWith("SNAPSHOT") && !pdf.getVersion().equals(version)) {
+						logger.info("MythicMobsExtension v" + version + " is available, get it here:");
 						logger.info("https://www.spigotmc.org/resources/mythicmobsextension.51884/");
 					} else {
 						logger.info("Plugin is up-to-date!");
@@ -100,9 +96,9 @@ JavaPlugin
 		if (pluginmanager.isPluginEnabled("MythicMobs")) {
 			NMSUtils.initialize();
 			new Utils();
-			internals=new Internals();
+			internals = new Internals();
 			if (Config.externals) {
-				externals=new Externals();
+				externals = new Externals();
 				logger.info("enabled externals");
 			}
 			new CustomMechanics();
@@ -115,32 +111,44 @@ JavaPlugin
 				new JavaScript();
 				logger.info("enabled javascript!");
 			}
-			if (Config.m_players) Main.mythicplayers=new MythicPlayers(this);
-			if (Config.m_thiefs) thiefs=new Thiefs();
-			
-			if (Config.wguard&&pluginmanager.getPlugin("WorldGuard")!=null) new WorldGuardFlag();
-			if (Config.factions&&pluginmanager.getPlugin("Factions")!=null&&pluginmanager.getPlugin("MassiveCore")!=null) new FactionsSupport();
-			if (Config.rpgitems&&pluginmanager.getPlugin("RPGItems") != null) {
+			if (Config.m_players)
+				Main.mythicplayers = new MythicPlayers(this);
+			if (Config.m_thiefs)
+				thiefs = new Thiefs();
+
+			if (Config.wguard && pluginmanager.getPlugin("WorldGuard") != null)
+				new WorldGuardFlag();
+			if (Config.factions && pluginmanager.getPlugin("Factions") != null
+					&& pluginmanager.getPlugin("MassiveCore") != null)
+				new FactionsSupport();
+			if (Config.rpgitems && pluginmanager.getPlugin("RPGItems") != null) {
 				hasRpgItems = true;
 				logger.info("using RPGItems");
 			}
-			if (Config.mobarena&&pluginmanager.getPlugin("MobArena")!=null) new MobArenaSupport();
-			if (Config.h_displays&&pluginmanager.getPlugin("HolographicDisplays")!=null) Main.healthbarhandler=new HealthbarHandler(this);
-			if (pluginmanager.getPlugin("ProtocolLib")!=null) {
+			if (Config.mobarena && pluginmanager.getPlugin("MobArena") != null)
+				new MobArenaSupport();
+			if (Config.h_displays && pluginmanager.getPlugin("HolographicDisplays") != null)
+				Main.healthbarhandler = new HealthbarHandler(this);
+			if (pluginmanager.getPlugin("ProtocolLib") != null) {
 				new ProtocolLibSupport(this);
 			}
-			if (Config.quests&&pluginmanager.getPlugin("Quests")!=null) new QuestsSupport(this);
-			if (pluginmanager.getPlugin("LibsDisguise")!=null) new LibsDisguisesSupport();
-			if (Config.ncp&&pluginmanager.getPlugin("NoCheatPlus")!=null) new NoCheatPlusSupport(this);
-			if (Config.c_owners) cachedOwnerHandler = new CachedOwnerHandler(plugin);
-			if (Config.pre44spawn) new Pre44MobSpawnEvent();
-			
-			entityCacheHandler=new EntityCacheHandler();
+			if (Config.quests && pluginmanager.getPlugin("Quests") != null)
+				new QuestsSupport(this);
+			if (pluginmanager.getPlugin("LibsDisguise") != null)
+				new LibsDisguisesSupport();
+			if (Config.ncp && pluginmanager.getPlugin("NoCheatPlus") != null)
+				new NoCheatPlusSupport(this);
+			if (Config.c_owners)
+				cachedOwnerHandler = new CachedOwnerHandler(plugin);
+			if (Config.pre44spawn)
+				new Pre44MobSpawnEvent();
+
+			entityCacheHandler = new EntityCacheHandler();
 			new BackBagHelper();
 			new BossBars();
 			new PlaceholderRegistery();
-			
-	        new BukkitRunnable() {
+
+			new BukkitRunnable() {
 				@Override
 				public void run() {
 					Utils.mythicmobs.getRandomSpawningManager().reload();
@@ -151,13 +159,14 @@ JavaPlugin
 
 	@Override
 	public void onDisable() {
-		server_running=false;
-		if(entityCacheHandler!=null) entityCacheHandler.stop();
-		if (healthbarhandler!=null) {
+		server_running = false;
+		if (entityCacheHandler != null)
+			entityCacheHandler.stop();
+		if (healthbarhandler != null) {
 			Main.healthbarhandler.removeHealthbars();
 			Main.healthbarhandler.removeSpeechBubbles();
 		}
-		if (Main.cachedOwnerHandler!=null) {
+		if (Main.cachedOwnerHandler != null) {
 			CachedOwnerHandler.cleanUp();
 			CachedOwnerHandler.saveCachedOwners();
 		}

@@ -10,12 +10,8 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="extinguish",author="BerndiVader")
-public class ExtinguishMechanic
-extends
-SkillMechanic 
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "extinguish", author = "BerndiVader")
+public class ExtinguishMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	public ExtinguishMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -23,7 +19,7 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		Entity e=target.getBukkitEntity();
+		Entity e = target.getBukkitEntity();
 		e.setFireTicks(-1);
 		return true;
 	}

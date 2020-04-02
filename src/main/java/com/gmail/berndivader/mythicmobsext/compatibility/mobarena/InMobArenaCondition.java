@@ -7,12 +7,7 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class InMobArenaCondition 
-extends
-AbstractCustomCondition
-implements 
-ILocationCondition 
-{
+public class InMobArenaCondition extends AbstractCustomCondition implements ILocationCondition {
 	public InMobArenaCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 	}

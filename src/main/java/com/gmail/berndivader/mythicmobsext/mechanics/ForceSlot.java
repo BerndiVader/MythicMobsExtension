@@ -10,28 +10,21 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="forceslot",author="BerndiVader")
-public
-class 
-ForceSlot 
-extends 
-SkillMechanic 
-implements
-ITargetedEntitySkill
-{
+@ExternalAnnotation(name = "forceslot", author = "BerndiVader")
+public class ForceSlot extends SkillMechanic implements ITargetedEntitySkill {
 	int slot;
 
 	public ForceSlot(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		
-		this.slot=mlc.getInteger("slot",0);
+		this.ASYNC_SAFE = false;
+
+		this.slot = mlc.getInteger("slot", 0);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
-		if(abstract_target.isPlayer()) {
-			Player player=(Player)abstract_target.getBukkitEntity();
+		if (abstract_target.isPlayer()) {
+			Player player = (Player) abstract_target.getBukkitEntity();
 			player.getInventory().setHeldItemSlot(slot);
 		}
 		return false;

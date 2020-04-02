@@ -11,25 +11,21 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="navigation",author="BerndiVader")
-public class NavigationMechanic 
-extends 
-SkillMechanic 
-implements 
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "navigation", author = "BerndiVader")
+public class NavigationMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	String type;
 
 	public NavigationMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.type=mlc.getString("type","walk").toUpperCase();
+		this.ASYNC_SAFE = false;
+		this.type = mlc.getString("type", "walk").toUpperCase();
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if(target.isLiving()) {
-			LivingEntity e=(LivingEntity)target.getBukkitEntity();
-			Volatile.handler.setMNc(e,type);
+		if (target.isLiving()) {
+			LivingEntity e = (LivingEntity) target.getBukkitEntity();
+			Volatile.handler.setMNc(e, type);
 		}
 		return true;
 	}

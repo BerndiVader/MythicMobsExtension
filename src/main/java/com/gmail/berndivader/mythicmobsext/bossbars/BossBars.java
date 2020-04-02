@@ -20,102 +20,98 @@ import com.gmail.berndivader.mythicmobsext.bossbars.mechanics.RemoveBossBar;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 
-public 
-class 
-BossBars
-implements
-Listener
-{
-	static HashMap<UUID,List<BossBar>>bars;
-	
+public class BossBars implements Listener {
+	static HashMap<UUID, List<BossBar>> bars;
+
 	static {
-		bars=new HashMap<>();
+		bars = new HashMap<>();
 	}
 
 	public static boolean contains(UUID uuid) {
 		return bars.containsKey(uuid);
 	}
-	
+
 	public static boolean sizeReached(UUID uuid) {
-		return bars.get(uuid).size()>3;
+		return bars.get(uuid).size() > 3;
 	}
-	
-	public static void addBar(UUID uuid,BossBar bar) {
-		if(bars.containsKey(uuid)) {
+
+	public static void addBar(UUID uuid, BossBar bar) {
+		if (bars.containsKey(uuid)) {
 			bars.get(uuid).add(bar);
 		} else {
-			List<BossBar>playerbars=new ArrayList<>();
+			List<BossBar> playerbars = new ArrayList<>();
 			playerbars.add(bar);
-			bars.put(uuid,playerbars);
+			bars.put(uuid, playerbars);
 		}
 	}
-	
-	public static BossBar getBar(UUID uuid,String bar_name) {
-		Iterator<BossBar>bar_iter=bars.get(uuid).iterator();
-		while(bar_iter.hasNext()) {
-			BossBar bar=bar_iter.next();
-			if(bar.getTitle().equals(bar_name)) return bar;
+
+	public static BossBar getBar(UUID uuid, String bar_name) {
+		Iterator<BossBar> bar_iter = bars.get(uuid).iterator();
+		while (bar_iter.hasNext()) {
+			BossBar bar = bar_iter.next();
+			if (bar.getTitle().equals(bar_name))
+				return bar;
 		}
 		return null;
 	}
-	
-	public static void removeBar(Entity entity,String title) {
-		Iterator<BossBar>bar_iter=bars.get(entity.getUniqueId()).iterator();
-		while(bar_iter.hasNext()) {
-			BossBar bar=bar_iter.next();
-			if(bar.getTitle().equals(title)) {
+
+	public static void removeBar(Entity entity, String title) {
+		Iterator<BossBar> bar_iter = bars.get(entity.getUniqueId()).iterator();
+		while (bar_iter.hasNext()) {
+			BossBar bar = bar_iter.next();
+			if (bar.getTitle().equals(title)) {
 				bar.removeAll();
 				bar_iter.remove();
-				bar=null;
+				bar = null;
 			}
 		}
 	}
-	
+
 	public BossBars() {
-		Main.pluginmanager.registerEvents(this,Main.getPlugin());
+		Main.pluginmanager.registerEvents(this, Main.getPlugin());
 	}
-	
+
 	@EventHandler
 	public void removeBarsOnQuit(PlayerQuitEvent e) {
-		UUID uuid=e.getPlayer().getUniqueId();
-		if(contains(uuid)) {
-			Iterator<BossBar>bar_iter=bars.get(uuid).iterator();
-			while(bar_iter.hasNext()) {
-				BossBar bar=bar_iter.next();
+		UUID uuid = e.getPlayer().getUniqueId();
+		if (contains(uuid)) {
+			Iterator<BossBar> bar_iter = bars.get(uuid).iterator();
+			while (bar_iter.hasNext()) {
+				BossBar bar = bar_iter.next();
 				bar.removeAll();
 				bar_iter.remove();
-				bar=null;
+				bar = null;
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void loadMechanicsEvent(MythicMechanicLoadEvent e) {
-		switch(e.getMechanicName().toLowerCase()) {
+		switch (e.getMechanicName().toLowerCase()) {
 		case "createbossbar":
 		case "createbossbar_ext":
-			e.register(new CreateBossBar(e.getContainer().getConfigLine(),e.getConfig()));
+			e.register(new CreateBossBar(e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "removebossbar":
 		case "removebossbar_ext":
-			e.register(new RemoveBossBar(e.getContainer().getConfigLine(),e.getConfig()));
+			e.register(new RemoveBossBar(e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		case "progressbossbar":
 		case "progressbossbar_ext":
-			e.register(new ProgressBossBar(e.getContainer().getConfigLine(),e.getConfig()));
+			e.register(new ProgressBossBar(e.getContainer().getConfigLine(), e.getConfig()));
 			break;
 		}
 	}
-	
+
 	@EventHandler
 	public void loadConditionsEvent(MythicConditionLoadEvent e) {
-		switch(e.getConditionName().toLowerCase()) {
+		switch (e.getConditionName().toLowerCase()) {
 		case "progressbossbar":
 		case "progressbossbar_ext":
-			e.register(new com.gmail.berndivader.mythicmobsext.bossbars.conditions.ProgressBossBar(e.getConfig().getLine(),e.getConfig()));
+			e.register(new com.gmail.berndivader.mythicmobsext.bossbars.conditions.ProgressBossBar(
+					e.getConfig().getLine(), e.getConfig()));
 			break;
 		}
 	}
-	
-	
+
 }

@@ -7,6 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public @interface ExternalAnnotation {
 	public String name();
+
 	public String author();
 }
-

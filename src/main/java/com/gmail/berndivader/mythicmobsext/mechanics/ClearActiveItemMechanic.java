@@ -11,28 +11,21 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="clearactiveitem,resetshield",author="BerndiVader")
-public 
-class 
-ClearActiveItemMechanic
-extends 
-SkillMechanic
-implements
-ITargetedEntitySkill {
-	
+@ExternalAnnotation(name = "clearactiveitem,resetshield", author = "BerndiVader")
+public class ClearActiveItemMechanic extends SkillMechanic implements ITargetedEntitySkill {
+
 	public ClearActiveItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE=false;
+		ASYNC_SAFE = false;
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		if(entity.isPlayer()) {
-			NMSUtils.clearActiveItem((Player)entity.getBukkitEntity());
+		if (entity.isPlayer()) {
+			NMSUtils.clearActiveItem((Player) entity.getBukkitEntity());
 			return true;
 		}
 		return false;
 	}
-
 
 }

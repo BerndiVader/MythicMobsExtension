@@ -16,29 +16,29 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class RestoreCachedOwnerMechanic extends SkillMechanic 
-implements
-INoTargetSkill {
-	
+public class RestoreCachedOwnerMechanic extends SkillMechanic implements INoTargetSkill {
+
 	public RestoreCachedOwnerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 	}
 
-    @Override
-    public boolean cast(SkillMetadata data) {
-        if (data.getCaster() instanceof ActiveMob) {
-            ActiveMob am = (ActiveMob)data.getCaster();
-            UUID owner_uuid=CachedOwnerHandler.getMobOwner(am.getUniqueId());
-            if(owner_uuid!=null) {
-            	AbstractEntity target=BukkitAdapter.adapt(NMSUtils.getEntity(owner_uuid));
-                am.setOwner(owner_uuid);
-                if (target!=null&&target.isPlayer()&&data.getCaster().getEntity().getBukkitEntity() instanceof Wolf) {
-                    ((Wolf)data.getCaster().getEntity().getBukkitEntity()).setOwner((AnimalTamer)((Player)target.getBukkitEntity()));
-                    ((Wolf)data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
-                }
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean cast(SkillMetadata data) {
+		if (data.getCaster() instanceof ActiveMob) {
+			ActiveMob am = (ActiveMob) data.getCaster();
+			UUID owner_uuid = CachedOwnerHandler.getMobOwner(am.getUniqueId());
+			if (owner_uuid != null) {
+				AbstractEntity target = BukkitAdapter.adapt(NMSUtils.getEntity(owner_uuid));
+				am.setOwner(owner_uuid);
+				if (target != null && target.isPlayer()
+						&& data.getCaster().getEntity().getBukkitEntity() instanceof Wolf) {
+					((Wolf) data.getCaster().getEntity().getBukkitEntity())
+							.setOwner((AnimalTamer) ((Player) target.getBukkitEntity()));
+					((Wolf) data.getCaster().getEntity().getBukkitEntity()).setTamed(true);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 }

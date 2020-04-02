@@ -26,64 +26,65 @@ import com.gmail.berndivader.mythicmobsext.utils.Vector;
 /**
  * Represents a node for interpolation.
  *
- * <p>The {@link #tension}, {@link #bias} and {@link #continuity} fields
- * are parameters for the Kochanek-Bartels interpolation algorithm.</p>
+ * <p>
+ * The {@link #tension}, {@link #bias} and {@link #continuity} fields are
+ * parameters for the Kochanek-Bartels interpolation algorithm.
+ * </p>
  */
 public class Node {
 
-    private Vector position;
+	private Vector position;
 
-    private double tension;
-    private double bias;
-    private double continuity;
+	private double tension;
+	private double bias;
+	private double continuity;
 
-    public Node() {
-        this(new Vector(0, 0, 0));
-    }
+	public Node() {
+		this(new Vector(0, 0, 0));
+	}
 
-    public Node(Node other) {
-        this.position = other.position;
+	public Node(Node other) {
+		this.position = other.position;
 
-        this.tension = other.tension;
-        this.bias = other.bias;
-        this.continuity = other.continuity;
-    }
+		this.tension = other.tension;
+		this.bias = other.bias;
+		this.continuity = other.continuity;
+	}
 
-    public Node(Vector position) {
-        this.position = position;
-    }
+	public Node(Vector position) {
+		this.position = position;
+	}
 
+	public Vector getPosition() {
+		return position;
+	}
 
-    public Vector getPosition() {
-        return position;
-    }
+	public void setPosition(Vector position) {
+		this.position = position;
+	}
 
-    public void setPosition(Vector position) {
-        this.position = position;
-    }
+	public double getTension() {
+		return tension;
+	}
 
-    public double getTension() {
-        return tension;
-    }
+	public void setTension(double tension) {
+		this.tension = tension;
+	}
 
-    public void setTension(double tension) {
-        this.tension = tension;
-    }
+	public double getBias() {
+		return bias;
+	}
 
-    public double getBias() {
-        return bias;
-    }
+	public void setBias(double bias) {
+		this.bias = bias;
+	}
 
-    public void setBias(double bias) {
-        this.bias = bias;
-    }
+	public double getContinuity() {
+		return continuity;
+	}
 
-    public double getContinuity() {
-        return continuity;
-    }
-
-    public void setContinuity(double continuity) {
-        this.continuity = continuity;
-    }
+	public void setContinuity(double continuity) {
+		this.continuity = continuity;
+	}
 
 }

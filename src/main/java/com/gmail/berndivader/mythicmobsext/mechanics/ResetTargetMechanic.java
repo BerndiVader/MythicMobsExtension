@@ -13,30 +13,22 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.*;
 
-@ExternalAnnotation(name="resettarget,settarget_ext",author="BerndiVader")
-public 
-class 
-ResetTargetMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill,
-INoTargetSkill 
-{
-	boolean event,trigger,set;
+@ExternalAnnotation(name = "resettarget,settarget_ext", author = "BerndiVader")
+public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
+	boolean event, trigger, set;
 	TargetReason reason;
-	
+
 	public ResetTargetMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		
-		set=line.charAt(0)=='s';
-		event=mlc.getBoolean("event",false);
-		trigger=mlc.getBoolean("trigger",false);
+
+		set = line.charAt(0) == 's';
+		event = mlc.getBoolean("event", false);
+		trigger = mlc.getBoolean("trigger", false);
 		try {
-			reason=TargetReason.valueOf(mlc.getString("reason","custom").toUpperCase());
+			reason = TargetReason.valueOf(mlc.getString("reason", "custom").toUpperCase());
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			reason=TargetReason.CUSTOM;
+			reason = TargetReason.CUSTOM;
 		}
 	}
 
@@ -47,15 +39,17 @@ INoTargetSkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if(target.isLiving()) {
-			if(data.getCaster().getEntity().isCreature()) {
-				Creature creature=(Creature)data.getCaster().getEntity().getBukkitEntity();
-				creature.setTarget(set?(LivingEntity)target.getBukkitEntity():null);
+		if (target.isLiving()) {
+			if (data.getCaster().getEntity().isCreature()) {
+				Creature creature = (Creature) data.getCaster().getEntity().getBukkitEntity();
+				creature.setTarget(set ? (LivingEntity) target.getBukkitEntity() : null);
 			} else {
-				NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),set?target.getBukkitEntity():null,reason,event);
+				NMSUtils.setGoalTarget(data.getCaster().getEntity().getBukkitEntity(),
+						set ? target.getBukkitEntity() : null, reason, event);
 			}
-			if(trigger&&Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
-				new TriggeredSkill(SkillTrigger.TARGETCHANGE,Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()),target,new Pair[0]);
+			if (trigger && Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
+				new TriggeredSkill(SkillTrigger.TARGETCHANGE,
+						Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()), target, new Pair[0]);
 			}
 			return true;
 		}

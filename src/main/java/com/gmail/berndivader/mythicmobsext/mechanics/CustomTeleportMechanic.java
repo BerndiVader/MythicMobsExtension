@@ -40,27 +40,23 @@ import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 import io.lumine.xikage.mythicmobs.skills.targeters.OriginTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
 
-@ExternalAnnotation(name="customteleport",author="BerndiVader")
-public class CustomTeleportMechanic 
-extends 
-SkillMechanic 
-implements 
-ITargetedEntitySkill, 
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "customteleport", author = "BerndiVader")
+public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 	PlaceholderString stargeter;
-	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal,stricts[],excludes[];
-	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner,ignorePitch;
-	double delay, noise, maxTargets, frontOffset,sideOffset,yOffset;
+	String FinalSignal, inBetweenLastSignal, inBetweenNextSignal, stricts[], excludes[];
+	boolean inFrontOf, isLocations, returnToStart, sortTargets, targetInsight, ignoreOwner, ignorePitch;
+	double delay, noise, maxTargets, frontOffset, sideOffset, yOffset;
 
 	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
-		super(line,mlc);
-		this.ASYNC_SAFE=false;
+		super(line, mlc);
+		this.ASYNC_SAFE = false;
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
-		this.delay = mlc.getDouble(new String[] { "teleportdelay","tdelay", "td" }, 0D);
-		this.frontOffset=mlc.getDouble(new String[] {"frontoffest","fo"},0D);
-		this.sideOffset=mlc.getDouble(new String[] {"sideoffset","so"},0D);
-		this.yOffset=mlc.getDouble(new String[] {"yoffset","yo"},0d);
-		if ((this.maxTargets=mlc.getDouble(new String[] { "maxtargets", "mt" },0D))<0) this.maxTargets=0D;
+		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
+		this.frontOffset = mlc.getDouble(new String[] { "frontoffest", "fo" }, 0D);
+		this.sideOffset = mlc.getDouble(new String[] { "sideoffset", "so" }, 0D);
+		this.yOffset = mlc.getDouble(new String[] { "yoffset", "yo" }, 0d);
+		if ((this.maxTargets = mlc.getDouble(new String[] { "maxtargets", "mt" }, 0D)) < 0)
+			this.maxTargets = 0D;
 		this.inFrontOf = mlc.getBoolean(new String[] { "infrontof", "infront", "front", "f" }, false);
 		this.returnToStart = mlc.getBoolean(new String[] { "returntostart", "return", "rs" }, false);
 		this.targetInsight = mlc.getBoolean(new String[] { "targetinsight", "insight", "is" }, false);
@@ -69,8 +65,8 @@ ITargetedLocationSkill {
 		this.inBetweenLastSignal = mlc.getString(new String[] { "betweenlastentitysignal", "bls" }, null);
 		this.inBetweenNextSignal = mlc.getString(new String[] { "betweennextentitysignal", "bns" }, null);
 		this.FinalSignal = mlc.getString(new String[] { "finalsignal", "final", "fs" }, null);
-		this.excludes=mlc.getString("exclude","").split(",");
-		this.stricts=mlc.getString("stricts","").split(",");
+		this.excludes = mlc.getString("exclude", "").split(",");
+		this.stricts = mlc.getString("stricts", "").split(",");
 
 		String s = mlc.getString(new String[] { "destination", "dest", "d", "location", "loc", "l" }, "@self");
 		s = s.replaceAll("<&lc>", "{");
@@ -80,9 +76,10 @@ ITargetedLocationSkill {
 		s = s.replaceAll("<&cm>", ",");
 		s = s.replaceAll("<&lb>", "[");
 		s = s.replaceAll("<&rb>", "]");
-		String parse=s=s.substring(1,s.length()-1);
-		if (!parse.startsWith("@")) parse="@"+parse;
-		this.stargeter=new PlaceholderString(parse);
+		String parse = s = s.substring(1, s.length() - 1);
+		if (!parse.startsWith("@"))
+			parse = "@" + parse;
+		this.stargeter = new PlaceholderString(parse);
 	}
 
 	@Override
@@ -100,16 +97,17 @@ ITargetedLocationSkill {
 		AbstractEntity entityTarget;
 		AbstractLocation startLocation;
 		String targeter = this.stargeter.get(data);
-		if (target.getClass().equals(BukkitEntity.class)||target.getClass().equals(BukkitPlayer.class)) {
-			targeter=this.stargeter.get(data,(AbstractEntity)target);
+		if (target.getClass().equals(BukkitEntity.class) || target.getClass().equals(BukkitPlayer.class)) {
+			targeter = this.stargeter.get(data, (AbstractEntity) target);
 			entityTarget = (AbstractEntity) target;
 			startLocation = ((AbstractEntity) target).getLocation();
 		} else {
 			Bukkit.getLogger().warning("A location is not a valid source for advanced teleport mechanic!");
 			return false;
 		}
-		HashSet<Object>osources=(HashSet<Object>)getDestination(targeter,data);
-		if (osources==null||!osources.iterator().hasNext()) return false;
+		HashSet<Object> osources = (HashSet<Object>) getDestination(targeter, data);
+		if (osources == null || !osources.iterator().hasNext())
+			return false;
 		this.isLocations = osources.iterator().next() instanceof AbstractLocation;
 		if (this.maxTargets > 0 && osources.size() > this.maxTargets) {
 			HashSet<Object> lsrc = new HashSet<>();
@@ -125,14 +123,15 @@ ITargetedLocationSkill {
 				c++;
 			}
 		}
-		if(!this.isLocations) {
+		if (!this.isLocations) {
 			if (this.ignoreOwner && data.getCaster() instanceof ActiveMob
 					&& ((ActiveMob) data.getCaster()).getOwner().isPresent()) {
 				World w = data.getCaster().getEntity().getBukkitEntity().getWorld();
-				osources.remove(BukkitAdapter.adapt(NMSUtils.getEntity(w,((ActiveMob) data.getCaster()).getOwner().get())));
+				osources.remove(
+						BukkitAdapter.adapt(NMSUtils.getEntity(w, ((ActiveMob) data.getCaster()).getOwner().get())));
 			}
 		}
-		
+
 		new BukkitRunnable() {
 			AbstractEntity sourceEntity = entityTarget;
 			AbstractEntity lastEntity;
@@ -141,15 +140,15 @@ ITargetedLocationSkill {
 			boolean is = targetInsight;
 			Iterator<?> it = osources.iterator();
 			double n = noise;
-			double fo=CustomTeleportMechanic.this.frontOffset;
-			double so=CustomTeleportMechanic.this.sideOffset;
-			double yo=CustomTeleportMechanic.this.yOffset;
-			boolean ip=CustomTeleportMechanic.this.ignorePitch;
+			double fo = CustomTeleportMechanic.this.frontOffset;
+			double so = CustomTeleportMechanic.this.sideOffset;
+			double yo = CustomTeleportMechanic.this.yOffset;
+			boolean ip = CustomTeleportMechanic.this.ignorePitch;
 			String bls = inBetweenLastSignal;
 			String bns = inBetweenNextSignal;
 			String fs = FinalSignal;
 			AbstractLocation start = startLocation;
-			
+
 			@Override
 			public void run() {
 				block: {
@@ -171,17 +170,19 @@ ITargetedLocationSkill {
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation((AbstractLocation) target, (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
-						Location ll=BukkitAdapter.adapt((AbstractLocation)target);
-						if (this.bns!=null) ((ActiveMob) data.getCaster()).signalMob(null,this.bns);
-						if(ip) ll.setPitch(0);
-						if(fo!=0.0d||so!=0.0d) {
-			    			Vector foV=MathUtils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
-			    			Vector soV=MathUtils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
-			    			ll.add(foV);
-			    			ll.add(soV);
+						Location ll = BukkitAdapter.adapt((AbstractLocation) target);
+						if (this.bns != null)
+							((ActiveMob) data.getCaster()).signalMob(null, this.bns);
+						if (ip)
+							ll.setPitch(0);
+						if (fo != 0.0d || so != 0.0d) {
+							Vector foV = MathUtils.getFrontBackOffsetVector(ll.getDirection(), this.fo);
+							Vector soV = MathUtils.getSideOffsetVectorFixed(ll.getYaw(), this.so, false);
+							ll.add(foV);
+							ll.add(soV);
 						}
-		    			target=BukkitAdapter.adapt(ll);
-						this.sourceEntity.teleport(((AbstractLocation)target).add(0,yo,0));
+						target = BukkitAdapter.adapt(ll);
+						this.sourceEntity.teleport(((AbstractLocation) target).add(0, yo, 0));
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(null, this.bls);
 					} else {
@@ -197,17 +198,19 @@ ITargetedLocationSkill {
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
 									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
-						if (this.bns != null) ((ActiveMob) data.getCaster()).signalMob(t, this.bns);
-						Location ll=BukkitAdapter.adapt((AbstractLocation)target);
-						if(ip)ll.setPitch(0);
-						if(fo!=0.0d||so!=0.0d) {
-			    			Vector foV=MathUtils.getFrontBackOffsetVector(ll.getDirection(),this.fo);
-			    			Vector soV=MathUtils.getSideOffsetVectorFixed(ll.getYaw(),this.so,false);
-			    			ll.add(foV);
-			    			ll.add(soV);
+						if (this.bns != null)
+							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
+						Location ll = BukkitAdapter.adapt((AbstractLocation) target);
+						if (ip)
+							ll.setPitch(0);
+						if (fo != 0.0d || so != 0.0d) {
+							Vector foV = MathUtils.getFrontBackOffsetVector(ll.getDirection(), this.fo);
+							Vector soV = MathUtils.getSideOffsetVectorFixed(ll.getYaw(), this.so, false);
+							ll.add(foV);
+							ll.add(soV);
 						}
-		    			target=BukkitAdapter.adapt(ll);
-						this.sourceEntity.teleport(((AbstractLocation)target).add(0,yo,0));
+						target = BukkitAdapter.adapt(ll);
+						this.sourceEntity.teleport(((AbstractLocation) target).add(0, yo, 0));
 						if (this.bls != null)
 							((ActiveMob) data.getCaster()).signalMob(this.lastEntity, this.bls);
 						this.lastEntity = t;
@@ -218,18 +221,20 @@ ITargetedLocationSkill {
 		return true;
 	}
 
-	protected static HashSet<?>getDestination(String target, SkillMetadata skilldata) {
-		SkillMetadata data=new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),skilldata.getOrigin(), null, null, 1.0f);
-		Optional<SkillTargeter>maybeTargeter;
-		maybeTargeter=Optional.of(Utils.parseSkillTargeter(target));
+	protected static HashSet<?> getDestination(String target, SkillMetadata skilldata) {
+		SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),
+				skilldata.getOrigin(), null, null, 1.0f);
+		Optional<SkillTargeter> maybeTargeter;
+		maybeTargeter = Optional.of(Utils.parseSkillTargeter(target));
 		if (maybeTargeter.isPresent()) {
 			SkillTargeter targeter = maybeTargeter.get();
-            if (targeter instanceof CustomTargeter) {
-                String s1=target.substring(1);
-                MythicLineConfig mlc=new MythicLineConfig(s1);
-                String s2=s1.contains("{")?s1.substring(0,s1.indexOf("{")):s1;
-            	if ((targeter=CustomTargeters.getCustomTargeter(s2,mlc))==null) targeter=new TriggerTargeter(mlc);
-            }
+			if (targeter instanceof CustomTargeter) {
+				String s1 = target.substring(1);
+				MythicLineConfig mlc = new MythicLineConfig(s1);
+				String s2 = s1.contains("{") ? s1.substring(0, s1.indexOf("{")) : s1;
+				if ((targeter = CustomTargeters.getCustomTargeter(s2, mlc)) == null)
+					targeter = new TriggerTargeter(mlc);
+			}
 			if (targeter instanceof IEntitySelector) {
 				data.setEntityTargets(((IEntitySelector) targeter).getEntities(data));
 				((IEntitySelector) targeter).filter(data, false);

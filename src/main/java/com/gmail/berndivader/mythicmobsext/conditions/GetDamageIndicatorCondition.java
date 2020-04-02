@@ -10,30 +10,25 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="getindicator,damageindicator,indicator",author="BerndiVader")
-public class GetDamageIndicatorCondition
-extends 
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "getindicator,damageindicator,indicator", author = "BerndiVader")
+public class GetDamageIndicatorCondition extends AbstractCustomCondition implements IEntityCondition {
 	private RangedDouble rd;
 
 	public GetDamageIndicatorCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		rd(mlc.getString("value","<1.1"));
+		rd(mlc.getString("value", "<1.1"));
 	}
 
 	@Override
 	public boolean check(AbstractEntity e) {
 		if (e.isPlayer()) {
-			return this.rd.equals((double)Volatile.handler.getIndicatorPercentage((Player)e.getBukkitEntity()));
+			return this.rd.equals((double) Volatile.handler.getIndicatorPercentage((Player) e.getBukkitEntity()));
 		}
 		return true;
 	}
-	
-	private void rd(String s1) {
-		this.rd=new RangedDouble(s1);
-	}
 
+	private void rd(String s1) {
+		this.rd = new RangedDouble(s1);
+	}
 
 }

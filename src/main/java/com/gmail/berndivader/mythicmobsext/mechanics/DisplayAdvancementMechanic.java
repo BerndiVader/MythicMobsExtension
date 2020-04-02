@@ -14,39 +14,31 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
-@ExternalAnnotation(name="sendtoast",author="BerndiVader")
-public 
-class 
-DisplayAdvancementMechanic 
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill
-{
+@ExternalAnnotation(name = "sendtoast", author = "BerndiVader")
+public class DisplayAdvancementMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	Material material;
 	PlaceholderString message;
 	String frame;
-	
+
 	public DisplayAdvancementMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		material=Material.STONE;
+		material = Material.STONE;
 		try {
-			material=Material.valueOf(mlc.getString(new String[] {"icon","material"},"stone").toUpperCase());
+			material = Material.valueOf(mlc.getString(new String[] { "icon", "material" }, "stone").toUpperCase());
 		} catch (Exception e) {
 			Main.logger.warning("Wrong material type. Set to stone");
 		}
-		message=mlc.getPlaceholderString("message","Title");
-		frame=mlc.getString("frame","GOAL").toUpperCase();
+		message = mlc.getPlaceholderString("message", "Title");
+		frame = mlc.getString("frame", "GOAL").toUpperCase();
 	}
-	
+
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity a_target) {
-		if(!a_target.isPlayer()) return false;
-		String msg=this.message.get(data, a_target);
-		Volatile.handler.sendPlayerAdvancement((Player)a_target.getBukkitEntity(),material,msg,new String(),frame);
+		if (!a_target.isPlayer())
+			return false;
+		String msg = this.message.get(data, a_target);
+		Volatile.handler.sendPlayerAdvancement((Player) a_target.getBukkitEntity(), material, msg, new String(), frame);
 		return true;
 	}
-	
-	
 
 }

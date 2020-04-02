@@ -8,13 +8,11 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public class UpdateHealthbar extends SkillMechanic 
-implements
-ITargetedEntitySkill {
-	
+public class UpdateHealthbar extends SkillMechanic implements ITargetedEntitySkill {
+
 	public UpdateHealthbar(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE=false;
+		ASYNC_SAFE = false;
 	}
 
 	@Override
@@ -22,7 +20,7 @@ ITargetedEntitySkill {
 		UUID uuid = target.getUniqueId();
 		if (HealthbarHandler.healthbars.containsKey(uuid)) {
 			Healthbar h = HealthbarHandler.healthbars.get(uuid);
-			if (h!=null) {
+			if (h != null) {
 				h.updateHealth();
 				return true;
 			}

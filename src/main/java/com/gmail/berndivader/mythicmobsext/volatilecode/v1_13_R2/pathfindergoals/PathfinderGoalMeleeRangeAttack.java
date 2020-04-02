@@ -4,20 +4,16 @@ import net.minecraft.server.v1_13_R2.EntityCreature;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
 
-public 
-class
-PathfinderGoalMeleeRangeAttack
-extends 
-PathfinderGoalMeleeAttack {
+public class PathfinderGoalMeleeRangeAttack extends PathfinderGoalMeleeAttack {
 	protected float range;
 
 	public PathfinderGoalMeleeRangeAttack(EntityCreature entityCreature, double d, boolean b, float range) {
 		super(entityCreature, d, b);
-		this.range=range;
+		this.range = range;
 	}
 
 	@Override
 	protected double a(EntityLiving entity) {
-	    return (double)(this.a.width * this.range * this.a.width * this.range + entity.width);
+		return (double) (this.a.width * this.range * this.a.width * this.range + entity.width);
 	}
 }

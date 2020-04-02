@@ -39,13 +39,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="blockprojectile",author="BerndiVader")
-public class BlockProjectile 
-extends 
-CustomProjectile 
-implements 
-ITargetedEntitySkill, 
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "blockprojectile", author = "BerndiVader")
+public class BlockProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	protected String pEntityName;
 	protected float pEntitySpin;
@@ -58,7 +53,7 @@ ITargetedLocationSkill {
 		this.pEntityName = mlc.getString(new String[] { "pobject", "projectileblock", "pblock" }, "DIRT").toUpperCase();
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
-		this.bite=(byte)mlc.getInteger("byte",0);
+		this.bite = (byte) mlc.getInteger("byte", 0);
 	}
 
 	@Override
@@ -134,7 +129,8 @@ ITargetedLocationSkill {
 					this.gravity = this.gravity > 0.0f ? this.gravity / BlockProjectile.this.ticksPerSecond : 0.0f;
 				} else {
 					this.gravity = BlockProjectile.this.projectileGravity > 0.0f
-							? BlockProjectile.this.projectileGravity / BlockProjectile.this.ticksPerSecond : 0.0f;
+							? BlockProjectile.this.projectileGravity / BlockProjectile.this.ticksPerSecond
+							: 0.0f;
 				}
 				velocity = 0.0;
 			} else {
@@ -145,18 +141,22 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + BlockProjectile.this.startYOffset);
 				}
 				if (BlockProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),BlockProjectile.this.startForwardOffset);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getFrontBackOffsetVector(
+							BukkitAdapter.adapt(this.startLocation).getDirection(),
+							BlockProjectile.this.startForwardOffset);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 				if (BlockProjectile.this.startSideOffset != 0.0f) {
-					Vector v=MathUtils.getSideOffsetVector(this.startLocation.getYaw(), BlockProjectile.this.startSideOffset,false);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getSideOffsetVector(this.startLocation.getYaw(),
+							BlockProjectile.this.startSideOffset, false);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 			}
-			this.currentLocation=this.startLocation.clone();
-			if (this.currentLocation == null) return;
+			this.currentLocation = this.startLocation.clone();
+			if (this.currentLocation == null)
+				return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -206,7 +206,7 @@ ITargetedLocationSkill {
 			}
 			this.pLocation.add(this.pLocation.getDirection().clone().multiply(this.pFOff));
 			this.pBlock = this.pLocation.getWorld().spawnFallingBlock(this.pLocation.add(0.0d, this.pVOff, 0.0d),
-					Material.valueOf(customItemName),(byte)BlockProjectile.this.bite);
+					Material.valueOf(customItemName), (byte) BlockProjectile.this.bite);
 			EntityCacheHandler.add(this.pBlock);
 			this.pBlock.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
@@ -216,7 +216,7 @@ ITargetedLocationSkill {
 			this.pBlock.setTicksLived(Integer.MAX_VALUE);
 			this.pBlock.setInvulnerable(true);
 			this.pBlock.setGravity(false);
-			Volatile.handler.changeHitBox((Entity)this.pBlock,0,0,0);
+			Volatile.handler.changeHitBox((Entity) this.pBlock, 0, 0, 0);
 
 			this.taskId = TaskManager.get().scheduleTask(this, 0, BlockProjectile.this.tickInterval);
 			if (BlockProjectile.this.hitPlayers || BlockProjectile.this.hitNonPlayers) {
@@ -227,7 +227,8 @@ ITargetedLocationSkill {
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())) {
 							return true;
 						}
-						if (e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) return true;
+						if (e.getBukkitEntity().hasMetadata(Utils.noTargetVar))
+							return true;
 						if (!BlockProjectile.this.hitPlayers && e.isPlayer()) {
 							return true;
 						}

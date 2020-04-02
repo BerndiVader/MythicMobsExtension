@@ -17,43 +17,41 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="playergoggle,playergoggleat",author="BerndiVader")
-public class PlayerGoggleMechanic 
-extends 
-SkillMechanic 
-implements
-ITargetedEntitySkill {
-	public static String str="mmGoggle";
+@ExternalAnnotation(name = "playergoggle,playergoggleat", author = "BerndiVader")
+public class PlayerGoggleMechanic extends SkillMechanic implements ITargetedEntitySkill {
+	public static String str = "mmGoggle";
 	private long dur;
-	private Handler vh=Volatile.handler;
+	private Handler vh = Volatile.handler;
 
 	public PlayerGoggleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.dur=(long)mlc.getInteger(new String[] { "duration", "dur" }, 120);
+		this.dur = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()||target.getBukkitEntity().hasMetadata(str)) target.getBukkitEntity().removeMetadata(str,Main.getPlugin());
+		if (!target.isPlayer() || target.getBukkitEntity().hasMetadata(str))
+			target.getBukkitEntity().removeMetadata(str, Main.getPlugin());
 		target.getBukkitEntity().setMetadata(str, new FixedMetadataValue(Main.getPlugin(), true));
-		final Player p=(Player)target.getBukkitEntity();
-		final AbstractEntity caster=data.getCaster().getEntity();
-		final long d=this.dur;
+		final Player p = (Player) target.getBukkitEntity();
+		final AbstractEntity caster = data.getCaster().getEntity();
+		final long d = this.dur;
 		new BukkitRunnable() {
-			long count=0;
+			long count = 0;
+
 			@Override
 			public void run() {
-				if (p==null || p.isDead() || count>d || !p.hasMetadata(str)) {
+				if (p == null || p.isDead() || count > d || !p.hasMetadata(str)) {
 					p.removeMetadata(str, Main.getPlugin());
 					this.cancel();
 				} else {
-					Vec2D v=MathUtils.lookAtVec(p.getEyeLocation(),
-							caster.getBukkitEntity().getLocation().add(0,caster.getEyeHeight(), 0));
-					PlayerGoggleMechanic.this.vh.playerConnectionLookAt(p,(float)v.getX(),(float)v.getY());
+					Vec2D v = MathUtils.lookAtVec(p.getEyeLocation(),
+							caster.getBukkitEntity().getLocation().add(0, caster.getEyeHeight(), 0));
+					PlayerGoggleMechanic.this.vh.playerConnectionLookAt(p, (float) v.getX(), (float) v.getY());
 				}
 				count++;
 			}
-		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L,1L);
+		}.runTaskTimerAsynchronously(Main.getPlugin(), 1L, 1L);
 		return true;
 	}
 

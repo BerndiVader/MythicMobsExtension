@@ -7,16 +7,13 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-public class WorldGuardDenySpawnFlagCondition 
-extends 
-AbstractCustomCondition 
-implements 
-ILocationCondition {
+public class WorldGuardDenySpawnFlagCondition extends AbstractCustomCondition implements ILocationCondition {
 	private String entities;
 
 	public WorldGuardDenySpawnFlagCondition(String line, MythicLineConfig mlc) {
-		super(line,mlc);
-		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie").toUpperCase();
+		super(line, mlc);
+		this.entities = mlc.getString(new String[] { "entitytypes", "entitytype", "types", "type", "t" }, "zombie")
+				.toUpperCase();
 	}
 
 	@Override

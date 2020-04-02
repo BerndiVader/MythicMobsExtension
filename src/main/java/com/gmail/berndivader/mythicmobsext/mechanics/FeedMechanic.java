@@ -10,25 +10,22 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="mmefeed",author="BerndiVader")
-public class FeedMechanic 
-extends 
-SkillMechanic 
-implements 
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "mmefeed", author = "BerndiVader")
+public class FeedMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private int amount;
 
 	public FeedMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		this.amount=mlc.getInteger(new String[] { "amount", "a" },1);
+		this.ASYNC_SAFE = false;
+		this.amount = mlc.getInteger(new String[] { "amount", "a" }, 1);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if (!target.isPlayer()) return false;
-		Player p=(Player)target.getBukkitEntity();
-		p.setFoodLevel(Integer.min(p.getFoodLevel()+amount,20));
+		if (!target.isPlayer())
+			return false;
+		Player p = (Player) target.getBukkitEntity();
+		p.setFoodLevel(Integer.min(p.getFoodLevel() + amount, 20));
 		return true;
 	}
 

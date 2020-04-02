@@ -9,23 +9,19 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="fakedeath",author="BerndiVader")
-public class FakeEntityDeathMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "fakedeath", author = "BerndiVader")
+public class FakeEntityDeathMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private long d;
 
 	public FakeEntityDeathMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.d=(long)mlc.getInteger(new String[] { "duration", "dur" }, 60);
+		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 60);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isLiving()) {
-			Volatile.handler.fakeEntityDeath(target.getBukkitEntity(),d);
+			Volatile.handler.fakeEntityDeath(target.getBukkitEntity(), d);
 		}
 		return false;
 	}

@@ -7,22 +7,18 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationComparisonCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="vdistance",author="BerndiVader")
-public class VerticalDistanceCondition
-extends
-AbstractCustomCondition
-implements
-ILocationComparisonCondition {
+@ExternalAnnotation(name = "vdistance", author = "BerndiVader")
+public class VerticalDistanceCondition extends AbstractCustomCondition implements ILocationComparisonCondition {
 	private RangedDouble rd;
 
 	public VerticalDistanceCondition(String line, MythicLineConfig mlc) {
-		super(line,mlc);
-		String d=mlc.getString(new String[] { "distance", "d" }, "1");
-		this.rd=new RangedDouble(d);
+		super(line, mlc);
+		String d = mlc.getString(new String[] { "distance", "d" }, "1");
+		this.rd = new RangedDouble(d);
 	}
 
 	@Override
 	public boolean check(AbstractLocation caster, AbstractLocation target) {
-		return rd.equals((double)target.getBlockY()-caster.getBlockY());
+		return rd.equals((double) target.getBlockY() - caster.getBlockY());
 	}
 }

@@ -18,46 +18,40 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
-@ExternalAnnotation(name="infect",author="BerndiVader")
-public 
-class 
-InfectWithMythic 
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "infect", author = "BerndiVader")
+public class InfectWithMythic extends SkillMechanic implements ITargetedEntitySkill {
 
 	private MythicMob mob_type;
 	private int level;
 
 	public InfectWithMythic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		
-		mob_type=Utils.mobmanager.getMythicMob(mlc.getString("mobtype",""));
-		level=mlc.getInteger("level",1);
+
+		mob_type = Utils.mobmanager.getMythicMob(mlc.getString("mobtype", ""));
+		level = mlc.getInteger("level", 1);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if(!target.isPlayer()) {
-			ActiveMob am=infectEntity(target.getBukkitEntity(),data,mob_type,this.level);
-			return am!=null;
+		if (!target.isPlayer()) {
+			ActiveMob am = infectEntity(target.getBukkitEntity(), data, mob_type, this.level);
+			return am != null;
 		}
 		return false;
 	}
-	
-	
-	static ActiveMob infectEntity(Entity entity,SkillMetadata data,MythicMob mob_type,int level) {
-		ActiveMob am=new ActiveMob(entity.getUniqueId(),BukkitAdapter.adapt(entity),mob_type,level);
-		if(am!=null) {
-	        if (mob_type.hasFaction()) {
-	            am.setFaction(mob_type.getFaction());
-	            am.getEntity().getBukkitEntity().setMetadata("Faction",new FixedMetadataValue(Utils.mythicmobs,mob_type.getFaction()));
-	        }
-	    	Utils.mobmanager.registerActiveMob(am);
-			new TriggeredSkill(SkillTrigger.SPAWN,am,data.getCaster().getEntity(),new Pair[0]);
+
+	static ActiveMob infectEntity(Entity entity, SkillMetadata data, MythicMob mob_type, int level) {
+		ActiveMob am = new ActiveMob(entity.getUniqueId(), BukkitAdapter.adapt(entity), mob_type, level);
+		if (am != null) {
+			if (mob_type.hasFaction()) {
+				am.setFaction(mob_type.getFaction());
+				am.getEntity().getBukkitEntity().setMetadata("Faction",
+						new FixedMetadataValue(Utils.mythicmobs, mob_type.getFaction()));
+			}
+			Utils.mobmanager.registerActiveMob(am);
+			new TriggeredSkill(SkillTrigger.SPAWN, am, data.getCaster().getEntity(), new Pair[0]);
 		}
-	    return am;
+		return am;
 	}
-	
+
 }

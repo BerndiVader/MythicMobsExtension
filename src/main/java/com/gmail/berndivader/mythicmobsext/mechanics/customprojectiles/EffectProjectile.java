@@ -35,13 +35,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="mythiceffectprojectile",author="BerndiVader")
-public class EffectProjectile
-extends 
-CustomProjectile
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "mythiceffectprojectile", author = "BerndiVader")
+public class EffectProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected Optional<Skill> onBounceSkill = Optional.empty();
 	protected String onBounceSkillName;
 
@@ -116,7 +111,8 @@ ITargetedLocationSkill {
 					this.gravity = this.gravity > 0.0f ? this.gravity / EffectProjectile.this.ticksPerSecond : 0.0f;
 				} else {
 					this.gravity = EffectProjectile.this.projectileGravity > 0.0f
-							? EffectProjectile.this.projectileGravity / EffectProjectile.this.ticksPerSecond : 0.0f;
+							? EffectProjectile.this.projectileGravity / EffectProjectile.this.ticksPerSecond
+							: 0.0f;
 				}
 				velocity = 0.0;
 			} else {
@@ -127,13 +123,16 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + EffectProjectile.this.startYOffset);
 				}
 				if (EffectProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),EffectProjectile.this.startForwardOffset);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getFrontBackOffsetVector(
+							BukkitAdapter.adapt(this.startLocation).getDirection(),
+							EffectProjectile.this.startForwardOffset);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 				if (EffectProjectile.this.startSideOffset != 0.0f) {
-					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), EffectProjectile.this.startSideOffset,false);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(),
+							EffectProjectile.this.startSideOffset, false);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 			}
@@ -330,7 +329,7 @@ ITargetedLocationSkill {
 				this.stop();
 				return;
 			}
-			Location cl=BukkitAdapter.adapt(this.currentLocation);
+			Location cl = BukkitAdapter.adapt(this.currentLocation);
 			if (this.inRange != null) {
 				HitBox hitBox = new HitBox(cl, EffectProjectile.this.hitRadius,
 						EffectProjectile.this.verticalHitRadius);

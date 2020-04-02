@@ -16,44 +16,38 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="jumpto",author="BerndiVader")
-public 
-class 
-JumpCasterExtMechanic 
-extends
-SkillMechanic 
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill
-{
-	
-	double height,gravity,speed;
-	boolean use_speed,use_gravity;
-	
+@ExternalAnnotation(name = "jumpto", author = "BerndiVader")
+public class JumpCasterExtMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
+
+	double height, gravity, speed;
+	boolean use_speed, use_gravity;
+
 	public JumpCasterExtMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
-		
-		height=mlc.getDouble("height",2d);
-		use_gravity=(gravity=mlc.getDouble("gravity",-1337))!=-1337;
-		use_speed=(speed=mlc.getDouble("speed",-1337))!=-1337;
-		
+		this.ASYNC_SAFE = false;
+
+		height = mlc.getDouble("height", 2d);
+		use_gravity = (gravity = mlc.getDouble("gravity", -1337)) != -1337;
+		use_speed = (speed = mlc.getDouble("speed", -1337)) != -1337;
+
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
-		return castAtLocation(data,t.getLocation());
+		return castAtLocation(data, t.getLocation());
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation l) {
-		Entity entity=data.getCaster().getEntity().getBukkitEntity();
-		Location destination=BukkitAdapter.adapt(l);
+		Entity entity = data.getCaster().getEntity().getBukkitEntity();
+		Location destination = BukkitAdapter.adapt(l);
 
-		if(!use_gravity) gravity=Utils.getGravity(entity.getType());
-        entity.setVelocity(MathUtils.calculateVelocity(entity.getLocation().toVector(),destination.toVector(),gravity,height));
-		
+		if (!use_gravity)
+			gravity = Utils.getGravity(entity.getType());
+		entity.setVelocity(
+				MathUtils.calculateVelocity(entity.getLocation().toVector(), destination.toVector(), gravity, height));
+
 		return true;
 	}
-	
+
 }

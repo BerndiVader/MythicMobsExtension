@@ -10,24 +10,20 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="movespeed",author="BerndiVader")
-public class MovementSpeedCondition
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "movespeed", author = "BerndiVader")
+public class MovementSpeedCondition extends AbstractCustomCondition implements IEntityCondition {
 	private RangedDouble r1;
 
 	public MovementSpeedCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		r1=new RangedDouble(mlc.getString("range",">0"));
+		r1 = new RangedDouble(mlc.getString("range", ">0"));
 	}
 
 	@Override
 	public boolean check(AbstractEntity e) {
 		if (e.isLiving()) {
-			LivingEntity le1=(LivingEntity)e.getBukkitEntity();
-			return r1.equals((double)le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+			LivingEntity le1 = (LivingEntity) e.getBukkitEntity();
+			return r1.equals((double) le1.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
 		}
 		return false;
 	}

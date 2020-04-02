@@ -6,19 +6,15 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
-@ExternalAnnotation(name="ispresent",author="BerndiVader")
-public class IsMythicMobMob
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "ispresent", author = "BerndiVader")
+public class IsMythicMobMob extends AbstractCustomCondition implements IEntityCondition {
 	public IsMythicMobMob(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 	}
 
 	@Override
 	public boolean check(AbstractEntity entity) {
-		return entity!=null;
+		return entity != null;
 	}
 
 }

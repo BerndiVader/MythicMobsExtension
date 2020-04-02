@@ -42,13 +42,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="itemprojectile",author="BerndiVader")
-public class ItemProjectile
-extends 
-CustomProjectile 
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill {
+@ExternalAnnotation(name = "itemprojectile", author = "BerndiVader")
+public class ItemProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 
 	ItemStack item_stack;
 	protected float pEntitySpin;
@@ -58,28 +53,29 @@ ITargetedLocationSkill {
 	public ItemProjectile(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 
-		String i=mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT");
-		Optional<MythicItem>optional=Utils.mythicmobs.getItemManager().getItem(i);
-		if(optional.isPresent()) {
-			item_stack=BukkitAdapter.adapt(optional.get().generateItemStack(1));
+		String i = mlc.getString(new String[] { "pobject", "projectileblock", "pitem" }, "DIRT");
+		Optional<MythicItem> optional = Utils.mythicmobs.getItemManager().getItem(i);
+		if (optional.isPresent()) {
+			item_stack = BukkitAdapter.adapt(optional.get().generateItemStack(1));
 		} else {
 			try {
-				item_stack=new ItemStack(Material.valueOf(i.toUpperCase()));
-			} catch (Exception e){
-				item_stack=new ItemStack(Material.DIRT);
+				item_stack = new ItemStack(Material.valueOf(i.toUpperCase()));
+			} catch (Exception e) {
+				item_stack = new ItemStack(Material.DIRT);
 			}
 		}
 		this.pEntitySpin = mlc.getFloat("pspin", 0.0F);
 		this.pEntityPitchOffset = mlc.getFloat("ppOff", 360.0f);
-		this.tickInterval=2;
-		this.ticksPerSecond=20.0f/this.tickInterval;
-        this.durability=(short)MathUtils.clamp(mlc.getInteger("durability",Short.MIN_VALUE),Short.MIN_VALUE,Short.MAX_VALUE);
+		this.tickInterval = 2;
+		this.ticksPerSecond = 20.0f / this.tickInterval;
+		this.durability = (short) MathUtils.clamp(mlc.getInteger("durability", Short.MIN_VALUE), Short.MIN_VALUE,
+				Short.MAX_VALUE);
 	}
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
 		try {
-			new ProjectileRunner(data,this.item_stack,target.clone().add(0.0, this.targetYOffset, 0.0));
+			new ProjectileRunner(data, this.item_stack, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
 			this.mythicmobs.handleException(ex);
@@ -100,7 +96,7 @@ ITargetedLocationSkill {
 		private float gravity;
 		private long startTime;
 		private AbstractLocation startLocation;
-		private AbstractLocation currentLocation,oldLocation;
+		private AbstractLocation currentLocation, oldLocation;
 		private AbstractVector currentVelocity;
 		private int currentX;
 		private int currentZ;
@@ -115,7 +111,7 @@ ITargetedLocationSkill {
 		private boolean pFaceDir, targetable, eyedir;
 		private float currentBounce, bounceReduce;
 
-		public ProjectileRunner(SkillMetadata data,ItemStack item_stack, AbstractLocation target) {
+		public ProjectileRunner(SkillMetadata data, ItemStack item_stack, AbstractLocation target) {
 
 			float noise;
 			this.cancelled = false;
@@ -147,7 +143,8 @@ ITargetedLocationSkill {
 					this.gravity = this.gravity > 0.0f ? this.gravity / ItemProjectile.this.ticksPerSecond : 0.0f;
 				} else {
 					this.gravity = ItemProjectile.this.projectileGravity > 0.0f
-							? ItemProjectile.this.projectileGravity / ItemProjectile.this.ticksPerSecond : 0.0f;
+							? ItemProjectile.this.projectileGravity / ItemProjectile.this.ticksPerSecond
+							: 0.0f;
 				}
 				velocity = 0.0;
 			} else {
@@ -158,18 +155,22 @@ ITargetedLocationSkill {
 					this.startLocation.setY(this.startLocation.getY() + ItemProjectile.this.startYOffset);
 				}
 				if (ItemProjectile.this.startForwardOffset != 0.0f) {
-					Vector v=MathUtils.getFrontBackOffsetVector(BukkitAdapter.adapt(this.startLocation).getDirection(),ItemProjectile.this.startForwardOffset);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getFrontBackOffsetVector(
+							BukkitAdapter.adapt(this.startLocation).getDirection(),
+							ItemProjectile.this.startForwardOffset);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 				if (ItemProjectile.this.startSideOffset != 0.0f) {
-					Vector v=MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(), ItemProjectile.this.startSideOffset,false);
-					AbstractVector av=new AbstractVector(v.getX(),v.getY(),v.getZ());
+					Vector v = MathUtils.getSideOffsetVectorFixed(this.startLocation.getYaw(),
+							ItemProjectile.this.startSideOffset, false);
+					AbstractVector av = new AbstractVector(v.getX(), v.getY(), v.getZ());
 					this.startLocation.add(av);
 				}
 			}
-			this.currentLocation=this.startLocation.clone();
-			if (this.currentLocation == null) return;
+			this.currentLocation = this.startLocation.clone();
+			if (this.currentLocation == null)
+				return;
 			if (!this.eyedir) {
 				this.currentVelocity = target.toVector().subtract(this.currentLocation.toVector()).normalize();
 			} else {
@@ -218,7 +219,7 @@ ITargetedLocationSkill {
 				this.inRange.removeIf(e -> {
 					if (e != null) {
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
-								||e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
+								|| e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
 							return true;
 						}
 						if (!ItemProjectile.this.hitPlayers && e.isPlayer()) {
@@ -241,10 +242,11 @@ ITargetedLocationSkill {
 				sData.setOrigin(this.currentLocation.clone());
 				ItemProjectile.this.onStartSkill.get().execute(sData);
 			}
-			ItemStack i=new ItemStack(item_stack);
-			if(durability>Short.MIN_VALUE) i.setDurability(ItemProjectile.this.durability);
+			ItemStack i = new ItemStack(item_stack);
+			if (durability > Short.MIN_VALUE)
+				i.setDurability(ItemProjectile.this.durability);
 			Location l = BukkitAdapter.adapt(this.currentLocation.clone().add(this.currentVelocity));
-			this.pItem = l.getWorld().dropItem(l,i);
+			this.pItem = l.getWorld().dropItem(l, i);
 			EntityCacheHandler.add(this.pItem);
 			this.pItem.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 			if (!this.targetable)
@@ -253,9 +255,9 @@ ITargetedLocationSkill {
 			this.pItem.setInvulnerable(true);
 			this.pItem.setGravity(false);
 			this.pItem.setPickupDelay(Integer.MAX_VALUE);
-			Volatile.handler.setItemMotion(this.pItem,l, null);
+			Volatile.handler.setItemMotion(this.pItem, l, null);
 			Volatile.handler.teleportEntityPacket(this.pItem);
-			Volatile.handler.changeHitBox((Entity)this.pItem,0,0,0);
+			Volatile.handler.changeHitBox((Entity) this.pItem, 0, 0, 0);
 		}
 
 		public void modifyVelocity(double v) {
@@ -284,9 +286,9 @@ ITargetedLocationSkill {
 				this.stop();
 				return;
 			}
-			this.oldLocation=this.currentLocation.clone();
+			this.oldLocation = this.currentLocation.clone();
 			this.currentLocation.add(this.currentVelocity);
-			
+
 			if (ItemProjectile.this.hugSurface) {
 				if (this.currentLocation.getBlockX() != this.currentX
 						|| this.currentLocation.getBlockZ() != this.currentZ) {

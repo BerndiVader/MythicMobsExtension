@@ -9,23 +9,18 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 
-@ExternalAnnotation(name="reachable",author="BerndiVader")
-public
-class
-ReachableCondition
-extends
-AbstractCustomCondition 
-implements
-IEntityComparisonCondition 
-{
-	
+@ExternalAnnotation(name = "reachable", author = "BerndiVader")
+public class ReachableCondition extends AbstractCustomCondition implements IEntityComparisonCondition {
+
 	public ReachableCondition(String line, MythicLineConfig mlc) {
-		super(line,mlc);
+		super(line, mlc);
 	}
 
 	@Override
 	public boolean check(AbstractEntity e, AbstractEntity t) {
-		if(e.isLiving()&&t.isLiving()) return Volatile.handler.isReachable1((LivingEntity)e.getBukkitEntity(),(LivingEntity)t.getBukkitEntity());
+		if (e.isLiving() && t.isLiving())
+			return Volatile.handler.isReachable1((LivingEntity) e.getBukkitEntity(),
+					(LivingEntity) t.getBukkitEntity());
 		return false;
 	}
 }

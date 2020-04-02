@@ -13,10 +13,8 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="playerweather",author="BerndiVader")
-public class PlayerWeatherMechanic extends SkillMechanic
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "playerweather", author = "BerndiVader")
+public class PlayerWeatherMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	int duration, time;
 	WeatherType type;
 	boolean relative;
@@ -24,21 +22,21 @@ ITargetedEntitySkill {
 	public PlayerWeatherMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 		try {
-			this.type=WeatherType.valueOf(mlc.getString(new String[] { "weather", "w" }, "CLEAR").toUpperCase());
+			this.type = WeatherType.valueOf(mlc.getString(new String[] { "weather", "w" }, "CLEAR").toUpperCase());
 		} catch (Exception e) {
-			this.type=WeatherType.CLEAR;
+			this.type = WeatherType.CLEAR;
 		}
-		this.time=mlc.getInteger(new String[] { "time", "t" }, -1);
-		this.duration=mlc.getInteger(new String[] { "duration", "dur" }, 200);
-		relative=mlc.getBoolean("relative",false);
+		this.time = mlc.getInteger(new String[] { "time", "t" }, -1);
+		this.duration = mlc.getInteger(new String[] { "duration", "dur" }, 200);
+		relative = mlc.getBoolean("relative", false);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Player p=(Player)target.getBukkitEntity();
-			if (this.time>-1) {
-				p.setPlayerTime(this.time,relative);
+			Player p = (Player) target.getBukkitEntity();
+			if (this.time > -1) {
+				p.setPlayerTime(this.time, relative);
 			}
 			p.setPlayerWeather(this.type);
 			new WeatherTracker(this.duration, p);
@@ -46,12 +44,12 @@ ITargetedEntitySkill {
 		}
 		return false;
 	}
-	
+
 	private class WeatherTracker implements Runnable {
 		private Player p;
-		
+
 		public WeatherTracker(int duration, Player player) {
-			this.p=player;
+			this.p = player;
 			Bukkit.getScheduler().runTaskLater(Main.getPlugin(), this, duration);
 		}
 

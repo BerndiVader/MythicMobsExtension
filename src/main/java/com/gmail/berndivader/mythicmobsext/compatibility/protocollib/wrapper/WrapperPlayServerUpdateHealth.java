@@ -33,7 +33,7 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	public WrapperPlayServerUpdateHealth(PacketContainer packet) {
 		super(packet, TYPE);
 	}
-	
+
 	/**
 	 * Retrieve Health.
 	 * <p>

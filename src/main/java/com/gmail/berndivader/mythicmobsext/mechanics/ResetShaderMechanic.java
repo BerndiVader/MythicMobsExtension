@@ -10,13 +10,9 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="resetshader",author="BerndiVader")
-public class ResetShaderMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill {
-	
+@ExternalAnnotation(name = "resetshader", author = "BerndiVader")
+public class ResetShaderMechanic extends SkillMechanic implements ITargetedEntitySkill {
+
 	public ResetShaderMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 	}
@@ -24,9 +20,9 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Volatile.handler.forceSpectate((Player)target.getBukkitEntity(),target.getBukkitEntity(),false);
+			Volatile.handler.forceSpectate((Player) target.getBukkitEntity(), target.getBukkitEntity(), false);
 			return true;
-		} 
+		}
 		return false;
 	}
 }

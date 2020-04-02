@@ -12,36 +12,35 @@ import io.lumine.xikage.mythicmobs.skills.conditions.IEntityComparisonCondition;
 
 import org.bukkit.entity.Entity;
 
-@ExternalAnnotation(name="samefaction",author="BerndiVader")
-public class SameFactionCondition 
-extends 
-AbstractCustomCondition
-implements
-IEntityComparisonCondition {
-    private String[] factions;
-    public SameFactionCondition(String line, MythicLineConfig mlc) {
-        super(line,mlc);
-        this.factions=mlc.getString("faction").split(",");
-    }
+@ExternalAnnotation(name = "samefaction", author = "BerndiVader")
+public class SameFactionCondition extends AbstractCustomCondition implements IEntityComparisonCondition {
+	private String[] factions;
 
-    @Override
-    public boolean check(AbstractEntity c, AbstractEntity t) {
-        Entity caster=c.getBukkitEntity();
-        Entity target=t.getBukkitEntity();
-        if (caster.getEntityId()==target.getEntityId()) return false;
-        ActiveMob am=Utils.mobmanager.getMythicMobInstance(caster);
-        ActiveMob tam=Utils.mobmanager.getMythicMobInstance(target);
-        if (am==null||tam==null) return false;
-        return (checkFactions(am,am,t,this.factions)&&checkFactions(am,tam,t,this.factions));
-    }
+	public SameFactionCondition(String line, MythicLineConfig mlc) {
+		super(line, mlc);
+		this.factions = mlc.getString("faction").split(",");
+	}
 
-    public static boolean checkFactions(SkillCaster caster, ActiveMob am, AbstractEntity target, String[]factions) {
-        for (int a=0;a<factions.length;a++) {
-            String f=SkillString.parseMobVariables(factions[a],caster,target,null);
-            if (am.hasFaction()&&am.getFaction().equals(f)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean check(AbstractEntity c, AbstractEntity t) {
+		Entity caster = c.getBukkitEntity();
+		Entity target = t.getBukkitEntity();
+		if (caster.getEntityId() == target.getEntityId())
+			return false;
+		ActiveMob am = Utils.mobmanager.getMythicMobInstance(caster);
+		ActiveMob tam = Utils.mobmanager.getMythicMobInstance(target);
+		if (am == null || tam == null)
+			return false;
+		return (checkFactions(am, am, t, this.factions) && checkFactions(am, tam, t, this.factions));
+	}
+
+	public static boolean checkFactions(SkillCaster caster, ActiveMob am, AbstractEntity target, String[] factions) {
+		for (int a = 0; a < factions.length; a++) {
+			String f = SkillString.parseMobVariables(factions[a], caster, target, null);
+			if (am.hasFaction() && am.getFaction().equals(f)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

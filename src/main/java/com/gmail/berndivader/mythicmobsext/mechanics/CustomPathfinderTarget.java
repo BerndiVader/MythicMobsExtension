@@ -14,38 +14,34 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
-@ExternalAnnotation(name="custompathfindertarget",author="BerndiVader")
-public class CustomPathfinderTarget 
-extends 
-SkillMechanic
-implements
-ITargetedEntitySkill {
-	
-	Handler vh=Volatile.handler;
+@ExternalAnnotation(name = "custompathfindertarget", author = "BerndiVader")
+public class CustomPathfinderTarget extends SkillMechanic implements ITargetedEntitySkill {
+
+	Handler vh = Volatile.handler;
 	PlaceholderString g;
-	
+
 	public CustomPathfinderTarget(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE=false;
-		String parse=mlc.getString("goal");
+		ASYNC_SAFE = false;
+		String parse = mlc.getString("goal");
 		if (parse.startsWith("\"") && parse.endsWith("\"")) {
-			parse=parse.substring(1, parse.length()-1);
+			parse = parse.substring(1, parse.length() - 1);
 		}
-		this.g=new PlaceholderString(SkillString.parseMessageSpecialChars(parse));
+		this.g = new PlaceholderString(SkillString.parseMessageSpecialChars(parse));
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity t) {
 		LivingEntity lS = null, lT = null;
-		if (t!=null && t.isLiving()) {
-			lT = (LivingEntity)t.getBukkitEntity();
+		if (t != null && t.isLiving()) {
+			lT = (LivingEntity) t.getBukkitEntity();
 		}
 		if (data.getCaster().getEntity().isLiving()) {
-			lS = (LivingEntity)data.getCaster().getEntity().getBukkitEntity();
+			lS = (LivingEntity) data.getCaster().getEntity().getBukkitEntity();
 		}
-		if (lS!=null) {
-			String pG=this.g.get(data,t);
-			vh.aiTargetSelector(lS,pG,lT);
+		if (lS != null) {
+			String pG = this.g.get(data, t);
+			vh.aiTargetSelector(lS, pG, lT);
 			return true;
 		}
 		return false;

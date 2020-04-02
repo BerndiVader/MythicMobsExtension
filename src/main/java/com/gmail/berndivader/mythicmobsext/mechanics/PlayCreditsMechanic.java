@@ -11,12 +11,8 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="playcredits",author="BerndiVader")
-public class PlayCreditsMechanic 
-extends 
-SkillMechanic 
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "playcredits", author = "BerndiVader")
+public class PlayCreditsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	public PlayCreditsMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
 	}
@@ -24,10 +20,10 @@ ITargetedEntitySkill {
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Volatile.handler.playEndScreenForPlayer((Player)target.getBukkitEntity(),1);
+			Volatile.handler.playEndScreenForPlayer((Player) target.getBukkitEntity(), 1);
 			return true;
 		}
 		return false;
 	}
-	
+
 }

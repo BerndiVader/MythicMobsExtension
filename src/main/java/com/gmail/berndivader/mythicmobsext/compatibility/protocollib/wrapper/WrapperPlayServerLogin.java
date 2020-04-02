@@ -83,8 +83,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	/**
 	 * Retrieve Gamemode.
 	 * <p>
-	 * Notes: 0: survival, 1: creative, 2: adventure. Bit 3 (0x8) is the
-	 * hardcore flag
+	 * Notes: 0: survival, 1: creative, 2: adventure. Bit 3 (0x8) is the hardcore
+	 * flag
 	 * 
 	 * @return The current Gamemode
 	 */

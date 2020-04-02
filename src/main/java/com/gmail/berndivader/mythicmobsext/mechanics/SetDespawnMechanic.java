@@ -8,19 +8,13 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.*;
 
-@ExternalAnnotation(name="despawning",author="BerndiVader")
-public class SetDespawnMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill,
-INoTargetSkill 
-{
+@ExternalAnnotation(name = "despawning", author = "BerndiVader")
+public class SetDespawnMechanic extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	boolean set;
-	
+
 	public SetDespawnMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		set=mlc.getBoolean("set",true);
+		set = mlc.getBoolean("set", true);
 	}
 
 	@Override
@@ -30,8 +24,8 @@ INoTargetSkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		if(target.isLiving()) {
-			LivingEntity entity=(LivingEntity)target.getBukkitEntity();
+		if (target.isLiving()) {
+			LivingEntity entity = (LivingEntity) target.getBukkitEntity();
 			entity.setRemoveWhenFarAway(set);
 			return true;
 		}

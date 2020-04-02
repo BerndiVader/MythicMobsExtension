@@ -32,126 +32,115 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LinearInterpolation implements Interpolation {
 
-    private List<Node> nodes;
+	private List<Node> nodes;
 
-    @Override
-    public void setNodes(List<Node> nodes) {
-        checkNotNull(nodes);
-        
-        this.nodes = nodes;
-    }
+	@Override
+	public void setNodes(List<Node> nodes) {
+		checkNotNull(nodes);
 
-    @Override
-    public Vector getPosition(double position) {
-        if (nodes == null)
-            throw new IllegalStateException("Must call setNodes first.");
+		this.nodes = nodes;
+	}
 
-        if (position > 1)
-            return null;
+	@Override
+	public Vector getPosition(double position) {
+		if (nodes == null)
+			throw new IllegalStateException("Must call setNodes first.");
 
-        position *= nodes.size() - 1;
+		if (position > 1)
+			return null;
 
-        final int index1 = (int) Math.floor(position);
-        final double remainder = position - index1;
+		position *= nodes.size() - 1;
 
-        final Vector position1 = nodes.get(index1).getPosition();
-        final Vector position2 = nodes.get(index1 + 1).getPosition();
+		final int index1 = (int) Math.floor(position);
+		final double remainder = position - index1;
 
-        return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
-    }
+		final Vector position1 = nodes.get(index1).getPosition();
+		final Vector position2 = nodes.get(index1 + 1).getPosition();
 
-    /*
-    Formula for position:
-        p1*(1-t) + p2*t
-    Formula for position in Horner/monomial form:
-        (p2-p1)*t + p1
-    1st Derivative:
-        p2-p1
-    2nd Derivative:
-        0
-    Integral:
-        (p2-p1)/2*t^2 + p1*t + constant
-    Integral in Horner form:
-        ((p2-p1)/2*t + p1)*t + constant
-    */
+		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
+	}
 
-    @Override
-    public Vector get1stDerivative(double position) {
-        if (nodes == null)
-            throw new IllegalStateException("Must call setNodes first.");
+	/*
+	 * Formula for position: p1*(1-t) + p2*t Formula for position in Horner/monomial
+	 * form: (p2-p1)*t + p1 1st Derivative: p2-p1 2nd Derivative: 0 Integral:
+	 * (p2-p1)/2*t^2 + p1*t + constant Integral in Horner form: ((p2-p1)/2*t + p1)*t
+	 * + constant
+	 */
 
-        if (position > 1)
-            return null;
+	@Override
+	public Vector get1stDerivative(double position) {
+		if (nodes == null)
+			throw new IllegalStateException("Must call setNodes first.");
 
-        position *= nodes.size() - 1;
+		if (position > 1)
+			return null;
 
-        final int index1 = (int) Math.floor(position);
+		position *= nodes.size() - 1;
 
-        final Vector position1 = nodes.get(index1).getPosition();
-        final Vector position2 = nodes.get(index1 + 1).getPosition();
+		final int index1 = (int) Math.floor(position);
 
-        return position2.subtract(position1);
-    }
+		final Vector position1 = nodes.get(index1).getPosition();
+		final Vector position2 = nodes.get(index1 + 1).getPosition();
 
-    @Override
-    public double arcLength(double positionA, double positionB) {
-        if (nodes == null)
-            throw new IllegalStateException("Must call setNodes first.");
+		return position2.subtract(position1);
+	}
 
-        if (positionA > positionB)
-            return arcLength(positionB, positionA);
+	@Override
+	public double arcLength(double positionA, double positionB) {
+		if (nodes == null)
+			throw new IllegalStateException("Must call setNodes first.");
 
-        positionA *= nodes.size() - 1;
-        positionB *= nodes.size() - 1;
+		if (positionA > positionB)
+			return arcLength(positionB, positionA);
 
-        final int indexA = (int) Math.floor(positionA);
-        final double remainderA = positionA - indexA;
+		positionA *= nodes.size() - 1;
+		positionB *= nodes.size() - 1;
 
-        final int indexB = (int) Math.floor(positionB);
-        final double remainderB = positionB - indexB;
+		final int indexA = (int) Math.floor(positionA);
+		final double remainderA = positionA - indexA;
 
-        return arcLengthRecursive(indexA, remainderA, indexB, remainderB);
-    }
+		final int indexB = (int) Math.floor(positionB);
+		final double remainderB = positionB - indexB;
 
-    /**
-     * Assumes a < b.
-     */
-    private double arcLengthRecursive(int indexA, double remainderA, int indexB, double remainderB) {
-        switch (indexB - indexA) {
-        case 0:
-            return arcLengthRecursive(indexA, remainderA, remainderB);
+		return arcLengthRecursive(indexA, remainderA, indexB, remainderB);
+	}
 
-        case 1:
-            // This case is merely a speed-up for a very common case
-            return
-                    arcLengthRecursive(indexA, remainderA, 1.0) +
-                    arcLengthRecursive(indexB, 0.0, remainderB);
+	/**
+	 * Assumes a < b.
+	 */
+	private double arcLengthRecursive(int indexA, double remainderA, int indexB, double remainderB) {
+		switch (indexB - indexA) {
+		case 0:
+			return arcLengthRecursive(indexA, remainderA, remainderB);
 
-        default:
-            return
-                    arcLengthRecursive(indexA, remainderA, indexB - 1, 1.0) +
-                    arcLengthRecursive(indexB, 0.0, remainderB);
-        }
-    }
+		case 1:
+			// This case is merely a speed-up for a very common case
+			return arcLengthRecursive(indexA, remainderA, 1.0) + arcLengthRecursive(indexB, 0.0, remainderB);
 
-    private double arcLengthRecursive(int index, double remainderA, double remainderB) {
-        final Vector position1 = nodes.get(index).getPosition();
-        final Vector position2 = nodes.get(index + 1).getPosition();
+		default:
+			return arcLengthRecursive(indexA, remainderA, indexB - 1, 1.0)
+					+ arcLengthRecursive(indexB, 0.0, remainderB);
+		}
+	}
 
-        return position1.distance(position2) * (remainderB - remainderA);
-    }
+	private double arcLengthRecursive(int index, double remainderA, double remainderB) {
+		final Vector position1 = nodes.get(index).getPosition();
+		final Vector position2 = nodes.get(index + 1).getPosition();
 
-    @Override
-    public int getSegment(double position) {
-        if (nodes == null)
-            throw new IllegalStateException("Must call setNodes first.");
+		return position1.distance(position2) * (remainderB - remainderA);
+	}
 
-        if (position > 1)
-            return Integer.MAX_VALUE;
+	@Override
+	public int getSegment(double position) {
+		if (nodes == null)
+			throw new IllegalStateException("Must call setNodes first.");
 
-        position *= nodes.size() - 1;
+		if (position > 1)
+			return Integer.MAX_VALUE;
 
-        return (int) Math.floor(position);
-    }
+		position *= nodes.size() - 1;
+
+		return (int) Math.floor(position);
+	}
 
 }

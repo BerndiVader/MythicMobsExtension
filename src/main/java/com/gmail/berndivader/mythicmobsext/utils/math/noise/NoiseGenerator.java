@@ -27,22 +27,22 @@ import com.gmail.berndivader.mythicmobsext.utils.Vector2D;
  */
 public interface NoiseGenerator {
 
-    /**
-     * Get the noise value for the given position. The returned value may
-     * change on every future call for the same position.
-     *
-     * @param position the position
-     * @return a noise value between 0 (inclusive) and 1 (inclusive)
-     */
-    float noise(Vector2D position);
+	/**
+	 * Get the noise value for the given position. The returned value may change on
+	 * every future call for the same position.
+	 *
+	 * @param position the position
+	 * @return a noise value between 0 (inclusive) and 1 (inclusive)
+	 */
+	float noise(Vector2D position);
 
-    /**
-     * Get the noise value for the given position. The returned value may
-     * change on every future call for the same position.
-     *
-     * @param position the position
-     * @return a noise value between 0 (inclusive) and 1 (inclusive)
-     */
-    float noise(Vector position);
+	/**
+	 * Get the noise value for the given position. The returned value may change on
+	 * every future call for the same position.
+	 *
+	 * @param position the position
+	 * @return a noise value between 0 (inclusive) and 1 (inclusive)
+	 */
+	float noise(Vector position);
 
 }

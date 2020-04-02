@@ -14,7 +14,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class ThiefHandler {
 	public BukkitTask taskid;
-	private final HashSet<Thief>thiefs=new HashSet<>();
+	private final HashSet<Thief> thiefs = new HashSet<>();
 
 	public ThiefHandler() {
 		this.taskid = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.getPlugin(), new Runnable() {
@@ -34,8 +34,8 @@ public class ThiefHandler {
 		return thiefs;
 	}
 
-	public boolean addThief(UUID uuid,UUID victim,ItemStack item) {
-		thiefs.add(new Thief(uuid,victim,item));
+	public boolean addThief(UUID uuid, UUID victim, ItemStack item) {
+		thiefs.add(new Thief(uuid, victim, item));
 		return true;
 	}
 
@@ -55,7 +55,7 @@ public class ThiefHandler {
 	public int Size() {
 		return thiefs.size();
 	}
-	
+
 	public void cancelTask() {
 		Bukkit.getServer().getScheduler().cancelTask(taskid.getTaskId());
 	}

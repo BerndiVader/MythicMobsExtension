@@ -10,35 +10,32 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="oncooldown",author="BerndiVader")
-public class OnCooldownCondition 
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "oncooldown", author = "BerndiVader")
+public class OnCooldownCondition extends AbstractCustomCondition implements IEntityCondition {
 	RangedDouble r;
 	int i1;
-	
+
 	public OnCooldownCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		r(mlc.getString(new String[] {"value","v","amount","a","ticks","t"},"0.0d"));
-		i(mlc.getInteger(new String[] {"slot","s",},-1));
+		r(mlc.getString(new String[] { "value", "v", "amount", "a", "ticks", "t" }, "0.0d"));
+		i(mlc.getInteger(new String[] { "slot", "s", }, -1));
 	}
 
 	@Override
 	public boolean check(AbstractEntity e) {
 		if (e.isPlayer()) {
-			double cooldown=Volatile.handler.getItemCoolDown((Player)e.getBukkitEntity(),this.i1);
+			double cooldown = Volatile.handler.getItemCoolDown((Player) e.getBukkitEntity(), this.i1);
 			System.err.println(cooldown);
-			return r.equals((double)Volatile.handler.getItemCoolDown((Player)e.getBukkitEntity(),this.i1));
+			return r.equals((double) Volatile.handler.getItemCoolDown((Player) e.getBukkitEntity(), this.i1));
 		}
 		return false;
 	}
-	
+
 	void r(String s) {
-		this.r=new RangedDouble(s);
+		this.r = new RangedDouble(s);
 	}
+
 	void i(int i) {
-		this.i1=i;
+		this.i1 = i;
 	}
 }

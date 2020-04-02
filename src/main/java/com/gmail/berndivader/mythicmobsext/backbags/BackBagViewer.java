@@ -35,176 +35,184 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 
-public 
-class
-BackBagViewer
-implements
-Listener
-{
+public class BackBagViewer implements Listener {
 	Entity owner;
 	Player viewer;
 	BackBagInventory inventory;
 	private int size;
 	String name;
 	boolean only_view;
-	List<Integer>excludes_slots;
-	
-	static int backbag_counter=0;
-	
+	List<Integer> excludes_slots;
+
+	static int backbag_counter = 0;
+
 	public BackBagViewer(Entity onwer) {
-		this(onwer,9);
+		this(onwer, 9);
 	}
 
-	public BackBagViewer(Entity onwer,String name) {
-		this(onwer,9,null,name,false);
+	public BackBagViewer(Entity onwer, String name) {
+		this(onwer, 9, null, name, false);
 	}
 
-	public BackBagViewer(Entity owner,int size) {
-		this(owner,size,null);
-	}
-	
-	public BackBagViewer(Entity owner,int size,ItemStack[]default_content) {
-		this(owner,size,default_content,null,false);
-	}
-	
-	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary) {
-		this(owner,size,default_content,name,temporary,false);
-	}
-	
-	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override) {
-		this(owner,size,default_content,name,temporary,override,new ArrayList<>());
+	public BackBagViewer(Entity owner, int size) {
+		this(owner, size, null);
 	}
 
-	public BackBagViewer(Entity owner,int size,ItemStack[]default_content,String name,boolean temporary,boolean override,List<Integer>excluded_slots) {
+	public BackBagViewer(Entity owner, int size, ItemStack[] default_content) {
+		this(owner, size, default_content, null, false);
+	}
+
+	public BackBagViewer(Entity owner, int size, ItemStack[] default_content, String name, boolean temporary) {
+		this(owner, size, default_content, name, temporary, false);
+	}
+
+	public BackBagViewer(Entity owner, int size, ItemStack[] default_content, String name, boolean temporary,
+			boolean override) {
+		this(owner, size, default_content, name, temporary, override, new ArrayList<>());
+	}
+
+	public BackBagViewer(Entity owner, int size, ItemStack[] default_content, String name, boolean temporary,
+			boolean override, List<Integer> excluded_slots) {
 		backbag_counter++;
-		if(name==null) name=BackBagHelper.str_name;
-		size=size%9>0?size+(9-size%9):size;
-		this.owner=owner;
-		if(override||(inventory=BackBagHelper.getBagInventory(owner.getUniqueId(),name))==null) {
-			inventory=new BackBagInventory(name,size,Bukkit.createInventory(null,size,name),temporary);
-			BackBagHelper.addInventory(owner.getUniqueId(),inventory);
+		if (name == null)
+			name = BackBagHelper.str_name;
+		size = size % 9 > 0 ? size + (9 - size % 9) : size;
+		this.owner = owner;
+		if (override || (inventory = BackBagHelper.getBagInventory(owner.getUniqueId(), name)) == null) {
+			inventory = new BackBagInventory(name, size, Bukkit.createInventory(null, size, name), temporary);
+			BackBagHelper.addInventory(owner.getUniqueId(), inventory);
 		}
-		this.size=inventory.getInventory().getSize();
-		this.name=inventory.getName();
-		if(default_content!=null&&default_content.length<=this.size) inventory.getInventory().setContents(default_content);
-		this.excludes_slots=excluded_slots;
+		this.size = inventory.getInventory().getSize();
+		this.name = inventory.getName();
+		if (default_content != null && default_content.length <= this.size)
+			inventory.getInventory().setContents(default_content);
+		this.excludes_slots = excluded_slots;
 	}
-	
-	
+
 	public void viewBackBag(Player player) {
-		viewBackBag(player,false,new ArrayList<>());
+		viewBackBag(player, false, new ArrayList<>());
 	}
-	
-	public void viewBackBag(Player player,boolean bool) {
-		viewBackBag(player,bool,new ArrayList<>());
+
+	public void viewBackBag(Player player, boolean bool) {
+		viewBackBag(player, bool, new ArrayList<>());
 	}
-	
-	public void viewBackBag(Player player,boolean bool,List<Integer> excludes_slots) {
-		this.only_view=bool;
-		this.excludes_slots=excludes_slots;
-		Main.pluginmanager.registerEvents(this,Main.getPlugin());
-		this.viewer=player;
+
+	public void viewBackBag(Player player, boolean bool, List<Integer> excludes_slots) {
+		this.only_view = bool;
+		this.excludes_slots = excludes_slots;
+		Main.pluginmanager.registerEvents(this, Main.getPlugin());
+		this.viewer = player;
 		player.openInventory(inventory.getInventory());
 	}
-	
-	
+
 	public boolean isPresent() {
-		return this.inventory!=null;
+		return this.inventory != null;
 	}
-	
+
 	public int getSize() {
 		return this.inventory.getSize();
 	}
-	
+
 	public Inventory getInventory() {
 		return this.inventory.getInventory();
 	}
-	
-	public void setInventory(String name,Inventory new_inv) {
-		this.inventory.setInventory(name,new_inv);
-		this.size=new_inv.getSize();
-		BackBagHelper.replace(owner.getUniqueId(),new BackBagInventory(this.name,this.size,this.inventory.getInventory()));
+
+	public void setInventory(String name, Inventory new_inv) {
+		this.inventory.setInventory(name, new_inv);
+		this.size = new_inv.getSize();
+		BackBagHelper.replace(owner.getUniqueId(),
+				new BackBagInventory(this.name, this.size, this.inventory.getInventory()));
 	}
-	
-	void executeSkill(String skill_name,Entity owner,Player viewer) {
-		Optional<Skill>maybe_skill=Utils.mythicmobs.getSkillManager().getSkill(skill_name);
-		if(maybe_skill.isPresent()) {
-			Skill skill=maybe_skill.get();
-			AbstractEntity abstract_target=BukkitAdapter.adapt(viewer);
-			SkillMetadata data=new SkillMetadata(SkillTrigger.API,new GenericCaster(BukkitAdapter.adapt(owner)),abstract_target);
+
+	void executeSkill(String skill_name, Entity owner, Player viewer) {
+		Optional<Skill> maybe_skill = Utils.mythicmobs.getSkillManager().getSkill(skill_name);
+		if (maybe_skill.isPresent()) {
+			Skill skill = maybe_skill.get();
+			AbstractEntity abstract_target = BukkitAdapter.adapt(viewer);
+			SkillMetadata data = new SkillMetadata(SkillTrigger.API, new GenericCaster(BukkitAdapter.adapt(owner)),
+					abstract_target);
 			data.setEntityTarget(abstract_target);
-			if(skill.isUsable(data)) skill.execute(data);
+			if (skill.isUsable(data))
+				skill.execute(data);
 		}
 	}
-	
+
 	@EventHandler
 	public void ownerDeath(EntityDeathEvent e) {
-		Entity entity=e.getEntity();
-		if(entity.getType()!=EntityType.PLAYER&&entity==this.owner) viewer.closeInventory();
+		Entity entity = e.getEntity();
+		if (entity.getType() != EntityType.PLAYER && entity == this.owner)
+			viewer.closeInventory();
 	}
-	
+
 	@EventHandler
 	public void ownerQuit(PlayerQuitEvent e) {
-		if(e.getPlayer()==this.owner) viewer.closeInventory();
+		if (e.getPlayer() == this.owner)
+			viewer.closeInventory();
 	}
-	
+
 	@EventHandler
 	public void inventoryOpen(InventoryOpenEvent e) {
-		if(e.isCancelled()&&e.getInventory().equals(inventory.getInventory())) HandlerList.unregisterAll(this);
+		if (e.isCancelled() && e.getInventory().equals(inventory.getInventory()))
+			HandlerList.unregisterAll(this);
 	}
-	
+
 	@EventHandler
 	public void drag(InventoryDragEvent e) {
-		if(e.getWhoClicked()==viewer) if(only_view) e.setCancelled(true);
+		if (e.getWhoClicked() == viewer)
+			if (only_view)
+				e.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void interact(InventoryClickEvent e) {
-		if(e.getWhoClicked()==viewer) {
-			if(only_view&&!excludes_slots.contains(e.getRawSlot())) e.setCancelled(true);
-			if(e.getClickedInventory()!=null&&e.getView().getTitle().equals(this.name)) {
-				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getRawSlot()));
-				owner.setMetadata(Utils.meta_LASTCLICKEDBAG,new FixedMetadataValue(Main.getPlugin(),this.name));
-				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,new FixedMetadataValue(Main.getPlugin(),e.getRawSlot()));
-				if(Utils.mobmanager.isActiveMob(owner.getUniqueId())) {
-					ActiveMob am=Utils.mobmanager.getMythicMobInstance(owner);
-					am.signalMob(BukkitAdapter.adapt(e.getWhoClicked()),Utils.signal_BACKBAGCLICK);
+		if (e.getWhoClicked() == viewer) {
+			if (only_view && !excludes_slots.contains(e.getRawSlot()))
+				e.setCancelled(true);
+			if (e.getClickedInventory() != null && e.getView().getTitle().equals(this.name)) {
+				owner.setMetadata(Utils.meta_LASTCLICKEDSLOT, new FixedMetadataValue(Main.getPlugin(), e.getRawSlot()));
+				owner.setMetadata(Utils.meta_LASTCLICKEDBAG, new FixedMetadataValue(Main.getPlugin(), this.name));
+				e.getWhoClicked().setMetadata(Utils.meta_LASTCLICKEDSLOT,
+						new FixedMetadataValue(Main.getPlugin(), e.getRawSlot()));
+				if (Utils.mobmanager.isActiveMob(owner.getUniqueId())) {
+					ActiveMob am = Utils.mobmanager.getMythicMobInstance(owner);
+					am.signalMob(BukkitAdapter.adapt(e.getWhoClicked()), Utils.signal_BACKBAGCLICK);
 				}
 			}
-			ItemStack clicked_stack=e.getCurrentItem();
-			ItemStack current_stack=e.getCursor();
-			if(clicked_stack!=null) {
-				if(NMSUtils.hasMeta(clicked_stack,Utils.meta_CLICKEDSKILL)) {
-					this.executeSkill(NMSUtils.getMetaString(clicked_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
+			ItemStack clicked_stack = e.getCurrentItem();
+			ItemStack current_stack = e.getCursor();
+			if (clicked_stack != null) {
+				if (NMSUtils.hasMeta(clicked_stack, Utils.meta_CLICKEDSKILL)) {
+					this.executeSkill(NMSUtils.getMetaString(clicked_stack, Utils.meta_CLICKEDSKILL), owner, viewer);
 				}
-				if(NMSUtils.hasMeta(clicked_stack,CreateItem.str_viewonly)) {
-					e.setCancelled(NMSUtils.getMetaBoolean(clicked_stack,CreateItem.str_viewonly,false));
+				if (NMSUtils.hasMeta(clicked_stack, CreateItem.str_viewonly)) {
+					e.setCancelled(NMSUtils.getMetaBoolean(clicked_stack, CreateItem.str_viewonly, false));
 				}
 			}
-			if(current_stack!=null) {
-				if(clicked_stack==null||clicked_stack.getType()==Material.AIR) {
-					if(NMSUtils.hasMeta(current_stack,Utils.meta_CLICKEDSKILL)) {
-						this.executeSkill(NMSUtils.getMetaString(current_stack,Utils.meta_CLICKEDSKILL),owner,viewer);
+			if (current_stack != null) {
+				if (clicked_stack == null || clicked_stack.getType() == Material.AIR) {
+					if (NMSUtils.hasMeta(current_stack, Utils.meta_CLICKEDSKILL)) {
+						this.executeSkill(NMSUtils.getMetaString(current_stack, Utils.meta_CLICKEDSKILL), owner,
+								viewer);
 					}
-					if(NMSUtils.hasMeta(current_stack,CreateItem.str_viewonly)) {
-						e.setCancelled(NMSUtils.getMetaBoolean(current_stack,CreateItem.str_viewonly,false));
+					if (NMSUtils.hasMeta(current_stack, CreateItem.str_viewonly)) {
+						e.setCancelled(NMSUtils.getMetaBoolean(current_stack, CreateItem.str_viewonly, false));
 					}
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void inventoryClose(InventoryCloseEvent e) {
-		if(e.getPlayer()==viewer&&e.getInventory().equals(inventory.getInventory())) {
+		if (e.getPlayer() == viewer && e.getInventory().equals(inventory.getInventory())) {
 			HandlerList.unregisterAll(this);
 		}
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		backbag_counter--;
 		super.finalize();
 	}
-	
+
 }

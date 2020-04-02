@@ -9,59 +9,55 @@ import org.bukkit.event.HandlerList;
 import io.lumine.xikage.mythicmobs.drops.DropTable;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 
-public class MythicMobsExtItemDropEvent 
-extends
-Event 
-implements
-Cancellable {
-    private static final HandlerList handlers=new HandlerList();
-    private final SkillCaster am;
-    private final LivingEntity trigger;
-    private DropTable stack;
-    private boolean cancelled;
-    
-    public MythicMobsExtItemDropEvent(SkillCaster am,LivingEntity trigger,DropTable dt) {
-    	this.am=am;
-    	this.trigger=trigger;
-    	this.stack=dt;
-    	this.cancelled=false;
+public class MythicMobsExtItemDropEvent extends Event implements Cancellable {
+	private static final HandlerList handlers = new HandlerList();
+	private final SkillCaster am;
+	private final LivingEntity trigger;
+	private DropTable stack;
+	private boolean cancelled;
+
+	public MythicMobsExtItemDropEvent(SkillCaster am, LivingEntity trigger, DropTable dt) {
+		this.am = am;
+		this.trigger = trigger;
+		this.stack = dt;
+		this.cancelled = false;
 	}
-    
-    public SkillCaster getMob() {
-        return this.am;
-    }
 
-    public Entity getEntity() {
-        return this.am.getEntity().getBukkitEntity();
-    }
+	public SkillCaster getMob() {
+		return this.am;
+	}
 
-    public Entity getMobType() {
-        return this.am.getEntity().getBukkitEntity();
-    }
+	public Entity getEntity() {
+		return this.am.getEntity().getBukkitEntity();
+	}
 
-    public double getMobLevel() {
-        return this.am.getLevel();
-    }
+	public Entity getMobType() {
+		return this.am.getEntity().getBukkitEntity();
+	}
 
-    public LivingEntity getTrigger() {
-        return this.trigger;
-    }
+	public double getMobLevel() {
+		return this.am.getLevel();
+	}
 
-    public DropTable getDrops() {
-        return this.stack;
-    }
+	public LivingEntity getTrigger() {
+		return this.trigger;
+	}
 
-    public void setDrops(DropTable l1) {
-        this.stack=l1;
-    }    
+	public DropTable getDrops() {
+		return this.stack;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public void setDrops(DropTable l1) {
+		this.stack = l1;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
 	@Override
 	public boolean isCancelled() {
@@ -70,6 +66,6 @@ Cancellable {
 
 	@Override
 	public void setCancelled(boolean bl1) {
-		this.cancelled=bl1;
+		this.cancelled = bl1;
 	}
 }

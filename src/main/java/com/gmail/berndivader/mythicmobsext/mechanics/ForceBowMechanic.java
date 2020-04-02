@@ -11,23 +11,21 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="forcebow",author="BerndiVader")
-public class ForceBowMechanic 
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "forcebow", author = "BerndiVader")
+public class ForceBowMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	boolean debug;
 
 	public ForceBowMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.debug=mlc.getBoolean("debug",false);
+		this.debug = mlc.getBoolean("debug", false);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		if (this.debug) System.err.println("Using forcebow");
-		Volatile.handler.forceBowDraw((LivingEntity)data.getCaster().getEntity().getBukkitEntity(),(LivingEntity)entity.getBukkitEntity(),this.debug);
+		if (this.debug)
+			System.err.println("Using forcebow");
+		Volatile.handler.forceBowDraw((LivingEntity) data.getCaster().getEntity().getBukkitEntity(),
+				(LivingEntity) entity.getBukkitEntity(), this.debug);
 		return false;
 	}
 }

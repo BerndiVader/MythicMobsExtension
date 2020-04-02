@@ -6,14 +6,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-public 
-class 
-UnExemptPlayerMechanic 
-extends 
-ExemptPlayerMechanic 
-implements
-INoTargetSkill,
-ITargetedEntitySkill {
+public class UnExemptPlayerMechanic extends ExemptPlayerMechanic implements INoTargetSkill, ITargetedEntitySkill {
 
 	public UnExemptPlayerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);

@@ -7,17 +7,13 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="isburning",author="BerndiVader")
-public class IsBurningCondition
-extends
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "isburning", author = "BerndiVader")
+public class IsBurningCondition extends AbstractCustomCondition implements IEntityCondition {
 	private RangedDouble rd;
 
 	public IsBurningCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.rd=new RangedDouble(mlc.getString(new String[] {"range","r"},">-1"));
+		this.rd = new RangedDouble(mlc.getString(new String[] { "range", "r" }, ">-1"));
 	}
 
 	@Override

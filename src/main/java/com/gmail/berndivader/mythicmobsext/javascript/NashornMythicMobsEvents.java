@@ -16,52 +16,45 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicConditionLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 
-public class NashornMythicMobsEvents 
-implements
-Listener {
-	
+public class NashornMythicMobsEvents implements Listener {
+
 	public NashornMythicMobsEvents() {
-		Main.pluginmanager.registerEvents(this,Main.getPlugin());
+		Main.pluginmanager.registerEvents(this, Main.getPlugin());
 	}
-	
+
 	@EventHandler
 	public void onMythicMobsReload(MythicReloadedEvent e) {
 		try {
-			Nashorn.scripts=new String(Files.readAllBytes(Paths.get(Utils.str_PLUGINPATH,Nashorn.filename)));
+			Nashorn.scripts = new String(Files.readAllBytes(Paths.get(Utils.str_PLUGINPATH, Nashorn.filename)));
 			Nashorn.get().nash.eval(Nashorn.scripts);
 		} catch (IOException | ScriptException ex) {
 			ex.printStackTrace();
 		}
 		Main.logger.info("Javascripts reloaded.");
 	}
-	
+
 	@EventHandler
 	public void onMechanicLoadEvent(MythicMechanicLoadEvent e) {
-		String s1=e.getMechanicName().toLowerCase();
-		switch(s1)
-		{
-			case "jsmechanic":
-			case "jsmechanic_ext":
-			{
-				e.register(new JavascriptMechanic(e.getContainer().getConfigLine(),e.getConfig()));
-			}
-			case "math":
-			case "math_ext":
-			{
-				e.register(new EvalMechanic(e.getContainer().getConfigLine(),e.getConfig()));
-			}
+		String s1 = e.getMechanicName().toLowerCase();
+		switch (s1) {
+		case "jsmechanic":
+		case "jsmechanic_ext": {
+			e.register(new JavascriptMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+		}
+		case "math":
+		case "math_ext": {
+			e.register(new EvalMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+		}
 		}
 	}
-	
+
 	@EventHandler
 	public void onConditionLoadEvent(MythicConditionLoadEvent e) {
-		switch(e.getConditionName().toLowerCase())
-		{
-			case "jscondition":
-			case "jscondition_ext":
-			{
-				e.register(new JavascriptCondition(e.getConfig().getLine(), e.getConfig()));
-			}
+		switch (e.getConditionName().toLowerCase()) {
+		case "jscondition":
+		case "jscondition_ext": {
+			e.register(new JavascriptCondition(e.getConfig().getLine(), e.getConfig()));
+		}
 		}
 	}
 

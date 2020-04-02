@@ -25,38 +25,38 @@ import com.gmail.berndivader.mythicmobsext.utils.Vector;
 import com.gmail.berndivader.mythicmobsext.utils.Vector2D;
 
 /**
- * Generates noise using {@link java.util.Random}. Every time a noise
- * generating function is called, a new value will be returned.
+ * Generates noise using {@link java.util.Random}. Every time a noise generating
+ * function is called, a new value will be returned.
  */
 public class RandomNoise implements NoiseGenerator {
 
-    private final Random random;
+	private final Random random;
 
-    /**
-     * Create a new noise generator using the given {@code Random}.
-     *
-     * @param random the random instance
-     */
-    public RandomNoise(Random random) {
-        this.random = random;
-    }
+	/**
+	 * Create a new noise generator using the given {@code Random}.
+	 *
+	 * @param random the random instance
+	 */
+	public RandomNoise(Random random) {
+		this.random = random;
+	}
 
-    /**
-     * Create a new noise generator with a newly constructed {@code Random}
-     * instance.
-     */
-    public RandomNoise() {
-        this(new Random());
-    }
+	/**
+	 * Create a new noise generator with a newly constructed {@code Random}
+	 * instance.
+	 */
+	public RandomNoise() {
+		this(new Random());
+	}
 
-    @Override
-    public float noise(Vector2D position) {
-        return random.nextFloat();
-    }
+	@Override
+	public float noise(Vector2D position) {
+		return random.nextFloat();
+	}
 
-    @Override
-    public float noise(Vector position) {
-        return random.nextFloat();
-    }
+	@Override
+	public float noise(Vector position) {
+		return random.nextFloat();
+	}
 
 }

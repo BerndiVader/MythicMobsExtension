@@ -12,35 +12,30 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="changegamemode",author="BerndiVader")
-public class ChangeGamemodeMechanic
-extends 
-SkillMechanic
-implements
-ITargetedEntitySkill {
-	
+@ExternalAnnotation(name = "changegamemode", author = "BerndiVader")
+public class ChangeGamemodeMechanic extends SkillMechanic implements ITargetedEntitySkill {
+
 	GameMode mode;
 
 	public ChangeGamemodeMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE=false;
+		ASYNC_SAFE = false;
 		try {
-			mode=GameMode.valueOf(mlc.getString("mode","SURVIVAL").toUpperCase());
-		} catch(Exception ex) {
-			mode=GameMode.SURVIVAL;
+			mode = GameMode.valueOf(mlc.getString("mode", "SURVIVAL").toUpperCase());
+		} catch (Exception ex) {
+			mode = GameMode.SURVIVAL;
 			Main.logger.warning("UNKNOWN GAMEMODETYPE. USING SURVIVAL INSTEAD");
 		}
-		
+
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		if(entity.isPlayer()) {
-			((Player)entity.getBukkitEntity()).setGameMode(mode);
+		if (entity.isPlayer()) {
+			((Player) entity.getBukkitEntity()).setGameMode(mode);
 			return true;
 		}
 		return false;
 	}
-
 
 }

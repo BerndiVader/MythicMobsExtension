@@ -8,19 +8,15 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.ILocationCondition;
 
-@ExternalAnnotation(name="minecraftversion",author="BerndiVader")
-public class MinecraftVersionCondition 
-extends 
-AbstractCustomCondition 
-implements 
-ILocationCondition {
-	
+@ExternalAnnotation(name = "minecraftversion", author = "BerndiVader")
+public class MinecraftVersionCondition extends AbstractCustomCondition implements ILocationCondition {
+
 	boolean match;
-	
+
 	public MinecraftVersionCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		
-		match=(new RangedDouble(mlc.getString("version",">10"))).equals(Utils.serverV);
+
+		match = (new RangedDouble(mlc.getString("version", ">10"))).equals(Utils.serverV);
 	}
 
 	@Override

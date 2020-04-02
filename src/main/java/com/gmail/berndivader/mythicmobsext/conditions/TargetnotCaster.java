@@ -7,12 +7,8 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="targetnotcaster",author="BerndiVader")
-public class TargetnotCaster
-extends 
-AbstractCustomCondition
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "targetnotcaster", author = "BerndiVader")
+public class TargetnotCaster extends AbstractCustomCondition implements ITargetedEntitySkill {
 
 	public TargetnotCaster(String line, MythicLineConfig mlc) {
 		super(line, mlc);
@@ -20,6 +16,6 @@ ITargetedEntitySkill {
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		return data.getCaster().getEntity().getBukkitEntity().getEntityId()!=entity.getBukkitEntity().getEntityId();
+		return data.getCaster().getEntity().getBukkitEntity().getEntityId() != entity.getBukkitEntity().getEntityId();
 	}
 }

@@ -17,39 +17,37 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
-@ExternalAnnotation(name="storetick,storeservertick",author="BerndiVader")
-public class StoreTicksMechanic 
-extends 
-SkillMechanic 
-implements
-INoTargetSkill {
+@ExternalAnnotation(name = "storetick,storeservertick", author = "BerndiVader")
+public class StoreTicksMechanic extends SkillMechanic implements INoTargetSkill {
 	boolean bl1;
 	PlaceholderString s1;
 
 	public StoreTicksMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		bl1=mlc.getBoolean("meta",false);
-		s1=mlc.getPlaceholderString("tag","");
+		bl1 = mlc.getBoolean("meta", false);
+		s1 = mlc.getPlaceholderString("tag", "");
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean cast(SkillMetadata data) {
-		int i1=NMSUtils.getCurrentTick(data.getCaster().getEntity().getBukkitEntity().getServer());
+		int i1 = NMSUtils.getCurrentTick(data.getCaster().getEntity().getBukkitEntity().getServer());
 		if (!bl1) {
-			String text=s1.get();
-			Scoreboard sb=Bukkit.getServer().getScoreboardManager().getMainScoreboard();
-			Objective obj=sb.getObjective(text);
-			if (obj==null) obj=sb.registerNewObjective(text,"emtpy");
-			Score score=null;
+			String text = s1.get();
+			Scoreboard sb = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
+			Objective obj = sb.getObjective(text);
+			if (obj == null)
+				obj = sb.registerNewObjective(text, "emtpy");
+			Score score = null;
 			if (data.getCaster().getEntity().isPlayer()) {
-				score=obj.getScore((OfflinePlayer)data.getCaster().getEntity().getBukkitEntity());
+				score = obj.getScore((OfflinePlayer) data.getCaster().getEntity().getBukkitEntity());
 			} else {
-				score=obj.getScore(data.getCaster().getEntity().getUniqueId().toString());
+				score = obj.getScore(data.getCaster().getEntity().getUniqueId().toString());
 			}
 			score.setScore(i1);
 		} else {
-			data.getCaster().getEntity().getBukkitEntity().setMetadata(s1.get(data),new FixedMetadataValue(Main.getPlugin(),i1));
+			data.getCaster().getEntity().getBukkitEntity().setMetadata(s1.get(data),
+					new FixedMetadataValue(Main.getPlugin(), i1));
 		}
 		return true;
 	}

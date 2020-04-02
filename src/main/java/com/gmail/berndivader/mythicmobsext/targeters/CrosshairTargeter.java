@@ -13,11 +13,8 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="crosshair,crosshairentity",author="BerndiVader")
-public class CrosshairTargeter 
-extends 
-ISelectorEntity 
-{
+@ExternalAnnotation(name = "crosshair,crosshairentity", author = "BerndiVader")
+public class CrosshairTargeter extends ISelectorEntity {
 	public CrosshairTargeter(MythicLineConfig mlc) {
 		super(mlc);
 	}
@@ -27,7 +24,8 @@ ISelectorEntity
 		HashSet<AbstractEntity> targets = new HashSet<AbstractEntity>();
 		SkillCaster caster = data.getCaster();
 		if (caster.getEntity().isPlayer()) {
-			targets.add(BukkitAdapter.adapt(Utils.getTargetedEntity((Player)caster.getEntity().getBukkitEntity(),length)));
+			targets.add(BukkitAdapter
+					.adapt(Utils.getTargetedEntity((Player) caster.getEntity().getBukkitEntity(), length)));
 		}
 		return this.applyOffsets(targets);
 	}

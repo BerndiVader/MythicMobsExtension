@@ -26,17 +26,18 @@ import java.awt.image.Kernel;
  */
 public class LinearKernel extends Kernel {
 
-    public LinearKernel(int radius) {
-        super(radius * 2 + 1, radius * 2 + 1, createKernel(radius));
-    }
+	public LinearKernel(int radius) {
+		super(radius * 2 + 1, radius * 2 + 1, createKernel(radius));
+	}
 
-    private static float[] createKernel(int radius) {
-        int diameter = radius * 2 + 1;
-        float[] data = new float[diameter * diameter];
+	private static float[] createKernel(int radius) {
+		int diameter = radius * 2 + 1;
+		float[] data = new float[diameter * diameter];
 
-        for (int i = 0; i < data.length; data[i++] = 1.0f / data.length);
+		for (int i = 0; i < data.length; data[i++] = 1.0f / data.length)
+			;
 
-        return data;
-    }
+		return data;
+	}
 
 }

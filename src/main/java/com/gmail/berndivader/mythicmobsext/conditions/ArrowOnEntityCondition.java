@@ -10,23 +10,19 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="arrowcount",author="BerndiVader")
-public class ArrowOnEntityCondition
-extends 
-AbstractCustomCondition
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "arrowcount", author = "BerndiVader")
+public class ArrowOnEntityCondition extends AbstractCustomCondition implements IEntityCondition {
 	private RangedDouble c;
 
 	public ArrowOnEntityCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.c=new RangedDouble(mlc.getString("amount",">0"));
+		this.c = new RangedDouble(mlc.getString("amount", ">0"));
 	}
 
 	@Override
 	public boolean check(AbstractEntity entity) {
 		if (entity.isLiving()) {
-			return this.c.equals(NMSUtils.getArrowsOnEntity((LivingEntity)entity.getBukkitEntity()));
+			return this.c.equals(NMSUtils.getArrowsOnEntity((LivingEntity) entity.getBukkitEntity()));
 		}
 		return false;
 	}

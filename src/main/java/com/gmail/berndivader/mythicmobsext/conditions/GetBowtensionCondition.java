@@ -11,47 +11,46 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 
-@ExternalAnnotation(name="getbowtension,bowtension,lastbowtension,tension",author="BerndiVader")
-public class GetBowtensionCondition
-extends
-AbstractCustomCondition 
-implements
-IEntityCondition {
+@ExternalAnnotation(name = "getbowtension,bowtension,lastbowtension,tension", author = "BerndiVader")
+public class GetBowtensionCondition extends AbstractCustomCondition implements IEntityCondition {
 	private boolean debug;
 	private RangedDouble r1;
 	private char c1;
-	
+
 	public GetBowtensionCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.debug=mlc.getBoolean("debug",false);
-		r(mlc.getString(new String[] {"range","r"},"-1.0"));
+		this.debug = mlc.getBoolean("debug", false);
+		r(mlc.getString(new String[] { "range", "r" }, "-1.0"));
 		c(line);
 	}
 
 	@Override
 	public boolean check(AbstractEntity e) {
-		double d1=-1;
+		double d1 = -1;
 		if (e.isPlayer()) {
-			Player p=(Player)e.getBukkitEntity();
-			if (this.c1=='l') {
+			Player p = (Player) e.getBukkitEntity();
+			if (this.c1 == 'l') {
 				if (p.hasMetadata(Utils.meta_BOWTENSIONLAST)) {
-					d1=p.getMetadata(Utils.meta_BOWTENSIONLAST).get(0).asDouble();
+					d1 = p.getMetadata(Utils.meta_BOWTENSIONLAST).get(0).asDouble();
 				}
 			} else {
-				if (p.getInventory().getItemInMainHand().getType()==Material.BOW||p.getInventory().getItemInOffHand().getType()==Material.BOW) {
-					d1=(double)Utils.getBowTension((Player)e.getBukkitEntity());
+				if (p.getInventory().getItemInMainHand().getType() == Material.BOW
+						|| p.getInventory().getItemInOffHand().getType() == Material.BOW) {
+					d1 = (double) Utils.getBowTension((Player) e.getBukkitEntity());
 				}
 			}
 		}
-		if (debug) System.err.println("bowtension time:"+d1);
+		if (debug)
+			System.err.println("bowtension time:" + d1);
 		return this.r1.equals(d1);
 	}
-	
+
 	private void c(String s) {
-		this.c1=s.charAt(0);
+		this.c1 = s.charAt(0);
 	}
+
 	private void r(String s) {
-		this.r1=new RangedDouble(s);
+		this.r1 = new RangedDouble(s);
 	}
 
 }

@@ -18,31 +18,29 @@ import net.minecraft.server.v1_14_R1.PacketPlayInFlying.PacketPlayInPosition;
 import net.minecraft.server.v1_14_R1.PacketPlayInResourcePackStatus;
 import net.minecraft.server.v1_14_R1.PacketPlayInSteerVehicle;
 
-public 
-class 
-PacketReceivingHandler 
-implements
-IPacketReceivingHandler 
-{
-	
+public class PacketReceivingHandler implements IPacketReceivingHandler {
+
 	Player player;
 	EntityPlayer entity_player;
-	
+
 	public PacketReceivingHandler(Player player) {
-		this.player=player;
-		entity_player=((CraftPlayer)this.player).getHandle();
+		this.player = player;
+		entity_player = ((CraftPlayer) this.player).getHandle();
 	}
 
 	@Override
 	public Packet<?> handle(PacketPlayInArmAnimation packet) {
-    	float f1=Volatile.handler.getIndicatorPercentage(player);
-    	player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,new FixedMetadataValue(Main.getPlugin(),f1));;
+		float f1 = Volatile.handler.getIndicatorPercentage(player);
+		player.setMetadata(GetLastDamageIndicatorCondition.meta_LASTDAMAGEINDICATOR,
+				new FixedMetadataValue(Main.getPlugin(), f1));
+		;
 		return packet;
 	}
 
 	@Override
 	public Packet<?> handle(PacketPlayInResourcePackStatus packet) {
-		player.setMetadata(Utils.meta_RESOURCEPACKSTATUS,new FixedMetadataValue(Main.getPlugin(),packet.status.name()));
+		player.setMetadata(Utils.meta_RESOURCEPACKSTATUS,
+				new FixedMetadataValue(Main.getPlugin(), packet.status.name()));
 		return packet;
 	}
 
@@ -54,12 +52,13 @@ IPacketReceivingHandler
 
 	@Override
 	public Packet<?> handle(PacketPlayInFlying packet) {
-		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3=new com.gmail.berndivader.mythicmobsext.utils.Vec3D(entity_player.locX,entity_player.locY,entity_player.locZ);
-		double dx=packet.a(entity_player.locX),dy=packet.b(entity_player.locY),dz=packet.c(entity_player.locZ);
-		v3=(v3.getX()!=dx||v3.getY()!=dy||v3.getZ()!=dz)
-				?v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx,dy,dz))
-				:new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0,0,0);
-		Utils.players.put(player.getUniqueId(),v3);
+		com.gmail.berndivader.mythicmobsext.utils.Vec3D v3 = new com.gmail.berndivader.mythicmobsext.utils.Vec3D(
+				entity_player.locX, entity_player.locY, entity_player.locZ);
+		double dx = packet.a(entity_player.locX), dy = packet.b(entity_player.locY), dz = packet.c(entity_player.locZ);
+		v3 = (v3.getX() != dx || v3.getY() != dy || v3.getZ() != dz)
+				? v3.length(new com.gmail.berndivader.mythicmobsext.utils.Vec3D(dx, dy, dz))
+				: new com.gmail.berndivader.mythicmobsext.utils.Vec3D(0, 0, 0);
+		Utils.players.put(player.getUniqueId(), v3);
 		return packet;
 	}
 
@@ -71,9 +70,8 @@ IPacketReceivingHandler
 
 	@Override
 	public Packet<?> handle(PacketPlayInBlockDig packet) {
-		player.setMetadata(Utils.meta_MMEDIGGING,new FixedMetadataValue(Main.getPlugin(),packet.d().name()));
+		player.setMetadata(Utils.meta_MMEDIGGING, new FixedMetadataValue(Main.getPlugin(), packet.d().name()));
 		return packet;
 	}
-
 
 }

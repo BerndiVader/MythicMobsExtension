@@ -26,28 +26,28 @@ import com.gmail.berndivader.mythicmobsext.utils.Vector;
  */
 public class Identity implements Transform {
 
-    @Override
-    public boolean isIdentity() {
-        return true;
-    }
+	@Override
+	public boolean isIdentity() {
+		return true;
+	}
 
-    @Override
-    public Vector apply(Vector vector) {
-        return vector;
-    }
+	@Override
+	public Vector apply(Vector vector) {
+		return vector;
+	}
 
-    @Override
-    public Transform inverse() {
-        return this;
-    }
+	@Override
+	public Transform inverse() {
+		return this;
+	}
 
-    @Override
-    public Transform combine(Transform other) {
-        if (other instanceof Identity) {
-            return this;
-        } else {
-            return other;
-        }
-    }
+	@Override
+	public Transform combine(Transform other) {
+		if (other instanceof Identity) {
+			return this;
+		} else {
+			return other;
+		}
+	}
 
 }

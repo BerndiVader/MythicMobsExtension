@@ -14,32 +14,29 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="forceshader",author="BerndiVader")
-public class ForceShaderMechanic
-extends
-SkillMechanic
-implements
-ITargetedEntitySkill {
-	
+@ExternalAnnotation(name = "forceshader", author = "BerndiVader")
+public class ForceShaderMechanic extends SkillMechanic implements ITargetedEntitySkill {
+
 	EntityType entityType;
 
 	public ForceShaderMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE=false;
-		
-		entityType=EntityType.valueOf(mlc.getString("type","CREEPER"));
+		ASYNC_SAFE = false;
+
+		entityType = EntityType.valueOf(mlc.getString("type", "CREEPER"));
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Player p=(Player)target.getBukkitEntity();
-			Location l=p.getLocation();
-			double dx=l.getX(),dz=l.getZ();
-			LivingEntity entity=(LivingEntity)p.getWorld().spawnEntity(new Location(p.getWorld(),dx,0,dz),entityType);
+			Player p = (Player) target.getBukkitEntity();
+			Location l = p.getLocation();
+			double dx = l.getX(), dz = l.getZ();
+			LivingEntity entity = (LivingEntity) p.getWorld().spawnEntity(new Location(p.getWorld(), dx, 0, dz),
+					entityType);
 			entity.setAI(false);
 			entity.setInvulnerable(false);
-			Volatile.handler.forceSpectate(p,entity,true);
+			Volatile.handler.forceSpectate(p, entity, true);
 			return true;
 		}
 		return false;

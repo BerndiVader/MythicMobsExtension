@@ -33,128 +33,131 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Reparametrises another interpolation function by arc length.
  *
- * <p>This is done so entities travel at roughly the same speed across
- * the whole route.</p>
+ * <p>
+ * This is done so entities travel at roughly the same speed across the whole
+ * route.
+ * </p>
  */
 public class ReparametrisingInterpolation implements Interpolation {
 
-    private static final Logger log = Logger.getLogger(ReparametrisingInterpolation.class.getCanonicalName());
+	private static final Logger log = Logger.getLogger(ReparametrisingInterpolation.class.getCanonicalName());
 
-    private final Interpolation baseInterpolation;
-    private double totalArcLength;
-    private final TreeMap<Double, Double> cache = new TreeMap<Double, Double>();
+	private final Interpolation baseInterpolation;
+	private double totalArcLength;
+	private final TreeMap<Double, Double> cache = new TreeMap<Double, Double>();
 
-    public ReparametrisingInterpolation(Interpolation baseInterpolation) {
-        checkNotNull(baseInterpolation);
-        
-        this.baseInterpolation = baseInterpolation;
-    }
+	public ReparametrisingInterpolation(Interpolation baseInterpolation) {
+		checkNotNull(baseInterpolation);
 
-    @Override
-    public void setNodes(List<Node> nodes) {
-        checkNotNull(nodes);
+		this.baseInterpolation = baseInterpolation;
+	}
 
-        baseInterpolation.setNodes(nodes);
-        cache.clear();
-        cache.put(0.0, 0.0);
-        cache.put(totalArcLength = baseInterpolation.arcLength(0.0, 1.0), 1.0);
-    }
+	@Override
+	public void setNodes(List<Node> nodes) {
+		checkNotNull(nodes);
 
-    public Interpolation getBaseInterpolation() {
-        return baseInterpolation;
-    }
+		baseInterpolation.setNodes(nodes);
+		cache.clear();
+		cache.put(0.0, 0.0);
+		cache.put(totalArcLength = baseInterpolation.arcLength(0.0, 1.0), 1.0);
+	}
 
-    @Override
-    public Vector getPosition(double position) {
-        if (position > 1)
-            return null;
+	public Interpolation getBaseInterpolation() {
+		return baseInterpolation;
+	}
 
-        return baseInterpolation.getPosition(arcToParameter(position));
-    }
+	@Override
+	public Vector getPosition(double position) {
+		if (position > 1)
+			return null;
 
-    @Override
-    public Vector get1stDerivative(double position) {
-        if (position > 1)
-            return null;
+		return baseInterpolation.getPosition(arcToParameter(position));
+	}
 
-        return baseInterpolation.get1stDerivative(arcToParameter(position)).normalize().multiply(totalArcLength);
-    }
+	@Override
+	public Vector get1stDerivative(double position) {
+		if (position > 1)
+			return null;
 
-    @Override
-    public double arcLength(double positionA, double positionB) {
-        return baseInterpolation.arcLength(arcToParameter(positionA), arcToParameter(positionB));
-    }
+		return baseInterpolation.get1stDerivative(arcToParameter(position)).normalize().multiply(totalArcLength);
+	}
 
-    private double arcToParameter(double arc) {
-        if (cache.isEmpty())
-            throw new IllegalStateException("Must call setNodes first.");
+	@Override
+	public double arcLength(double positionA, double positionB) {
+		return baseInterpolation.arcLength(arcToParameter(positionA), arcToParameter(positionB));
+	}
 
-        if (arc > 1) arc = 1;
-        arc *= totalArcLength;
+	private double arcToParameter(double arc) {
+		if (cache.isEmpty())
+			throw new IllegalStateException("Must call setNodes first.");
 
-        Entry<Double, Double> floorEntry = cache.floorEntry(arc);
-        final double leftArc = floorEntry.getKey();
-        final double leftParameter = floorEntry.getValue();
+		if (arc > 1)
+			arc = 1;
+		arc *= totalArcLength;
 
-        if (leftArc == arc) {
-            return leftParameter;
-        }
+		Entry<Double, Double> floorEntry = cache.floorEntry(arc);
+		final double leftArc = floorEntry.getKey();
+		final double leftParameter = floorEntry.getValue();
 
-        Entry<Double, Double> ceilingEntry = cache.ceilingEntry(arc);
-        if (ceilingEntry == null) {
-            log.warning("Error in arcToParameter: no ceiling entry for " + arc + " found!");
-            return 0;
-        }
-        final double rightArc = ceilingEntry.getKey();
-        final double rightParameter = ceilingEntry.getValue();
+		if (leftArc == arc) {
+			return leftParameter;
+		}
 
-        if (rightArc == arc) {
-            return rightParameter;
-        }
+		Entry<Double, Double> ceilingEntry = cache.ceilingEntry(arc);
+		if (ceilingEntry == null) {
+			log.warning("Error in arcToParameter: no ceiling entry for " + arc + " found!");
+			return 0;
+		}
+		final double rightArc = ceilingEntry.getKey();
+		final double rightParameter = ceilingEntry.getValue();
 
-        return evaluate(arc, leftArc, leftParameter, rightArc, rightParameter);
-    }
+		if (rightArc == arc) {
+			return rightParameter;
+		}
 
-    private double evaluate(double arc, double leftArc, double leftParameter, double rightArc, double rightParameter) {
-        double midParameter = 0;
-        for (int i = 0; i < 10; ++i) {
-            midParameter = (leftParameter + rightParameter) * 0.5;
-            //final double midArc = leftArc + baseInterpolation.arcLength(leftParameter, midParameter);
-            final double midArc = baseInterpolation.arcLength(0, midParameter);
-            cache.put(midArc, midParameter);
+		return evaluate(arc, leftArc, leftParameter, rightArc, rightParameter);
+	}
 
-            if (midArc < leftArc) {
-                return leftParameter;
-            }
+	private double evaluate(double arc, double leftArc, double leftParameter, double rightArc, double rightParameter) {
+		double midParameter = 0;
+		for (int i = 0; i < 10; ++i) {
+			midParameter = (leftParameter + rightParameter) * 0.5;
+			// final double midArc = leftArc + baseInterpolation.arcLength(leftParameter,
+			// midParameter);
+			final double midArc = baseInterpolation.arcLength(0, midParameter);
+			cache.put(midArc, midParameter);
 
-            if (midArc > rightArc) {
-                return rightParameter;
-            }
+			if (midArc < leftArc) {
+				return leftParameter;
+			}
 
-            if (Math.abs(midArc - arc) < 0.01) {
-                return midParameter;
-            }
+			if (midArc > rightArc) {
+				return rightParameter;
+			}
 
-            if (arc < midArc) {
-                // search between left and mid
-                rightArc = midArc;
-                rightParameter = midParameter;
-            }
-            else {
-                // search between mid and right
-                leftArc = midArc;
-                leftParameter = midParameter;
-            }
-        }
-        return midParameter;
-    }
+			if (Math.abs(midArc - arc) < 0.01) {
+				return midParameter;
+			}
 
-    @Override
-    public int getSegment(double position) {
-        if (position > 1)
-            return Integer.MAX_VALUE;
+			if (arc < midArc) {
+				// search between left and mid
+				rightArc = midArc;
+				rightParameter = midParameter;
+			} else {
+				// search between mid and right
+				leftArc = midArc;
+				leftParameter = midParameter;
+			}
+		}
+		return midParameter;
+	}
 
-        return baseInterpolation.getSegment(arcToParameter(position));
-    }
+	@Override
+	public int getSegment(double position) {
+		if (position > 1)
+			return Integer.MAX_VALUE;
+
+		return baseInterpolation.getSegment(arcToParameter(position));
+	}
 
 }

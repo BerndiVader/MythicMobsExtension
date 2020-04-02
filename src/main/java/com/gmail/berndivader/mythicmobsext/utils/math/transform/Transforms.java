@@ -28,22 +28,24 @@ import com.gmail.berndivader.mythicmobsext.utils.Location;
  */
 public final class Transforms {
 
-    private Transforms() {
-    }
+	private Transforms() {
+	}
 
-    /**
-     * Transform a location's position with a given transform.
-     *
-     * <p>Direction is unaffected.</p>
-     *
-     * @param location the location
-     * @param transform the transform
-     * @return the transformed location
-     */
-    public static Location transform(Location location, Transform transform) {
-        checkNotNull(location);
-        checkNotNull(transform);
-        return new Location(location.getExtent(), transform.apply(location.toVector()), location.getDirection());
-    }
+	/**
+	 * Transform a location's position with a given transform.
+	 *
+	 * <p>
+	 * Direction is unaffected.
+	 * </p>
+	 *
+	 * @param location  the location
+	 * @param transform the transform
+	 * @return the transformed location
+	 */
+	public static Location transform(Location location, Transform transform) {
+		checkNotNull(location);
+		checkNotNull(transform);
+		return new Location(location.getExtent(), transform.apply(location.toVector()), location.getDirection());
+	}
 
 }

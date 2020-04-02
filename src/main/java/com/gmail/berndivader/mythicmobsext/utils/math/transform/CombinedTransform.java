@@ -33,67 +33,68 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CombinedTransform implements Transform {
 
-    private final Transform[] transforms;
+	private final Transform[] transforms;
 
-    /**
-     * Create a new combined transformation.
-     *
-     * @param transforms a list of transformations
-     */
-    public CombinedTransform(Transform... transforms) {
-        checkNotNull(transforms);
-        this.transforms = Arrays.copyOf(transforms, transforms.length);
-    }
+	/**
+	 * Create a new combined transformation.
+	 *
+	 * @param transforms a list of transformations
+	 */
+	public CombinedTransform(Transform... transforms) {
+		checkNotNull(transforms);
+		this.transforms = Arrays.copyOf(transforms, transforms.length);
+	}
 
-    /**
-     * Create a new combined transformation.
-     *
-     * @param transforms a list of transformations
-     */
-    public CombinedTransform(Collection<Transform> transforms) {
-        this(transforms.toArray(new Transform[checkNotNull(transforms).size()]));
-    }
+	/**
+	 * Create a new combined transformation.
+	 *
+	 * @param transforms a list of transformations
+	 */
+	public CombinedTransform(Collection<Transform> transforms) {
+		this(transforms.toArray(new Transform[checkNotNull(transforms).size()]));
+	}
 
-    @Override
-    public boolean isIdentity() {
-        for (Transform transform : transforms) {
-            if (!transform.isIdentity()) {
-                return false;
-            }
-        }
+	@Override
+	public boolean isIdentity() {
+		for (Transform transform : transforms) {
+			if (!transform.isIdentity()) {
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public Vector apply(Vector vector) {
-        for (Transform transform : transforms) {
-            vector = transform.apply(vector);
-        }
-        return vector;
-    }
+	@Override
+	public Vector apply(Vector vector) {
+		for (Transform transform : transforms) {
+			vector = transform.apply(vector);
+		}
+		return vector;
+	}
 
-    @Override
-    public Transform inverse() {
-        List<Transform> list = new ArrayList<Transform>();
-        for (int i = transforms.length - 1; i >= 0; i--) {
-            list.add(transforms[i].inverse());
-        }
-        return new CombinedTransform(list);
-    }
+	@Override
+	public Transform inverse() {
+		List<Transform> list = new ArrayList<Transform>();
+		for (int i = transforms.length - 1; i >= 0; i--) {
+			list.add(transforms[i].inverse());
+		}
+		return new CombinedTransform(list);
+	}
 
-    @Override
-    public Transform combine(Transform other) {
-        checkNotNull(other);
-        if (other instanceof CombinedTransform) {
-            CombinedTransform combinedOther = (CombinedTransform) other;
-            Transform[] newTransforms = new Transform[transforms.length + combinedOther.transforms.length];
-            System.arraycopy(transforms, 0, newTransforms, 0, transforms.length);
-            System.arraycopy(combinedOther.transforms, 0, newTransforms, transforms.length, combinedOther.transforms.length);
-            return new CombinedTransform(newTransforms);
-        } else {
-            return new CombinedTransform(this, other);
-        }
-    }
+	@Override
+	public Transform combine(Transform other) {
+		checkNotNull(other);
+		if (other instanceof CombinedTransform) {
+			CombinedTransform combinedOther = (CombinedTransform) other;
+			Transform[] newTransforms = new Transform[transforms.length + combinedOther.transforms.length];
+			System.arraycopy(transforms, 0, newTransforms, 0, transforms.length);
+			System.arraycopy(combinedOther.transforms, 0, newTransforms, transforms.length,
+					combinedOther.transforms.length);
+			return new CombinedTransform(newTransforms);
+		} else {
+			return new CombinedTransform(this, other);
+		}
+	}
 
 }

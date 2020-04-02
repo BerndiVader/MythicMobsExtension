@@ -34,16 +34,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
 
-@ExternalAnnotation(name="mythicorbitalprojectile",author="BerndiVader")
-public
-class
-MythicOrbitalProjectile
-extends 
-CustomProjectile
-implements
-ITargetedEntitySkill,
-ITargetedLocationSkill
-{
+@ExternalAnnotation(name = "mythicorbitalprojectile", author = "BerndiVader")
+public class MythicOrbitalProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
 	protected String pEntityName;
 	protected float pEntitySpin;
 	protected int pEntityPitchOffset;
@@ -157,8 +149,8 @@ ITargetedLocationSkill
 						BukkitAdapter.adapt(this.currentLocation));
 				this.pEntity.setMetadata(Utils.mpNameVar, new FixedMetadataValue(Main.getPlugin(), null));
 				if (!this.targetable)
-					Volatile.handler.changeHitBox(this.pEntity,0,0,0);
-					this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
+					Volatile.handler.changeHitBox(this.pEntity, 0, 0, 0);
+				this.pEntity.setMetadata(Utils.noTargetVar, new FixedMetadataValue(Main.getPlugin(), null));
 			} catch (InvalidMobTypeException e1) {
 				e1.printStackTrace();
 				return;
@@ -186,7 +178,7 @@ ITargetedLocationSkill
 				this.inRange.removeIf(e -> {
 					if (e != null) {
 						if (e.getUniqueId().equals(this.am.getEntity().getUniqueId())
-								||e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
+								|| e.getBukkitEntity().hasMetadata(Utils.noTargetVar)) {
 							return true;
 						}
 						if (!MythicOrbitalProjectile.this.hitPlayers && e.isPlayer()) {
@@ -220,7 +212,7 @@ ITargetedLocationSkill
 		@Override
 		public void run() {
 			this.tick++;
-			if ((this.radPerTick*this.tick)>360) {
+			if ((this.radPerTick * this.tick) > 360) {
 				this.tick = 0;
 			}
 			if (this.cancelled) {
@@ -240,8 +232,8 @@ ITargetedLocationSkill
 			}
 
 			this.centerLocation = this.target.getBukkitEntity().getLocation().clone().add(0.0D, this.pVOff, 0.0D);
-			this.currentLocation = MathUtils.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ,
-					this.radiusY, this.radPerTick * tick);
+			this.currentLocation = MathUtils.getCircleLoc(this.centerLocation, this.radiusX, this.radiusZ, this.radiusY,
+					this.radPerTick * tick);
 			if (MythicOrbitalProjectile.this.stopOnHitGround
 					&& !BlockUtil.isPathable(BukkitAdapter.adapt(this.currentLocation).getBlock())) {
 				this.stop();

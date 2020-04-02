@@ -17,42 +17,39 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="getmobfield",author="BerndiVader")
-public class GetMobField 
-extends 
-SkillMechanic
-implements
-ITargetedEntitySkill,
-INoTargetSkill {
+@ExternalAnnotation(name = "getmobfield", author = "BerndiVader")
+public class GetMobField extends SkillMechanic implements ITargetedEntitySkill, INoTargetSkill {
 	String s2;
 	boolean bl1;
 	Field f1;
 
 	public GetMobField(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		s2=mlc.getString("meta",null);
-		bl1=mlc.getBoolean("stance",false);
+		s2 = mlc.getString("meta", null);
+		bl1 = mlc.getBoolean("stance", false);
 		try {
-			f1=ActiveMob.class.getDeclaredField(mlc.getString("field",""));
+			f1 = ActiveMob.class.getDeclaredField(mlc.getString("field", ""));
 			f1.setAccessible(true);
 		} catch (NoSuchFieldException | SecurityException e) {
-			Main.logger.warning("Field "+e.getLocalizedMessage()+" doesnt exists in ActiveMob.class!");
+			Main.logger.warning("Field " + e.getLocalizedMessage() + " doesnt exists in ActiveMob.class!");
 		}
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		ActiveMob am;
-		Object o=null;
-		if (f1!=null&&(am=Utils.mobmanager.getMythicMobInstance(target))!=null) {
+		Object o = null;
+		if (f1 != null && (am = Utils.mobmanager.getMythicMobInstance(target)) != null) {
 			try {
-				if ((o=f1.get(am))==null) return false;
+				if ((o = f1.get(am)) == null)
+					return false;
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			if ((o instanceof Optional)&&((Optional<?>)o).isPresent()) o=((Optional<?>)o).get();
-			if (!bl1&&s2!=null) {
-				target.getBukkitEntity().setMetadata(s2,new FixedMetadataValue(Main.getPlugin(),o.toString()));
+			if ((o instanceof Optional) && ((Optional<?>) o).isPresent())
+				o = ((Optional<?>) o).get();
+			if (!bl1 && s2 != null) {
+				target.getBukkitEntity().setMetadata(s2, new FixedMetadataValue(Main.getPlugin(), o.toString()));
 			} else {
 				am.setStance(o.toString());
 			}
@@ -62,7 +59,7 @@ INoTargetSkill {
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		return castAtEntity(data,data.getCaster().getEntity());
+		return castAtEntity(data, data.getCaster().getEntity());
 	}
 
 }

@@ -23,7 +23,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 		this.ASYNC_SAFE = false;
 		this.filter = mlc.getString(new String[] { "filter", "f" }, "").split(",");
 		this.targetself = mlc.getBoolean(new String[] { "selfnotarget", "snt" }, false);
-		length=mlc.getInteger("length",32);
+		length = mlc.getInteger("length", 32);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 				am.getThreatTable().clearTarget();
 				am.getThreatTable().getAllThreatTargets().clear();
 			}
-			le = Utils.getTargetedEntity((Player) BukkitAdapter.adapt(data.getCaster().getEntity()),length);
+			le = Utils.getTargetedEntity((Player) BukkitAdapter.adapt(data.getCaster().getEntity()), length);
 			if (le != null) {
 				am.getThreatTable().threatGain(BukkitAdapter.adapt(le), 99999999);
 				am.getThreatTable().targetHighestThreat();

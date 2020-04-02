@@ -11,22 +11,18 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
-@ExternalAnnotation(name="closeinventory",author="BerndiVader")
-public class CloseInventoryMechanic
-extends
-SkillMechanic 
-implements
-ITargetedEntitySkill {
+@ExternalAnnotation(name = "closeinventory", author = "BerndiVader")
+public class CloseInventoryMechanic extends SkillMechanic implements ITargetedEntitySkill {
 
 	public CloseInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE=false;
+		this.ASYNC_SAFE = false;
 	}
-	
+
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (target.isPlayer()) {
-			Player player=(Player)target.getBukkitEntity();
+			Player player = (Player) target.getBukkitEntity();
 			player.closeInventory();
 			Volatile.handler.forceCancelEndScreenPlayer(player);
 			return true;
