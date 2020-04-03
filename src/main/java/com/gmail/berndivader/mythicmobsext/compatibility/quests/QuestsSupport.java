@@ -28,10 +28,14 @@ public class QuestsSupport implements Listener {
 	}
 
 	public QuestsSupport(Plugin plugin) {
-		core = this;
-		this.plugin = plugin;
-		Main.pluginmanager.registerEvents(this, plugin);
-		Main.logger.info("using " + pluginName);
+		if(Bukkit.getPluginManager().getPlugin(quests.get().getName()).getDescription().getVersion().contains("3.9")) {
+			core = this;
+			this.plugin = plugin;
+			Main.pluginmanager.registerEvents(this, plugin);
+			Main.logger.info("using " + pluginName);
+		} else {
+			Main.logger.warning("Your Quests plugin version is too old, update it if you want to use it!");
+		}
 
 	}
 

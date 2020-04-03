@@ -11,7 +11,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillString;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
-import me.blackvein.quests.exceptions.InvalidStageException;
 
 public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	Quests quests = QuestsSupport.inst().quests();
@@ -55,11 +54,7 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 				break;
 			case "SETSTAGE":
 				if (quest != null) {
-					try {
-						quest.setStage(q, i1);
-					} catch (InvalidStageException e1) {
-						e1.printStackTrace();
-					}
+					quest.setStage(q, i1);
 					quest.updateCompass(q, q.getCurrentStage(quest));
 				}
 				break;

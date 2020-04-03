@@ -286,7 +286,6 @@ public class Core implements Handler, Listener {
 			NMSUtils.setFinalField("j", playerList.getClass().getSuperclass(), playerList, j);
 		}
 		entityplayer1.setHealth(entityplayer1.getHealth());
-		playerList.updateClient(entityplayer);
 		entityplayer.updateAbilities();
 		for (Object o1 : entityplayer.getEffects()) {
 			MobEffect mobEffect = (MobEffect) o1;
@@ -307,6 +306,7 @@ public class Core implements Handler, Listener {
 				advancementdataplayer.c();
 			}
 		}
+		playerList.updateClient(entityplayer);
 	}
 
 	public void forceEntitySitting(Entity entity) {
