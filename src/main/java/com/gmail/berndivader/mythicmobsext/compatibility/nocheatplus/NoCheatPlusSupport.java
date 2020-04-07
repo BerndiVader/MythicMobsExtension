@@ -52,10 +52,12 @@ public class NoCheatPlusSupport implements Listener {
 		case "exemptplayer":
 		case "exemptplayer_ext": {
 			e.register(new ExemptPlayerMechanic(e.getConfig().getLine(), e.getConfig()));
+			break;
 		}
 		case "unexemptplayer":
 		case "unexemptplayer_ext": {
 			e.register(new UnExemptPlayerMechanic(e.getConfig().getLine(), e.getConfig()));
+			break;
 		}
 		}
 	}
@@ -67,6 +69,7 @@ public class NoCheatPlusSupport implements Listener {
 		case "hasexemption":
 		case "hasexemption_ext": {
 			e.register(new HasExemptionCondition(e.getConfig().getLine(), e.getConfig()));
+			break;
 		}
 		}
 	}

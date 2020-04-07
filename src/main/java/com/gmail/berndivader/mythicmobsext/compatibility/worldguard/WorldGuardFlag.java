@@ -24,27 +24,33 @@ public class WorldGuardFlag implements Listener {
 		case "wgstateflag_ext": {
 			SkillCondition c = new WorldGuardStateFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(c);
+			break;
 		}
 		case "wgdenyspawnflag":
 		case "wgdenyspawnflag_ext": {
 			SkillCondition c = new WorldGuardDenySpawnFlagCondition(e.getConditionName(), e.getConfig());
 			e.register(c);
+			break;
 		}
 		case "worldguardflag":
 		case "worldguardflag_ext": {
 			e.register(new WorldGuardFlagCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		case "regionname":
 		case "regionname_ext": {
 			e.register(new WorldGuardRegionCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		case "entitiesinregion":
 		case "entitiesinregion_ext": {
 			e.register(new EntitiesInRegionCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		case "memberregion":
 		case "memberregion_ext": {
 			e.register(new MemberRegion(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		}
 	}

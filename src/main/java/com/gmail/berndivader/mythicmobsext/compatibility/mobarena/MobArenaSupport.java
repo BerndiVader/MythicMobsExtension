@@ -29,6 +29,7 @@ public class MobArenaSupport implements Listener {
 		case "inmobarena":
 		case "inmobarena_ext": {
 			e.register(new InMobArenaCondition(e.getConfig().getLine(), e.getConfig()));
+			break;
 		}
 		}
 	}

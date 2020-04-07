@@ -26,10 +26,10 @@ public class QuestCompleteCondition extends AbstractCustomCondition implements I
 	}
 
 	@Override
-	public boolean check(AbstractEntity e) {
-		if (!e.isPlayer())
+	public boolean check(AbstractEntity entity) {
+		if (!entity.isPlayer())
 			return false;
-		Player p = (Player) e.getBukkitEntity();
+		Player p = (Player) entity.getBukkitEntity();
 		Quester q = quests.getQuester(p.getUniqueId());
 		boolean bl1 = false;
 		if (q != null) {

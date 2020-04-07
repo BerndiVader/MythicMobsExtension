@@ -207,6 +207,14 @@ public class Utils implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void testDamage(EntityDamageByEntityEvent e) {
+		if (e.getEntity().hasMetadata(("mme_dmg_chk")))
+			e.setCancelled(true);
+		e.getEntity().removeMetadata("mme_dmg_chk", Main.getPlugin());
+		e.getEntity().setMetadata("mme_dmg_amount", new FixedMetadataValue(Main.getPlugin(), e.getFinalDamage()));
+	}
+
 	@EventHandler
 	public void creeperExplode(EntityExplodeEvent e) {
 		if (e.isCancelled() || (e.getEntityType() != EntityType.CREEPER))

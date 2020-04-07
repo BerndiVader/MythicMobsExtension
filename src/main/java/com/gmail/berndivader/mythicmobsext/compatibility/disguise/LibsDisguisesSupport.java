@@ -49,6 +49,7 @@ public class LibsDisguisesSupport implements Listener {
 		case "parseddisguise":
 		case "parseddisguise_ext": {
 			e.register(new ParsedDisguiseMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			break;
 		}
 		}
 	}

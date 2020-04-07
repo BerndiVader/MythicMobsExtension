@@ -28,7 +28,7 @@ public class QuestsSupport implements Listener {
 	}
 
 	public QuestsSupport(Plugin plugin) {
-		if(Bukkit.getPluginManager().getPlugin(quests.get().getName()).getDescription().getVersion().contains("3.9")) {
+		if (Bukkit.getPluginManager().getPlugin(quests.get().getName()).getDescription().getVersion().contains("3.9")) {
 			core = this;
 			this.plugin = plugin;
 			Main.pluginmanager.registerEvents(this, plugin);
@@ -61,15 +61,18 @@ public class QuestsSupport implements Listener {
 		switch (s1) {
 		case "activequest":
 		case "activequest_ext": {
-			e.register(new QuestRunningCondition(e.getConfig().getLine(), e.getConfig()));
+			e.register(new QuestRunningCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		case "completedquest":
 		case "completedquest_ext": {
-			e.register(new QuestCompleteCondition(e.getConfig().getLine(), e.getConfig()));
+			e.register(new QuestCompleteCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		case "testrequirement":
 		case "testrequirement_ext": {
-			e.register(new TestRequirementCondition(e.getConfig().getLine(), e.getConfig()));
+			e.register(new TestRequirementCondition(e.getConditionName(), e.getConfig()));
+			break;
 		}
 		}
 	}
@@ -84,7 +87,8 @@ public class QuestsSupport implements Listener {
 		case "completequest_ext":
 		case "takequest_ext":
 		case "failquest_ext": {
-			e.register(new QuestsMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			e.register(new QuestsMechanic(e.getMechanicName(), e.getConfig()));
+			break;
 		}
 		}
 	}
