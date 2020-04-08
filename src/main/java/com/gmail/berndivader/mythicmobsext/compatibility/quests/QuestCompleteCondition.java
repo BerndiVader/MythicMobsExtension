@@ -1,6 +1,8 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 
@@ -15,14 +17,14 @@ import me.blackvein.quests.Quests;
 
 public class QuestCompleteCondition extends AbstractCustomCondition implements IEntityCondition {
 	Quests quests = QuestsSupport.inst().quests();
-	String[] arr1;
+	List<String> questList;
 
 	public QuestCompleteCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
 		String s1 = mlc.getString("quest", "any").toLowerCase();
 		if (!s1.isEmpty() && s1.charAt(0) == '"')
 			s1 = SkillString.parseMessageSpecialChars(s1.substring(1, s1.length() - 1));
-		arr1 = s1.split(",");
+		questList = Arrays.asList(s1.toLowerCase().split(","));
 	}
 
 	@Override
@@ -34,14 +36,11 @@ public class QuestCompleteCondition extends AbstractCustomCondition implements I
 		boolean bl1 = false;
 		if (q != null) {
 			Iterator<String> quests = q.getCompletedQuests().iterator();
-			while (quests.hasNext() && !bl1) {
-				String quest = quests.next().toLowerCase();
-				for (int i1 = 0; i1 < arr1.length; i1++) {
-					String s1 = arr1[i1];
-					if ((s1.equals("any") || quest.equals(s1))) {
-						bl1 = true;
-						break;
-					}
+			while (quests.hasNext()) {
+				String quest=quests.next().toLowerCase();
+				System.err.println(quest);
+				if (questList.contains(quest)) {
+					return true;
 				}
 			}
 		}
