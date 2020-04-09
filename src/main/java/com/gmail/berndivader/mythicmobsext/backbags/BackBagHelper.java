@@ -178,6 +178,16 @@ public class BackBagHelper implements Listener {
 		return null;
 	}
 
+	public static List<ItemStack> getItemsFromInventories(UUID uuid) {
+		List<ItemStack> items = new ArrayList<>();
+		Iterator<BackBagInventory> inventory_iter = bags.get(uuid).iterator();
+		while (inventory_iter.hasNext()) {
+			BackBagInventory stored_inventory = inventory_iter.next();
+			items.addAll(Arrays.asList(stored_inventory.getInventory().getContents()));
+		}
+		return items;
+	}
+
 	public static void replace(UUID uuid, BackBagInventory inventory) {
 		addInventory(uuid, inventory);
 	}

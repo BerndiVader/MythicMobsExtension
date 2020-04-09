@@ -63,9 +63,8 @@ public class ModdingItem implements Cloneable {
 
 	public int getSlot(SkillMetadata data, AbstractEntity target) {
 		return data != null
-				? this.slot.isPresent() ? Integer.parseInt(new PlaceholderString(this.slot.get()).get(data, target))
-						: -1
-				: this.slot.isPresent() ? Integer.parseInt(new PlaceholderString(this.slot.get()).get(target)) : -1;
+				? this.slot.isPresent() ? Integer.parseInt(PlaceholderString.of(this.slot.get()).get(data, target)) : -1
+				: this.slot.isPresent() ? Integer.parseInt(PlaceholderString.of(this.slot.get()).get(target)) : -1;
 	}
 
 	public void setBagName(String bag_name) {
@@ -88,7 +87,7 @@ public class ModdingItem implements Cloneable {
 			if (amount.isPresent())
 				item_stack.setAmount(amount.get().rollInteger());
 			if (name.isPresent()) {
-				String name = new PlaceholderString(this.name.get()).get(data, target);
+				String name = PlaceholderString.of(this.name.get()).get(data, target);
 				ItemMeta item_meta = item_stack.getItemMeta();
 				item_meta.setDisplayName(name);
 				item_stack.setItemMeta(item_meta);
@@ -97,7 +96,7 @@ public class ModdingItem implements Cloneable {
 				String[] lore = this.lore.get().clone();
 				int size = lore.length;
 				for (int i1 = 0; i1 < size; i1++) {
-					String temp = new PlaceholderString(lore[i1]).get(data, target);
+					String temp = PlaceholderString.of(lore[i1]).get(data, target);
 					lore[i1] = temp;
 				}
 				ItemMeta item_meta = item_stack.getItemMeta();
@@ -115,7 +114,7 @@ public class ModdingItem implements Cloneable {
 			}
 			if (durability.isPresent()) {
 				short duration = item_stack.getDurability();
-				String durability = new PlaceholderString(this.durability.get()).get(data, target);
+				String durability = PlaceholderString.of(this.durability.get()).get(data, target);
 				try {
 					duration = Short.parseShort(durability);
 				} catch (Exception ex) {
@@ -132,7 +131,7 @@ public class ModdingItem implements Cloneable {
 			if (amount.isPresent())
 				item_stack.setAmount(item_stack.getAmount() + amount.get().rollInteger());
 			if (name.isPresent()) {
-				String name = new PlaceholderString(this.name.get()).get(data, target);
+				String name = PlaceholderString.of(this.name.get()).get(data, target);
 				ItemMeta item_meta = item_stack.getItemMeta();
 				String old_name = item_meta.hasDisplayName() ? item_meta.getDisplayName() : "";
 				item_meta.setDisplayName(old_name + name);
@@ -142,7 +141,7 @@ public class ModdingItem implements Cloneable {
 				String[] lore = this.lore.get().clone();
 				int size = lore.length;
 				for (int i1 = 0; i1 < size; i1++) {
-					lore[i1] = new PlaceholderString(lore[i1]).get(data, target);
+					lore[i1] = PlaceholderString.of(lore[i1]).get(data, target);
 				}
 				ItemMeta item_meta = item_stack.getItemMeta();
 				if (item_meta.hasLore()) {
@@ -164,7 +163,7 @@ public class ModdingItem implements Cloneable {
 			}
 			if (durability.isPresent()) {
 				short duration = 0;
-				String durability = new PlaceholderString(this.durability.get()).get(data, target);
+				String durability = PlaceholderString.of(this.durability.get()).get(data, target);
 				try {
 					duration = Short.parseShort(durability);
 				} catch (Exception ex) {
@@ -184,7 +183,7 @@ public class ModdingItem implements Cloneable {
 				}
 			}
 			if (name.isPresent() && item_stack.getItemMeta().hasDisplayName()) {
-				String name = new PlaceholderString(this.name.get()).get(data, target);
+				String name = PlaceholderString.of(this.name.get()).get(data, target);
 				ItemMeta item_meta = item_stack.getItemMeta();
 				String new_name = name;
 				String old_name = item_meta.getDisplayName();
@@ -195,7 +194,7 @@ public class ModdingItem implements Cloneable {
 				String[] lore = this.lore.get().clone();
 				int size = lore.length;
 				for (int i1 = 0; i1 < size; i1++) {
-					lore[i1] = new PlaceholderString(lore[i1]).get(data, target);
+					lore[i1] = PlaceholderString.of(lore[i1]).get(data, target);
 				}
 				ItemMeta item_meta = item_stack.getItemMeta();
 				String[] lores = lore;
@@ -217,7 +216,7 @@ public class ModdingItem implements Cloneable {
 			}
 			if (durability.isPresent()) {
 				short duration = 0;
-				String durability = new PlaceholderString(this.durability.get()).get(data, target);
+				String durability = PlaceholderString.of(this.durability.get()).get(data, target);
 				try {
 					duration = Short.parseShort(durability);
 				} catch (Exception ex) {

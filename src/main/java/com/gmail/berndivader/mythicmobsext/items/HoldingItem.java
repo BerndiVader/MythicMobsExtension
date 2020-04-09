@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -165,7 +166,7 @@ public class HoldingItem implements Cloneable {
 
 	public void parseSlot(SkillMetadata data, AbstractEntity target) {
 		if (this.slot != null) {
-			this.slot = new PlaceholderString(this.slot).get(data, target);
+			this.slot = PlaceholderString.of(this.slot).get(data, target);
 		}
 	}
 
@@ -251,6 +252,9 @@ public class HoldingItem implements Cloneable {
 				contents.add(entity.getEquipment().getItemInMainHand());
 				contents.add(entity.getEquipment().getItemInOffHand());
 			}
+			if (BackBagHelper.hasBackBag(entity.getUniqueId())) {
+				contents.addAll(BackBagHelper.getItemsFromInventories(entity.getUniqueId()));
+			}
 		} else if (holding.getWhere().equals(WhereEnum.SLOT)) {
 			if (is_player) {
 				ItemStack itemstack = new ItemStack(Material.AIR);
@@ -260,12 +264,16 @@ public class HoldingItem implements Cloneable {
 			}
 		} else if (holding.getWhere().equals(WhereEnum.BACKBAG)) {
 			if (BackBagHelper.hasBackBag(entity.getUniqueId())) {
-				Inventory inventroy = BackBagHelper.getInventory(entity.getUniqueId(), holding.getBagName());
-				if (inventroy != null) {
-					if (holding.getSlot() > -1) {
-						contents.add(inventroy.getItem(holding.getSlot()));
-					} else {
-						contents = Arrays.asList(inventroy.getContents());
+				if (holding.getBagName().toUpperCase().equals("ANY")) {
+					contents.addAll(BackBagHelper.getItemsFromInventories(entity.getUniqueId()));
+				} else {
+					Inventory inventroy = BackBagHelper.getInventory(entity.getUniqueId(), holding.getBagName());
+					if (inventroy != null) {
+						if (holding.getSlot() > -1) {
+							contents.add(inventroy.getItem(holding.getSlot()));
+						} else {
+							contents = Arrays.asList(inventroy.getContents());
+						}
 					}
 				}
 			}
@@ -288,9 +296,6 @@ public class HoldingItem implements Cloneable {
 			} else if (holding.getWhere().equals(WhereEnum.ARMOR)) {
 				contents.addAll(Arrays.asList(entity.getEquipment().getArmorContents()));
 			}
-		}
-		for (int i1 = 0; i1 < contents.size(); i1++) {
-			ItemStack stack = contents.get(i1);
 		}
 		return contents;
 	}

@@ -37,7 +37,7 @@ public class QuestCompleteCondition extends AbstractCustomCondition implements I
 		if (q != null) {
 			Iterator<String> quests = q.getCompletedQuests().iterator();
 			while (quests.hasNext()) {
-				String quest=quests.next().toLowerCase();
+				String quest = quests.next().toLowerCase();
 				System.err.println(quest);
 				if (questList.contains(quest)) {
 					return true;

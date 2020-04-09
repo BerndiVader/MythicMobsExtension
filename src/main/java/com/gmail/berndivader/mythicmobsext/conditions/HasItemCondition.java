@@ -72,7 +72,7 @@ public class HasItemCondition extends AbstractCustomCondition implements IEntity
 				holding.parseSlot(data, t);
 				String bag_name = holding.getBagName();
 				if (bag_name != null)
-					holding.setBagName(new PlaceholderString(bag_name).get(data, t));
+					holding.setBagName(PlaceholderString.of(bag_name).get(data, t));
 				List<ItemStack> contents = HoldingItem.getContents(holding, target);
 				for (int i2 = 0; i2 < contents.size(); i2++) {
 					if (bool = holding.stackMatch(contents.get(i2), false)) {
