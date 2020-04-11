@@ -16,8 +16,6 @@ import org.bukkit.util.BoundingBox;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 
-import net.minecraft.server.v1_15_R1.AxisAlignedBB;
-
 public interface Handler {
 	public void aiPathfinderGoal(LivingEntity livingEntity, String goalList, LivingEntity target);
 
