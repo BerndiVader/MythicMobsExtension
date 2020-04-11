@@ -6,7 +6,6 @@ import org.bukkit.Location;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.RegistryFlag;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
