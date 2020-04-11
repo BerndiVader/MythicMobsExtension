@@ -32,32 +32,40 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 		if (e.isPlayer()) {
 			Player p = (Player) e.getBukkitEntity();
 			Quester q = quests.getQuester(p.getUniqueId());
-			Quest quest = QuestsSupport.getQuestFromCurrent(q, s1);
-			switch (s2) {
-			case "COMPLETE":
-				if (quest != null)
-					quest.completeQuest(q);
-				break;
-			case "TAKE":
-				if (quest == null && (quest = quests.getQuest(s1)) != null)
-					q.takeQuest(quest, true);
-				break;
-			case "FAIL":
-				if (quest != null)
-					quest.failQuest(q);
-				break;
-			case "NEXTSTAGE":
-				if (quest != null) {
-					quest.nextStage(q, false);
-					quest.updateCompass(q, q.getCurrentStage(quest));
+			if(q!=null) {
+				Quest quest = QuestsSupport.getQuestFromCurrent(q, s1);
+				switch (s2) {
+				case "COMPLETEQUEST":
+					if(quest!=null) {
+						quest.completeQuest(q);
+					}
+					break;
+				case "TAKEQUEST":
+					if(quest==null) {
+						quest=quests.getQuest(s1);
+						if(quest!=null) {
+							q.takeQuest(quest, true);
+						}
+					}
+					break;
+				case "FAILQUEST":
+					if(quest!=null) {
+						quest.failQuest(q);
+					}
+					break;
+				case "NEXTSTAGEQUEST":
+					if(quest!=null) {
+						quest.nextStage(q, false);
+						quest.updateCompass(q, q.getCurrentStage(quest));
+					}
+					break;
+				case "SETSTAGEQUEST":
+					if(quest!=null) {
+						quest.setStage(q, i1);
+						quest.updateCompass(q, q.getCurrentStage(quest));
+					}
+					break;
 				}
-				break;
-			case "SETSTAGE":
-				if (quest != null) {
-					quest.setStage(q, i1);
-					quest.updateCompass(q, q.getCurrentStage(quest));
-				}
-				break;
 			}
 		}
 		return true;

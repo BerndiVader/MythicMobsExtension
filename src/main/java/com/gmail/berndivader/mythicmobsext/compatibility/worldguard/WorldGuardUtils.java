@@ -6,6 +6,7 @@ import org.bukkit.Location;
 
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.RegistryFlag;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
@@ -54,20 +55,22 @@ public class WorldGuardUtils {
 			break;
 		case "SetFlag":
 			switch (((SetFlag<?>) flag).getType().getClass().getSimpleName()) {
-			case "EntityTypeFlag":
-				for (ProtectedRegion region : regions) {
-					Set<Object> entitytypes = (Set<Object>) region.getFlag(flag);
-					if (entitytypes == null)
-						continue;
-					for (Object o1 : entitytypes) {
-						String arr[] = args.split(",");
-						for (int i1 = 0; i1 < arr.length; i1++) {
-							if (arr[i1].equals(Reflections.class_EntityType_getName(o1)))
-								return true;
+				case "RegistryFlag":
+				case "EntityTypeFlag": {
+					String arr[] = args.split(",");
+					for (ProtectedRegion region : regions) {
+						Set<Object> entitytypes = (Set<Object>) region.getFlag(flag);
+						if (entitytypes == null)
+							continue;
+						for (Object o1 : entitytypes) {
+							for (int i1 = 0; i1 < arr.length; i1++) {
+								if (arr[i1].equals(Reflections.class_EntityType_getName(o1)))
+									return true;
+							}
 						}
 					}
+					break;
 				}
-				break;
 			}
 			break;
 		case "StringFlag":

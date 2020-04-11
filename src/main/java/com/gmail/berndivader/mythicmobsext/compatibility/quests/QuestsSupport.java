@@ -97,8 +97,9 @@ public class QuestsSupport implements Listener {
 		Iterator<Map.Entry<Quest, Integer>> entries = quester.getCurrentQuests().entrySet().iterator();
 		while (entries.hasNext()) {
 			Quest quest = entries.next().getKey();
-			if ((quest.getName().toLowerCase().equals(questName)))
+			if ((quest.getName().toLowerCase().equals(questName))) {
 				return quest;
+			}
 		}
 		return null;
 	}
