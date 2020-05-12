@@ -230,6 +230,7 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 			}
 			HandlerList.unregisterAll(this);
 			p.getBukkitEntity().removeMetadata(str + this.buff.auraName, Main.getPlugin());
+			this.close();
 			return true;
 		}
 	}

@@ -69,8 +69,8 @@ public abstract class ISelectorLocation extends ILocationSelector {
 	}
 
 	public HashSet<AbstractLocation> applyOffsets(HashSet<AbstractLocation> targets) {
-		if (this.use_relative) {
-			targets.stream().forEach(abstract_location -> {
+		targets.stream().forEach(abstract_location -> {
+			if(this.use_relative) {
 				Location location = BukkitAdapter.adapt(abstract_location);
 				float yaw = location.getYaw();
 				float pitch = location.getPitch();
@@ -80,10 +80,11 @@ public abstract class ISelectorLocation extends ILocationSelector {
 						soV.getZ() + foV.getZ());
 				abstract_location.setYaw(yaw + this.yaw_offset);
 				abstract_location.setPitch(pitch + this.pitch_offset);
-				if (length != 0)
-					abstract_location.add(abstract_location.getDirection().clone().multiply(this.length));
-			});
-		}
+			}
+			if (length != 0) {
+				abstract_location.add(abstract_location.getDirection().clone().multiply(this.length));
+			}
+		});
 		return targets;
 	}
 

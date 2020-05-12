@@ -171,6 +171,7 @@ public class ClickListenerMechanic extends AuraMechanic implements ITargetedEnti
 			}
 			HandlerList.unregisterAll(this);
 			p.removeMetadata(str, Main.getPlugin());
+			this.close();
 			return true;
 		}
 	}
