@@ -462,10 +462,10 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @return Map<String,Map<Plugin,MetadataValue>> {@link MetadataStoreBase}
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, Map<Plugin, MetadataValue>> getEntityMetadataMap(Entity entity) {
+	public static Map<String, Map<Plugin, MetadataValue>> getEntityMetadataMap(Server server) {
 		Map<String, Map<Plugin, MetadataValue>> metadata_map = new HashMap<String, Map<Plugin, MetadataValue>>();
 		try {
-			Object craft_server = entity.getServer();
+			Object craft_server = server;
 			Object entity_metadata_store = class_CraftServer_getEntityMetadataStoreMethod.invoke(craft_server);
 			metadata_map = (Map<String, Map<Plugin, MetadataValue>>) class_MetadataStoreBase_metadataMapField
 					.get(entity_metadata_store);
@@ -474,6 +474,8 @@ public class NMSUtils extends CompatibilityUtils {
 		}
 		return metadata_map;
 	}
+	
+	
 
 	/**
 	 * @param player {@link Player}

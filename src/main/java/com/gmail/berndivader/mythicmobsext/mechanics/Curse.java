@@ -1,11 +1,14 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
@@ -22,20 +25,42 @@ import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 @ExternalAnnotation(name = "curse", author = "BerndiVader")
 public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 	int duration;
-	boolean infinite,strict;
+	float ratio;
+	boolean infinite,strict,cancel=false;
+	List<RegainReason>reasons;
 	
 	Optional<Skill> matchSkill = Optional.empty();
 	Optional<Skill> startSkill = Optional.empty();
+	Optional<Skill> failSkill = Optional.empty();
 	Optional<Skill> endSkill = Optional.empty();
 	
 	final static String str = "MME_CURSE";
 
 	public Curse(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		
 		this.ASYNC_SAFE = false;
 		this.auraName = Optional.of(str);
+		reasons=new ArrayList<>();
 		
+		ratio=mlc.getFloat("ratio",1f);
 		strict=mlc.getBoolean("strict",false);
+		if(strict) {
+			String temp=mlc.getString("reasons","eating,regen,satiated,magic,magic_regen").toUpperCase();
+			if(!(strict=temp.contains("ANY"))) {
+				String[]parse=temp.split(",");
+				int size=parse.length;
+				for(int i1=0;i1<size;i1++) {
+					try {
+						RegainReason rr=RegainReason.valueOf(parse[i1]);
+						reasons.add(rr);
+					} catch (Exception ex) {
+						Main.logger.warning("There was no valid reason for "+parse[i1]+". Ignoring it.");
+					}
+				}
+			}
+		}
+		
 		infinite=mlc.getBoolean("infinite",false);
 		duration=mlc.getInteger("period",120);
 		
@@ -45,6 +70,8 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 			startSkill = Utils.mythicmobs.getSkillManager().getSkill(s1);
 		if ((s1 = mlc.getString("endskill")) != null)
 			endSkill = Utils.mythicmobs.getSkillManager().getSkill(s1);
+		if ((s1 = mlc.getString("failskill")) != null)
+			failSkill = Utils.mythicmobs.getSkillManager().getSkill(s1);
 	}
 
 	@Override
@@ -53,17 +80,19 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 			new CurseTracker(this, data, abstractEntity);
 			return true;
 		}
-		
+	
 		return false;
 	}
 
 	class CurseTracker extends Curse.AuraTracker implements Runnable, IParentSkill, Listener {
 		final Curse buff;
+		final float ratio=Curse.this.ratio;
 		final int uid;
 		int ticksRemaining;
-		boolean hasEnded = false, regained=false;
+		boolean hasEnded = false;
 		AbstractEntity abstractEntity;
 		double prevHealth;
+		RegainReason currentReason=null;
 
 		public CurseTracker(Curse buff, SkillMetadata data, AbstractEntity abstractEntity) {
 			super(abstractEntity,data);
@@ -72,49 +101,63 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 			this.ticksRemaining = buff.duration;
 			this.skillMetadata.setCallingEvent(this);
 			this.abstractEntity = abstractEntity;
-			Main.pluginmanager.registerEvents(this, Main.getPlugin());
-			prevHealth=abstractEntity.getHealth();
+			if(strict) {
+				Main.pluginmanager.registerEvents(this, Main.getPlugin());
+			}
 			if (startSkill.isPresent()) {
 				Skill sk = startSkill.get();
 				SkillMetadata sd = data.deepClone();
 				if (sk.isUsable(sd))
 					sk.execute(sd);
 			}
-			
+			prevHealth=abstractEntity.getHealth();
 			this.start();
 		}
 
 		@Override
 		public void run() {
 			if (!buff.infinite) ticksRemaining--;
-			if (abstractEntity==null||abstractEntity.isDead()||!hasEnded && ticksRemaining <= 0) {
+			if (abstractEntity==null||abstractEntity.isDead()||(!hasEnded && ticksRemaining <= 0)) {
 				if (endSkill.isPresent() && endSkill.get().isUsable(skillMetadata)) endSkill.get().execute(skillMetadata.deepClone());
 				terminate();
 			} else {
 				double health=abstractEntity.getHealth();
 				if(prevHealth<health) {
-					if(strict||(!strict&&!regained)) {
-						if (matchSkill.isPresent()) {
-							Skill sk = matchSkill.get();
+					double amount=(health-prevHealth)*ratio;
+					if(strict) {
+						if(currentReason!=null&&reasons.contains(currentReason)) {
+							doMatchSkill(health,amount);
+							currentReason=null;
+						} else if(failSkill.isPresent()) {
+							Skill sk = failSkill.get();
 							SkillMetadata sd = this.skillMetadata.deepClone();
-							if (sk.isUsable(sd))
-								sk.execute(sd);
+							if (sk.isUsable(sd)) sk.execute(sd);
 						}
-						abstractEntity.setHealth(prevHealth);
+					} else {
+						doMatchSkill(health,amount);
 					}
-					regained=false;
 				}
 				prevHealth=abstractEntity.getHealth();
 			}
 		}
 		
-		@EventHandler
-		public void regeneration(EntityRegainHealthEvent e) {
-			if(e.getEntity().getEntityId()==uid) {
-				regained=true;
+		void doMatchSkill(double health, double amount) {
+			if (matchSkill.isPresent()) {
+				Skill sk = matchSkill.get();
+				SkillMetadata sd = this.skillMetadata.deepClone();
+				if (sk.isUsable(sd)) {
+					sk.execute(sd);
+					abstractEntity.setHealth(health-amount);
+				}
+			} else {
+				abstractEntity.setHealth(health-amount);
 			}
 		}
 		
+		@EventHandler
+		public void onRegainHealth(EntityRegainHealthEvent e) {
+			if(e.getEntity().getEntityId()==uid) this.currentReason=e.getRegainReason();
+		}
 
 		@Override
 		public boolean getCancelled() {
@@ -128,19 +171,18 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 
 		@Override
 		public boolean terminate() {
+			HandlerList.unregisterAll(this);
 			if (!this.hasEnded) {
 				if (Curse.this.auraName.isPresent()) {
 					this.skillMetadata.getCaster().unregisterAura(Curse.this.auraName.get(), this);
 				}
 				this.hasEnded = true;
 			}
-			HandlerList.unregisterAll(this);
 			abstractEntity.getBukkitEntity().removeMetadata(str,Main.getPlugin());
 			if (endSkill.isPresent()) {
 				Skill sk = endSkill.get();
 				SkillMetadata sd = this.skillMetadata.deepClone();
-				if (sk.isUsable(sd))
-					sk.execute(sd);
+				if (sk.isUsable(sd)) sk.execute(sd);
 			}
 			this.close();
 			return true;

@@ -40,7 +40,6 @@ public class CreateHealthbar extends SkillMechanic implements ITargetedEntitySki
 			new Healthbar(entity, this.offset, this.counter, this.display, this.hOffset, this.vOffset, this.ignoreYaw);
 			return true;
 		}
-		;
 		return false;
 	}
 

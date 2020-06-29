@@ -53,7 +53,7 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_entity) {
 		Entity target = abstract_entity.getBukkitEntity();
 		Map<String, Map<Plugin, MetadataValue>> map = this.filter(
-				use_players ? NMSUtils.getPlayerMetadataMap(target) : NMSUtils.getEntityMetadataMap(target),
+				use_players ? NMSUtils.getPlayerMetadataMap(target) : NMSUtils.getEntityMetadataMap(target.getServer()),
 				target.getUniqueId());
 		Iterator<Entry<String, Map<Plugin, MetadataValue>>> iter = map.entrySet().iterator();
 		while (iter.hasNext()) {

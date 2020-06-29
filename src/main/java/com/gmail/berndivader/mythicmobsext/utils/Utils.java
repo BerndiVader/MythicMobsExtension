@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -39,9 +40,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -49,6 +53,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.compatibility.nocheatplus.NoCheatPlusSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.papi.Papi;
 import com.gmail.berndivader.mythicmobsext.compatibilitylib.BukkitSerialization;
+import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.mechanics.NoDamageTicksMechanic;
 import com.gmail.berndivader.mythicmobsext.mechanics.PlayerGoggleMechanic;
@@ -69,7 +74,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
 
-import com.gmail.berndivader.mythicmobsext.utils.RangedDouble;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 import com.google.gson.JsonElement;
@@ -127,7 +131,9 @@ public class Utils implements Listener {
 	public static Field action_var_field;
 
 	static boolean papi_ispresent;
-
+	
+	static MetaRunner metaRunner;
+	
 	static {
 		mythicmobs = MythicMobs.inst();
 		mobmanager = mythicmobs.getMobManager();
@@ -161,6 +167,8 @@ public class Utils implements Listener {
 	public Utils() {
 		Main.pluginmanager.registerEvents(new UndoBlockListener(), Main.getPlugin());
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this, Main.getPlugin());
+		
+		metaRunner=new MetaRunner();
 		p();
 	}
 
@@ -748,7 +756,7 @@ public class Utils implements Listener {
 		String name = search.contains("{") ? search.substring(0, search.indexOf("{")) : search;
 		return SkillTargeter.getMythicTargeter(name, mlc);
 	}
-
+	
 	public static Object getTagValue(Object nbt, JsonElement json_element) {
 		Object nbt_value = null;
 		if (nbt != null) {
@@ -766,6 +774,30 @@ public class Utils implements Listener {
 				System.err.println("primitive");
 		}
 		return nbt_value;
+	}
+	
+	static class MetaRunner {
+		
+		BukkitTask task;
+		Map<String,Map<Plugin,MetadataValue>>entity_map;
+		
+		public MetaRunner() {
+			
+			entity_map=NMSUtils.getEntityMetadataMap(Bukkit.getServer());
+			task=new BukkitRunnable() {
+				@Override
+				public void run() {
+					Iterator<Entry<String, Map<Plugin, MetadataValue>>> map_iter = entity_map.entrySet().iterator();
+					while (map_iter.hasNext()) {
+						Entry<String, Map<Plugin, MetadataValue>>map_entry=map_iter.next();
+						Entity entity=Bukkit.getEntity(UUID.fromString(map_entry.getKey().split(":")[0].toLowerCase()));
+						if(entity==null) map_iter.remove();
+					}
+					System.err.println(entity_map.size());
+				}
+				
+			}.runTaskTimerAsynchronously(Main.getPlugin(),Config.meta_delay,Config.meta_delay);
+		}
 	}
 
 }

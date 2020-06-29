@@ -10,7 +10,8 @@ public enum ConfigValue {
 	RPGITEMS("Configuration.Compatibility.RPGItems", true), MOBARENA("Configuration.Compatibility.MobArena", true),
 	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true), EXTERNALS("Configuration.Externals", true),
 	JAVASCRIPT("Configuration.Javascript", true), QUESTS("Configuration.Quests", true), NCP("Configuration.NPC", true),
-	PRE44SPAWN("Configuration.PRE44SPAWN", false);
+	PRE44SPAWN("Configuration.PRE44SPAWN", false),
+	META_DELAY("Configuration.Metadata.Delay",480);
 	private final String path;
 	private final Object value;
 

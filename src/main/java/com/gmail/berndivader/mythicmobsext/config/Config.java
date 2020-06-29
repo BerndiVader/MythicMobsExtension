@@ -31,6 +31,7 @@ public class Config {
 	public static boolean quests;
 	public static boolean ncp;
 	public static boolean pre44spawn;
+	public static long meta_delay;
 	final static YamlConfiguration config;
 
 	static {
@@ -98,6 +99,7 @@ public class Config {
 		quests = config.getBoolean(ConfigValue.QUESTS.getPath());
 		ncp = config.getBoolean(ConfigValue.NCP.getPath());
 		pre44spawn = config.getBoolean(ConfigValue.PRE44SPAWN.getPath());
+		meta_delay=config.getLong(ConfigValue.META_DELAY.getPath());
 	}
 
 }
