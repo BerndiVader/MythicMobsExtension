@@ -793,7 +793,6 @@ public class Utils implements Listener {
 						Entity entity=Bukkit.getEntity(UUID.fromString(map_entry.getKey().split(":")[0].toLowerCase()));
 						if(entity==null) map_iter.remove();
 					}
-					System.err.println(entity_map.size());
 				}
 				
 			}.runTaskTimerAsynchronously(Main.getPlugin(),Config.meta_delay,Config.meta_delay);

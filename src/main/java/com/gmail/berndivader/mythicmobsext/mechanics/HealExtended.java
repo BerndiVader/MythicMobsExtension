@@ -28,7 +28,7 @@ ITargetedEntitySkill,
 INoTargetSkill
 {
 	double healByDistance;
-	boolean reduceHealByDistance;
+	boolean incHealByDistance;
 	boolean power;
 	boolean percentage;
 	boolean caster;
@@ -48,7 +48,7 @@ INoTargetSkill
 		if ((loss=mlc.getBoolean("loss",false))) current=false;
 		
 		healByDistance=mlc.getDouble("dec",0)*-1;
-		reduceHealByDistance=(healByDistance=mlc.getDouble("inc",healByDistance))<0;
+		incHealByDistance=(healByDistance=mlc.getDouble("inc",healByDistance))<0;
 		healByDistance=Math.abs(healByDistance);
 		
 		String reasonString=mlc.getString("reason","custom").toUpperCase();
@@ -63,7 +63,7 @@ INoTargetSkill
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity abstract_target) {
-		if(!abstract_target.isLiving()||!abstract_target.isValid()||!abstract_target.isDead()) return false;
+		if(!(abstract_target.getBukkitEntity() instanceof LivingEntity)) return false;
 		
 		LivingEntity t=(LivingEntity)abstract_target.getBukkitEntity();
 		LivingEntity c=(LivingEntity)data.getCaster().getEntity().getBukkitEntity();
@@ -81,13 +81,14 @@ INoTargetSkill
 		
 		if(healByDistance>0) {
 			int distance=(int)Math.sqrt(MathUtils.distance3D(abstract_caster.getBukkitEntity().getLocation().toVector(),abstract_target.getBukkitEntity().getLocation().toVector()));
-			amount=reduceHealByDistance?amount-(amount*(distance*healByDistance)):amount+(amount*(distance*healByDistance));
+			amount=incHealByDistance?amount-(amount*(distance*healByDistance)):amount+(amount*(distance*healByDistance));
 		}
 		
 		EntityRegainHealthEvent event=new EntityRegainHealthEvent(t,amount,reason);
 		Bukkit.getPluginManager().callEvent(event);
-		System.err.println(amount+":"+event.getAmount());
-		if(!event.isCancelled()) t.setHealth(event.getAmount());
+		if(!event.isCancelled()) {
+			t.setHealth(MathUtils.clamp(t.getHealth()+event.getAmount(),0d,t.getMaxHealth()));
+		}
 		return true;
 	}
 
