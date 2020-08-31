@@ -23,7 +23,7 @@ public class TestRequirementCondition extends AbstractCustomCondition implements
 
 	@Override
 	public boolean check(AbstractEntity e) {
-		if (!e.isPlayer() || s1.isEmpty() || quests.checkQuester(e.getUniqueId()))
+		if (!e.isPlayer() || s1.isEmpty() || quests.canUseQuests(e.getUniqueId()))
 			return false;
 		boolean bl1 = false;
 		Quester quester = quests.getQuester(e.getUniqueId());

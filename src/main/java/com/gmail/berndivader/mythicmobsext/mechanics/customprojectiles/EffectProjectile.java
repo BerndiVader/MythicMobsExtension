@@ -26,6 +26,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractVector;
 import io.lumine.xikage.mythicmobs.adapters.TaskManager;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.logging.MythicLogger;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.skills.IParentSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
@@ -34,6 +35,7 @@ import io.lumine.xikage.mythicmobs.skills.Skill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
+import io.lumine.xikage.mythicmobs.utils.numbers.Numbers;
 
 @ExternalAnnotation(name = "mythiceffectprojectile", author = "BerndiVader")
 public class EffectProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -55,7 +57,6 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 			new ProjectileRunner(data, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
-			this.mythicmobs.handleException(ex);
 			return false;
 		}
 	}
@@ -152,8 +153,8 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 					|| EffectProjectile.this.projectileVelocityHorizNoise > 0.0f) {
 				noise = 0.0f;
 				if (EffectProjectile.this.projectileVelocityHorizNoise > 0.0f) {
-					noise = EffectProjectile.this.projectileVelocityHorizNoiseBase
-							+ MythicMobs.r.nextFloat() * EffectProjectile.this.projectileVelocityHorizNoise;
+					noise = (float) (EffectProjectile.this.projectileVelocityHorizNoiseBase
+							+ Numbers.randomDouble() * EffectProjectile.this.projectileVelocityHorizNoise);
 				}
 				this.currentVelocity.rotate(EffectProjectile.this.projectileVelocityHorizOffset + noise);
 			}
@@ -164,8 +165,8 @@ public class EffectProjectile extends CustomProjectile implements ITargetedEntit
 					|| EffectProjectile.this.projectileVelocityVertNoise > 0.0f) {
 				noise = 0.0f;
 				if (EffectProjectile.this.projectileVelocityVertNoise > 0.0f) {
-					noise = EffectProjectile.this.projectileVelocityVertNoiseBase
-							+ MythicMobs.r.nextFloat() * EffectProjectile.this.projectileVelocityVertNoise;
+					noise = (float) (EffectProjectile.this.projectileVelocityVertNoiseBase
+							+ Numbers.randomDouble() * EffectProjectile.this.projectileVelocityVertNoise);
 				}
 				this.currentVelocity
 						.add(new AbstractVector(0.0f, EffectProjectile.this.projectileVelocityVertOffset + noise, 0.0f))

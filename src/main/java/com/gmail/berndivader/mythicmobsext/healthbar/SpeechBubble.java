@@ -64,7 +64,6 @@ public class SpeechBubble extends CraftHologram {
 		lines();
 	}
 
-	@Override
 	public boolean update() {
 		if (this.isDeleted())
 			return false;
@@ -73,7 +72,7 @@ public class SpeechBubble extends CraftHologram {
 		double dx = l.getX();
 		double dy = l.getY();
 		double dz = l.getZ();
-		double do1 = (this.getLinesLength() * 0.25) + (il1 * 0.5) + this.offset;
+		double do1 = (this.size() * 0.25) + (il1 * 0.5) + this.offset;
 		if (this.useOffset) {
 			Vector soV = MathUtils.getSideOffsetVectorFixed(entity.getLocation().getYaw(), this.sOffset, false);
 			Vector foV = MathUtils.getFrontBackOffsetVector(entity.getLocation().getDirection(), this.fOffset);

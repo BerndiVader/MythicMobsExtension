@@ -38,6 +38,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
+import io.lumine.xikage.mythicmobs.utils.numbers.Numbers;
 
 @ExternalAnnotation(name = "mythicprojectile", author = "BerndiVader")
 public class MythicProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -55,7 +56,6 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 			new ProjectileRunner(data, this.pEntityName, target.clone().add(0.0, this.targetYOffset, 0.0));
 			return true;
 		} catch (Exception ex) {
-			this.mythicmobs.handleException(ex);
 			return false;
 		}
 	}
@@ -161,8 +161,8 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					|| MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
 				noise = 0.0f;
 				if (MythicProjectile.this.projectileVelocityHorizNoise > 0.0f) {
-					noise = MythicProjectile.this.projectileVelocityHorizNoiseBase
-							+ MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityHorizNoise;
+					noise = (float) (MythicProjectile.this.projectileVelocityHorizNoiseBase
+							+ Numbers.randomDouble() * MythicProjectile.this.projectileVelocityHorizNoise);
 				}
 				this.currentVelocity.rotate(MythicProjectile.this.projectileVelocityHorizOffset + noise);
 			}
@@ -170,8 +170,8 @@ public class MythicProjectile extends CustomProjectile implements ITargetedEntit
 					|| MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
 				noise = 0.0f;
 				if (MythicProjectile.this.projectileVelocityVertNoise > 0.0f) {
-					noise = MythicProjectile.this.projectileVelocityVertNoiseBase
-							+ MythicMobs.r.nextFloat() * MythicProjectile.this.projectileVelocityVertNoise;
+					noise = (float) (MythicProjectile.this.projectileVelocityVertNoiseBase
+							+ Numbers.randomDouble() * MythicProjectile.this.projectileVelocityVertNoise);
 				}
 				this.currentVelocity
 						.add(new AbstractVector(0.0f, MythicProjectile.this.projectileVelocityVertOffset + noise, 0.0f))

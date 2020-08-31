@@ -134,8 +134,14 @@ public class NMSUtils extends CompatibilityUtils {
 				mm_version = 45;
 			}
 
-			class_Drop_getDropMethod = mm_version < 45 ? class_Drop.getMethod("getDrop", String.class)
-					: class_Drop.getMethod("getDrop", String.class, String.class);
+			try {
+				class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class);
+			} catch (Exception e) {
+				class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class, String.class);
+			}
+
+			/*class_Drop_getDropMethod = mm_version < 45 ? class_Drop.getMethod("getDrop", String.class)
+					: class_Drop.getMethod("getDrop", String.class, String.class);*/
 
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();

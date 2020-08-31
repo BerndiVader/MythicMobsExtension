@@ -1,27 +1,25 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
 
-import net.minecraft.server.v1_13_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.minecraft.server.v1_13_R2.*;
-import net.minecraft.server.v1_13_R2.PacketPlayOutEntity.PacketPlayOutEntityLook;
-import net.minecraft.server.v1_13_R2.PacketPlayOutPosition.EnumPlayerTeleportFlags;
-import net.minecraft.server.v1_13_R2.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.server.v1_16_R1.PacketPlayOutEntity.PacketPlayOutEntityLook;
+import net.minecraft.server.v1_16_R1.PacketPlayOutPosition.EnumPlayerTeleportFlags;
+import net.minecraft.server.v1_16_R1.PacketPlayOutWorldBorder.EnumWorldBorderAction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_13_R2.util.CraftMagicNumbers.NBT;
+import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R1.util.CraftMagicNumbers.NBT;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -42,30 +40,31 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.Vec3D;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import com.gmail.berndivader.mythicmobsext.volatilecode.Handler;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeAdvancement;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeDisplay;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.advancement.FakeDisplay.AdvancementFrame;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.ControllerFly;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.ControllerVex;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.navigation.NavigationClimb;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathFinderGoalShoot;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalAttack;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalBreakBlocks;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalDoorBreak;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalDoorOpen;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalEntityGrowNotify;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalMeleeRangeAttack;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalNotifyOnCollide;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalOtherTeams;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalReturnHome;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalTravelAround;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalVexA;
-import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalVexD;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.advancement.FakeAdvancement;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.advancement.FakeDisplay;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.advancement.FakeDisplay.AdvancementFrame;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.navigation.ControllerFly;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.navigation.ControllerVex;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.navigation.NavigationClimb;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathFinderGoalShoot;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalBreakBlocks;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalDoorBreak;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalDoorOpen;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalEntityGrowNotify;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalJumpOffFromVehicle;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalMeleeRangeAttack;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalNotifyHeal;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalNotifyOnCollide;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalOtherTeams;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalReturnHome;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalTravelAround;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalVexA;
+import com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalVexD;
+import com.google.common.collect.Lists;
+import com.google.common.hash.Hashing;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.logging.MythicLogger;
+import com.mojang.datafixers.util.Pair;
 
 public class Core implements Handler, Listener {
 
@@ -74,19 +73,19 @@ public class Core implements Handler, Listener {
 	private static Field ai_pathfinderlist_b;
 	private static Field ai_pathfinderlist_c;
 
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> sSet = new HashSet<>(Arrays
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> rot_set = new HashSet<>(Arrays
 			.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT, }));
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> ssSet = new HashSet<>(
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> rot_pos_set = new HashSet<>(
 			Arrays.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X_ROT, EnumPlayerTeleportFlags.Y_ROT,
 					EnumPlayerTeleportFlags.X, EnumPlayerTeleportFlags.Y, EnumPlayerTeleportFlags.Z }));
-	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> sssSet = new HashSet<>(
+	private static Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> pos_set = new HashSet<>(
 			Arrays.asList(new EnumPlayerTeleportFlags[] { EnumPlayerTeleportFlags.X, EnumPlayerTeleportFlags.Y,
 					EnumPlayerTeleportFlags.Z }));
 
 	static {
-		nms_path = "net.minecraft.server.v1_13_R2";
+		nms_path = "net.minecraft.server.v1_16_R1";
 		try {
-			ai_pathfinderlist_b = PathfinderGoalSelector.class.getDeclaredField("b");
+			ai_pathfinderlist_b = PathfinderGoalSelector.class.getDeclaredField("d");
 			ai_pathfinderlist_c = PathfinderGoalSelector.class.getDeclaredField("c");
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
@@ -157,8 +156,52 @@ public class Core implements Handler, Listener {
 	}
 
 	@Override
+	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
+		net.minecraft.server.v1_16_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
+		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), null);
+	}
+
+	@Override
+	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range, Predicate<Entity> filter) {
+		net.minecraft.server.v1_16_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
+		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), filter);
+	}
+
+	@Override
+	public List<Entity> getNearbyEntities(World bukkit_world, BoundingBox bukkit_aabb, Predicate<Entity> filter) {
+		return this.getNearbyEntities(
+				((CraftWorld) bukkit_world).getHandle(), new AxisAlignedBB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
+						bukkit_aabb.getMinZ(), bukkit_aabb.getMaxX(), bukkit_aabb.getMaxY(), bukkit_aabb.getMaxZ()),
+				filter);
+	}
+
+	@Override
+	public List<Entity> getNearbyEntities(World bukkit_world, Location bukkit_location, double x, double y, double z,
+			Predicate<Entity> filter) {
+		BoundingBox bukkit_aabb = BoundingBox.of(bukkit_location, x, y, z);
+		return this.getNearbyEntities(
+				((CraftWorld) bukkit_world).getHandle(), new AxisAlignedBB(bukkit_aabb.getMinX(), bukkit_aabb.getMinY(),
+						bukkit_aabb.getMinZ(), bukkit_aabb.getMaxX(), bukkit_aabb.getMaxY(), bukkit_aabb.getMaxZ()),
+				filter);
+	}
+
+	public List<Entity> getNearbyEntities(net.minecraft.server.v1_16_R1.World world, AxisAlignedBB bb,
+			Predicate<Entity> filter) {
+		List<net.minecraft.server.v1_16_R1.Entity> entityList = world.getEntities(null, bb, null);
+		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(
+				entityList.size());
+		for (net.minecraft.server.v1_16_R1.Entity entity : entityList) {
+			CraftEntity bukkitEntity = entity.getBukkitEntity();
+			if (filter != null && !filter.test(bukkitEntity))
+				continue;
+			bukkitEntityList.add(bukkitEntity);
+		}
+		return bukkitEntityList;
+	}
+
+	@Override
 	public void setFieldOfViewPacketSend(Player player, float f1) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
 		PlayerAbilities arg1 = (PlayerAbilities) Utils.cloneObject(me.abilities);
 		if (f1 != 0) {
 			player.setMetadata(Utils.meta_WALKSPEED, new FixedMetadataValue(Main.getPlugin(), arg1.walkSpeed));
@@ -181,7 +224,7 @@ public class Core implements Handler, Listener {
 	@Override
 	public void forceSpectate(Player player, Entity e, boolean bl1) {
 		LivingEntity entity = (LivingEntity) e;
-		net.minecraft.server.v1_13_R2.EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
 		entityPlayer.playerConnection.sendPacket(new PacketPlayOutCamera(((CraftEntity) entity).getHandle()));
 		if (bl1) {
 			dupePlayer(entityPlayer, player.getLocation());
@@ -195,47 +238,47 @@ public class Core implements Handler, Listener {
 		PlayerList playerList = minecraftServer.getPlayerList();
 
 		entityplayer.stopRiding();
-		entityplayer.getWorldServer().getTracker().untrackPlayer(entityplayer);
-		entityplayer.getWorldServer().getPlayerChunkMap().removePlayer(entityplayer);
 		playerList.players.remove(entityplayer);
 		Map<String, EntityPlayer> ppn = (Map<String, EntityPlayer>) NMSUtils.getField("playersByName",
 				playerList.getClass().getSuperclass(), playerList);
-		ppn.remove(entityplayer.getName());
+		ppn.remove(entityplayer.getName().toLowerCase(Locale.ROOT));
 		NMSUtils.setFinalField("playersByName", playerList.getClass().getSuperclass(), playerList, ppn);
-		minecraftServer.getWorldServer(entityplayer.dimension).removeEntity(entityplayer);
+		entityplayer.getWorldServer().removePlayer(entityplayer);
 		EntityPlayer entityplayer1 = entityplayer;
-		org.bukkit.World fromWorld = entityplayer.getBukkitEntity().getWorld();
 		entityplayer.viewingCredits = false;
 		entityplayer1.playerConnection = entityplayer.playerConnection;
 		entityplayer1.copyFrom(entityplayer, true);
-		entityplayer1.h(entityplayer.getId());
-		entityplayer1.v(entityplayer);
+		entityplayer1.e(entityplayer.getId());
 		entityplayer1.a(entityplayer.getMainHand());
 		for (String s : entityplayer.getScoreboardTags()) {
 			entityplayer1.addScoreboardTag(s);
 		}
-		location.setWorld(minecraftServer.getWorldServer(entityplayer.dimension).getWorld());
+		WorldData worlddata = worldServer.getWorldData();
+		location.setWorld(minecraftServer.getWorldServer(entityplayer.getSpawnDimension()).getWorld());
 		entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(),
 				location.getPitch());
-		worldServer.getChunkProvider().getChunkAt((int) entityplayer1.locX >> 4, (int) entityplayer1.locZ >> 4, true,
-				true);
-		entityplayer1.playerConnection.sendPacket(
-				new PacketPlayOutRespawn(worldServer.worldProvider.getDimensionManager(), worldServer.getDifficulty(),
-						worldServer.getWorldData().getType(), entityplayer1.playerInteractManager.getGameMode()));
+		entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(
+				entityplayer1.world.getTypeKey(), entityplayer1.world.getDimensionKey(),
+				BiomeManager.a(entityplayer1.getWorldServer().getSeed()),
+				entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(),
+				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
+		entityplayer1.playerConnection.sendPacket(new PacketPlayOutViewDistance(worldServer.spigotConfig.viewDistance));
 		entityplayer1.spawnIn(worldServer);
 		entityplayer1.dead = false;
-		entityplayer1.playerConnection.teleport(new Location(worldServer.getWorld(), entityplayer1.locX,
-				entityplayer1.locY, entityplayer1.locZ, entityplayer1.yaw, entityplayer1.pitch));
+		entityplayer1.playerConnection.teleport(new Location(worldServer.getWorld(), entityplayer1.locX(),
+				entityplayer1.locY(), entityplayer1.locZ(), entityplayer1.yaw, entityplayer1.pitch));
 		entityplayer1.setSneaking(false);
 		BlockPosition blockPosition1 = worldServer.getSpawn();
 		entityplayer1.playerConnection.sendPacket(new PacketPlayOutSpawnPosition(blockPosition1));
 		entityplayer1.playerConnection.sendPacket(
+				new PacketPlayOutServerDifficulty(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
+		entityplayer1.playerConnection.sendPacket(
 				new PacketPlayOutExperience(entityplayer1.exp, entityplayer1.expTotal, entityplayer1.expLevel));
-		playerList.b(entityplayer1, worldServer);
-		playerList.f(entityplayer1);
+		playerList.a(entityplayer1, worldServer);
+		playerList.d(entityplayer1);
 		if (!entityplayer.playerConnection.isDisconnected()) {
-			worldServer.getPlayerChunkMap().addPlayer(entityplayer1);
-			worldServer.addEntity(entityplayer1);
+			worldServer.addPlayerRespawn(entityplayer1);
+			// worldServer.addEntity(entityplayer1);
 			playerList.players.add(entityplayer1);
 			ppn = (Map<String, EntityPlayer>) NMSUtils.getField("playersByName", playerList.getClass().getSuperclass(),
 					playerList);
@@ -247,19 +290,12 @@ public class Core implements Handler, Listener {
 			NMSUtils.setFinalField("j", playerList.getClass().getSuperclass(), playerList, j);
 		}
 		entityplayer1.setHealth(entityplayer1.getHealth());
-		playerList.updateClient(entityplayer);
 		entityplayer.updateAbilities();
 		for (Object o1 : entityplayer.getEffects()) {
 			MobEffect mobEffect = (MobEffect) o1;
 			entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityEffect(entityplayer.getId(), mobEffect));
 		}
-		CriterionTriggers.v.a(entityplayer, ((CraftWorld) fromWorld).getHandle().worldProvider.getDimensionManager(),
-				worldServer.worldProvider.getDimensionManager());
-		if (((CraftWorld) fromWorld).getHandle().worldProvider.getDimensionManager() == DimensionManager.NETHER
-				&& worldServer.worldProvider.getDimensionManager() == DimensionManager.OVERWORLD
-				&& entityplayer.M() != null) {
-			CriterionTriggers.C.a(entityplayer, entityplayer.M());
-		}
+		entityplayer.triggerDimensionAdvancements(worldServer);
 		if (entityplayer.playerConnection.isDisconnected()) {
 			AdvancementDataPlayer advancementdataplayer;
 			if (!entityplayer.getBukkitEntity().isPersistent()) {
@@ -268,12 +304,13 @@ public class Core implements Handler, Listener {
 			playerList.playerFileData.save(entityplayer);
 			ServerStatisticManager serverstatisticmanager = entityplayer.getStatisticManager();
 			if (serverstatisticmanager != null) {
-				serverstatisticmanager.a();
+				serverstatisticmanager.save();
 			}
 			if ((advancementdataplayer = entityplayer.getAdvancementData()) != null) {
-				advancementdataplayer.c();
+				advancementdataplayer.b();
 			}
 		}
+		playerList.updateClient(entityplayer);
 	}
 
 	public void forceEntitySitting(Entity entity) {
@@ -281,13 +318,13 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playEndScreenForPlayer(Player player, float f) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) player).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, f));
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutGameStateChange(new PacketPlayOutGameStateChange.a(4), f));
 	}
 
 	@Override
 	public void fakeEntityDeath(Entity entity, long d) {
-		net.minecraft.server.v1_13_R2.EntityLiving me = ((CraftLivingEntity) entity).getHandle();
+		net.minecraft.server.v1_16_R1.EntityLiving me = ((CraftLivingEntity) entity).getHandle();
 		me.world.broadcastEntityEffect(me, (byte) 3);
 		PacketPlayOutEntityDestroy pd = new PacketPlayOutEntityDestroy(me.getId());
 		PacketPlayOutSpawnEntityLiving ps = new PacketPlayOutSpawnEntityLiving(me);
@@ -302,27 +339,27 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void forceCancelEndScreenPlayer(Player player) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) player).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) player).getHandle();
 		me.playerConnection.sendPacket(new PacketPlayOutCloseWindow(0));
 	}
 
 	@Override
 	public void forceSetPositionRotation(Entity entity, double x, double y, double z, float yaw, float pitch, boolean f,
 			boolean g) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) entity).getHandle();
 		me.setLocation(x, y, z, yaw, pitch);
 		if (entity instanceof Player) {
 			playerConnectionTeleport(entity, x, y, z, yaw, pitch, f, g);
 		}
-		me.world.entityJoinedWorld(me, false);
+//        me.world.entityJoinedWorld(me, false);
 	}
 
 	private void playerConnectionTeleport(Entity entity, double x, double y, double z, float yaw, float pitch,
 			boolean f, boolean g) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
 		Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set = new HashSet<>();
 		if (f) {
-			set = sSet;
+			set = rot_set;
 			yaw = 0.0F;
 			pitch = 0.0F;
 		}
@@ -335,10 +372,10 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void rotateEntityPacket(Entity entity, float y, float p) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) entity).getHandle();
 		byte ya = (byte) ((int) (y * 256.0F / 360.0F));
 		byte pa = (byte) ((int) (p * 256.0F / 360.0F));
-		PacketPlayOutEntityLook el = new PacketPlayOutEntityLook(me.getId(), ya, pa, me.onGround);
+		PacketPlayOutEntityLook el = new PacketPlayOutEntityLook(me.getId(), ya, pa, me.isOnGround());
 		PacketPlayOutEntityHeadRotation hr = new PacketPlayOutEntityHeadRotation(me, ya);
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength),
 				new Packet[] { el, hr });
@@ -346,19 +383,19 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void playerConnectionLookAt(Entity entity, float yaw, float pitch) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) entity).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, yaw, pitch, sssSet, 0));
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, yaw, pitch, pos_set, 0));
 	}
 
 	@Override
 	public void playerConnectionSpin(Entity entity, float s) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) entity).getHandle();
-		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, s, 0, ssSet, 0));
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) entity).getHandle();
+		me.playerConnection.sendPacket(new PacketPlayOutPosition(0, 0, 0, s, 0, rot_pos_set, 0));
 	}
 
 	@Override
 	public void changeHitBox(Entity entity, double a0, double a1, double a2) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) entity).getHandle();
 		me.getBoundingBox().a(a0, a1, a2);
 	}
 
@@ -370,33 +407,35 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void sendArmorstandEquipPacket(ArmorStand entity) {
-		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entity.getEntityId(), EnumItemSlot.CHEST,
-				new ItemStack(Blocks.DIAMOND_BLOCK, 1));
+		
+		PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entity.getEntityId(),
+				Lists.newArrayList(Pair.of(EnumItemSlot.CHEST, new ItemStack(Blocks.DIAMOND_BLOCK, 1))));
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength),
 				new Packet[] { packet });
 	}
 
 	@Override
 	public void teleportEntityPacket(Entity entity) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) entity).getHandle();
 		PacketPlayOutEntityTeleport tp = new PacketPlayOutEntityTeleport(me);
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength), new Packet[] { tp });
 	}
 
 	@Override
 	public void moveEntityPacket(Entity entity, Location cl, double x, double y, double z) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) entity).getHandle();
-		double x1 = cl.getX() - me.locX;
-		double y1 = cl.getY() - me.locY;
-		double z1 = cl.getZ() - me.locZ;
-		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(), x1, y1, z1);
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) entity).getHandle();
+		double x1 = cl.getX() - me.locX();
+		double y1 = cl.getY() - me.locY();
+		double z1 = cl.getZ() - me.locZ();
+		PacketPlayOutEntityVelocity vp = new PacketPlayOutEntityVelocity(me.getId(),
+				new net.minecraft.server.v1_16_R1.Vec3D(x1, y1, z1));
 		sendPlayerPacketsAsync(Utils.getPlayersInRange(entity.getLocation(), Utils.renderLength), new Packet[] { vp });
 	}
 
 	@Override
 	public boolean inMotion(LivingEntity entity) {
 		EntityInsentient e = (EntityInsentient) ((CraftLivingEntity) entity).getHandle();
-		if (e.lastX != e.locX || e.lastY != e.locY || e.lastZ != e.locZ)
+		if (e.lastX != e.locX() || e.lastY != e.locY() || e.lastZ != e.locZ())
 			return true;
 		return false;
 	}
@@ -571,7 +610,7 @@ public class Core implements Handler, Listener {
 					}
 					if (tE != null && tE.isAlive()) {
 						pathfindergoal = Optional.ofNullable(
-								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals.PathfinderGoalFollowEntity(
+								new com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals.PathfinderGoalFollowEntity(
 										e, tE, speed, zR, aR));
 					}
 				}
@@ -599,21 +638,27 @@ public class Core implements Handler, Listener {
 				}
 				break;
 			}
+			case "notifyheal": {
+				if (e instanceof EntityLiving) {
+					pathfindergoal = Optional.ofNullable(new PathfinderGoalNotifyHeal(e, "mme_heal"));
+				}
+				break;
+			}
 			case "notifygrow":
 			case "grownotify": {
 				if (e instanceof EntityAgeable) {
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalEntityGrowNotify(e, data));
 				} else {
-					MythicLogger.log("No ageable entity");
+					Main.logger.warning("No ageable entity");
 				}
 				break;
 			}
 			case "returnhome": {
 				if (e instanceof EntityCreature) {
 					double speed = 1.0d;
-					double x = e.locX;
-					double y = e.locY;
-					double z = e.locZ;
+					double x = e.locX();
+					double y = e.locY();
+					double z = e.locZ();
 					double mR = 10.0D;
 					double tR = 512.0D;
 					boolean iT = false;
@@ -699,7 +744,7 @@ public class Core implements Handler, Listener {
 					return;
 				float distance = 16f;
 				double speed = 1.2d;
-				EntityTypes<?> type = EntityTypes.a(data);
+				EntityTypes<?> type = EntityTypes.a(data).get();
 				if (type != null) {
 					if (data1 != null) {
 						String[] arr1 = data1.split(",");
@@ -708,8 +753,8 @@ public class Core implements Handler, Listener {
 						if (arr1.length > 1)
 							speed = Double.parseDouble(arr1[1]);
 					}
-					pathfindergoal = Optional.ofNullable(
-							new PathfinderGoalAvoidTarget<>((EntityCreature) e, type.c(), distance, 1d, speed));
+					pathfindergoal = Optional
+							.ofNullable(new PathfinderGoalAvoidTarget<>((EntityCreature) e, null, distance, 1d, speed));
 				}
 				break;
 			case "vexa": {
@@ -737,9 +782,8 @@ public class Core implements Handler, Listener {
 		} else {
 			if (i > -1) {
 				try {
-					Set<Object> list = (Set) ai_pathfinderlist_c.get((Object) goals);
-					list.clear();
-					list = (Set) ai_pathfinderlist_b.get((Object) goals);
+					((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
+					LinkedHashSet<Object> list = (LinkedHashSet) ai_pathfinderlist_b.get((Object) goals);
 					Iterator<Object> iter = list.iterator();
 					while (iter.hasNext()) {
 						Object object = iter.next();
@@ -750,6 +794,14 @@ public class Core implements Handler, Listener {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+			} else {
+				try {
+					((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
+					((LinkedHashSet) ai_pathfinderlist_b.get((Object) goals)).clear();
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
@@ -759,9 +811,8 @@ public class Core implements Handler, Listener {
 		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
 		PathfinderGoalSelector goals = entity.goalSelector;
 		try {
-			Set<Object> list = (Set) ai_pathfinderlist_c.get((Object) goals);
-			list.clear();
-			list = (Set) ai_pathfinderlist_b.get((Object) goals);
+			((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
+			LinkedHashSet<Object> list = (LinkedHashSet) ai_pathfinderlist_b.get((Object) goals);
 			Iterator<Object> iter = list.iterator();
 			while (iter.hasNext()) {
 				Object object = iter.next();
@@ -780,9 +831,8 @@ public class Core implements Handler, Listener {
 		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
 		PathfinderGoalSelector goals = entity.goalSelector;
 		try {
-			Set<Object> list = (Set) ai_pathfinderlist_c.get((Object) goals);
-			list.clear();
-			list = (Set) ai_pathfinderlist_b.get((Object) goals);
+			((Map) ai_pathfinderlist_c.get((Object) goals)).clear();
+			LinkedHashSet<Object> list = (LinkedHashSet) ai_pathfinderlist_b.get((Object) goals);
 			Iterator<Object> iter = list.iterator();
 			while (iter.hasNext()) {
 				Object object = iter.next();
@@ -803,7 +853,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean addNBTTag(Entity e1, String s) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) e1).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) e1).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null, nbt3 = null;
 		if ((nbt1 = TFa(me)) != null) {
 			nbt3 = nbt1.clone();
@@ -815,18 +865,18 @@ public class Core implements Handler, Listener {
 			}
 			UUID u = me.getUniqueID();
 			nbt1.a(nbt2);
-			me.a(u);
+			me.a_(u);
 			if (nbt3.equals(nbt1)) {
 				return false;
 			}
-			me.f(nbt1);
+			me.load(nbt1);
 			return true;
 		}
 		return false;
 	}
 
 	private boolean getNBTValue(Entity e1, String s) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) e1).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) e1).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null;
 		boolean bl1 = false;
 		if ((nbt1 = TFa(me)) != null) {
@@ -858,8 +908,8 @@ public class Core implements Handler, Listener {
 			NBTTagList nbl1 = (NBTTagList) nb1;
 			NBTTagList nbl2 = (NBTTagList) nb2;
 			for (int i1 = 0; i1 < nbl1.size(); i1++) {
-				NBTBase nb3 = nbl1.c(i1);
-				NBTBase nb4 = nbl2.c(i1);
+				NBTBase nb3 = nbl1.b(i1);
+				NBTBase nb4 = nbl2.b(i1);
 				if (nb3.toString().toLowerCase().contains("id:\"ignore\""))
 					nb3 = nb4;
 				if (!(bl1 = nbtA(nb3, nb4, bl1)))
@@ -896,7 +946,7 @@ public class Core implements Handler, Listener {
 	}
 
 	private boolean testFor(Entity e, String c, char m) {
-		net.minecraft.server.v1_13_R2.Entity me = ((CraftEntity) e).getHandle();
+		net.minecraft.server.v1_16_R1.Entity me = ((CraftEntity) e).getHandle();
 		NBTTagCompound nbt1 = null, nbt2 = null;
 		try {
 			nbt2 = MojangsonParser.parse(c);
@@ -911,7 +961,7 @@ public class Core implements Handler, Listener {
 		return true;
 	}
 
-	private NBTTagCompound TFa(net.minecraft.server.v1_13_R2.Entity e) {
+	private NBTTagCompound TFa(net.minecraft.server.v1_16_R1.Entity e) {
 		NBTTagCompound nbt = null;
 		if (e.valid) {
 			try {
@@ -951,10 +1001,10 @@ public class Core implements Handler, Listener {
 			if (nbtl1.isEmpty())
 				return nbtl2.isEmpty();
 			for (int j = 0; j < nbtl1.size(); j++) {
-				NBTBase b4 = nbtl1.c(j);
+				NBTBase b4 = nbtl1.b(j);
 				boolean bl2 = false;
 				for (int k = 0; k < nbtl2.size(); k++) {
-					if (!GPa(b4, nbtl2.c(k), false))
+					if (!GPa(b4, nbtl2.b(k), false))
 						continue;
 					bl2 = true;
 					break;
@@ -970,38 +1020,38 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean playerIsSleeping(Player p) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSleeping() || me.isDeeplySleeping();
 	}
 
 	@Override
 	public boolean playerIsRunning(Player p) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSprinting();
 	}
 
 	@Override
 	public boolean playerIsCrouching(Player p) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		return me.isSneaking();
 	}
 
 	@Override
 	public boolean playerIsJumping(Player p) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) p).getHandle();
-		return !me.onGround && MathUtils.round(me.motY, 5) != -0.00784;
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		return !me.isOnGround() && MathUtils.round(me.getMot().getY(), 5) != -0.00784;
 	}
 
 	@Override
 	public void setDeath(Player p, boolean b) {
-		net.minecraft.server.v1_13_R2.EntityPlayer me = ((CraftPlayer) p).getHandle();
+		net.minecraft.server.v1_16_R1.EntityPlayer me = ((CraftPlayer) p).getHandle();
 		me.dead = b;
 	}
 
 	@Override
 	public float getIndicatorPercentage(Player p) {
 		EntityHuman eh = ((CraftHumanEntity) p).getHandle();
-		return eh.r(0.0f);
+		return eh.getAttackCooldown(0.0f);
 	}
 
 	@Override
@@ -1014,13 +1064,13 @@ public class Core implements Handler, Listener {
 	@Override
 	public boolean setItemCooldown(Player p, int j1, int i1) {
 		EntityHuman eh = ((CraftHumanEntity) p).getHandle();
-		net.minecraft.server.v1_13_R2.Item i = i1 == -1 ? eh.inventory.getItemInHand().getItem()
+		net.minecraft.server.v1_16_R1.Item i = i1 == -1 ? eh.inventory.getItemInHand().getItem()
 				: eh.inventory.getItem(i1).getItem();
 		if (eh.getCooldownTracker().cooldowns.containsKey(i)) {
 			eh.getCooldownTracker().cooldowns.remove(i);
 		}
 		;
-		eh.getCooldownTracker().a(i, j1);
+		eh.getCooldownTracker().setCooldown(i, j1);
 		return true;
 	}
 
@@ -1081,7 +1131,7 @@ public class Core implements Handler, Listener {
 		if (ei.isHandRaised()) {
 			if (bl1)
 				System.err.println("hand not raised!");
-			ei.da();
+			ei.clearActiveItem();
 		} else {
 			if (bl1)
 				System.err.println("hand is raised draws bow");
@@ -1097,8 +1147,7 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public void forceSpectate(Player player, Entity entity) {
-		EntityPlayer entityplayer = ((CraftPlayer) player).getHandle();
-		((WorldServer) entityplayer.world).getTracker().a(entityplayer, new PacketPlayOutAnimation(entityplayer, 3));
+		this.forceSpectate(player, entity, false);
 	}
 
 	@Override
@@ -1120,8 +1169,8 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public boolean velocityChanged(Entity bukkit_entity) {
-		net.minecraft.server.v1_13_R2.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
-		return entity.world.a(entity.getBoundingBox().grow(0.001, 0.001, 0.001));
+		net.minecraft.server.v1_16_R1.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
+		return entity.world.b(entity.getBoundingBox().grow(0.001, 0.001, 0.001));
 	}
 
 	@Override
@@ -1129,10 +1178,10 @@ public class Core implements Handler, Listener {
 		EntityLiving target = ((CraftLivingEntity) bukkit_target).getHandle();
 		EntityLiving source = ((CraftLivingEntity) bukkit_source).getHandle();
 
-		double delta_x = target.locX + (target.locX - target.lastX) * delta - source.locX;
-		double delta_y = target.locY + (target.locY - target.lastY) * delta + target.getHeadHeight() - 0.15f
-				- source.locY - source.getHeadHeight();
-		double delta_z = target.locZ + (target.locZ - target.lastZ) * delta - source.locZ;
+		double delta_x = target.locX() + (target.locX() - target.lastX) * delta - source.locX();
+		double delta_y = target.locY() + (target.locY() - target.lastY) * delta + target.getHeadHeight() - 0.15f
+				- source.locY() - source.getHeadHeight();
+		double delta_z = target.locZ() + (target.locZ() - target.lastZ) * delta - source.locZ();
 
 		return new Vec3D(delta_x, delta_y, delta_z);
 	}
@@ -1149,9 +1198,9 @@ public class Core implements Handler, Listener {
 		EntityInsentient entity = (EntityInsentient) ((CraftLivingEntity) bukkit_entity).getHandle();
 		if (target == null)
 			return true;
-		PathEntity pe = (entity).getNavigation().a(target);
+		PathEntity pe = entity.getNavigation().a(target, 16);
 		if (pe == null) {
-			return entity.onGround != true;
+			return entity.isOnGround() != true;
 		} else {
 			PathPoint pp = pe.c();
 			return pp != null;
@@ -1163,24 +1212,4 @@ public class Core implements Handler, Listener {
 		this.addTravelPoint(bukkit_entity, vector, true);
 	}
 
-	@Override
-	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
-		return bukkit_entity.getNearbyEntities(range, range, range);
-	}
-
-	@Override
-	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range, Predicate<Entity> filter) {
-		return bukkit_entity.getNearbyEntities(range, range, range);
-	}
-
-	@Override
-	public List<Entity> getNearbyEntities(World bukkit_world, BoundingBox bukkit_aabb, Predicate<Entity> filter) {
-		return new ArrayList<Entity>(bukkit_world.getNearbyEntities(bukkit_aabb, filter));
-	}
-
-	@Override
-	public List<Entity> getNearbyEntities(World bukkit_world, Location bukkit_location, double x, double y, double z,
-			Predicate<Entity> filter) {
-		return new ArrayList<Entity>(bukkit_world.getNearbyEntities(bukkit_location, x, y, z, filter));
-	}
 }

@@ -5,9 +5,9 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.logging.MythicLogger;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "spawnreason,spawnreason_ext", author = "BerndiVader")
@@ -26,7 +26,7 @@ public class SpawnReasonCondition extends AbstractCustomCondition implements IEn
 			try {
 				reason = SpawnReason.valueOf(s1);
 			} catch (Exception ex) {
-				MythicMobs.error("Skipping SpawnReason: " + s1 + " because its unknown.");
+				MythicLogger.error("Skipping SpawnReason: " + s1 + " because its unknown.");
 				continue;
 			}
 			reasons = add(reasons, new SpawnReason[] { reason });

@@ -37,7 +37,6 @@ import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
-import com.gmail.berndivader.mythicmobsext.utils.Pre44MobSpawnEvent;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Main extends JavaPlugin {
@@ -140,8 +139,6 @@ public class Main extends JavaPlugin {
 				new NoCheatPlusSupport(this);
 			if (Config.c_owners)
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
-			if (Config.pre44spawn)
-				new Pre44MobSpawnEvent();
 
 			entityCacheHandler = new EntityCacheHandler();
 			new BackBagHelper();

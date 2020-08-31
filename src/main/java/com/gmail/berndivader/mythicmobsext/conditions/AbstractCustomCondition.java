@@ -9,7 +9,7 @@ import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString
 
 public class AbstractCustomCondition extends SkillCondition {
 	boolean dba, debug;
-	// Verifying uploading to github works
+
 	public AbstractCustomCondition(String line, MythicLineConfig mlc) {
 		super(line);
 

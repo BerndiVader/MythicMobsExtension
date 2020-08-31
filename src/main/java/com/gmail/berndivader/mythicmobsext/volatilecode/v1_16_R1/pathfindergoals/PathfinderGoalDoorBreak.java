@@ -1,13 +1,13 @@
-package com.gmail.berndivader.mythicmobsext.volatilecode.v1_14_R1.pathfindergoals;
+package com.gmail.berndivader.mythicmobsext.volatilecode.v1_16_R1.pathfindergoals;
 
-import org.bukkit.craftbukkit.v1_14_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_16_R1.event.CraftEventFactory;
 
-import net.minecraft.server.v1_14_R1.Block;
-import net.minecraft.server.v1_14_R1.BlockDoor;
-import net.minecraft.server.v1_14_R1.EntityInsentient;
-import net.minecraft.server.v1_14_R1.GameRules;
-import net.minecraft.server.v1_14_R1.IBlockData;
-import net.minecraft.server.v1_14_R1.Vec3D;
+import net.minecraft.server.v1_16_R1.Block;
+import net.minecraft.server.v1_16_R1.BlockDoor;
+import net.minecraft.server.v1_16_R1.EntityInsentient;
+import net.minecraft.server.v1_16_R1.GameRules;
+import net.minecraft.server.v1_16_R1.IBlockData;
+import net.minecraft.server.v1_16_R1.Vec3D;
 
 public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 	int g;
@@ -21,7 +21,7 @@ public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 	public boolean a() {
 		if (!super.a())
 			return false;
-		if (bl1 && !this.a.world.getGameRules().getBoolean("mobGriefing"))
+		if (bl1 && !this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))
 			return false;
 		return !this.g();
 	}
@@ -34,7 +34,7 @@ public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 
 	@Override
 	public boolean b() {
-		double d0 = this.a.c(new Vec3D(this.b));
+		double d0 = this.a.d(new Vec3D(this.b.getX(), this.b.getY(), this.b.getZ()));
 		if (this.g <= 240 && !this.g() && d0 < 4.0) {
 			flag = true;
 			return flag;

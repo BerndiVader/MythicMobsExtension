@@ -78,7 +78,6 @@ public class MythicOrbitalProjectile extends CustomProjectile implements ITarget
 			new ProjectileRunner(data, this.pEntityName, target);
 			return true;
 		} catch (Exception ex) {
-			this.mythicmobs.handleException(ex);
 			return false;
 		}
 	}

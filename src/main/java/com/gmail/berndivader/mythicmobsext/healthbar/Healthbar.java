@@ -68,7 +68,6 @@ public class Healthbar extends CraftHologram {
 		}
 	}
 
-	@Override
 	public boolean update() {
 		if (this.isDeleted())
 			return false;

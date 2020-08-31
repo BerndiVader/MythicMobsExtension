@@ -494,14 +494,14 @@ public class Utils implements Listener {
 		ItemStack[] armour = p.getInventory().getArmorContents();
 		boolean useDamage = false;
 		for (ItemStack pArmour : armour) {
-			RPGItem pRItem = ItemManager.toRPGItem(pArmour);
+			RPGItem pRItem = ItemManager.toRPGItem(pArmour).get();
 			if (pRItem == null)
 				continue;
 			boolean can;
-			if (!pRItem.hitCostByDamage) {
-				can = pRItem.consumeDurability(pArmour, pRItem.hitCost);
+			if (!pRItem.isHitCostByDamage()) {
+				can = pRItem.consumeDurability(pArmour, pRItem.getHitCost());
 			} else {
-				can = pRItem.consumeDurability(pArmour, (int) (pRItem.hitCost * damage / 100d));
+				can = pRItem.consumeDurability(pArmour, (int) (pRItem.getHitCost() * damage / 100d));
 			}
 			if (can && pRItem.getArmour() > 0) {
 				useDamage = true;

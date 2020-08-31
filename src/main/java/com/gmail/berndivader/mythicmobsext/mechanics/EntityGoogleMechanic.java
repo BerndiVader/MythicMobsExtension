@@ -18,6 +18,7 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.logging.MythicLogger;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -41,13 +42,13 @@ public class EntityGoogleMechanic extends SkillMechanic implements ITargetedEnti
 		if (s1 != null) {
 			String[] arr1 = s1.toUpperCase().split(",");
 			if (arr1.length < 4) {
-				MythicMobs.error("There was an error while parsing location string for skill " + skill);
+				MythicLogger.log("There was an error while parsing location string for skill " + skill);
 			} else {
 				try {
 					l = new Location(Bukkit.getWorld(arr1[3]), Double.parseDouble(arr1[0]), Double.parseDouble(arr1[1]),
 							Double.parseDouble(arr1[2]));
 				} catch (Exception ex) {
-					MythicMobs.error("There was an error while creating the location for the skill " + skill + ": "
+					MythicLogger.log("There was an error while creating the location for the skill " + skill + ": "
 							+ ex.getMessage());
 				}
 			}

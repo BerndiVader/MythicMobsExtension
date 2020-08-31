@@ -10,9 +10,9 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import com.gmail.berndivader.mythicmobsext.externals.*;
 import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
+import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
@@ -36,8 +36,8 @@ import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.IEntitySelector;
 import io.lumine.xikage.mythicmobs.skills.targeters.ILocationSelector;
-import io.lumine.xikage.mythicmobs.skills.targeters.MTTriggerLocation;
 import io.lumine.xikage.mythicmobs.skills.targeters.OriginTargeter;
+import io.lumine.xikage.mythicmobs.skills.targeters.TargetLocationTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
 
 @ExternalAnnotation(name = "customteleport", author = "BerndiVader")
@@ -245,7 +245,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 				((ILocationSelector) targeter).filter(data);
 			} else if (targeter instanceof OriginTargeter) {
 				data.setLocationTargets(((OriginTargeter) targeter).getLocation(data.getOrigin()));
-			} else if (targeter instanceof MTTriggerLocation) {
+			} else if (targeter instanceof TargetLocationTargeter) {
 				HashSet<AbstractLocation> lTargets = new HashSet<AbstractLocation>();
 				lTargets.add(data.getTrigger().getLocation());
 				data.setLocationTargets(lTargets);
