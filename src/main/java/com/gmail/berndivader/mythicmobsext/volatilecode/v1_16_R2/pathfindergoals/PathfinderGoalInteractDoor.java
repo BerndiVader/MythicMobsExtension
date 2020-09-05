@@ -41,7 +41,7 @@ public class PathfinderGoalInteractDoor extends PathfinderGoal {
 		for (int i1 = 0; i1 < Math.min(pe1.f() + 2, pe1.e()); i1++) {
 			PathPoint pp1 = pe1.a(i1);
 			this.b = new BlockPosition(pp1.a, pp1.b + 1, pp1.c);
-			if (this.a.g(this.b.getX(), this.a.locY(), this.b.getZ()) > 2.25)
+			if (this.a.h(this.b.getX(), this.a.locY(), this.b.getZ()) > 2.25)
 				continue;
 			this.c = this.a(this.b);
 			if (this.c == null)

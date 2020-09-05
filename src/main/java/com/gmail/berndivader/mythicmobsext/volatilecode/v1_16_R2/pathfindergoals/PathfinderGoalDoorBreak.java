@@ -34,7 +34,7 @@ public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 
 	@Override
 	public boolean b() {
-		double d0 = this.a.d(new Vec3D(this.b.getX(), this.b.getY(), this.b.getZ()));
+		double d0 = this.a.e(new Vec3D(this.b.getX(), this.b.getY(), this.b.getZ()));
 		if (this.g <= 240 && !this.g() && d0 < 4.0) {
 			flag = true;
 			return flag;

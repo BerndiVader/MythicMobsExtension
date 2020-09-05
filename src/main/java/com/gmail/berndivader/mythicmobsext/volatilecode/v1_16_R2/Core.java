@@ -187,7 +187,7 @@ public class Core implements Handler, Listener {
 
 	public List<Entity> getNearbyEntities(net.minecraft.server.v1_16_R2.World world, AxisAlignedBB bb,
 			Predicate<Entity> filter) {
-		List<net.minecraft.server.v1_16_R2.Entity> entityList = world.getEntities(null, bb, null);
+		List<net.minecraft.server.v1_16_R2.Entity> entityList = world.getEntities((net.minecraft.server.v1_16_R2.Entity) null, bb, null);
 		ArrayList<org.bukkit.entity.Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(
 				entityList.size());
 		for (net.minecraft.server.v1_16_R2.Entity entity : entityList) {
@@ -258,7 +258,7 @@ public class Core implements Handler, Listener {
 		entityplayer1.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(),
 				location.getPitch());
 		entityplayer1.playerConnection.sendPacket(new PacketPlayOutRespawn(
-				entityplayer1.world.getTypeKey(), entityplayer1.world.getDimensionKey(),
+				entityplayer1.world.getDimensionManager(), entityplayer1.world.getDimensionKey(),
 				BiomeManager.a(entityplayer1.getWorldServer().getSeed()),
 				entityplayer1.playerInteractManager.getGameMode(), entityplayer1.playerInteractManager.c(),
 				entityplayer1.getWorldServer().isDebugWorld(), entityplayer1.getWorldServer().isFlatWorld(), true));
@@ -1202,7 +1202,7 @@ public class Core implements Handler, Listener {
 		if (pe == null) {
 			return entity.isOnGround() != true;
 		} else {
-			PathPoint pp = pe.c();
+			PathPoint pp = pe.d();
 			return pp != null;
 		}
 	}

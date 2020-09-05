@@ -76,7 +76,7 @@ public class PathFinderGoalShoot extends PathfinderGoal {
 		if (entityLiving == null) {
 			return;
 		}
-		double d2 = this.a.g(entityLiving.locX(), entityLiving.getBoundingBox().maxY, entityLiving.locZ());
+		double d2 = this.a.h(entityLiving.locX(), entityLiving.getBoundingBox().maxY, entityLiving.locZ());
 		boolean bl2 = this.a.getEntitySenses().a(entityLiving);
 		bl = this.f > 0;
 		if (bl2 != bl) {

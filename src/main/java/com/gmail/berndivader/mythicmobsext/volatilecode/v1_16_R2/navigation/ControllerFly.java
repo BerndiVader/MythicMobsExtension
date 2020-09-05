@@ -39,8 +39,8 @@ public class ControllerFly extends ControllerMove {
 				f3 = f2;
 			}
 			this.a.n(f3);
-			this.a.r(this.f);
-			this.a.s(this.g);
+			this.a.v(this.f);
+			this.a.u(this.g);
 			this.h = Operation.WAIT;
 		} else if (this.h == ControllerMove.Operation.MOVE_TO) {
 			this.h = ControllerMove.Operation.WAIT;
@@ -50,8 +50,8 @@ public class ControllerFly extends ControllerMove {
 			double d4 = this.d - this.a.locZ();
 			double d5 = d2 * d2 + d3 * d3 + d4 * d4;
 			if (d5 < 2.500000277905201E-7) {
-				this.a.s(0.0f);
-				this.a.r(0.0f);
+				this.a.u(0.0f);
+				this.a.v(0.0f);
 				return;
 			}
 			float f2 = (float) (MathHelper.d(d4, d2) * 57.2957763671875) - 90.0f;
@@ -63,11 +63,11 @@ public class ControllerFly extends ControllerMove {
 			double d6 = MathHelper.sqrt(d2 * d2 + d4 * d4);
 			float f4 = (float) (-MathHelper.d(d3, d6) * 57.2957763671875);
 			this.a.pitch = this.a(this.a.pitch, f4, 10.0f);
-			this.a.s(d3 > 0.0 ? f3 : -f3);
+			this.a.u(d3 > 0.0 ? f3 : -f3);
 		} else {
 			this.a.setNoGravity(false);
-			this.a.s(0.0f);
-			this.a.r(0.0f);
+			this.a.u(0.0f);
+			this.a.v(0.0f);
 		}
 	}
 }

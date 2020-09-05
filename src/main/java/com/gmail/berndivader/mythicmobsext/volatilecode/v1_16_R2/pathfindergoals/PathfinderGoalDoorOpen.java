@@ -20,13 +20,13 @@ public class PathfinderGoalDoorOpen extends PathfinderGoalInteractDoor {
 	@Override
 	public void c() {
 		this.h = 20;
-		this.c.setDoor(this.a.world, this.b, true);
+		this.c.setDoor(this.a.world, null, this.b, true);
 	}
 
 	@Override
 	public void d() {
 		if (this.g)
-			this.c.setDoor(this.a.world, this.b, false);
+			this.c.setDoor(this.a.world, null, this.b, false);
 	}
 
 	@Override

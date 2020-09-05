@@ -59,7 +59,6 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 		boolean broken = false;
 		int damagevalue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
 		if (this.armortype.contains("offhand") || this.armortype.contains("all")) {
-			// MythicMobs stopped supporting versions below 1.12; removed old version check
 			armor = e.getEquipment().getItemInOffHand();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
@@ -71,7 +70,6 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 			}
 		}
 		if (this.armortype.contains("hand") || this.armortype.contains("all")) {
-			// MythicMobs stopped supporting versions below 1.12 - removed old version check
 			armor = e.getEquipment().getItemInMainHand();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
