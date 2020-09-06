@@ -35,7 +35,7 @@ public class ControllerVex extends ControllerMove {
 			}
 		} else {
 			this.a.setNoGravity(false);
-			this.a.v(0.0f);
+			this.a.u(0.0f);
 			this.a.v(0.0f);
 		}
 	}

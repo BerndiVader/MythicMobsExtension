@@ -983,85 +983,77 @@ public class NMSUtils {
 			}
 
 			try {
+				
 				try {
 					if (!isCurrentVersion) {
-						throw new Exception("Not 1.16");
+						throw new Exception("Not 1.16.2");
 					}
 					class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
 					class_Entity_jumpingField.setAccessible(true);
 					class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("aR");
 					class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("aT");
 					if (!isPublic(class_Entity_moveStrafingField) || !isPublic(class_Entity_moveForwardField)) {
-						throw new Exception("Not 1.1.6");
+						throw new Exception("Not 1.1.6.2");
 					}
-				} catch (Throwable not16) {
-					// 1.15
+				} catch (Throwable not162) {
+				
 					try {
 						if (!isCurrentVersion) {
-							throw new Exception("Not 1.15");
+							throw new Exception("Not 1.16");
 						}
 						class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
 						class_Entity_jumpingField.setAccessible(true);
-						class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("aZ");
-						class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bb");
-					} catch (Throwable not15) {
-						// 1.14
+						class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("aY");
+						class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("ba");
+						if (!isPublic(class_Entity_moveStrafingField) || !isPublic(class_Entity_moveForwardField)) {
+							throw new Exception("Not 1.1.6");
+						}
+					} catch (Throwable not16) {
+						// 1.15
 						try {
 							if (!isCurrentVersion) {
-								throw new Exception("Not 1.14");
+								throw new Exception("Not 1.15");
 							}
 							class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
 							class_Entity_jumpingField.setAccessible(true);
-							class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bb");
-							class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bd");
-						} catch (Throwable not14) {
-							// 1.13
+							class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("aZ");
+							class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bb");
+						} catch (Throwable not15) {
+							// 1.14
 							try {
-								if (!isModernVersion) {
-									throw new Exception("Not 1.13");
+								if (!isCurrentVersion) {
+									throw new Exception("Not 1.14");
 								}
-								class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bg");
+								class_Entity_jumpingField = class_EntityLiving.getDeclaredField("jumping");
 								class_Entity_jumpingField.setAccessible(true);
-								class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bh");
-								class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bj");
-							} catch (Throwable not13) {
-								// 1.12
+								class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bb");
+								class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bd");
+							} catch (Throwable not14) {
+								// 1.13
 								try {
-									if (!current) {
-										throw new Exception("Not 1.12");
+									if (!isModernVersion) {
+										throw new Exception("Not 1.13");
 									}
-									class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
+									class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bg");
 									class_Entity_jumpingField.setAccessible(true);
-									class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
-									class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
-								} catch (Throwable not12) {
-									// 1.11
-									current = false;
+									class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bh");
+									class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bj");
+								} catch (Throwable not13) {
+									// 1.12
 									try {
+										if (!current) {
+											throw new Exception("Not 1.12");
+										}
 										class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bd");
 										class_Entity_jumpingField.setAccessible(true);
 										class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("be");
-										class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bf");
-									} catch (Throwable not11) {
-										// 1.10
-										try {
-											class_Entity_jumpingField = class_EntityLiving.getDeclaredField("be");
-											class_Entity_jumpingField.setAccessible(true);
-											class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bf");
-											class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
-										} catch (Throwable not10) {
-											class_Entity_jumpingField = class_EntityLiving.getDeclaredField("bc");
-											class_Entity_jumpingField.setAccessible(true);
-											class_Entity_moveStrafingField = class_EntityLiving.getDeclaredField("bd");
-											class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("be");
-									}
-								}
+										class_Entity_moveForwardField = class_EntityLiving.getDeclaredField("bg");
+									} catch (Throwable not12) {}
 							}
 						}
 					}
 				}
-			}
-					
+			}		
 				if (!isPublic(class_Entity_moveStrafingField) || !isPublic(class_Entity_moveForwardField)) {
 					throw new Exception("Could not find accessible methods");
 				}
