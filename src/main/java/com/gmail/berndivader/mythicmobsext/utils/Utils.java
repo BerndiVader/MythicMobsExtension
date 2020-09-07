@@ -787,10 +787,11 @@ public class Utils implements Listener {
 			task=new BukkitRunnable() {
 				@Override
 				public void run() {
-					
+
 					for (Iterator<Entry<String, Map<Plugin, MetadataValue>>> iterator = entity_map.entrySet().iterator(); iterator.hasNext();) {
 						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
 						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
+						
 						if(entity == null)
 							iterator.remove();
 					    }

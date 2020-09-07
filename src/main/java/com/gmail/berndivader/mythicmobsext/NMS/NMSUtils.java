@@ -27,8 +27,6 @@ import io.lumine.xikage.mythicmobs.drops.Drop;
 
 public class NMSUtils extends CompatibilityUtils {
 
-	protected static int mm_version;
-
 	protected static Class<?> class_IChatBaseComponent_ChatSerializer;
 	protected static Class<?> class_EntitySnowman;
 
@@ -125,23 +123,8 @@ public class NMSUtils extends CompatibilityUtils {
 			class_CraftServer_getEntityMetadataStoreMethod = class_CraftServer.getMethod("getEntityMetadata");
 			class_CraftServer_getPlayerMetadataStoreMethod = class_CraftServer.getMethod("getPlayerMetadata");
 
-			mm_version = 45;
+			class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class, String.class);
 
-			try {
-				mm_version = Integer.parseInt(Utils.mythicmobs.getVersion().replaceAll("\\.", "").substring(0, 2));
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				mm_version = 45;
-			}
-
-			try {
-				class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class);
-			} catch (Exception e) {
-				class_Drop_getDropMethod = class_Drop.getMethod("getDrop", String.class, String.class);
-			}
-
-			/*class_Drop_getDropMethod = mm_version < 45 ? class_Drop.getMethod("getDrop", String.class)
-					: class_Drop.getMethod("getDrop", String.class, String.class);*/
 
 		} catch (NoSuchFieldException | SecurityException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -455,8 +438,7 @@ public class NMSUtils extends CompatibilityUtils {
 	public static Drop getDrop(String item_name) {
 		Drop drop = null;
 		try {
-			drop = mm_version < 45 ? (Drop) class_Drop_getDropMethod.invoke(null, item_name)
-					: (Drop) class_Drop_getDropMethod.invoke(null, "MMEDrop", item_name);
+			drop = (Drop) class_Drop_getDropMethod.invoke(null, "MMEDrop", item_name);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
