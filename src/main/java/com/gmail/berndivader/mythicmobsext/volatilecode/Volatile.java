@@ -10,6 +10,8 @@ public class Volatile {
 	static {
 		String v, n;
 		n = Bukkit.getServer().getClass().getPackage().getName();
+		// TODO:
+		// Change this to something that is more future proof
 		v = n.substring(n.lastIndexOf(46) + 1);
 		try {
 			Class<?> c = Class.forName("com.gmail.berndivader.mythicmobsext.volatilecode." + v + ".Core");
