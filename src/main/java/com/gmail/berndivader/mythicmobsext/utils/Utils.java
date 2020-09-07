@@ -787,12 +787,13 @@ public class Utils implements Listener {
 			task=new BukkitRunnable() {
 				@Override
 				public void run() {
-					Iterator<Entry<String, Map<Plugin, MetadataValue>>> map_iter = entity_map.entrySet().iterator();
-					while (map_iter.hasNext()) {
-						Entry<String, Map<Plugin, MetadataValue>>map_entry=map_iter.next();
-						Entity entity=Bukkit.getEntity(UUID.fromString(map_entry.getKey().split(":")[0].toLowerCase()));
-						if(entity==null) map_iter.remove();
-					}
+					
+					for (Iterator<Entry<String, Map<Plugin, MetadataValue>>> iterator = entity_map.entrySet().iterator(); iterator.hasNext();) {
+						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
+						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
+						if(entity == null)
+							iterator.remove();
+					    }
 				}
 				
 			}.runTaskTimerAsynchronously(Main.getPlugin(),Config.meta_delay,Config.meta_delay);
