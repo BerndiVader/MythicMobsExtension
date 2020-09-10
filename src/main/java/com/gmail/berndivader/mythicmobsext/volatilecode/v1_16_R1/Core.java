@@ -157,13 +157,13 @@ public class Core implements Handler, Listener {
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range) {
-		net.minecraft.server.v1_16_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
 		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), null);
 	}
 
 	@Override
 	public List<Entity> getNearbyEntities(Entity bukkit_entity, int range, Predicate<Entity> filter) {
-		net.minecraft.server.v1_16_R1.Entity entity = ((CraftLivingEntity) bukkit_entity).getHandle();
+		net.minecraft.server.v1_16_R1.Entity entity = ((CraftEntity) bukkit_entity).getHandle();
 		return this.getNearbyEntities(entity.getWorld(), entity.getBoundingBox().grow(range, range, range), filter);
 	}
 
