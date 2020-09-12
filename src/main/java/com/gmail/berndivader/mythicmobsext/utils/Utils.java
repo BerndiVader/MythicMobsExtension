@@ -737,11 +737,14 @@ public class Utils implements Listener {
 	}
 
 	private static void p() {
+		return;
+		/*
 		try {
 			NMSUtils.setField("p", MythicMobs.class, null, true);
 		} catch (Throwable e) {
 			//
 		}
+		*/
 	}
 
 	/**
