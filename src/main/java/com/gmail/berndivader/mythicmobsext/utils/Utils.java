@@ -169,7 +169,6 @@ public class Utils implements Listener {
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 		
 		metaRunner=new MetaRunner();
-		p();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -734,14 +733,6 @@ public class Utils implements Listener {
 			}
 		}
 		return threattable;
-	}
-
-	private static void p() {
-		try {
-			NMSUtils.setField("p", MythicMobs.class, null, true);
-		} catch (Throwable e) {
-			//
-		}
 	}
 
 	/**

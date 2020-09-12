@@ -69,6 +69,12 @@ public class Main extends JavaPlugin {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
+					
+					logger.info("Using MMEv0.7 by Seyarada! Keep on mind this isn't an official release. Please report any errors you"
+								+ " may find to Pandemonium#9722 on Discord, not to the official MME team.");
+					
+					System.out.println(Utils.mythicmobs.getVersion());
+					
 					String version = new String();
 					PluginDescriptionFile pdf = getDescription();
 					try {
