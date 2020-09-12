@@ -69,9 +69,7 @@ public class Main extends JavaPlugin {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					
-					System.out.println(Utils.mythicmobs.getVersion());
-					
+
 					String version = new String();
 					PluginDescriptionFile pdf = getDescription();
 					try {
