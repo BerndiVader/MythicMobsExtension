@@ -169,7 +169,6 @@ public class Utils implements Listener {
 		Main.getPlugin().getServer().getPluginManager().registerEvents(this, Main.getPlugin());
 		
 		metaRunner=new MetaRunner();
-		p();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -494,14 +493,14 @@ public class Utils implements Listener {
 		ItemStack[] armour = p.getInventory().getArmorContents();
 		boolean useDamage = false;
 		for (ItemStack pArmour : armour) {
-			RPGItem pRItem = ItemManager.toRPGItem(pArmour);
+			RPGItem pRItem = ItemManager.toRPGItem(pArmour).get();
 			if (pRItem == null)
 				continue;
 			boolean can;
-			if (!pRItem.hitCostByDamage) {
-				can = pRItem.consumeDurability(pArmour, pRItem.hitCost);
+			if (!pRItem.isHitCostByDamage()) {
+				can = pRItem.consumeDurability(pArmour, pRItem.getHitCost());
 			} else {
-				can = pRItem.consumeDurability(pArmour, (int) (pRItem.hitCost * damage / 100d));
+				can = pRItem.consumeDurability(pArmour, (int) (pRItem.getHitCost() * damage / 100d));
 			}
 			if (can && pRItem.getArmour() > 0) {
 				useDamage = true;
@@ -736,17 +735,6 @@ public class Utils implements Listener {
 		return threattable;
 	}
 
-	private static void p() {
-		return;
-		/*
-		try {
-			NMSUtils.setField("p", MythicMobs.class, null, true);
-		} catch (Throwable e) {
-			//
-		}
-		*/
-	}
-
 	/**
 	 * 
 	 * @param targeter_string {@link String}
@@ -790,12 +778,14 @@ public class Utils implements Listener {
 			task=new BukkitRunnable() {
 				@Override
 				public void run() {
-					Iterator<Entry<String, Map<Plugin, MetadataValue>>> map_iter = entity_map.entrySet().iterator();
-					while (map_iter.hasNext()) {
-						Entry<String, Map<Plugin, MetadataValue>>map_entry=map_iter.next();
-						Entity entity=Bukkit.getEntity(UUID.fromString(map_entry.getKey().split(":")[0].toLowerCase()));
-						if(entity==null) map_iter.remove();
-					}
+
+					for (Iterator<Entry<String, Map<Plugin, MetadataValue>>> iterator = entity_map.entrySet().iterator(); iterator.hasNext();) {
+						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
+						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
+						
+						if(entity == null)
+							iterator.remove();
+					    }
 				}
 				
 			}.runTaskTimerAsynchronously(Main.getPlugin(),Config.meta_delay,Config.meta_delay);

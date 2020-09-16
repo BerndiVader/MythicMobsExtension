@@ -47,7 +47,6 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		int ver = Utils.mythicmobs.getMinecraftVersion();
 		if (target == null || !target.isLiving() || target.isDead()) {
 			return false;
 		}
@@ -60,7 +59,7 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 		boolean broken = false;
 		int damagevalue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
 		if (this.armortype.contains("offhand") || this.armortype.contains("all")) {
-			armor = ver >= 9 ? e.getEquipment().getItemInOffHand() : null;
+			armor = e.getEquipment().getItemInOffHand();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
 				armor.setDurability(dur);
@@ -71,23 +70,15 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 			}
 		}
 		if (this.armortype.contains("hand") || this.armortype.contains("all")) {
-			armor = ver >= 9 ? e.getEquipment().getItemInMainHand() : e.getEquipment().getItemInHand();
+			armor = e.getEquipment().getItemInMainHand();
 			if (armor != null) {
 				dur = (short) (armor.getDurability() + damagevalue);
 				armor.setDurability(dur);
 				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					if (ver >= 9) {
 						e.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
-					} else {
-						e.getEquipment().setItemInHand(new ItemStack(Material.AIR));
-					}
 					broken = true;
 				} else {
-					if (ver >= 9) {
-						e.getEquipment().setItemInMainHand(new ItemStack(armor));
-					} else {
-						e.getEquipment().setItemInHand(new ItemStack(armor));
-					}
+					e.getEquipment().setItemInMainHand(new ItemStack(armor));
 				}
 			}
 		}

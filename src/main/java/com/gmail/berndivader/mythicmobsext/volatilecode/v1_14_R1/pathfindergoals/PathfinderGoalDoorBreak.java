@@ -21,7 +21,7 @@ public class PathfinderGoalDoorBreak extends PathfinderGoalInteractDoor {
 	public boolean a() {
 		if (!super.a())
 			return false;
-		if (bl1 && !this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING))
+		if (bl1 && !this.a.world.getGameRules().getBoolean("mobGriefing"))
 			return false;
 		return !this.g();
 	}

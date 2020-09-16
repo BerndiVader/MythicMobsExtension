@@ -29,7 +29,7 @@ public class ParsedDisguiseMechanic extends SkillMechanic implements ITargetedEn
 			case "ALEX":
 				break;
 			default:
-				CompatibilityManager.LibsDisguises.setDisguise((ActiveMob) data.getCaster(), d);
+				CompatibilityManager.LibsDisguises.setDisguise((ActiveMob) data.getCaster(), d, false);
 			}
 			return true;
 		}

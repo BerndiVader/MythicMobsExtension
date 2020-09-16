@@ -38,6 +38,7 @@ import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.util.BlockUtil;
+import io.lumine.xikage.mythicmobs.utils.numbers.Numbers;
 
 @ExternalAnnotation(name = "blockprojectile", author = "BerndiVader")
 public class BlockProjectile extends CustomProjectile implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -168,8 +169,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 					|| BlockProjectile.this.projectileVelocityHorizNoise > 0.0f) {
 				noise = 0.0f;
 				if (BlockProjectile.this.projectileVelocityHorizNoise > 0.0f) {
-					noise = BlockProjectile.this.projectileVelocityHorizNoiseBase
-							+ MythicMobs.r.nextFloat() * BlockProjectile.this.projectileVelocityHorizNoise;
+					noise = (float) (BlockProjectile.this.projectileVelocityHorizNoiseBase
+							+ Numbers.randomDouble() * BlockProjectile.this.projectileVelocityHorizNoise);
 				}
 				this.currentVelocity.rotate(BlockProjectile.this.projectileVelocityHorizOffset + noise);
 			}
@@ -180,8 +181,8 @@ public class BlockProjectile extends CustomProjectile implements ITargetedEntity
 					|| BlockProjectile.this.projectileVelocityVertNoise > 0.0f) {
 				noise = 0.0f;
 				if (BlockProjectile.this.projectileVelocityVertNoise > 0.0f) {
-					noise = BlockProjectile.this.projectileVelocityVertNoiseBase
-							+ MythicMobs.r.nextFloat() * BlockProjectile.this.projectileVelocityVertNoise;
+					noise = (float) (BlockProjectile.this.projectileVelocityVertNoiseBase
+							+ Numbers.randomDouble() * BlockProjectile.this.projectileVelocityVertNoise);
 				}
 				this.currentVelocity
 						.add(new AbstractVector(0.0f, BlockProjectile.this.projectileVelocityVertOffset + noise, 0.0f))

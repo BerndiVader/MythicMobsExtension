@@ -65,6 +65,7 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.v1_13_R2.pathfindergoals
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.logging.MythicLogger;
 
 public class Core implements Handler, Listener {
 
@@ -603,7 +604,7 @@ public class Core implements Handler, Listener {
 				if (e instanceof EntityAgeable) {
 					pathfindergoal = Optional.ofNullable(new PathfinderGoalEntityGrowNotify(e, data));
 				} else {
-					MythicMobs.error("No ageable entity");
+					MythicLogger.log("No ageable entity");
 				}
 				break;
 			}
