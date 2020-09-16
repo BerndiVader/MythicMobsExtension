@@ -31,6 +31,8 @@ repositories {
  }
 
 dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.16.3:+") 
+    compileOnly  ("org.spigotmc:spigot-1.16.1:+") 
     compileOnly  ("org.spigotmc:spigot-1.15.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 

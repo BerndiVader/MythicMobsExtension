@@ -32,7 +32,7 @@ public class PathfinderGoalInteractDoor extends PathfinderGoal {
 
 	@Override
 	public boolean a() {
-		if (!this.a.positionChanged || (bl1 && !this.a.world.getGameRules().getBoolean("mobGriefing")))
+		if (!this.a.positionChanged || (bl1 && !this.a.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)))
 			return false;
 		Navigation n1 = (Navigation) this.a.getNavigation();
 		PathEntity pe1 = n1.l();
