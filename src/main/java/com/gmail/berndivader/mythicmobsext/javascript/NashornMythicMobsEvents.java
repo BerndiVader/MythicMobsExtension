@@ -40,10 +40,12 @@ public class NashornMythicMobsEvents implements Listener {
 		case "jsmechanic":
 		case "jsmechanic_ext": {
 			e.register(new JavascriptMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			break;
 		}
 		case "math":
 		case "math_ext": {
 			e.register(new EvalMechanic(e.getContainer().getConfigLine(), e.getConfig()));
+			break;
 		}
 		}
 	}

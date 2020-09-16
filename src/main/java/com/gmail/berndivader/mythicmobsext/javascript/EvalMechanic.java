@@ -38,7 +38,7 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 			temp = SkillString.unparseMessageSpecialChars(temp.substring(1, temp.length() - 1));
 		}
 		;
-		eval = new PlaceholderString(temp);
+		eval = PlaceholderString.of(temp);
 		String s1 = mlc.getString(new String[] { "storage", "store", "s" }, "<mob.meta.test>");
 		parse = (s1.substring(1, s1.length() - 1)).split(Pattern.quote("."));
 	}
