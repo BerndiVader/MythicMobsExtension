@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.64-SNAPSHOT for 
+# MythicMobsExtension v1.65-SNAPSHOT for 
 ### MythicMobs >4.10 
 ### Spigot >1.12.2
 ### for Worldguard support: the plugin is not compatible with worldedit, worldguard 7.0.0 use 6.x or >7.0.0

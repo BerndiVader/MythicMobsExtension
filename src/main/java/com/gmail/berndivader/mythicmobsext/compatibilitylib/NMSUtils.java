@@ -1210,7 +1210,7 @@ public class NMSUtils {
 						ex);
 			}
 			
-			// So Mojag apparetly deobfuscated this field in 1.16.3? That's odd
+			// So Mojang apparetly deobfuscated this field in 1.16.3? That's odd
 			// TODO:
 			// Clean this up so it's mode readable
 			try {
