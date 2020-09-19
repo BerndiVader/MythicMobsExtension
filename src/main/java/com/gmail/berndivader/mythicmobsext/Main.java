@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -142,6 +143,7 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 
 			entityCacheHandler = new EntityCacheHandler();
+			new File(Main.getPlugin().getDataFolder().getPath() + "/images").mkdirs(); // Creates the file for the particleimage mechanic
 			new BackBagHelper();
 			new BossBars();
 			new PlaceholderRegistery();
