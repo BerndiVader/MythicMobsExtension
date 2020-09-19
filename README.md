@@ -5,7 +5,7 @@
 
 
 # [Discord](https://discord.gg/8EfDrnd) <br>
-## Use the bot there to get help `!help` ss
+## Use the bot there to get help `!help`
 
 
 ## [DOWNLOAD](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/) [![Build Status](http://mc.hackerzlair.org:8080/job/MythicMobsExtension/badge/icon)] <br>

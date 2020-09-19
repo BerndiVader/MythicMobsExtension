@@ -40,6 +40,9 @@ import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString
 
 @ExternalAnnotation(name="particleimage", author="Seyarada")
 public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill  {
+
+// TODO:
+// Optimize this
 	
 	String file;
 	String backgroundColor;
@@ -51,7 +54,6 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	Long interval;
 	PlaceholderString scaleAmount;
 	Particle particle;
-	
 	
 	public ParticleImage(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -199,6 +201,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	
 	public ArrayList<BufferedImage> getFrames(File gif) throws IOException {
 		ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
+		File dir = new File( Main.getPlugin().getDataFolder().getPath() + "/images/qlJ06jLEg8.png");
 		try {
 		    String[] imageatt = new String[]{
 		            "imageLeftPosition",
@@ -242,15 +245,14 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		        // I don't know why, I don't want to know why, I shouldn't have to 
 		        // wonder why, but for whatever reason I need to write master
 		        // then read it to get the actual value
-		        File dir = new File( Main.getPlugin().getDataFolder().getPath() + "/images/qlJ06jLEg8.png");
 		        ImageIO.write(master, "GIF", dir);
 		        BufferedImage a = ImageIO.read(dir);
 		        frames.add(a);
-		        dir.delete();
 		    }
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		//dir.delete();
 		return frames;
 	}
 	

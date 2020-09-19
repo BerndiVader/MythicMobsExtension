@@ -1209,57 +1209,67 @@ public class NMSUtils {
 						"An error occurred, using specific damage types will not work, will use normal damage instead",
 						ex);
 			}
+			
+			// So Mojag apparetly deobfuscated this field in 1.16.3? That's odd
+			// TODO:
+			// Clean this up so it's mode readable
 			try {
-				class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bv");
+				class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("disabledSlots");
 				if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
 					throw new Exception("Looks like 1.15, maybe");
-			} catch (Exception not16) {
-				// 1.15
+			} catch (Exception not163) {
 				try {
-					class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bB");
+					class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bv");
 					if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-						throw new Exception("Looks like 1.14, maybe");
-				} catch (Exception not15) {
-					// 1.14
+						throw new Exception("Looks like 1.15, maybe");
+				} catch (Exception not16) {
+					// 1.15
 					try {
-						class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bE");
+						class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bB");
 						if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-							throw new Exception("Looks like 1.13, maybe");
-					} catch (Exception not14) {
-						// 1.13
+							throw new Exception("Looks like 1.14, maybe");
+					} catch (Exception not15) {
+						// 1.14
 						try {
-							class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bH");
+							class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bE");
 							if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-								throw new Exception("Looks like 1.12, maybe");
-						} catch (Exception not13) {
+								throw new Exception("Looks like 1.13, maybe");
+						} catch (Exception not14) {
+							// 1.13
 							try {
-								// 1.12, same as 1.10
-								class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bB");
+								class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bH");
 								if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-									throw new Exception("Looks like 1.11, maybe");
-							} catch (Throwable not12) {
+									throw new Exception("Looks like 1.12, maybe");
+							} catch (Exception not13) {
 								try {
-									// 1.11
-									class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bA");
+									// 1.12, same as 1.10
+									class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bB");
 									if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-										throw new Exception("Looks like 1.10");
-								} catch (Throwable ignore) {
-									// 1.10 and earlier
-									setLegacy();
+										throw new Exception("Looks like 1.11, maybe");
+								} catch (Throwable not12) {
 									try {
-										class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand
-												.getDeclaredField("bB");
+										// 1.11
+										class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand.getDeclaredField("bA");
 										if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
-											throw new Exception("Looks like 1.9");
-									} catch (Throwable ignore2) {
+											throw new Exception("Looks like 1.10");
+									} catch (Throwable ignore) {
+										// 1.10 and earlier
+										setLegacy();
 										try {
-											// 1.9.4
 											class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand
-													.getDeclaredField("bA");
-										} catch (Throwable ignore3) {
-											// 1.9.2
-											class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand
-													.getDeclaredField("bz");
+													.getDeclaredField("bB");
+											if (class_EntityArmorStand_disabledSlotsField.getType() != Integer.TYPE)
+												throw new Exception("Looks like 1.9");
+										} catch (Throwable ignore2) {
+											try {
+												// 1.9.4
+												class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand
+														.getDeclaredField("bA");
+											} catch (Throwable ignore3) {
+												// 1.9.2
+												class_EntityArmorStand_disabledSlotsField = class_EntityArmorStand
+														.getDeclaredField("bz");
+											}
 										}
 									}
 								}
