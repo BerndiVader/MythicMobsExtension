@@ -143,7 +143,8 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 
 			entityCacheHandler = new EntityCacheHandler();
-			new File(Main.getPlugin().getDataFolder().getPath() + "/images").mkdirs(); // Creates the file for the particleimage mechanic
+			new File(Main.getPlugin().getDataFolder().getPath() + "/images").mkdirs(); // Creates the file for the particleImage mechanic
+			new File(Main.getPlugin().getDataFolder().getPath() + "/files").mkdirs(); // Creates the file for the fileLine mechanic
 			new BackBagHelper();
 			new BossBars();
 			new PlaceholderRegistery();

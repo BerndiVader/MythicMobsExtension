@@ -31,7 +31,6 @@ public class SetFactionMechanic extends SkillMechanic implements ITargetedEntity
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		System.err.println("faction:" + this.faction);
 		ActiveMob am = Utils.mobmanager.getMythicMobInstance(target);
 		String f = this.faction.get(data, target);
 		if (am != null)
