@@ -20,6 +20,7 @@ import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 import com.gmail.berndivader.mythicmobsext.bossbars.BossBars;
 import com.gmail.berndivader.mythicmobsext.cachedowners.CachedOwnerHandler;
+import com.gmail.berndivader.mythicmobsext.commands.VersionCommand;
 import com.gmail.berndivader.mythicmobsext.compatibility.disguise.LibsDisguisesSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.factions.FactionsSupport;
 import com.gmail.berndivader.mythicmobsext.compatibility.mobarena.MobArenaSupport;
@@ -31,10 +32,10 @@ import com.gmail.berndivader.mythicmobsext.conditions.CustomConditions;
 import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.externals.Externals;
 import com.gmail.berndivader.mythicmobsext.externals.Internals;
-import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
-import com.gmail.berndivader.mythicmobsext.placeholders.PlaceholderRegistery;
 import com.gmail.berndivader.mythicmobsext.healthbar.HealthbarHandler;
 import com.gmail.berndivader.mythicmobsext.javascript.JavaScript;
+import com.gmail.berndivader.mythicmobsext.mechanics.CustomMechanics;
+import com.gmail.berndivader.mythicmobsext.placeholders.PlaceholderRegistery;
 import com.gmail.berndivader.mythicmobsext.targeters.CustomTargeters;
 import com.gmail.berndivader.mythicmobsext.thiefs.Thiefs;
 import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
@@ -143,12 +144,15 @@ public class Main extends JavaPlugin {
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 
 			entityCacheHandler = new EntityCacheHandler();
-			new File(Main.getPlugin().getDataFolder().getPath() + "/images").mkdirs(); // Creates the file for the particleImage mechanic
-			new File(Main.getPlugin().getDataFolder().getPath() + "/files").mkdirs(); // Creates the file for the fileLine mechanic
+			new VersionCommand(this);
+			new File(this.getDataFolder().getPath() + "/images").mkdirs(); // Creates the file for the particleImage mechanic
+			new File(this.getDataFolder().getPath() + "/files").mkdirs(); // Creates the file for the fileLine mechanic
 			new BackBagHelper();
 			new BossBars();
 			new PlaceholderRegistery();
 
+			
+			// Why?
 			new BukkitRunnable() {
 				@Override
 				public void run() {

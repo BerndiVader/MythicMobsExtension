@@ -4,3 +4,8 @@ version: ${version}
 api-version: 1.13
 softdepend: [PlaceholderAPI, ProtocolLib, RPGItems, LibsDisguise, MobArena, HolographicDisplays, WorldGuard, Factions, MassiveCore, Quests, NoCheatPlus]
 depend: [MythicMobs]
+commands:
+   mme:
+      description: Main MME command
+      usage: /mme
+      permission: mme.use
