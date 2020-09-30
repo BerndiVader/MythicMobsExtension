@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import com.gmail.berndivader.mythicmobsext.Main;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import net.md_5.bungee.api.ChatColor;
 
 public class VersionCommand implements CommandExecutor {
 	
@@ -27,10 +28,10 @@ public class VersionCommand implements CommandExecutor {
 		List<String> commands = Arrays.asList("version");
 		
 		if (args.length > 0 && args[0].equals("version")) {
-	        String MMEV = "§eMMExtension Version: §r"+ plugin.getDescription().getVersion()+"\n";
-	        String SV = "§eServer Version: §r"+Bukkit.getServer().getClass().getName()+ "\n";
-	        String MMV = "§eMM Version: §r"+MythicMobs.inst().getVersion()+ "\n";
-	        String MMB = "§eMM Build: §r"+MythicMobs.inst().getBuildNumber();
+	        String MMEV = ChatColor.YELLOW +"MMExtension Version: "+ChatColor.WHITE+ plugin.getDescription().getVersion()+"\n";
+	        String SV = ChatColor.YELLOW +"Server Version: "+ChatColor.WHITE+Bukkit.getServer().getClass().getName()+ "\n";
+	        String MMV = ChatColor.YELLOW +"MM Version: "+ChatColor.WHITE+MythicMobs.inst().getVersion()+ "\n";
+	        String MMB = ChatColor.YELLOW +"MM Build: "+ChatColor.WHITE+MythicMobs.inst().getBuildNumber();
 	        
 	        String msg = SV + MMEV + MMV + MMB;
 	        
@@ -39,7 +40,7 @@ public class VersionCommand implements CommandExecutor {
 	        return true;}
 		
 		String x = commands.stream().collect(Collectors.joining(","));
-		sender.sendMessage("§e[MME] §rAvaliable commands: "+x);
+		sender.sendMessage(ChatColor.YELLOW +"[MME] §rAvaliable commands: "+ChatColor.WHITE+x);
 		return true;
 		
     }
