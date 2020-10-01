@@ -57,10 +57,7 @@ public class FileLine extends VariableMechanic implements ITargetedEntitySkill {
 	   try {
 		   Stream<String> lines = Files.lines(path);
 		   size = (int) Files.lines(path).count();
-		   if (y < 0) {
-			   System.out.println("This is being executed");
-			   y = ThreadLocalRandom.current().nextInt(1, size + 1);
-		   }
+		   if (y < 0) y = ThreadLocalRandom.current().nextInt(1, size + 1);
 		   
 		   result = lines.skip(y-1).findFirst().get();
 		   lines.close();
