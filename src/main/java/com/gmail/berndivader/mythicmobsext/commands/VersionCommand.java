@@ -40,7 +40,7 @@ public class VersionCommand implements CommandExecutor {
 	        return true;}
 		
 		String x = commands.stream().collect(Collectors.joining(","));
-		sender.sendMessage(ChatColor.YELLOW +"[MME] §rAvaliable commands: "+ChatColor.WHITE+x);
+		sender.sendMessage(ChatColor.YELLOW +"[MME] Avaliable commands: "+ChatColor.WHITE+x);
 		return true;
 		
     }
