@@ -17,6 +17,7 @@ import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "giveitem", author = "BerndiVader")
@@ -26,11 +27,12 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 	public final static String str_viewonly = "view_only";
 
 	PlaceholderString bag_name;
-	String item_name, click_skill;
+	PlaceholderString item_name;
+	String click_skill;
 	HoldingItem holding;
 	boolean override;
 	Optional<Boolean> view_only = Optional.empty();
-	int amount;
+	PlaceholderInt amount;
 
 	public CreateItem(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
@@ -41,8 +43,8 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 		this.holding.setSlot(mlc.getString("slot", "-1"));
 		this.holding.setBagName(mlc.getString("bagname"));
 
-		this.item_name = mlc.getString("item");
-		this.amount = mlc.getInteger("amount", 1);
+		this.item_name = PlaceholderString.of(mlc.getString("item"));
+		this.amount = PlaceholderInt.of(mlc.getString("amount", "1"));
 		this.override = mlc.getBoolean("override", true);
 		this.click_skill = mlc.getString("clickskill");
 		if (mlc.getLine().contains("viewonly")) {
@@ -65,9 +67,9 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 			holding.parseSlot(data, abstract_entity);
 			if (bag_name != null)
 				holding.setBagName(this.bag_name.get(data, abstract_entity));
-			ItemStack item_stack = itemmanager.getItemStack(this.item_name);
+			ItemStack item_stack = itemmanager.getItemStack(this.item_name.get(data, abstract_entity));
 			if (item_stack != null) {
-				item_stack.setAmount(amount);
+				item_stack.setAmount(amount.get(data, abstract_entity));
 				item_stack = NMSUtils.makeReal(item_stack);
 				if (this.click_skill != null)
 					NMSUtils.setMeta(item_stack, Utils.meta_CLICKEDSKILL, this.click_skill);
