@@ -12,11 +12,13 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitEntityType;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import io.lumine.xikage.mythicmobs.mobs.entities.MythicEntity;
+import io.lumine.xikage.mythicmobs.mobs.entities.SpawnReason;
 import io.lumine.xikage.mythicmobs.skills.*;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
@@ -38,7 +40,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		this.amount = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (this.amount.startsWith("-"))
 			this.amount = "1";
-		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, null);
+		String strType = mlc.getString(new String[] { "mobtype", "type", "t", "mob", "m" }, "SKELETON");
 		this.invisible = mlc.getBoolean(new String[] { "invisible", "inv" }, false);
 		this.tag = SkillString.unparseMessageSpecialChars(mlc.getString(new String[] { "addtag", "tag", "at" }, ""));
 		this.noise = mlc.getInteger(new String[] { "noise", "n", "radius", "r" }, 0);
@@ -57,8 +59,8 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 		this.leashtocaster = mlc.getBoolean(new String[] { "leashtocaster", "leash", "lc" }, false);
 		this.mm = Utils.mobmanager.getMythicMob(strType);
 		if (this.mm == null)
-			this.me = MythicEntity.getMythicEntity(strType);
-		this.reason = mlc.getString(new String[] { "customreason", "custom", "cr" }, "CUSTOM").toUpperCase();
+			this.me = BukkitEntityType.getMythicEntity(strType);
+		this.reason = mlc.getString(new String[] { "customreason", "custom", "cr" }, "SUMMON").toUpperCase();
 	}
 
 	@Override
@@ -86,7 +88,8 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 						(int) this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly) : target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
-				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
+				// spawsn
+				ActiveMob ams = this.mm.spawsn(l, data.getCaster().getLevel());
 				if (ams == null || ams.getEntity() == null || ams.getEntity().isDead())
 					continue;
 				ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,
@@ -133,7 +136,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 						: target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
-				this.me.spawn(BukkitAdapter.adapt(l));
+				this.me.spawn(l, SpawnReason.valueOf(reason));
 			}
 			return true;
 		}

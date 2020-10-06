@@ -164,7 +164,11 @@ public class MStatueMechanic extends SkillMechanic implements ITargetedEntitySki
 			}
 			this.targets = new HashSet<LivingEntity>();
 			this.immune = new HashMap<LivingEntity, Long>();
-			this.am = MStatueMechanic.this.material.spawn(BukkitAdapter.adapt(this.currentLocation), 0);
+			
+			// Awesome typo
+			// TODO:
+			// Change this back when Ash fixed the typo
+			this.am = MStatueMechanic.this.material.spawsn(BukkitAdapter.adapt(this.currentLocation), 0);
 			this.entity = this.am.getEntity().getBukkitEntity();
 			this.am.setOwner(this.caster.getEntity().getUniqueId());
 			EntityCacheHandler.add(this.entity);
