@@ -24,6 +24,12 @@ repositories {
     }
     
     maven {
+        url "http://mvn.lumine.io/repository/maven-releases/"
+        mavenContent {
+            snapshotsOnly()
+        }
+    
+    maven {
         name = "placeholderapi"
         url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
@@ -45,13 +51,13 @@ dependencies {
     compileOnly  ("com.sk89q:worldedit:+")
     compileOnly  ("com.sk89q:worldguard:+")
     compileOnly  ("fr.neatmonster:nocheatplus:+")
-    compileOnly  ("io.lumine.xikage:mythicmobs:4.10.0-BETA2")
     compileOnly  ("me.blackvein:quests:+")
     compileOnly  ("me.libraryaddict:disguise:10.0.16-Free")
     compileOnly  ("net.citizensnpcs:citizens:+")
     compileOnly  ("think:rpgitems:3.8.107")
     compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
     compileOnly  group: "me.clip", name: "placeholderapi" ,version: "+"
+    compileOnly  group: "io.lumine.xikage", name: "mythicmobs" ,version: "+"
 }
 
 processResources {
