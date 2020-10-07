@@ -1,6 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
@@ -17,6 +17,6 @@ public class IsPlayer extends AbstractCustomCondition implements IEntityComparis
 
 	@Override
 	public boolean check(AbstractEntity caster, AbstractEntity target) {
-		return target.getBukkitEntity().getType().equals(EntityType.valueOf("PLAYER"));
+		return (target.getBukkitEntity() instanceof Player);
 	}
 }
