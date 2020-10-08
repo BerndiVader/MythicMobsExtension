@@ -89,7 +89,7 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
 				// spawsn
-				ActiveMob ams = this.mm.spawsn(l, data.getCaster().getLevel());
+				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
 				if (ams == null || ams.getEntity() == null || ams.getEntity().isDead())
 					continue;
 				ams.getEntity().getBukkitEntity().setMetadata(Utils.meta_CUSTOMSPAWNREASON,
