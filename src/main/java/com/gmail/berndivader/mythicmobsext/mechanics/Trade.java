@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
@@ -42,63 +44,72 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity p) {
 		if (p.isPlayer()) {
-			Player player = (Player) p.getBukkitEntity();		
-			Merchant merchant = Bukkit.createMerchant(title);
-			List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
+			Player player = (Player) p.getBukkitEntity();
+			List<MerchantRecipe> merchantRecipes = getRecipes();
 			
-			for (String trades : tradesRaw) {
-				
-				ItemStack r = null, p1 = null, p2 = null;
-            	ItemStack f1 = null,f2 = null,f3 = null;
-            	Integer uses = 9999;
-            	Boolean xp = false;
-            	
-	            for(String trade : trades.split(",")) {	
-	            	String rS = null, p1S = null, p2S = null;
-	            	
-	            	
-	            	String[] n = trade.split(":");
-	            	String k = trade.split(":")[0];
-	            	String l = trade.split(":")[1];
-	            	
-	            	Integer amount = 1;
-	            	if (n.length > 2)
-	            		amount = Integer.valueOf(n[2]);
-	            	
-	            	if (k.equals("result")) rS = l;
-	            	else if (k.equals("price")) p1S = l;
-	            	else if (k.equals("price1")) p1S = l;
-	            	else if (k.equals("price2")) p2S = l;
-	            	else if (k.equals("uses")) uses = Integer.valueOf(l);
-	            	else if (k.equals("xp")) xp = Boolean.valueOf(l);
-	            	
-	            	r = getItem(rS,amount);
-	            	p1 = getItem(p1S,amount);
-	            	p2 = getItem(p2S,amount);
-	            	
-	            	if (r!=null) f1 = r;
-	            	if (p1!=null) f2 = p1;
-	            	if (p2!=null) f3 = p2;
-	            	rS = null; p1S = null; p2S = null;
-	            	
-	            }
-            	MerchantRecipe recipe = new MerchantRecipe(f1, uses);
-            	recipe.setVillagerExperience(0);
-    			recipe.setExperienceReward(xp);
-    			recipe.addIngredient(f2);
-    			if (f3!=null) recipe.addIngredient(f3);
-    			merchantRecipes.add(recipe);
-	        }
-
-			// apply recipes to merchant:
-			merchant.setRecipes(merchantRecipes);
-
-			// open trading window:
-			player.openMerchant(merchant, true);
+			Entity v = data.getCaster().getEntity().getBukkitEntity();
+			if(v instanceof Villager) {
+				((Villager)v).setRecipes(merchantRecipes);
+				player.openMerchant(((Villager)v), true);
+			} else {
+				Merchant merchant = Bukkit.createMerchant(title);
+				merchant.setRecipes(merchantRecipes);
+				player.openMerchant(merchant, true);
+			}
 			
 			
 		}
 		return true;
+	}
+	
+	public List<MerchantRecipe> getRecipes() {
+		List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
+		
+		for (String trades : tradesRaw) {
+			
+			ItemStack r = null, p1 = null, p2 = null;
+        	ItemStack f1 = null,f2 = null,f3 = null;
+        	Integer uses = 9999;
+        	Boolean xp = true;
+        	
+            for(String trade : trades.split(",")) {	
+            	String rS = null, p1S = null, p2S = null;
+            	
+            	
+            	String[] n = trade.split(":");
+            	String k = trade.split(":")[0];
+            	String l = trade.split(":")[1];
+            	
+            	Integer amount = 1;
+            	if (n.length > 2)
+            		amount = Integer.valueOf(n[2]);
+            	
+            	if (k.equals("result")) rS = l;
+            	else if (k.equals("price")) p1S = l;
+            	else if (k.equals("price1")) p1S = l;
+            	else if (k.equals("price2")) p2S = l;
+            	else if (k.equals("uses")) uses = Integer.valueOf(l);
+            	else if (k.equals("xp")) xp = Boolean.valueOf(l);
+            	
+            	r = getItem(rS,amount);
+            	p1 = getItem(p1S,amount);
+            	p2 = getItem(p2S,amount);
+            	
+            	if (r!=null) f1 = r;
+            	if (p1!=null) f2 = p1;
+            	if (p2!=null) f3 = p2;
+            	rS = null; p1S = null; p2S = null;
+            	
+            }
+        	MerchantRecipe recipe = new MerchantRecipe(f1, uses);
+        	recipe.setVillagerExperience(0);
+			recipe.setExperienceReward(xp);
+			recipe.addIngredient(f2);
+			recipe.setVillagerExperience(5);
+			if (f3!=null) recipe.addIngredient(f3);
+			merchantRecipes.add(recipe);
+        }
+		return merchantRecipes;
 	}
 	
 	public ItemStack getItem(String i, Integer amount) {

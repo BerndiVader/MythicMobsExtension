@@ -88,7 +88,6 @@ public class CustomSummonMechanic extends SkillMechanic implements ITargetedLoca
 						(int) this.yNoise, this.mm.getMythicEntity().getHeight(), this.yUpOnly) : target;
 				if (this.yaw != -1337)
 					l.setYaw(Math.abs(this.yaw));
-				// spawsn
 				ActiveMob ams = this.mm.spawn(l, data.getCaster().getLevel());
 				if (ams == null || ams.getEntity() == null || ams.getEntity().isDead())
 					continue;
