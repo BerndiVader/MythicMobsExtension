@@ -35,22 +35,22 @@ public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySk
 		
 		switch (destination) {
 			case "HAND":
-				equipment.setItemInMainHand(getItem(where,equipment));
+				equipment.setItemInMainHand(getItem(where,equipment,true));
 				break;
 			case "OFFHAND":
-				equipment.setItemInOffHand(getItem(where,equipment));
+				equipment.setItemInOffHand(getItem(where,equipment,true));
 				break;
 			case "HELMET":
-				equipment.setHelmet(getItem(where,equipment));
+				equipment.setHelmet(getItem(where,equipment,true));
 				break;
 			case "CHESTPLATE":
-				equipment.setChestplate(getItem(where,equipment));
+				equipment.setChestplate(getItem(where,equipment,true));
 				break;
 			case "LEGGINGS":
-				equipment.setLeggings(getItem(where,equipment));
+				equipment.setLeggings(getItem(where,equipment,true));
 				break;
 			case "BOOTS":
-				equipment.setBoots(getItem(where,equipment));
+				equipment.setBoots(getItem(where,equipment,true));
 				break;
 		}
 		return true;
@@ -60,32 +60,32 @@ public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySk
 		return stack != null && stack.getType() != Material.AIR;
 	}
 	
-	public ItemStack getItem(String where, EntityEquipment equipment) {
+	public ItemStack getItem(String where, EntityEquipment equipment, boolean replace) {
 		ItemStack iS = null;
 		switch (where) {
 			case "HAND":
 				iS = equipment.getItemInMainHand().clone();
-				equipment.setItemInMainHand(new ItemStack(Material.AIR));
+				if(replace) equipment.setItemInMainHand(getItem(destination,equipment, false));
 				break;
 			case "OFFHAND":
 				iS = equipment.getItemInOffHand().clone();
-				equipment.setItemInOffHand(new ItemStack(Material.AIR));
+				if(replace) equipment.setItemInOffHand(getItem(destination,equipment, false));
 				break;
 			case "HELMET":
 				iS = equipment.getHelmet().clone();
-				equipment.setHelmet(new ItemStack(Material.AIR));
+				if(replace) equipment.setHelmet(getItem(destination,equipment, false));
 				break;
 			case "CHESTPLATE":
 				iS = equipment.getChestplate().clone();
-				equipment.setChestplate(new ItemStack(Material.AIR));
+				if(replace) equipment.setChestplate(getItem(destination,equipment, false));
 				break;
 			case "LEGGINGS":
 				iS = equipment.getLeggings().clone();
-				equipment.setLeggings(new ItemStack(Material.AIR));
+				if(replace) equipment.setLeggings(getItem(destination,equipment, false));
 				break;
 			case "BOOTS":
 				iS = equipment.getBoots().clone();
-				equipment.setBoots(new ItemStack(Material.AIR));
+				if(replace) equipment.setBoots(getItem(destination,equipment, false));
 				break;
 		}
 		return iS;
