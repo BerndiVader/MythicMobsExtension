@@ -32,7 +32,7 @@ public class OnTrade extends Aura implements ITargetedEntitySkill {
 
    public OnTrade(String skill, MythicLineConfig mlc) {
       super(skill, mlc);
-      this.onTradeSkillName = mlc.getString(new String[]{"ontradeskill", "ontrade", "os", "s", "skill"}, "trade");
+      this.onTradeSkillName = mlc.getString(new String[]{"ontradeskill", "ontrade", "os", "s", "skill"});
       this.cancelEvent = mlc.getBoolean(new String[]{"cancelevent", "ce"}, false);
       this.forceAsPower = mlc.getBoolean(new String[]{"forceaspower", "fap"}, true);
       MythicMobs.inst().getSkillManager().queueSecondPass(() -> {
