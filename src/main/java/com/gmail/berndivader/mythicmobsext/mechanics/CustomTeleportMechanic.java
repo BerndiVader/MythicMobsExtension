@@ -197,7 +197,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 									.add(t.getLocation().getDirection().setY(0).normalize().multiply(2));
 						if (this.n > 0)
 							target = MobManager.findSafeSpawnLocation(((AbstractLocation) target), (int) this.n, 0,
-									((ActiveMob) data.getCaster()).getType().getMythicEntity().getHeight(), false);
+									(int)BukkitAdapter.adapt(data.getCaster().getEntity()).getHeight(), false);
 						if (this.bns != null)
 							((ActiveMob) data.getCaster()).signalMob(t, this.bns);
 						Location ll = BukkitAdapter.adapt((AbstractLocation) target);
