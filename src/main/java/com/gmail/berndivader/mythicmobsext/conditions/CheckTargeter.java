@@ -27,7 +27,7 @@ import io.lumine.xikage.mythicmobs.skills.targeters.OriginTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.TargetLocationTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.TriggerTargeter;
 
-@ExternalAnnotation(name = "checktargeter", author = "Seyarada")
+@ExternalAnnotation(name = "checktargeter,targetcondition", author = "Seyarada")
 public class CheckTargeter extends AbstractCustomCondition implements IEntityCondition {
 	
 	private PlaceholderString stargeter;
