@@ -16,11 +16,12 @@ import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 
 @ExternalAnnotation(name = "transmuteitem", author = "Seyarada")
 public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill {
 
-	int amount;
+	PlaceholderInt amount;
 	ItemStack baseItem;
 	ItemStack resultItem;
 	Material resultMaterial;
@@ -28,7 +29,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	
 	public TransmuteItem(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		amount = mlc.getInteger(new String[] {"amount", "a"}, -1);
+		amount = PlaceholderInt.of(mlc.getString(new String[] {"amount", "a"}, "-1"));
 		
 		String baseMLC = mlc.getString(new String[] {"item", "i"}, "STONE");
 		try {
@@ -60,7 +61,7 @@ public class TransmuteItem extends SkillMechanic implements ITargetedEntitySkill
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity p) {
 		
-		int altAmount = Integer.valueOf(amount);
+		int altAmount = Integer.valueOf(amount.get(data, p));
 		if (p.isPlayer()) {
 			Player player = (Player) p.getBukkitEntity();
 			
