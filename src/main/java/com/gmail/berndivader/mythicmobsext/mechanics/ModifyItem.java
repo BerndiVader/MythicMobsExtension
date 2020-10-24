@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -99,6 +100,9 @@ public class ModifyItem extends SkillMechanic implements ITargetedEntitySkill {
 			ItemStack item_stack = modding_item.getItemStackByWhere(data, target, entity);
 			if (item_stack != null)
 				item_stack = modding_item.applyMods(data, target, item_stack);
+			if(target.getBukkitEntity() instanceof Player) {
+				((Player)target.getBukkitEntity()).updateInventory();
+			}
 			return true;
 		}
 		return false;

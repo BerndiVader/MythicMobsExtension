@@ -85,9 +85,6 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 			case "nbt":
 				storeVariable(readNBT(iS));
 				break;
-			case "lore":
-				iS.getItemMeta().getLore();
-				break;
 			case "material":
 				storeVariable(String.valueOf(iS.getType()));
 				break;
