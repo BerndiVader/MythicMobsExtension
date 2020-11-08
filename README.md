@@ -1,4 +1,4 @@
-# MythicMobsExtension v1.736-SNAPSHOT for 
+# MythicMobsExtension v1.736a-SNAPSHOT for 
 ### MythicMobs >4.10 
 ### Spigot >1.12.2
 
