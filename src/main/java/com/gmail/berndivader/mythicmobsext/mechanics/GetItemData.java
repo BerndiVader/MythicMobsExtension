@@ -1,12 +1,16 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
@@ -33,6 +37,9 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	private final String get;
 	private ItemStack mythicItem;
 	private VariableType type;
+	private int loreLine;
+	private String loreRegex;
+	
 	
 	SkillMetadata data;
 	AbstractEntity target;
@@ -43,6 +50,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.searchKey = mlc.getString(new String[] { "key", "k" }, "Hello");
 		this.get = mlc.getString(new String[] { "get", "g" }, "amount");
+		this.loreLine = mlc.getInteger("loreline");
+		this.loreRegex = mlc.getString("loreregex");
 		
 		String strType = mlc.getString(new String[]{"type", "t"}, VariableType.INTEGER.toString());
 	    try {
@@ -87,6 +96,25 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 				break;
 			case "material":
 				storeVariable(String.valueOf(iS.getType()));
+				break;
+			case "loreline":
+				ItemMeta itemMeta = iS.getItemMeta();
+				if (itemMeta.hasLore()) {
+					List<String> loreArray = itemMeta.getLore();
+					if(loreArray.size() > loreLine) {
+						String line = loreArray.get(loreLine);
+						if(loreRegex == null)
+							storeVariable(line);
+						else
+						{
+							Pattern pattern = Pattern.compile(loreRegex, Pattern.CASE_INSENSITIVE);
+							Matcher matcher = pattern.matcher(line);
+							if(matcher.find()) {
+								storeVariable(matcher.group(0));
+							}
+						}
+					}
+				}
 				break;
 			default:
 				break;
