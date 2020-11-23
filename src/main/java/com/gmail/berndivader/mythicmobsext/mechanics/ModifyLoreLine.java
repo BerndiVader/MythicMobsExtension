@@ -38,7 +38,6 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 		ACTION action = ACTION.SET;
 		
 		if (loreText==null||loreLine==null) return;
-		
 		moddingItem = new ModdingItem(where, slot, action, null, null, null, null, null, null, bag, null);
 	}
 
