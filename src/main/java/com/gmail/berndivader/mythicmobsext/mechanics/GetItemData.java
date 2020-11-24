@@ -174,3 +174,4 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	}
 	
 }
+
