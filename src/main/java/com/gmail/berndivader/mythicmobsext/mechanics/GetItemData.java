@@ -50,8 +50,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.searchKey = mlc.getString(new String[] { "key", "k" }, "Hello");
 		this.get = mlc.getString(new String[] { "get", "g" }, "amount");
-		this.loreLine = mlc.getInteger(new String[] { "loreline", "line" }, "0");
-		this.loreRegex = (new String[] { "loreregex", "regex", "lr" }, null);
+		this.loreLine = mlc.getInteger(new String[] { "loreline", "line" }, 0);
+		this.loreRegex = mlc.getString(new String[] { "loreregex", "regex", "lr" }, null);
 		
 		String strType = mlc.getString(new String[]{"type", "t"}, VariableType.INTEGER.toString());
 	    try {
