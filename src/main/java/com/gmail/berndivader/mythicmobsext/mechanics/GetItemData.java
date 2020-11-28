@@ -116,6 +116,12 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 					}
 				}
 				break;
+			case "name":
+				ItemMeta itemMetaN = iS.getItemMeta();
+				if (itemMetaN.hasDisplayName()) {
+					storeVariable(String.valueOf(itemMetaN.getDisplayName()));
+				}
+				break;
 			default:
 				break;
 		
