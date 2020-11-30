@@ -13,6 +13,7 @@ task processbuildnumber {
 	p1.load(pf1.newDataInputStream())
 	version = artver
 	group = "com.gmail.berndivader"
+
 }
 
 repositories {
@@ -80,7 +81,24 @@ task createPom  {
     }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
 }
 
-task copy15(type: Copy) {
-	from "build/libs/"+project.name+"-"+project.version+".jar"
-    into "c:/dev15/plugins/"
+uploadArchives {
+
+	def d1=project.projectDir
+	Properties archiva=new Properties()
+	
+	archiva.load(new File("${d1}/../usr.properties").newDataInputStream())
+	def usr=archiva.getProperty('usr')
+	def pwd=archiva.getProperty('pwd')
+
+
+	repositories.mavenDeployer {
+		repository(url:'http://mc.hackerzlair.org:8888/repository/public/') {
+			authentication (userName: '${usr}', password: '${pwd}')
+		}
+		
+		pom.version=project.version
+		pom.artifactId=project.name
+		pom.groupId='com.gmail.berndivader'
+	}
 }
+
