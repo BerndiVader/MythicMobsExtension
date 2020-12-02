@@ -38,7 +38,7 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 		WhereEnum where = WhereEnum.valueOf(what);
 		ACTION action = ACTION.SET;
 		
-		if (loreTextInput==null||loreLine==null) return;
+		if (loreTextUnprocessed==null||loreLine==null) return;
 		
 		moddingItem = new ModdingItem(where, slot, action, null, null, null, null, null, null, bag, null);
 	}
