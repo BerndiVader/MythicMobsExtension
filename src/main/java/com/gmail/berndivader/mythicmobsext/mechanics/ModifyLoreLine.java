@@ -17,12 +17,13 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name="modifyloreline", author="nicochulo2001")
 public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkill {
 	ModdingItem moddingItem;
 	String loreLine;
-	String loreText;
+	PlaceholderString loreTextUnprocessed;
 	String loreAction;
 
 	public ModifyLoreLine(String skill, MythicLineConfig mlc) {
@@ -32,12 +33,13 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 		String what = mlc.getString(new String[] { "what", "w"}, "HAND").toUpperCase();
 		String bag = mlc.getString(new String[] { "bagname", "name", "bag", "b", "n"}, null);
 		loreLine = mlc.getString(new String[] { "loreline", "line", "l"}, null);
-		loreText = mlc.getString(new String[] { "loretext", "text", "t"}, null);
+		loreTextUnprocessed = new PlaceholderString(mlc.getString(new String[] { "loretext", "text", "t"}, null));
 		loreAction = mlc.getString(new String[] { "loreaction", "action", "a"}, "SET").toUpperCase();
 		WhereEnum where = WhereEnum.valueOf(what);
 		ACTION action = ACTION.SET;
 		
-		if (loreText==null||loreLine==null) return;
+		if (loreTextUnprocessed==null||loreLine==null) return;
+		
 		moddingItem = new ModdingItem(where, slot, action, null, null, null, null, null, null, bag, null);
 	}
 
@@ -53,7 +55,7 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 				List<String> loreArray = itemMeta.getLore();
 				if(loreArray.size() > line) {
 					String lore = loreArray.get(line);
-					
+					String loreText = loreTextUnprocessed.get(data, target);
 					switch (loreAction) {
 					case "SET":
 						lore = loreText;
