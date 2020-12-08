@@ -783,7 +783,7 @@ public class Utils implements Listener {
 						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
 						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
 						
-						if(entity == null)
+						if(entity == null&&iterator.hasNext())
 							iterator.remove();
 					    }
 				}
