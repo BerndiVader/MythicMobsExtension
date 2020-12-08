@@ -779,11 +779,12 @@ public class Utils implements Listener {
 				@Override
 				public void run() {
 
-					for (Iterator<Entry<String, Map<Plugin, MetadataValue>>> iterator = entity_map.entrySet().iterator(); iterator.hasNext();) {
+					Iterator<Entry<String, Map<Plugin, MetadataValue>>> iterator = entity_map.entrySet().iterator();
+					while(iterator.hasNext()) {
 						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
 						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
 						
-						if(entity == null&&iterator.hasNext())
+						if(entity == null)
 							iterator.remove();
 					    }
 				}
