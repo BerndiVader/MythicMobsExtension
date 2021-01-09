@@ -83,7 +83,7 @@ public class WorldGuardUtils {
 		return bl1;
 	}
 
-	public static boolean checkRegionStateFlagAtLocation(Location l, String f) {
+	public static boolean checkRegionStateFlagAtLocation(Location l, String f, String action) {
 		return checkFlagAtLocation(l, f, "");
 	}
 

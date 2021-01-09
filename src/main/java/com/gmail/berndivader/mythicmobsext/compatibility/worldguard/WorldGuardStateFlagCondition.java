@@ -21,7 +21,7 @@ public class WorldGuardStateFlagCondition extends AbstractCustomCondition implem
 
 	@Override
 	public boolean check(AbstractLocation location) {
-		boolean b = WorldGuardUtils.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName);
+		boolean b = WorldGuardUtils.checkRegionStateFlagAtLocation(BukkitAdapter.adapt(location), flagName,ACTION.toString().toLowerCase());
 		if (this.debug)
 			Main.logger.info("wgstateflag outcome: " + b);
 		return b;
