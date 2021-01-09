@@ -66,7 +66,7 @@ public class NMSUtils extends CompatibilityUtils {
 	protected static Method class_CraftServer_getPlayerMetadataStoreMethod;
 
 	public static boolean initialize() {
-		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize();
+		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize(Main.getPlugin().getLogger());
 		try {
 			class_IChatBaseComponent_ChatSerializer = fixBukkitClass(
 					"net.minecraft.server.IChatBaseComponent$ChatSerializer");
