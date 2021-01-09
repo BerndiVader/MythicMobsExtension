@@ -84,7 +84,7 @@ public class WorldGuardUtils {
 	}
 
 	public static boolean checkRegionStateFlagAtLocation(Location l, String f, String action) {
-		return checkFlagAtLocation(l, f, "");
+		return checkFlagAtLocation(l, f, action);
 	}
 
 	public static boolean checkRegionDenySpawnFlagAtLocation(Location l, String entitylist) {

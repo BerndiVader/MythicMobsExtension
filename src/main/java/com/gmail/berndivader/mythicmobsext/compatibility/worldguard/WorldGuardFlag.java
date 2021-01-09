@@ -32,7 +32,7 @@ public class WorldGuardFlag implements Listener {
 			e.register(c);
 			break;
 		}
-		case "worldguardflag":
+		case "wordguardflag":
 		case "worldguardflag_ext": {
 			e.register(new WorldGuardFlagCondition(e.getConditionName(), e.getConfig()));
 			break;
