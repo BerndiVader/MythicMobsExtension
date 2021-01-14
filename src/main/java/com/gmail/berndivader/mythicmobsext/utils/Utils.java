@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -778,77 +776,27 @@ public class Utils implements Listener {
 			
 			entity_map=NMSUtils.getEntityMetadataMap(Bukkit.getServer());
 			
+			Predicate<String>filter=new Predicate<String>() {
+				
+				@Override
+				public boolean test(String t) {
+					return null==Bukkit.getEntity(UUID.fromString(t.split(":")[0].toLowerCase()));
+				}
+			};
+			
 			
 			task=new BukkitRunnable() {
+				
 				@Override
 				public void run() {
+					
+					entity_map.keySet().removeIf(filter);
 
-					AsyncIteratory<Entry<String, Map<Plugin, MetadataValue>>> iterator = (AsyncIteratory<Entry<String, Map<Plugin, MetadataValue>>>) entity_map.entrySet().iterator();
-					while(iterator.hasNext()) {
-						Entry<String, Map<Plugin, MetadataValue>>entry = iterator.next();
-						Entity entity = Bukkit.getEntity(UUID.fromString(entry.getKey().split(":")[0].toLowerCase()));
-						
-						if(entity == null)
-							iterator.remove();
-					}
 				}
 				
-			}.runTaskTimerAsynchronously(Main.getPlugin(),Config.meta_delay,Config.meta_delay);
+			}.runTaskTimer(Main.getPlugin(),Config.meta_delay,Config.meta_delay);
 		}
 	}
 	
-	public class AsyncIteratory<T> implements Iterator<T> {
-
-		BlockingQueue<T>queue=new ArrayBlockingQueue<T>(20);
-		T sentinel=(T)new Object();
-		T next;
-		
-		public AsyncIteratory(final Iterator<T>delegate) {
-			new Thread() {
-				
-				@Override
-				public void run() {
-					while(delegate.hasNext()) {
-						try {
-							queue.put(delegate.next());
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						try {
-							queue.put(sentinel);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-				
-			}.start();
-		}
-		
-		@Override
-		public boolean hasNext() {
-			if(next!=null) return true;
-			
-			try {
-				next=queue.take();
-				if(next==sentinel) return false;
-				return true;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			return false;
-		}
-
-		@Override
-		public T next() {
-			T temp=next;
-			next=null;
-			return temp;
-		}
-		
-	}
-
 }
+
