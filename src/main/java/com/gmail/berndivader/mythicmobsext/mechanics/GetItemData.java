@@ -50,8 +50,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.searchKey = mlc.getString(new String[] { "key", "k" }, "Hello");
 		this.get = mlc.getString(new String[] { "get", "g" }, "amount");
-		this.loreLine = mlc.getInteger("loreline");
-		this.loreRegex = mlc.getString("loreregex");
+		this.loreLine = mlc.getInteger(new String[] { "loreline", "line" }, 0);
+		this.loreRegex = mlc.getString(new String[] { "loreregex", "regex", "lr" }, null);
 		
 		String strType = mlc.getString(new String[]{"type", "t"}, VariableType.INTEGER.toString());
 	    try {
@@ -97,7 +97,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 			case "material":
 				storeVariable(String.valueOf(iS.getType()));
 				break;
-			case "loreline":
+			case "lore":
 				ItemMeta itemMeta = iS.getItemMeta();
 				if (itemMeta.hasLore()) {
 					List<String> loreArray = itemMeta.getLore();
@@ -105,8 +105,7 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 						String line = loreArray.get(loreLine);
 						if(loreRegex == null)
 							storeVariable(line);
-						else
-						{
+						else {
 							Pattern pattern = Pattern.compile(loreRegex, Pattern.CASE_INSENSITIVE);
 							Matcher matcher = pattern.matcher(line);
 							if(matcher.find()) {
@@ -119,7 +118,9 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 			case "name":
 				ItemMeta itemMetaN = iS.getItemMeta();
 				if (itemMetaN.hasDisplayName()) {
-					storeVariable(String.valueOf(itemMetaN.getDisplayName()));
+					storeVariable(itemMetaN.getDisplayName());
+				} else {
+					storeVariable(iS.getType().name());
 				}
 				break;
 			default:
