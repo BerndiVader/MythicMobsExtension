@@ -33,14 +33,12 @@ public class ModifyLoreLine extends SkillMechanic implements ITargetedEntitySkil
 		String what = mlc.getString(new String[] { "what", "w"}, "HAND").toUpperCase();
 		String bag = mlc.getString(new String[] { "bagname", "name", "bag", "b", "n"}, null);
 		loreLine = mlc.getString(new String[] { "loreline", "line", "l"}, null);
-		String loreTextInput = mlc.getString(new String[] { "loretext", "text", "t"}, null);
+		loreTextUnprocessed = new PlaceholderString(mlc.getString(new String[] { "loretext", "text", "t"}, null));
 		loreAction = mlc.getString(new String[] { "loreaction", "action", "a"}, "SET").toUpperCase();
 		WhereEnum where = WhereEnum.valueOf(what);
 		ACTION action = ACTION.SET;
 		
-		if (loreTextInput==null||loreLine==null) return;
-		
-		loreTextUnprocessed = new PlaceholderString(loreTextInput);
+		if (loreTextUnprocessed==null||loreLine==null) return;
 		
 		moddingItem = new ModdingItem(where, slot, action, null, null, null, null, null, null, bag, null);
 	}
