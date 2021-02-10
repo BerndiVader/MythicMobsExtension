@@ -1,0 +1,104 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+task processbuildnumber {
+	Properties p1=new Properties()
+	def d1=project.projectDir
+	def d2="${d1}/gradle.properties"
+	File pf1=new File(d2)
+	p1.load(pf1.newDataInputStream())
+	Integer i1=(((p1.getProperty('artbuild')) as BigDecimal) + 1 )
+	p1.setProperty('artbuild', i1.toString())
+	p1.store(pf1.newWriter(), null)
+	p1.load(pf1.newDataInputStream())
+	version = artver
+	group = "com.gmail.berndivader"
+
+}
+
+repositories {
+
+    mavenCentral()
+
+    maven {
+        url "http://mc.hackerzlair.org:8888/repository/public"
+    }
+    
+    maven {
+        name = "placeholderapi"
+        url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+    
+ }
+
+dependencies {
+    compileOnly  ("org.spigotmc:spigot-1.16.5:+")
+    compileOnly  ("org.spigotmc:spigot-1.16.3R:+")
+    compileOnly  ("org.spigotmc:spigot-1.16.1R:+")
+    compileOnly  ("org.spigotmc:spigot-1.15.2:+") 
+    compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
+    compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
+    compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
+    compileOnly  ("com.massivecraft:massivecore:+")
+    compileOnly  ("com.massivecraft:factions:+")
+    compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
+    compileOnly  ("com.comphenix:protocol:+")
+    compileOnly  ("com.garbagemule:mobarena:+")
+    compileOnly  ("com.sk89q:worldedit:+")
+    compileOnly  ("com.sk89q:worldguard:+")
+    compileOnly  ("fr.neatmonster:nocheatplus:+")
+    compileOnly  ("me.blackvein:quests:+")
+    compileOnly  ("me.libraryaddict:disguise:+")
+    compileOnly  ("net.citizensnpcs:citizens:+")
+    compileOnly  ("think:rpgitems:3.8.6")
+    compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
+    compileOnly  ("io.lumine.xikage:mythicmobs:+")
+
+    compileOnly  group: "me.clip", name: "placeholderapi" ,version: "+"
+}
+
+processResources {
+	inputs.property "version", project.version
+	from (sourceSets.main.resources.srcDirs) {
+		include "plugin.yml"
+		include "version.txt"
+		expand "version": project.version
+	}
+
+	from (sourceSets.main.resources.srcDirs) {
+		exclude "plugin.yml"
+		exclude "version.txt"
+	}
+}
+
+task createPom  {
+    pom {
+        project {
+            groupId "com.gmail.berndivader"
+            artifactId "MythicMobsExtension"
+            version project.version
+        }
+    }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+}
+
+uploadArchives {
+
+	def d1=project.projectDir
+	Properties archiva=new Properties()
+	
+	archiva.load(new File("${d1}/usr.properties").newDataInputStream())
+	def usr=archiva.getProperty('usr')
+	def pwd=archiva.getProperty('pwd')
+
+
+	repositories.mavenDeployer {
+		repository(url:'http://mc.hackerzlair.org:8888/repository/public/') {
+			authentication (userName: '${usr}', password: '${pwd}')
+		}
+		
+		pom.version=project.version
+		pom.artifactId=project.name
+		pom.groupId='com.gmail.berndivader'
+	}
+}
+
