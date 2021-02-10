@@ -1,6 +1,5 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.event.inventory.InventoryType;
@@ -14,16 +13,17 @@ import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
 
 @ExternalAnnotation(name = "openinventory", author = "nicochulo2001")
 public class OpenInventoryCondition extends AbstractCustomCondition implements IEntityCondition {
-	String type;
-	String name;
 	
+	private String type;
+	private String name;
+
 	public OpenInventoryCondition(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		
+
 		type = mlc.getString(new String[] { "type", "t"}, "CRAFTING");
 		name = mlc.getString(new String[] { "name", "n"}, null);
 	}
-	
+
 	@Override
 	public boolean check(AbstractEntity target) {
 		if(target.getBukkitEntity() instanceof Player) {
@@ -33,21 +33,15 @@ public class OpenInventoryCondition extends AbstractCustomCondition implements I
 			String invName = invView.getTitle();
 			if(invType.toString().equals(type)) {
 				if(name != null) {
-					if(invName.equals(name)) {
-						return true;
-					}
-					else return false;
+					return invName.equals(name);
 				}
-				else return true;
+				return true;
 			}
 			else if(type.equals("BACKBAG")) {
-				if(invView.getTopInventory() == BackBagHelper.getInventory(target.getUniqueId(), name)) {
-					return true;
-				}
-				else return false;
+				return invView.getTopInventory() == BackBagHelper.getInventory(target.getUniqueId(), name);
 			}
-			else return false;
+			return false;
 		}
-		else return false;
+		return false;
 	}
 }
