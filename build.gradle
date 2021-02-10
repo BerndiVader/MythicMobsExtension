@@ -32,9 +32,9 @@ repositories {
  }
 
 dependencies {
-    compileOnly  ("org.spigotmc:spigot-1.16.4:+") 
-    compileOnly  ("org.spigotmc:spigot-1.16.3:+") 
-    compileOnly  ("org.spigotmc:spigot-1.16.1:+") 
+    compileOnly  ("org.spigotmc:spigot-1.16.5:+")
+    compileOnly  ("org.spigotmc:spigot-1.16.3R:+")
+    compileOnly  ("org.spigotmc:spigot-1.16.1R:+")
     compileOnly  ("org.spigotmc:spigot-1.15.2:+") 
     compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
     compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
@@ -48,11 +48,11 @@ dependencies {
     compileOnly  ("com.sk89q:worldguard:+")
     compileOnly  ("fr.neatmonster:nocheatplus:+")
     compileOnly  ("me.blackvein:quests:+")
-    compileOnly  ("me.libraryaddict:disguise:10.0.16-Free")
+    compileOnly  ("me.libraryaddict:disguise:+")
     compileOnly  ("net.citizensnpcs:citizens:+")
-    compileOnly  ("think:rpgitems:3.8.107")
+    compileOnly  ("think:rpgitems:3.8.6")
     compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
-    compileOnly  ("io.lumine.xikage:mythicmobs:4.11.0")
+    compileOnly  ("io.lumine.xikage:mythicmobs:+")
 
     compileOnly  group: "me.clip", name: "placeholderapi" ,version: "+"
 }
@@ -86,7 +86,7 @@ uploadArchives {
 	def d1=project.projectDir
 	Properties archiva=new Properties()
 	
-	archiva.load(new File("${d1}/../usr.properties").newDataInputStream())
+	archiva.load(new File("${d1}/usr.properties").newDataInputStream())
 	def usr=archiva.getProperty('usr')
 	def pwd=archiva.getProperty('pwd')
 
