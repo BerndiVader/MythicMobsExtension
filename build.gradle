@@ -86,7 +86,7 @@ uploadArchives {
 	def d1=project.projectDir
 	Properties archiva=new Properties()
 	
-	archiva.load(new File("${d1}/usr.properties").newDataInputStream())
+	archiva.load(new File("${d1}/../usr.properties").newDataInputStream())
 	def usr=archiva.getProperty('usr')
 	def pwd=archiva.getProperty('pwd')
 
