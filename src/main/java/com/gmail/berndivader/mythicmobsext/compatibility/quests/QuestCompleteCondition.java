@@ -12,6 +12,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.conditions.IEntityCondition;
+import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
 
@@ -35,9 +36,9 @@ public class QuestCompleteCondition extends AbstractCustomCondition implements I
 		Quester q = quests.getQuester(p.getUniqueId());
 		boolean bl1 = false;
 		if (q != null) {
-			Iterator<String> quests = q.getCompletedQuests().iterator();
+			Iterator<Quest> quests = q.getCompletedQuests().iterator();
 			while (quests.hasNext()) {
-				String quest = quests.next().toLowerCase();
+				String quest = quests.next().getName().toLowerCase();
 			if (questList.contains(quest)) {
 					return true;
 				}

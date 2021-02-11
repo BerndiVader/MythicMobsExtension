@@ -57,7 +57,11 @@ public class EvalMechanic extends SkillMechanic implements INoTargetSkill, ITarg
 	boolean eval(SkillMetadata data, Entity e1, Location l1) {
 		double s1 = 0d;
 		try {
-			s1 = ((Number) Nashorn.get().invoc.invokeFunction(js, eval.get(data))).doubleValue();
+			if(Nashorn.invocable!=null) {
+				s1 = ((Number) Nashorn.invocable.invokeFunction(js, eval.get(data))).doubleValue();
+			} else {
+				Main.logger.warning("No javascriptengine present!");
+			}
 		} catch (NoSuchMethodException | ScriptException e) {
 			e.printStackTrace();
 		}

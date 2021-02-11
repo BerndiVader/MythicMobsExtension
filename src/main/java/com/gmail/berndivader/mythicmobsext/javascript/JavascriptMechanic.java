@@ -5,6 +5,7 @@ import javax.script.ScriptException;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.externals.*;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -50,8 +51,12 @@ public class JavascriptMechanic extends SkillMechanic
 
 	private boolean eval(SkillMetadata data, Entity e1, Location l1) {
 		try {
-			Nashorn.get().invoc.invokeFunction(js, data, e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null,
-					mlc);
+			if(Nashorn.invocable!=null) {
+				Nashorn.invocable.invokeFunction(js, data, e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null,
+						mlc);
+			}else {
+				Main.logger.warning("No javascriptengine found!");
+			}
 		} catch (NoSuchMethodException | ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

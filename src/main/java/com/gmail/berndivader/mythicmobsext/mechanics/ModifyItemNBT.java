@@ -68,7 +68,7 @@ public class ModifyItemNBT extends VariableMechanic implements ITargetedEntitySk
 	
 	
 	public ItemStack setItemNBT(ItemStack iS) {
-	    Map<String, String> tags = new HashMap<String, String>();
+	    Map<String, Object> tags = new HashMap<String, Object>();
 	    tags.put(NBTkey, NBTvalue.get(skill, abstract_entity));
 	    iS = MythicItem.addItemNBT(iS, "Base", tags);
 		return iS;

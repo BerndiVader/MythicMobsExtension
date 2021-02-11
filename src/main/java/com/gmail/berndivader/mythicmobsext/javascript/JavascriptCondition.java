@@ -5,6 +5,7 @@ import javax.script.ScriptException;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import com.gmail.berndivader.mythicmobsext.Main;
 import com.gmail.berndivader.mythicmobsext.conditions.AbstractCustomCondition;
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
 
@@ -42,8 +43,12 @@ public class JavascriptCondition extends AbstractCustomCondition implements IEnt
 
 	private boolean eval(MythicLineConfig mlc, Entity e1, Location l1) {
 		try {
-			return (boolean) Nashorn.get().invoc.invokeFunction(js,
-					e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null, mlc);
+			if(Nashorn.invocable!=null) {
+				return (boolean) Nashorn.invocable.invokeFunction(js,
+						e1 != null ? (Entity) e1 : l1 != null ? (Location) l1 : null, mlc);
+			} else {
+				Main.logger.warning("No javascript engine present!");
+			}
 		} catch (NoSuchMethodException | ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

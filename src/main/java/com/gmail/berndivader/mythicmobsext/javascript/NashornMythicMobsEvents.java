@@ -26,11 +26,15 @@ public class NashornMythicMobsEvents implements Listener {
 	public void onMythicMobsReload(MythicReloadedEvent e) {
 		try {
 			Nashorn.scripts = new String(Files.readAllBytes(Paths.get(Utils.str_PLUGINPATH, Nashorn.filename)));
-			Nashorn.get().nash.eval(Nashorn.scripts);
+			if(Nashorn.engine!=null) {
+				Nashorn.engine.eval(Nashorn.scripts);
+				Main.logger.info("Javascripts reloaded.");
+			}else {
+				Main.logger.warning("No javascriptengine present!");
+			}
 		} catch (IOException | ScriptException ex) {
 			ex.printStackTrace();
 		}
-		Main.logger.info("Javascripts reloaded.");
 	}
 
 	@EventHandler
