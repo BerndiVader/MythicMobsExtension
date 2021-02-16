@@ -1,5 +1,5 @@
-# MythicMobsExtension v1.736a-SNAPSHOT for 
-### MythicMobs >4.10 
+# MythicMobsExtension v1.738a-SNAPSHOT for 
+### MythicMobs >4.10
 ### Spigot >1.12.2
 
 # [Discord](https://discord.gg/8EfDrnd) <br>
