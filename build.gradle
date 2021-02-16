@@ -1,36 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-task processbuildnumber {
-	Properties p1=new Properties()
-	def d1=project.projectDir
-	def d2="${d1}/gradle.properties"
-	File pf1=new File(d2)
-	p1.load(pf1.newDataInputStream())
-	Integer i1=(((p1.getProperty('artbuild')) as BigDecimal) + 1 )
-	p1.setProperty('artbuild', i1.toString())
-	p1.store(pf1.newWriter(), null)
-	p1.load(pf1.newDataInputStream())
-	version = artver
-	group = "com.gmail.berndivader"
-
-}
-
 repositories {
-
     mavenCentral()
-
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
     }
-    
     maven {
-        name = "placeholderapi"
         url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
-    
  }
-
+ 
 dependencies {
     compileOnly  ("org.spigotmc:spigot-1.16.5:+")
     compileOnly  ("org.spigotmc:spigot-1.16.3R:+")
@@ -53,52 +33,86 @@ dependencies {
     compileOnly  ("think:rpgitems:3.8.6")
     compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
     compileOnly  ("io.lumine.xikage:mythicmobs:+")
-
-    compileOnly  group: "me.clip", name: "placeholderapi" ,version: "+"
+    compileOnly  ("me.clip:placeholderapi:+")
 }
 
 processResources {
-	inputs.property "version", project.version
-	from (sourceSets.main.resources.srcDirs) {
-		include "plugin.yml"
-		include "version.txt"
-		expand "version": project.version
-	}
+    
+    print("Process properties....")
+    Properties p1=new Properties()
+    File pf1=new File("$project.projectDir/gradle.properties")
+    if(pf1.exists())
+    {
+        p1.load(pf1.newDataInputStream())
+        project.version = p1.artver
+        project.group = p1.group
+        println("Done!")
+    }
+    else
+    {
+        println("Warning! gradle.properties file is missing!")
+    }
+    
+    print("Process resources....")
+    inputs.property "version", project.version
+    from (sourceSets.main.resources.srcDirs) {
+            include "plugin.yml"
+            expand "version": project.version
+    }
 
-	from (sourceSets.main.resources.srcDirs) {
-		exclude "plugin.yml"
-		exclude "version.txt"
-	}
+    from (sourceSets.main.resources.srcDirs) {
+            exclude "plugin.yml"
+    }
+    println("Done!")
 }
 
-task createPom  {
-    pom {
-        project {
-            groupId "com.gmail.berndivader"
-            artifactId "MythicMobsExtension"
-            version project.version
-        }
-    }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+compileJava {
+    dependsOn clean
+    
+    doLast {
+        print("Create POM file....")
+        pom {
+            project {
+                groupId project.group
+                artifactId project.name
+                version project.version
+            }
+        }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+        println("Done!")
+    }
+    
 }
 
 uploadArchives {
-
+    doLast {
+        print("Update repository files....")
 	def d1=project.projectDir
 	Properties archiva=new Properties()
-	
-	archiva.load(new File("${d1}/../usr.properties").newDataInputStream())
-	def usr=archiva.getProperty('usr')
-	def pwd=archiva.getProperty('pwd')
+        
+        File data=new File("${d1}/../usr.properties")
+	if(data.exists())
+        {
+            archiva.load(data).newDataInputStream()
+            def usr=archiva.getProperty('usr')
+            def pwd=archiva.getProperty('pwd')
 
 
-	repositories.mavenDeployer {
-		repository(url:'http://mc.hackerzlair.org:8888/repository/public/') {
-			authentication (userName: '${usr}', password: '${pwd}')
-		}
-		
-		pom.version=project.version
-		pom.artifactId=project.name
-		pom.groupId='com.gmail.berndivader'
-	}
+            repositories.mavenDeployer {
+                    repository(url:'http://mc.hackerzlair.org:8888/repository/public/') {
+                            authentication (userName: '${usr}', password: '${pwd}')
+                    }
+
+                    pom.version=project.version
+                    pom.artifactId=project.name
+                    pom.groupId='com.gmail.berndivader'
+            }
+            println("Done!")
+        }
+        else
+        {
+            println("Archiva config file is missing. Repository not updated!")
+        }
+    }
+
 }
 
