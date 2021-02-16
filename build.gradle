@@ -92,7 +92,7 @@ uploadArchives {
         File data=new File("${d1}/../usr.properties")
 	if(data.exists())
         {
-            archiva.load(data).newDataInputStream()
+            archiva.load(data.newDataInputStream())
             def usr=archiva.getProperty('usr')
             def pwd=archiva.getProperty('pwd')
 
