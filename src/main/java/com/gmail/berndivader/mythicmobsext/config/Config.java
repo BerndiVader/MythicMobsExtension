@@ -31,6 +31,7 @@ public class Config {
 	public static boolean quests;
 	public static boolean ncp;
 	public static long meta_delay;
+        public static String javascriptengine;
 	final static YamlConfiguration config;
 
 	static {
@@ -98,6 +99,7 @@ public class Config {
 		quests = config.getBoolean(ConfigValue.QUESTS.getPath());
 		ncp = config.getBoolean(ConfigValue.NCP.getPath());
 		meta_delay=config.getLong(ConfigValue.META_DELAY.getPath());
+                javascriptengine=config.getString(ConfigValue.JAVASCRIPTENGINE.getPath());
 	}
 
 }

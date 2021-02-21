@@ -11,6 +11,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import com.gmail.berndivader.mythicmobsext.Main;
+import com.gmail.berndivader.mythicmobsext.config.Config;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Nashorn {
@@ -28,26 +29,23 @@ public class Nashorn {
 		p1 = Paths.get(Utils.str_PLUGINPATH, includes);
 		if (!p1.toFile().exists())
 			Main.getPlugin().saveResource(includes, false);
-		Thread.currentThread().setContextClassLoader(Main.getPlugin().getClass().getClassLoader());
 		try {
 			p1 = Paths.get(Utils.str_PLUGINPATH, filename);
 			Main.getPlugin().saveResource(filename, true);
 			scripts = new String(Files.readAllBytes(p1));
-			
-			ScriptEngineManager manager=new ScriptEngineManager();
-			engine=manager.getEngineByName("javascript");
-			System.err.println(engine==null);
+			ScriptEngineManager manager=new ScriptEngineManager(ClassLoader.getSystemClassLoader());
+			if((engine=manager.getEngineByName(Config.javascriptengine))==null) {
+                            engine=manager.getEngineByName("nashorn");
+                        }
 			if(engine!=null) {
-				engine.eval(scripts);
-				invocable=(Invocable)engine;
-			}
+                            Main.logger.info("Using scriptengine "+engine.getFactory().getEngineName());
+                            engine.eval(scripts);
+                            invocable=(Invocable)engine;
+			} else {
+                            Main.logger.warning("No scriptengine found!");
+                        }
 		} catch (IOException | ScriptException e1) {
 			e1.printStackTrace();
 		}
 	}
-
-	public static Nashorn get() {
-		return nashorn;
-	}
-
 }

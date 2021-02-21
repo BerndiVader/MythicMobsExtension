@@ -9,9 +9,10 @@ public enum ConfigValue {
 	WGUARD("Configuration.Compatibility.Worldguard", true), FACTIONS("Configuration.Compatibility.Factions", true),
 	RPGITEMS("Configuration.Compatibility.RPGItems", true), MOBARENA("Configuration.Compatibility.MobArena", true),
 	H_DISPLAYS("Configuration.Compatibility.Holographic_Displays", true), EXTERNALS("Configuration.Externals", true),
-	JAVASCRIPT("Configuration.Javascript", true), QUESTS("Configuration.Quests", true), NCP("Configuration.NPC", true),
+	JAVASCRIPT("Configuration.Javascript.Enabled", true), QUESTS("Configuration.Quests", true), NCP("Configuration.NPC", true),
 	PRE44SPAWN("Configuration.PRE44SPAWN", false),
-	META_DELAY("Configuration.Metadata.Delay",480);
+	META_DELAY("Configuration.Metadata.Delay",480),
+        JAVASCRIPTENGINE("Configuration.Javascript.Engine","nashorn");
 	private final String path;
 	private final Object value;
 
