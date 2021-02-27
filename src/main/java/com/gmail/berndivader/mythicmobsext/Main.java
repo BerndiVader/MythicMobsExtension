@@ -134,8 +134,9 @@ public class Main extends JavaPlugin {
 			if (pluginmanager.getPlugin("ProtocolLib") != null) {
 				new ProtocolLibSupport(this);
 			}
-			if (Config.quests && pluginmanager.getPlugin("Quests") != null)
+			if (Config.quests && pluginmanager.getPlugin("Quests")!=null&&pluginmanager.getPlugin("Quests").getClass().getPackage().getName().equals("me.blackvein.quests")) {
 				new QuestsSupport(this);
+			}
 			if (pluginmanager.getPlugin("LibsDisguise") != null)
 				new LibsDisguisesSupport();
 			if (Config.ncp && pluginmanager.getPlugin("NoCheatPlus") != null)
