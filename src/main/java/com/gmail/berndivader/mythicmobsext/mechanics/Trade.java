@@ -14,6 +14,7 @@ import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
 
 import com.gmail.berndivader.mythicmobsext.externals.ExternalAnnotation;
+import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
@@ -23,34 +24,36 @@ import io.lumine.xikage.mythicmobs.items.MythicItem;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "trade", author = "Seyarada")
 public class Trade extends SkillMechanic implements ITargetedEntitySkill{
+	private PlaceholderString text;
 	String title;
 	List<String> tradesRaw = new ArrayList<>();
 
-	public Trade(String line, MythicLineConfig mlc) {
-		super(line, mlc);
+	public Trade(String line, MythicLineConfig MythicLineConfig) {
+		super(line, MythicLineConfig);
 		this.ASYNC_SAFE = false;
-		title = mlc.getString(new String[] { "title", "t"}, "Trades");
-		for (int i = 1; i <= 10; i++) {
-			String x = mlc.getString(new String[] {String.valueOf(i)}, "none");
+		title = MythicLineConfig.getString(new String[] { "title", "t"}, "Trades");
+		for (int index = 1; index <= 10; index++) {
+			String x = MythicLineConfig.getString(new String[] {String.valueOf(index)}, "none");
 			
 			if (!x.equals("none")) tradesRaw.add(x);
-			}
-
+		}
 	}
 	
 	@Override
-	public boolean castAtEntity(SkillMetadata data, AbstractEntity p) {
-		if (p.isPlayer()) {
-			Player player = (Player) p.getBukkitEntity();
-			List<MerchantRecipe> merchantRecipes = getRecipes();
+	public boolean castAtEntity(SkillMetadata data, AbstractEntity playerEntity) {
+		if (playerEntity.isPlayer()) {
+			Player player = (Player) playerEntity.getBukkitEntity();
+			List<MerchantRecipe> merchantRecipes = getRecipes(data);
 			
-			Entity v = data.getCaster().getEntity().getBukkitEntity();
-			if(v instanceof Villager) {
-				((Villager)v).setRecipes(merchantRecipes);
-				player.openMerchant(((Villager)v), true);
+			Entity villagerEntity = data.getCaster().getEntity().getBukkitEntity();
+			if(villagerEntity instanceof Villager) {
+				((Villager)villagerEntity).setRecipes(merchantRecipes);
+				player.openMerchant(((Villager)villagerEntity), true);
 			} else {
 				Merchant merchant = Bukkit.createMerchant(title);
 				merchant.setRecipes(merchantRecipes);
@@ -62,18 +65,18 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
 		return true;
 	}
 	
-	public List<MerchantRecipe> getRecipes() {
+	public List<MerchantRecipe> getRecipes(SkillMetadata data) {
 		List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
 		
 		for (String trades : tradesRaw) {
 			
-			ItemStack r = null, p1 = null, p2 = null;
-        	ItemStack f1 = null,f2 = null,f3 = null;
+			ItemStack result = null, price1 = null, price2 = null;
+        	ItemStack finalResult = null,finalPrice1 = null,finalPrice2 = null;
         	Integer uses = 9999;
         	Boolean xp = true;
         	
             for(String trade : trades.split(",")) {	
-            	String rS = null, p1S = null, p2S = null;
+            	String resultString = null, price1String = null, price2String = null;
             	
             	
             	String[] n = trade.split(":");
@@ -81,32 +84,54 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
             	String l = trade.split(":")[1];
             	
             	Integer amount = 1;
-            	if (n.length > 2)
-            		amount = Integer.valueOf(n[2]);
+            	if (n.length > 2) {
+        			text = new PlaceholderString(SkillString.unparseMessageSpecialChars(n[2]));
+            		if (text.get(data).contains("to")) {
+            			amount = MathUtils.randomRangeInt(text.get(data));
+            			
+            		}else {
+            			amount = Integer.valueOf(text.get(data));
+            			
+            		}
+            		
+            	}
             	
-            	if (k.equals("result")) rS = l;
-            	else if (k.equals("price")) p1S = l;
-            	else if (k.equals("price1")) p1S = l;
-            	else if (k.equals("price2")) p2S = l;
+            	if (k.equals("result")) {
+            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		resultString = this.text.get(data);
+
+            	}
+            	else if (k.equals("price")) {
+            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		price1String = this.text.get(data);
+            	}
+            	else if (k.equals("price1")) {
+            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		price1String = this.text.get(data);
+            	}
+            	else if (k.equals("price2")) {
+            		text = new PlaceholderString(SkillString.unparseMessageSpecialChars(l));
+            		price2String = this.text.get(data);
+            	}
             	else if (k.equals("uses")) uses = Integer.valueOf(l);
             	else if (k.equals("xp")) xp = Boolean.valueOf(l);
             	
-            	r = getItem(rS,amount);
-            	p1 = getItem(p1S,amount);
-            	p2 = getItem(p2S,amount);
+            	result = getItem(resultString,amount);
+            	price1 = getItem(price1String,amount);
+            	price2 = getItem(price2String,amount);
             	
-            	if (r!=null) f1 = r;
-            	if (p1!=null) f2 = p1;
-            	if (p2!=null) f3 = p2;
-            	rS = null; p1S = null; p2S = null;
+            	if (result!=null) finalResult = result;
+            	if (price1!=null) finalPrice1 = price1;
+            	if (price2!=null) finalPrice2 = price2;
+            	resultString = null; price1String = null; price2String = null;
             	
             }
-        	MerchantRecipe recipe = new MerchantRecipe(f1, uses);
+        	MerchantRecipe recipe = new MerchantRecipe(finalResult, uses);
         	recipe.setVillagerExperience(0);
 			recipe.setExperienceReward(xp);
-			recipe.addIngredient(f2);
+			recipe.addIngredient(finalPrice1);
 			recipe.setVillagerExperience(5);
-			if (f3!=null) recipe.addIngredient(f3);
+			if (finalPrice2!=null) recipe.addIngredient(finalPrice2);
 			merchantRecipes.add(recipe);
         }
 		return merchantRecipes;
