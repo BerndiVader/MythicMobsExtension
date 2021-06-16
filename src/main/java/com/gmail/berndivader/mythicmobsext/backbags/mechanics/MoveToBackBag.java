@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
 import java.util.List;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
@@ -16,10 +17,6 @@ import com.gmail.berndivader.mythicmobsext.items.WhereEnum;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
@@ -32,7 +29,8 @@ public class MoveToBackBag extends SkillMechanic implements INoTargetSkill, ITar
 
 	public MoveToBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		what = WhereEnum.getWhere(mlc.getString("what", "head"));
 		slot = mlc.getString("slot", "-1");
 		backbag_slot = mlc.getInteger("bagslot", -1);

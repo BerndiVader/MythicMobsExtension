@@ -32,7 +32,7 @@ dependencies {
     compileOnly  ("net.citizensnpcs:citizens:+")
     compileOnly  ("think:rpgitems:3.8.6")
     compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
-    compileOnly  ("io.lumine.xikage:mythicmobs:+")
+    compileOnly  ("io.lumine.xikage:mythicmobs:4.12.0")
     compileOnly  ("me.clip:placeholderapi:+")
 }
 

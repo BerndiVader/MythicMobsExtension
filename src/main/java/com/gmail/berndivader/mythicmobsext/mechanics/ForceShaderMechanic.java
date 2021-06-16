@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -21,7 +22,7 @@ public class ForceShaderMechanic extends SkillMechanic implements ITargetedEntit
 
 	public ForceShaderMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		entityType = EntityType.valueOf(mlc.getString("type", "CREEPER"));
 	}

@@ -17,8 +17,6 @@ public class TargetsGrid extends ISelectorEntity {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity> targets = new HashSet<>();
-		HashSet<AbstractEntity> old_targets = data.getEntityTargets();
-
 		return this.applyOffsets(targets);
 	}
 }

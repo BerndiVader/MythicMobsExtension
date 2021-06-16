@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -48,7 +49,8 @@ public class StunextMechanic extends SkillMechanic implements ITargetedEntitySki
 
 	public StunextMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.duration = mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.f = mlc.getBoolean(new String[] { "facing", "face", "f" }, false);
 		this.g = mlc.getBoolean(new String[] { "gravity", "g" }, false);

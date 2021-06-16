@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -16,10 +17,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 
 @ExternalAnnotation(name = "curse", author = "BerndiVader")
@@ -38,8 +35,8 @@ public class Curse extends AuraMechanic implements ITargetedEntitySkill {
 
 	public Curse(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.auraName = Optional.of(str);
 		reasons=new ArrayList<>();
 		

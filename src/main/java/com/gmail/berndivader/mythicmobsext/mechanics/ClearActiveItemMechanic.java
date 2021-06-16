@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Player;
 
 import com.gmail.berndivader.mythicmobsext.NMS.NMSUtils;
@@ -16,7 +17,7 @@ public class ClearActiveItemMechanic extends SkillMechanic implements ITargetedE
 
 	public ClearActiveItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override

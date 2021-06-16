@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import java.util.ArrayList;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
@@ -10,10 +11,6 @@ import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -29,7 +26,8 @@ public class SpeechBubbleMechanic extends SkillMechanic implements ITargetedEnti
 
 	public SpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.id = mlc.getString("id", "bubble");
 		this.offset = mlc.getDouble(new String[] { "offset", "o" }, 2.1D);
 		this.so = mlc.getDouble(new String[] { "sideoffset", "so" }, 0D);

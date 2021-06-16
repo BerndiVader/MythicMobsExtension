@@ -1,13 +1,10 @@
 package com.gmail.berndivader.mythicmobsext.compatibility.quests;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.entity.Player;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quester;
 import me.blackvein.quests.Quests;
@@ -19,7 +16,8 @@ public class QuestsMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public QuestsMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		s1 = mlc.getString("quest", "").toLowerCase();
 		i1 = mlc.getInteger("stage", 0);
 		if (!s1.isEmpty() && s1.charAt(0) == '"')

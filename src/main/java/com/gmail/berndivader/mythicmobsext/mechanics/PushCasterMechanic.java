@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,10 +17,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "push,pushto", author = "BerndiVader")
 public class PushCasterMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -31,7 +28,7 @@ public class PushCasterMechanic extends SkillMechanic implements ITargetedEntity
 
 	public PushCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		this.s = mlc.getFloat("speed", 1.0f);
 		this.exact = mlc.getBoolean("exact", false);

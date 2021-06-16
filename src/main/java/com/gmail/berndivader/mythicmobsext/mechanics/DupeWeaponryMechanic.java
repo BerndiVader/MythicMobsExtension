@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +21,8 @@ public class DupeWeaponryMechanic extends SkillMechanic implements ITargetedEnti
 
 	public DupeWeaponryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		removeFromTarget = mlc.getBoolean(new String[] { "removefromtarget", "rft" }, false);
 		ignoreAir = mlc.getBoolean(new String[] { "ignoreair", "ia" }, true);
 

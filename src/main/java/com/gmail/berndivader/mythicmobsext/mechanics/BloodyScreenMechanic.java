@@ -41,7 +41,7 @@ public class BloodyScreenMechanic extends SkillMechanic implements ITargetedEnti
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						if (player != null && player.isOnline()) {
+						if (player.isOnline()) {
 							if (player.hasMetadata(str))
 								player.removeMetadata(str, Main.getPlugin());
 							Volatile.handler.setWorldborder((Player) var2.getBukkitEntity(), 0, false);

@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +29,8 @@ public class ModifyItemNBT extends VariableMechanic implements ITargetedEntitySk
 	
 	public ModifyItemNBT(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.NBTkey = mlc.getString(new String[] { "key", "k" }, "Hello");
 		this.NBTvalue = PlaceholderString.of(mlc.getString(new String[] { "value", "v" }, "World"));

@@ -40,6 +40,5 @@ public class EnderDragonDeathEffect extends SkillMechanic implements ITargetedEn
 		EnderDragon e = l.getWorld().spawn(l, EnderDragon.class);
 		e.playEffect(EntityEffect.DEATH);
 		e.setHealth(0);
-		return;
 	}
 }

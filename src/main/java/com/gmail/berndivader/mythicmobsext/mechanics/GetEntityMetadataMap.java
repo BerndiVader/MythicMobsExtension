@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -38,7 +39,7 @@ public class GetEntityMetadataMap extends SkillMechanic implements ITargetedEnti
 
 	public GetEntityMetadataMap(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		use_players = mlc.getLine().toLowerCase().startsWith("getplayermeta");
 		data = mlc.getString("data", "ANY");

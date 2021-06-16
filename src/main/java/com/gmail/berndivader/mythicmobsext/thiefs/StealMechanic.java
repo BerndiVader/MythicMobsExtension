@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.ListIterator;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +30,8 @@ public class StealMechanic extends SkillMechanic implements ITargetedEntitySkill
 
 	public StealMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.items = new ArrayList<>(
 				Arrays.asList(mlc.getString(new String[] { "items", "item", "i" }, "ANY:1").toUpperCase().split(",")));
 		this.signal_fail = mlc.getString(new String[] { "failsignal", "fail" }, "steal_fail");

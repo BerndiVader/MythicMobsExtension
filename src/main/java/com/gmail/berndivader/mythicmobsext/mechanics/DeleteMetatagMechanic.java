@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
@@ -17,7 +18,7 @@ public class DeleteMetatagMechanic extends SetMetatagMechanic {
 
 	public DeleteMetatagMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override

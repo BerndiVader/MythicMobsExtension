@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.conditions;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class CheckTargeter extends AbstractCustomCondition implements IEntityCon
 			targeter = this.stargeter.get(data, (AbstractEntity) caster);
 		}
 		
-		HashSet<?> entries = getDestination(targeter, data);
+		Collection<?> entries = getDestination(targeter, data);
 		if(entries.size()==0) return false;
 		for(Object i:getDestination(targeter, data)) {
 			
@@ -76,7 +77,7 @@ public class CheckTargeter extends AbstractCustomCondition implements IEntityCon
 		return true;
 	}
 	
-	protected HashSet<?> getDestination(String target, SkillMetadata skilldata) {
+	protected Collection<?> getDestination(String target, SkillMetadata skilldata) {
 		SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),
 				skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter> maybeTargeter;

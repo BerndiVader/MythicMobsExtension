@@ -33,15 +33,14 @@ public class DisarmPlayerMechanic extends SkillMechanic implements ITargetedEnti
 
 		whats = new ArrayList<>();
 		String[] temp = mlc.getString("what", "HAND").toUpperCase().split(",");
-		int size = temp.length;
-		for (int i1 = 0; i1 < size; i1++) {
-			whats.add(WhereEnum.getWhere(temp[i1]));
+		for (String slot : temp) {
+			whats.add(WhereEnum.getWhere(slot));
 		}
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
-		ItemStack equipped_item = null;
+		ItemStack equipped_item;
 		HashMap<WhereEnum, ItemStack> stores = new HashMap<>();
 		if (!target.isPlayer()) {
 			if (target.isLiving()) {

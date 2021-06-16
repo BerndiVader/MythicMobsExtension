@@ -4,6 +4,7 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.compatibility.CompatibilityManager;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -17,7 +18,7 @@ public class ParsedDisguiseMechanic extends SkillMechanic implements ITargetedEn
 
 		super(skill, mlc);
 		this.disguise = mlc.getPlaceholderString(new String[] { "disguise", "d" }, "Notch");
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override

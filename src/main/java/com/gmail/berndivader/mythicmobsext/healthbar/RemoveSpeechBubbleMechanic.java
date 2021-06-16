@@ -1,6 +1,7 @@
 package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
 import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
@@ -10,7 +11,7 @@ public class RemoveSpeechBubbleMechanic extends SkillMechanic implements INoTarg
 
 	public RemoveSpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 		this.id = mlc.getString("id", "bubble");
 	}
 

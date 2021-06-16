@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
@@ -13,10 +14,6 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 
 @ExternalAnnotation(name = "jumpex,jump_ex", author = "BerndiVader")
 public class JumpCasterMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
@@ -26,7 +23,7 @@ public class JumpCasterMechanic extends SkillMechanic implements ITargetedEntity
 
 	public JumpCasterMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		this.speed = MathUtils.clamp(mlc.getFloat("speed", 1.3f), 1.01f, 3.0f);
 		this.G = mlc.getFloat("gravity", 0.02155f);

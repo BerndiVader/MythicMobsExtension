@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -39,8 +40,8 @@ public class CustomDamageMechanic extends SkillMechanic implements ITargetedEnti
 
 	public CustomDamageMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
-		this.ASYNC_SAFE = false;
 		this.pk = mlc.getBoolean(new String[] { "preventknockback", "pkb", "pk" }, false);
 		String value = mlc.getString(new String[] { "amount", "a" }, "1");
 		if (value.startsWith("-"))

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,9 +27,9 @@ public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill 
 
 	public BreakBlock(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
-		restore = mlc.getInteger("restore", -1);
+		restore = mlc.getInteger("restore", 0);
 		play_effect = mlc.getBoolean("effect", false);
 		try {
 			block_face = BlockFace.valueOf(mlc.getString("blockface", "down").toUpperCase());
@@ -39,11 +40,11 @@ public class BreakBlock extends SkillMechanic implements ITargetedLocationSkill 
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation al) {
-		Block block = ((Location) BukkitAdapter.adapt(al)).getBlock().getRelative(block_face);
-		if (block != null && block.getType() != Material.AIR) {
+		Block block = BukkitAdapter.adapt(al).getBlock().getRelative(block_face);
+		if (block.getType() != Material.AIR) {
 			final BlockState block_state = block.getState();
 			block.breakNaturally();
-			if (restore > -1) {
+			if (restore > 0) {
 				new BukkitRunnable() {
 					@Override
 					public void run() {

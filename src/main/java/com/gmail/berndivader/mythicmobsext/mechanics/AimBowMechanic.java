@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -29,7 +30,7 @@ public class AimBowMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public AimBowMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override
@@ -45,8 +46,7 @@ public class AimBowMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 					@Override
 					public void run() {
-						if (player == null || player.isDead() || !player.isOnline() || !player.isHandRaised()
-								|| !player.hasMetadata(meta_str)) {
+						if (player.isDead() || !player.isOnline() || !player.isHandRaised() || !player.hasMetadata(meta_str)) {
 							if (player.hasMetadata(meta_str))
 								player.removeMetadata(meta_str, Main.getPlugin());
 							this.cancel();

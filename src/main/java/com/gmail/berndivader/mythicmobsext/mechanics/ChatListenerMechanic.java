@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -21,11 +22,6 @@ import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.IParentSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.mechanics.AuraMechanic;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
@@ -50,7 +46,8 @@ public class ChatListenerMechanic extends AuraMechanic implements ITargetedEntit
 
 	public ChatListenerMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.auraName = Optional.of(mlc.getString("chatname", "chatlistener"));
 		String s1 = mlc.getString("phrases", "").toLowerCase();
 		if (s1.startsWith("\"") && s1.endsWith("\"")) {

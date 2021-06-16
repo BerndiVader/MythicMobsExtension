@@ -5,11 +5,7 @@ import com.gmail.berndivader.mythicmobsext.externals.*;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
-import io.lumine.xikage.mythicmobs.skills.TriggeredSkill;
+import io.lumine.xikage.mythicmobs.skills.*;
 
 @ExternalAnnotation(name = "setthreattarget", author = "BerndiVader")
 public class SetThreatTableTargetMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -17,11 +13,11 @@ public class SetThreatTableTargetMechanic extends SkillMechanic implements ITarg
 
 	public SetThreatTableTargetMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = true;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.amount = mlc.getDouble(new String[] { "amount", "a" }, 65536);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
 		if (data.getCaster() instanceof ActiveMob) {

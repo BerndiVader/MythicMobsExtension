@@ -4,10 +4,7 @@ import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
+import io.lumine.xikage.mythicmobs.skills.*;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class ExpandBackBag extends SkillMechanic implements INoTargetSkill, ITargetedEntitySkill {
@@ -16,7 +13,8 @@ public class ExpandBackBag extends SkillMechanic implements INoTargetSkill, ITar
 
 	public ExpandBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		size = mlc.getInteger("size", 1);
 		bag_name = mlc.getPlaceholderString(new String[] { "title", "name" }, BackBagHelper.str_name);
 	}

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.backbags.BackBagHelper;
@@ -16,7 +17,7 @@ public class RenameBackBag extends SkillMechanic implements INoTargetSkill {
 
 	public RenameBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		bag_name = mlc.getPlaceholderString(new String[] { "title", "name" }, BackBagHelper.str_name);
 		new_bag_name = mlc.getPlaceholderString(new String[] { "new", "newname" }, BackBagHelper.str_name);

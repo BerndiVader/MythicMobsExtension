@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,10 +14,6 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.items.ItemManager;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
@@ -36,7 +33,7 @@ public class CreateItem extends SkillMechanic implements ITargetedEntitySkill, I
 
 	public CreateItem(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		holding = new HoldingItem();
 		this.holding.setWhere(mlc.getString("to", "inventory"));

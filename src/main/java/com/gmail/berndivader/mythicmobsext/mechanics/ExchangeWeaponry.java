@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
@@ -21,7 +22,8 @@ public class ExchangeWeaponry extends SkillMechanic implements ITargetedEntitySk
 	
 	public ExchangeWeaponry(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.destination = mlc.getString(new String[] { "destination", "d" }, "OFFHAND");
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 	}

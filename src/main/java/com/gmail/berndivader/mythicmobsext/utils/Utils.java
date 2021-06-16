@@ -277,7 +277,7 @@ public class Utils implements Listener {
 		final Entity s = (Entity) e.getEntity().getShooter();
 		final ActiveMob am = mobmanager.getMythicMobInstance(s);
 		if (am != null) {
-			TriggeredSkill ts = new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), new Pair[0]);
+			TriggeredSkill ts = new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), true);
 			e.setCancelled(ts.getCancelled());
 		}
 	}
@@ -297,7 +297,7 @@ public class Utils implements Listener {
 			LivingEntity damager = getAttacker(((EntityDamageByEntityEvent) entityDamageEvent).getDamager());
 			if (damager != null && mobmanager.isActiveMob(damager.getUniqueId())) {
 				new TriggeredSkill(SkillTrigger.KILL, mobmanager.getMythicMobInstance(damager),
-						BukkitAdapter.adapt(e.getEntity()), new Pair[0]);
+						BukkitAdapter.adapt(e.getEntity()), true);
 			}
 		}
 	}
@@ -361,7 +361,7 @@ public class Utils implements Listener {
 		ActiveMob am = mobmanager.getMythicMobInstance(victim);
 		if (am == null || !am.getType().getConfig().getBoolean("onDamageForOtherCause"))
 			return;
-		ts = new TriggeredSkill(SkillTrigger.DAMAGED, am, null, new Pair[0]);
+		ts = new TriggeredSkill(SkillTrigger.DAMAGED, am, null, true);
 		if (ts.getCancelled())
 			e.setCancelled(true);
 	}
@@ -605,7 +605,7 @@ public class Utils implements Listener {
 	public static void triggerShoot(Entity caster, Entity trigger) {
 		final ActiveMob am = mobmanager.getMythicMobInstance(caster);
 		if (am != null) {
-			new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), new Pair[0]);
+			new TriggeredSkill(SkillTrigger.SHOOT, am, am.getEntity().getTarget(), true);
 		}
 	}
 

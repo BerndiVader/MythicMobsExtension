@@ -6,10 +6,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.*;
 
 public class ModifySpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
 	private String text;
@@ -23,7 +20,8 @@ public class ModifySpeechBubbleMechanic extends SkillMechanic implements ITarget
 
 	public ModifySpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.id = mlc.getString("id", "bubble");
 		this.offset = mlc.getDouble(new String[] { "offset", "yo" }, -999);
 		this.so = mlc.getDouble(new String[] { "sideoffset", "so" }, -999);
