@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +30,8 @@ public class EquipArmorstandMechanic extends SkillMechanic implements INoTargetS
 	
 	public EquipArmorstandMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		parse = mlc.getString(new String[] { "item", "i" }).split(":");
 		item = PlaceholderString.of(parse[0]);
 		pos = Integer.parseInt(parse[1]);

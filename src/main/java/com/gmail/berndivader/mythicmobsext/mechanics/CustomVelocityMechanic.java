@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
@@ -21,7 +22,8 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 
 	public CustomVelocityMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.debug = mlc.getBoolean("debug", false);
 		this.velocityX = mlc.getDouble(new String[] { "velocityx", "vx", "x" }, 0.0D);
 		this.velocityY = mlc.getDouble(new String[] { "velocityy", "vy", "y" }, 0.0D);
@@ -35,19 +37,19 @@ public class CustomVelocityMechanic extends SkillMechanic implements ITargetedEn
 		Vector v = e.getVelocity().clone();
 		Vector vb = v.clone();
 		switch (c) {
-		case 'A':
-			v.setX(v.getX() + this.velocityX);
-			v.setY(v.getY() + this.velocityY);
-			v.setZ(v.getZ() + this.velocityZ);
-			break;
-		case 'M':
-			v.setX(v.getX() * this.velocityX);
-			v.setY(v.getY() * this.velocityY);
-			v.setZ(v.getZ() * this.velocityZ);
-			break;
-		default:
-			v = new Vector(this.velocityX, this.velocityY, this.velocityZ);
-			break;
+			case 'A':
+				v.setX(v.getX() + this.velocityX);
+				v.setY(v.getY() + this.velocityY);
+				v.setZ(v.getZ() + this.velocityZ);
+				break;
+			case 'M':
+				v.setX(v.getX() * this.velocityX);
+				v.setY(v.getY() * this.velocityY);
+				v.setZ(v.getZ() * this.velocityZ);
+				break;
+			default:
+				v = new Vector(this.velocityX, this.velocityY, this.velocityZ);
+				break;
 		}
 		if (debug)
 			System.out.println("dx:" + v.getX() + " dy:" + v.getY() + " dz:" + v.getZ() + " len:" + v.length());

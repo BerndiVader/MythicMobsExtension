@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -33,12 +34,22 @@ public class Trade extends SkillMechanic implements ITargetedEntitySkill{
 	String title;
 	List<String> tradesRaw = new ArrayList<>();
 
+<<<<<<< HEAD
 	public Trade(String line, MythicLineConfig MythicLineConfig) {
 		super(line, MythicLineConfig);
 		this.ASYNC_SAFE = false;
 		title = MythicLineConfig.getString(new String[] { "title", "t"}, "Trades");
 		for (int index = 1; index <= 10; index++) {
 			String x = MythicLineConfig.getString(new String[] {String.valueOf(index)}, "none");
+=======
+	public Trade(String line, MythicLineConfig mlc) {
+		super(line, mlc);
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
+		title = mlc.getString(new String[] { "title", "t"}, "Trades");
+		for (int i = 1; i <= 10; i++) {
+			String x = mlc.getString(new String[] {String.valueOf(i)}, "none");
+>>>>>>> 45ef248a2002d4837839f5506555fa74bc88e713
 			
 			if (!x.equals("none")) tradesRaw.add(x);
 		}

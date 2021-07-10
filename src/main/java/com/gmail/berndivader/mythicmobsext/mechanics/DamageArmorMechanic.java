@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -29,17 +30,18 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 
 	public DamageArmorMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.armortype = new HashSet<>();
 		this.armortype.addAll(
 				Arrays.asList(mlc.getString(new String[] { "armor", "a", "armour" }, "all").toLowerCase().split(",")));
 		String[] maybeRnd = mlc.getString(new String[] { "damage", "dmg", "d" }, "1").split("to");
 		if (maybeRnd.length > 1) {
-			this.rndMin = Integer.valueOf(maybeRnd[0]);
-			this.rndMax = Integer.valueOf(maybeRnd[1]);
+			this.rndMin = Integer.parseInt(maybeRnd[0]);
+			this.rndMax = Integer.parseInt(maybeRnd[1]);
 		} else {
-			this.rndMin = Integer.valueOf(maybeRnd[0]);
-			this.rndMax = Integer.valueOf(maybeRnd[0]);
+			this.rndMin = Integer.parseInt(maybeRnd[0]);
+			this.rndMax = Integer.parseInt(maybeRnd[0]);
 		}
 		this.signal = mlc.getString(new String[] { "signal", "s" }, null);
 	}
@@ -57,81 +59,72 @@ public class DamageArmorMechanic extends SkillMechanic implements ITargetedEntit
 		ItemStack armor;
 		short dur;
 		boolean broken = false;
-		int damagevalue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
+		int damageValue = this.rndMin + (int) (Math.random() * ((this.rndMax - this.rndMin) + 1));
+
+		if(e.getEquipment()==null) return false;
+
 		if (this.armortype.contains("offhand") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getItemInOffHand();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					e.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
-					broken = true;
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
+				broken = true;
 			}
 		}
 		if (this.armortype.contains("hand") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getItemInMainHand();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-						e.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
-					broken = true;
-				} else {
-					e.getEquipment().setItemInMainHand(new ItemStack(armor));
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+				broken = true;
+			} else {
+				e.getEquipment().setItemInMainHand(new ItemStack(armor));
 			}
 		}
 		if (this.armortype.contains("helmet") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getHelmet();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					e.getEquipment().setHelmet(new ItemStack(Material.AIR));
-					broken = true;
-				} else {
-					e.getEquipment().setHelmet(new ItemStack(armor));
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setHelmet(new ItemStack(Material.AIR));
+				broken = true;
+			} else {
+				e.getEquipment().setHelmet(new ItemStack(armor));
 			}
 		}
 		if (this.armortype.contains("chest") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getChestplate();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					e.getEquipment().setChestplate(new ItemStack(Material.AIR));
-					broken = true;
-				} else {
-					e.getEquipment().setChestplate(new ItemStack(armor));
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setChestplate(new ItemStack(Material.AIR));
+				broken = true;
+			} else {
+				e.getEquipment().setChestplate(new ItemStack(armor));
 			}
 		}
 		if (this.armortype.contains("leggings") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getLeggings();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					e.getEquipment().setLeggings(new ItemStack(Material.AIR));
-					broken = true;
-				} else {
-					e.getEquipment().setLeggings(new ItemStack(armor));
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setLeggings(new ItemStack(Material.AIR));
+				broken = true;
+			} else {
+				e.getEquipment().setLeggings(new ItemStack(armor));
 			}
 		}
 		if (this.armortype.contains("boots") || this.armortype.contains("all")) {
 			armor = e.getEquipment().getBoots();
-			if (armor != null) {
-				dur = (short) (armor.getDurability() + damagevalue);
-				armor.setDurability(dur);
-				if (armor.getDurability() > armor.getType().getMaxDurability()) {
-					e.getEquipment().setBoots(new ItemStack(Material.AIR));
-					broken = true;
-				} else {
-					e.getEquipment().setBoots(new ItemStack(armor));
-				}
+			dur = (short) (armor.getDurability() + damageValue);
+			armor.setDurability(dur);
+			if (armor.getDurability() > armor.getType().getMaxDurability()) {
+				e.getEquipment().setBoots(new ItemStack(Material.AIR));
+				broken = true;
+			} else {
+				e.getEquipment().setBoots(new ItemStack(armor));
 			}
 		}
 		ActiveMob am = null;

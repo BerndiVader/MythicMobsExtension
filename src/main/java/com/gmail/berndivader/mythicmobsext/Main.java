@@ -42,6 +42,7 @@ import com.gmail.berndivader.mythicmobsext.utils.EntityCacheHandler;
 import com.gmail.berndivader.mythicmobsext.utils.Utils;
 
 public class Main extends JavaPlugin {
+
 	private static Main plugin;
 	private static MythicPlayers mythicplayers;
 
@@ -51,14 +52,12 @@ public class Main extends JavaPlugin {
 	public static EntityCacheHandler entityCacheHandler;
 	public static Logger logger;
 	public static Random random;
-	public static boolean hasRpgItems = false;
-	public static boolean slappyNewBorn = true;
+	public static boolean hasRpgItems;
 	public static boolean server_running;
 
-	public Thiefs thiefs;
-
-	public Internals internals;
-	public Externals externals;
+	public static Thiefs thiefs;
+	public static Internals internals;
+	public static Externals externals;
 
 	public void onEnable() {
 		server_running = true;
@@ -72,14 +71,14 @@ public class Main extends JavaPlugin {
 				@Override
 				public void run() {
 
-					String version = new String();
+					String version = "";
 					PluginDescriptionFile pdf = getDescription();
 					try {
 						URL url = new URL(
 								"https://raw.githubusercontent.com/BerndiVader/MythicMobsExtension/master/version.txt");
 						try (InputStream in = url.openStream();
 								BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-							version = br.readLine().toString();
+							version = br.readLine();
 						}
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
@@ -99,48 +98,62 @@ public class Main extends JavaPlugin {
 			NMSUtils.initialize();
 			new Utils();
 			internals = new Internals();
+
 			if (Config.externals) {
 				externals = new Externals();
 				logger.info("enabled externals");
 			}
+
 			new CustomMechanics();
 			logger.info("registered mechanics!");
 			new CustomConditions();
 			logger.info("registered conditions!");
 			new CustomTargeters();
 			logger.info("registered targeters!");
+
 			if (Config.javascript) {
 				new JavaScript();
 				logger.info("enabled javascript!");
 			}
+
 			if (Config.m_players)
 				Main.mythicplayers = new MythicPlayers(this);
+
 			if (Config.m_thiefs)
 				thiefs = new Thiefs();
 
 			if (Config.wguard && pluginmanager.getPlugin("WorldGuard") != null)
 				new WorldGuardFlag();
+
 			if (Config.factions && pluginmanager.getPlugin("Factions") != null
 					&& pluginmanager.getPlugin("MassiveCore") != null)
 				new FactionsSupport();
+
 			if (Config.rpgitems && pluginmanager.getPlugin("RPGItems") != null) {
 				hasRpgItems = true;
 				logger.info("using RPGItems");
 			}
+
 			if (Config.mobarena && pluginmanager.getPlugin("MobArena") != null)
 				new MobArenaSupport();
+
 			if (Config.h_displays && pluginmanager.getPlugin("HolographicDisplays") != null)
 				Main.healthbarhandler = new HealthbarHandler(this);
+
 			if (pluginmanager.getPlugin("ProtocolLib") != null) {
 				new ProtocolLibSupport(this);
 			}
+
 			if (Config.quests && pluginmanager.getPlugin("Quests")!=null&&pluginmanager.getPlugin("Quests").getClass().getPackage().getName().equals("me.blackvein.quests")) {
 				new QuestsSupport(this);
 			}
+
 			if (pluginmanager.getPlugin("LibsDisguise") != null)
 				new LibsDisguisesSupport();
+
 			if (Config.ncp && pluginmanager.getPlugin("NoCheatPlus") != null)
 				new NoCheatPlusSupport(this);
+
 			if (Config.c_owners)
 				cachedOwnerHandler = new CachedOwnerHandler(plugin);
 

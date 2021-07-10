@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.thiefs;
 import java.util.Iterator;
 import java.util.UUID;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,7 +16,7 @@ public class DropStolenItemsMechanic extends SkillMechanic implements INoTargetS
 
 	public DropStolenItemsMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override

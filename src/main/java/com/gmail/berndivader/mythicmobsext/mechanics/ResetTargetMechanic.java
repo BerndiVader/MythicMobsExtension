@@ -49,7 +49,7 @@ public class ResetTargetMechanic extends SkillMechanic implements ITargetedEntit
 			}
 			if (trigger && Utils.mobmanager.isActiveMob(data.getCaster().getEntity())) {
 				new TriggeredSkill(SkillTrigger.TARGETCHANGE,
-						Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()), target, new Pair[0]);
+						Utils.mobmanager.getMythicMobInstance(data.getCaster().getEntity()), target, true);
 			}
 			return true;
 		}

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.MythicPlayers.Mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,8 @@ public class mmSetTarget extends SkillMechanic implements INoTargetSkill {
 
 	public mmSetTarget(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.filter = mlc.getString(new String[] { "filter", "f" }, "").split(",");
 		this.targetself = mlc.getBoolean(new String[] { "selfnotarget", "snt" }, false);
 		length = mlc.getInteger("length", 32);

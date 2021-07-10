@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +25,7 @@ public class ForceSpectateMechanic extends SkillMechanic implements ITargetedEnt
 		super(skill, mlc);
 		this.d = (long) mlc.getInteger(new String[] { "duration", "dur" }, 120);
 		this.shaderOnly = mlc.getBoolean("shaderonly", false);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 	}
 
 	@Override

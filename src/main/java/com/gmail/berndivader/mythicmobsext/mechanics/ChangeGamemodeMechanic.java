@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -19,7 +20,8 @@ public class ChangeGamemodeMechanic extends SkillMechanic implements ITargetedEn
 
 	public ChangeGamemodeMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		try {
 			mode = GameMode.valueOf(mlc.getString("mode", "SURVIVAL").toUpperCase());
 		} catch (Exception ex) {

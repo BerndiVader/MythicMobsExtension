@@ -1,9 +1,11 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,12 +27,6 @@ import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitPlayer;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MobManager;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
-import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.skills.targeters.ConsoleTargeter;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
@@ -49,7 +45,8 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 
 	public CustomTeleportMechanic(String line, MythicLineConfig mlc) {
 		super(line, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+		
 		this.noise = mlc.getDouble(new String[] { "noise", "n", "radius", "r" }, 0D);
 		this.delay = mlc.getDouble(new String[] { "teleportdelay", "tdelay", "td" }, 0D);
 		this.frontOffset = mlc.getDouble(new String[] { "frontoffest", "fo" }, 0D);
@@ -221,7 +218,7 @@ public class CustomTeleportMechanic extends SkillMechanic implements ITargetedEn
 		return true;
 	}
 
-	protected static HashSet<?> getDestination(String target, SkillMetadata skilldata) {
+	protected static Collection<?> getDestination(String target, SkillMetadata skilldata) {
 		SkillMetadata data = new SkillMetadata(SkillTrigger.API, skilldata.getCaster(), skilldata.getTrigger(),
 				skilldata.getOrigin(), null, null, 1.0f);
 		Optional<SkillTargeter> maybeTargeter;

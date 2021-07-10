@@ -29,7 +29,7 @@ public class CustomRandomSkillMechanic extends SkillMechanic implements IMetaSki
 		skillmanager = Utils.mythicmobs.getSkillManager();
 		this.entrylist = new LinkedList<>();
 
-		String parse[] = mlc.getString(new String[] { "skills", "s" }).split(",");
+		String[] parse = mlc.getString(new String[] { "skills", "s" }).split(",");
 		b1(mlc.getBoolean(new String[] { "renewrandom", "newrandom", "rnr" }, false));
 		shuffle = mlc.getBoolean("shuffle", false);
 

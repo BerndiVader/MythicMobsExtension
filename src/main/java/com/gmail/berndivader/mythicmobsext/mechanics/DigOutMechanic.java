@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -28,7 +29,8 @@ public class DigOutMechanic extends SkillMechanic implements INoTargetSkill {
 
 	public DigOutMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+		
 		speed = (long) mlc.getInteger("speed", 5);
 		particle_amount = mlc.getInteger("amount", 5);
 		try {

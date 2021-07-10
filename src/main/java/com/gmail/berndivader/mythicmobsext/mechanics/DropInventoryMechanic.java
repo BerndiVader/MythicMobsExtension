@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 import java.util.Collections;
 import java.util.List;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -13,10 +14,6 @@ import com.gmail.berndivader.mythicmobsext.items.HoldingItem;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "dropinventory", author = "BerndiVader")
@@ -29,7 +26,8 @@ public class DropInventoryMechanic extends SkillMechanic implements ITargetedEnt
 
 	public DropInventoryMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		String tmp = mlc.getString(new String[] { "item" }, null);
 		this.holding = new HoldingItem();
 		if (tmp == null) {

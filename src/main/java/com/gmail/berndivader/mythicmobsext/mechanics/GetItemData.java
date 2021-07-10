@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -46,7 +47,8 @@ public class GetItemData extends VariableMechanic implements ITargetedEntitySkil
 	
 	public GetItemData(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.where = mlc.getString(new String[] { "where", "w" }, "HAND");
 		this.searchKey = mlc.getString(new String[] { "key", "k" }, "Hello");
 		this.get = mlc.getString(new String[] { "get", "g" }, "amount");

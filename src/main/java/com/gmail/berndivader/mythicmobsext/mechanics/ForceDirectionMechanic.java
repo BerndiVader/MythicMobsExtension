@@ -2,6 +2,7 @@ package com.gmail.berndivader.mythicmobsext.mechanics;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -27,7 +28,8 @@ public class ForceDirectionMechanic extends SkillMechanic implements ITargetedEn
 
 	public ForceDirectionMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		faceing = BlockFace.valueOf(mlc.getString("faceing", "north").toUpperCase());
 		duration = mlc.getInteger("duration", 1);
 		noise = mlc.getDouble("noise", 0.0d);

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.entity.Entity;
 
 import com.gmail.berndivader.mythicmobsext.externals.*;
@@ -7,11 +8,6 @@ import com.gmail.berndivader.mythicmobsext.volatilecode.Volatile;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "setnbt", author = "BerndiVader")
@@ -20,7 +16,8 @@ public class SetNbtMechanic extends SkillMechanic implements ITargetedEntitySkil
 
 	public SetNbtMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		String tmp = mlc.getString("nbt");
 		if (tmp.startsWith("\"") && tmp.endsWith("\"")) {
 			tmp = SkillString.parseMessageSpecialChars(tmp.substring(1, tmp.length() - 1));

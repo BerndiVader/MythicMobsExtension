@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import io.lumine.xikage.mythicmobs.skills.*;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -30,10 +31,6 @@ import io.lumine.xikage.mythicmobs.drops.InvalidDrop;
 import io.lumine.xikage.mythicmobs.drops.LootBag;
 import io.lumine.xikage.mythicmobs.drops.droppables.ExperienceDrop;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 @ExternalAnnotation(name = "dropmythicitem", author = "BerndiVader")
@@ -46,7 +43,8 @@ public class DropMythicItemMechanic extends SkillMechanic implements ITargetedEn
 
 	public DropMythicItemMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.str_types = mlc.getPlaceholderString(new String[] { "mythicitem", "item", "itemtype", "type", "t", "i" },
 				"");
 		this.tags = mlc.getString(new String[] { "tags", "tag" }, "").split(",");

@@ -15,15 +15,7 @@ import com.gmail.berndivader.mythicmobsext.utils.Utils;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.INoTargetSkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.ITargetedLocationSkill;
-import io.lumine.xikage.mythicmobs.skills.Skill;
-import io.lumine.xikage.mythicmobs.skills.SkillCondition;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
-import io.lumine.xikage.mythicmobs.skills.SkillTargeter;
+import io.lumine.xikage.mythicmobs.skills.*;
 import io.lumine.xikage.mythicmobs.skills.conditions.InvalidCondition;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.skills.targeters.CustomTargeter;
@@ -39,7 +31,7 @@ public class CastIfMechanic extends SkillMechanic
 	private PlaceholderString elseAction;
 	private String cConditionLine;
 	private String tConditionLine;
-	private boolean breakOnMeet;
+	private boolean breakOnMeet; // These 2 aren't being used
 	private boolean breakOnElse;
 	private boolean RTskill;
 	private HashMap<Integer, String> tConditionLines = new HashMap<>();
@@ -48,12 +40,13 @@ public class CastIfMechanic extends SkillMechanic
 	private HashMap<Integer, SkillCondition> casterConditions = new HashMap<>();
 	private Optional<Skill> meetSkill = Optional.empty();
 	private Optional<Skill> elseSkill = Optional.empty();
-	private Optional<String> meetTargeter = Optional.empty();
-	private Optional<String> elseTargeter = Optional.empty();
+	private Optional<String> meetTargeter;
+	private Optional<String> elseTargeter;
 
 	public CastIfMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.breakOnMeet = mlc.getBoolean(new String[] { "breakonmeet", "breakmeet" }, false);
 		this.breakOnElse = mlc.getBoolean(new String[] { "breakonelse", "breakelse" }, false);
 		this.RTskill = mlc.getBoolean(new String[] { "realtime", "rtskill", "rt" }, false);
@@ -94,16 +87,16 @@ public class CastIfMechanic extends SkillMechanic
 
 	@Override
 	public boolean cast(SkillMetadata data) {
-		SkillMetadata sdata = data.deepClone();
+		SkillMetadata skillData = data.deepClone();
 		Optional<Skill> mSkill = Optional.empty();
 		Optional<Skill> eSkill = Optional.empty();
 		if (this.RTskill) {
 			AbstractEntity at = null;
-			AbstractLocation al = null;
-			if (sdata.getEntityTargets() != null && sdata.getEntityTargets().size() > 0)
-				at = sdata.getEntityTargets().iterator().next();
-			if (sdata.getLocationTargets() != null && sdata.getLocationTargets().size() > 0)
-				al = sdata.getLocationTargets().iterator().next();
+			AbstractLocation al = null;		// This variable isn't being used?
+			if (skillData.getEntityTargets() != null && skillData.getEntityTargets().size() > 0)
+				at = skillData.getEntityTargets().iterator().next();
+			if (skillData.getLocationTargets() != null && skillData.getLocationTargets().size() > 0)
+				al = skillData.getLocationTargets().iterator().next();
 			if (this.meetAction != null) {
 				mSkill = Utils.mythicmobs.getSkillManager().getSkill(this.meetAction.get(data, at));
 			}
@@ -114,22 +107,20 @@ public class CastIfMechanic extends SkillMechanic
 			mSkill = this.meetSkill;
 			eSkill = this.elseSkill;
 		}
-		if (this.handleConditions(sdata)) {
-			if (mSkill.isPresent() && mSkill.get().isUsable(sdata)) {
-				if (this.meetTargeter.isPresent())
-					renewTargets(this.meetTargeter.get(), sdata);
-				mSkill.get().execute(sdata);
+		if (this.handleConditions(skillData)) {
+			if (mSkill.isPresent() && mSkill.get().isUsable(skillData)) {
+				this.meetTargeter.ifPresent(s -> renewTargets(s, skillData));
+				mSkill.get().execute(skillData);
 			}
-			if (this.breakOnMeet) {
-			}
+			//if (this.breakOnMeet) {
+			//}
 		} else {
-			if (eSkill.isPresent() && eSkill.get().isUsable(sdata)) {
-				if (this.elseTargeter.isPresent())
-					renewTargets(this.elseTargeter.get(), sdata);
-				eSkill.get().execute(sdata);
+			if (eSkill.isPresent() && eSkill.get().isUsable(skillData)) {
+				this.elseTargeter.ifPresent(s -> renewTargets(s, skillData));
+				eSkill.get().execute(skillData);
 			}
-			if (this.breakOnElse) {
-			}
+			//if (this.breakOnElse) {
+			//}
 		}
 		return true;
 	}
@@ -161,20 +152,20 @@ public class CastIfMechanic extends SkillMechanic
 
 	@Override
 	public boolean castAtLocation(SkillMetadata data, AbstractLocation location) {
-		SkillMetadata sdata = data.deepClone();
+		SkillMetadata skillData = data.deepClone();
 		HashSet<AbstractLocation> targets = new HashSet<>();
 		targets.add(location);
-		sdata.setLocationTargets(targets);
-		return this.cast(sdata);
+		skillData.setLocationTargets(targets);
+		return this.cast(skillData);
 	}
 
 	@Override
 	public boolean castAtEntity(SkillMetadata data, AbstractEntity entity) {
-		SkillMetadata sdata = data.deepClone();
+		SkillMetadata skillData = data.deepClone();
 		HashSet<AbstractEntity> targets = new HashSet<>();
 		targets.add(entity);
-		sdata.setEntityTargets(targets);
-		return this.cast(sdata);
+		skillData.setEntityTargets(targets);
+		return this.cast(skillData);
 	}
 
 	public boolean handleConditions(SkillMetadata data) {
@@ -191,15 +182,15 @@ public class CastIfMechanic extends SkillMechanic
 	private boolean checkConditions(SkillMetadata data, HashMap<Integer, SkillCondition> conditions, boolean isTarget) {
 		String cline = isTarget ? this.tConditionLine : this.cConditionLine;
 		for (int a = 0; a < conditions.size(); a++) {
-			SkillMetadata sdata;
-			sdata = data.deepClone();
+			SkillMetadata skillData;
+			skillData = data.deepClone();
 			SkillCondition condition = conditions.get(a);
 			if (isTarget) {
 				cline = cline.replaceFirst(Pattern.quote(this.tConditionLines.get(a)),
-						Boolean.toString(condition.evaluateTargets(sdata)));
+						Boolean.toString(condition.evaluateTargets(skillData)));
 			} else {
 				cline = cline.replaceFirst(Pattern.quote(this.cConditionLines.get(a)),
-						Boolean.toString(condition.evaluateCaster(sdata)));
+						Boolean.toString(condition.evaluateCaster(skillData)));
 			}
 		}
 		return expressBoolean(cline);

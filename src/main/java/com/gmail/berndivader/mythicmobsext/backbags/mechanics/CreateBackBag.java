@@ -3,6 +3,7 @@ package com.gmail.berndivader.mythicmobsext.backbags.mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -24,7 +25,7 @@ public class CreateBackBag extends SkillMechanic implements INoTargetSkill {
 
 	public CreateBackBag(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
 
 		size = mlc.getInteger("size", 9);
 		default_items = BackBagHelper.createDefaultItemStack(mlc.getString("items", null));

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.MythicPlayers.Mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.MythicPlayers.MythicPlayers;
@@ -20,7 +21,8 @@ public class mmCreateActivePlayer extends SkillMechanic implements ITargetedEnti
 
 	public mmCreateActivePlayer(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.mobtype = mlc.getString(new String[] { "mobtype", "type", "mob", "t", "m" }, "Player");
 	}
 

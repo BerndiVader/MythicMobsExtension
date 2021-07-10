@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.targeters;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -22,10 +23,8 @@ public class TargetsTargetTargeter extends ISelectorEntity {
 	@Override
 	public HashSet<AbstractEntity> getEntities(SkillMetadata data) {
 		HashSet<AbstractEntity> targets = new HashSet<>();
-		HashSet<AbstractEntity> tt = data.getEntityTargets();
-		Iterator<AbstractEntity> it = tt.iterator();
-		while (it.hasNext()) {
-			AbstractEntity target = it.next();
+		Collection<AbstractEntity> tt = data.getEntityTargets();
+		for (AbstractEntity target : tt) {
 			if (target != null) {
 				if (target.isPlayer()) {
 					AbstractEntity pt = BukkitAdapter

@@ -1,5 +1,6 @@
 package com.gmail.berndivader.mythicmobsext.mechanics;
 
+import io.lumine.xikage.mythicmobs.skills.AbstractSkill;
 import org.bukkit.entity.LivingEntity;
 
 import com.gmail.berndivader.mythicmobsext.Main;
@@ -18,7 +19,8 @@ public class PlayAnimationMechanic extends SkillMechanic implements ITargetedEnt
 
 	public PlayAnimationMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = true;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		String[] parse = mlc.getString(new String[] { "id", "ids" }, "0").split(",");
 		ids = new Integer[parse.length];
 		for (int i1 = 0; i1 < parse.length; i1++) {

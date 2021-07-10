@@ -87,7 +87,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		start(loc);
 		return false;
 	}
-	
+
 	public void start(Location loc) {
 		
 		if(file.contains(".gif")) {
@@ -126,11 +126,11 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 	}
 	
 	public void draw(BufferedImage img, Location loc) {
-		if(resize != "false") {
+		if(!resize.equals("false")) {
 			
 			String[] x = resize.split(",");
-			int tWidth = Integer.valueOf(x[0]);
-			int tHeight = Integer.valueOf(x[1]);
+			int tWidth = Integer.parseInt(x[0]);
+			int tHeight = Integer.parseInt(x[1]);
 			
 			try {
 				img = resizeImage(img, tWidth, tHeight);
@@ -155,23 +155,23 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 			    	  int r = (pixel>>16) & 0xff;
 			    	  int g = (pixel>>8) & 0xff;
 			    	  int b = pixel & 0xff;
-			    	  
-			    	  int bgr = 255;
-			    	  int bgg = 255;
-			    	  int bgb = 255;
-			    	  if (backgroundColor != "white" && !backgroundColor.contains(",")) {
-			    		  bgr = 0;
-			    		  bgg = 0;
-			    		  bgb = 0;}
+
+			    	  int bgRed, bgGreen, bgBlue;
+			    	  bgRed = bgGreen = bgBlue = 255;
+			    	  if (!backgroundColor.equals("white") && !backgroundColor.contains(",")) {
+						  bgRed = 0;
+						  bgGreen = 0;
+						  bgBlue = 0;
+			    	  }
 			    	  else if (backgroundColor.contains(",")) {
 			    		  String[] colors = backgroundColor.split(",");
-			    		  bgr = Integer.valueOf(colors[0]);
-			    		  bgg = Integer.valueOf(colors[1]);
-			    		  bgb = Integer.valueOf(colors[2]);
+						  bgRed = Integer.parseInt(colors[0]);
+						  bgGreen = Integer.parseInt(colors[1]);
+						  bgBlue = Integer.parseInt(colors[2]);
 			    	  }
 	
 			    	  // Removes white/black pixels to remove the background
-			    	  if ( r != bgr && g != bgg && b != bgb )
+			    	  if ( r != bgRed && g != bgGreen && b != bgBlue )
 			    	  {
 			    		  double x = (i/scale) - ((width/scale)/2.0);
 			    		  double y = (o/scale) - ((height/scale)/2.0);
@@ -213,7 +213,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		            "imageHeight"
 		    };    
 
-		    ImageReader reader = (ImageReader)ImageIO.getImageReadersByFormatName("gif").next();
+		    ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
 		    ImageInputStream ciis = ImageIO.createImageInputStream(gif);
 		    reader.setInput(ciis, false);
 
@@ -231,7 +231,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		            Node nodeItem = children.item(j);
 
 		            if(nodeItem.getNodeName().equals("ImageDescriptor")){
-		                Map<String, Integer> imageAttr = new HashMap<String, Integer>();
+		                Map<String, Integer> imageAttr = new HashMap<>();
 
 		                for (int k = 0; k < imageatt.length; k++) {
 		                    NamedNodeMap attr = nodeItem.getAttributes();
@@ -245,9 +245,7 @@ public class ParticleImage extends SkillMechanic implements ITargetedEntitySkill
 		            }
 		        }
 		        
-		        // I don't know why, I don't want to know why, I shouldn't have to 
-		        // wonder why, but for whatever reason I need to write master
-		        // then read it to get the actual value
+				// TODO: Change this part
 		        File dir = new File( Main.getPlugin().getDataFolder().getPath() + "/images/qlJ06jLEg8.png");
 		        ImageIO.write(master, "GIF", dir);
 		        BufferedImage a = ImageIO.read(dir);

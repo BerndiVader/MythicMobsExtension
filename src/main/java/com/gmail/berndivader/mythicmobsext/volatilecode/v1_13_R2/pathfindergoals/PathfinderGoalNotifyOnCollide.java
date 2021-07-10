@@ -68,8 +68,7 @@ public class PathfinderGoalNotifyOnCollide extends PathfinderGoal {
 			this.e.getBukkitEntity().setMetadata(Utils.meta_LASTCOLLIDETYPE,
 					new FixedMetadataValue(Main.getPlugin(), ee.getBukkitEntity().getType().toString()));
 			if (am.isPresent())
-				new TriggeredSkill(SkillTrigger.BLOCK, this.am.get(), BukkitAdapter.adapt(ee.getBukkitEntity()),
-						new Pair[0]);
+				new TriggeredSkill(SkillTrigger.BLOCK, this.am.get(), BukkitAdapter.adapt(ee.getBukkitEntity()),true);
 		}
 	}
 }

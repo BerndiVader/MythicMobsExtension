@@ -2,10 +2,7 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.ITargetedEntitySkill;
-import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
-import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
-import io.lumine.xikage.mythicmobs.skills.SkillString;
+import io.lumine.xikage.mythicmobs.skills.*;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 
 public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargetedEntitySkill {
@@ -16,7 +13,8 @@ public class LineSpeechBubbleMechanic extends SkillMechanic implements ITargeted
 
 	public LineSpeechBubbleMechanic(String skill, MythicLineConfig mlc) {
 		super(skill, mlc);
-		this.ASYNC_SAFE = false;
+		this.threadSafetyLevel = AbstractSkill.ThreadSafetyLevel.SYNC_ONLY;
+
 		this.id = mlc.getString("id", "bubble");
 		this.cmp = mlc.getString(new String[] { "mode", "m" }, "replace").toLowerCase();
 		String ol = mlc.getString(new String[] { "oldline", "ol" }, null);

@@ -32,7 +32,7 @@ public class ModifyArrowsMechanic extends SkillMechanic implements ITargetedEnti
 		return false;
 	}
 
-	/**
+	/*
 	 * @param entity {@link LivingEntity}
 	 * @param amount {@link Integer}
 	 * @param action {@link Char} <b>A</b>=add - <b>S</b>=sub - <b>C</b>=clear

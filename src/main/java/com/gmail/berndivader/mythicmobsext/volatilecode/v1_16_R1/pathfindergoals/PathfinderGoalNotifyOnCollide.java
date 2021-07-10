@@ -57,9 +57,7 @@ public class PathfinderGoalNotifyOnCollide extends PathfinderGoal {
 	}
 
 	public void e() {
-		ListIterator<Entity> it1 = this.w.getEntities((Entity) this.e, this.e.getBoundingBox()).listIterator();
-		while (it1.hasNext()) {
-			Entity ee = it1.next();
+		for (Entity ee : this.w.getEntities(this.e, this.e.getBoundingBox())) {
 			if (this.cooldown.containsKey(ee.getUniqueID()))
 				continue;
 			this.cooldown.put(ee.getUniqueID(), this.c);
@@ -68,8 +66,7 @@ public class PathfinderGoalNotifyOnCollide extends PathfinderGoal {
 			this.e.getBukkitEntity().setMetadata(Utils.meta_LASTCOLLIDETYPE,
 					new FixedMetadataValue(Main.getPlugin(), ee.getBukkitEntity().getType().toString()));
 			if (am.isPresent())
-				new TriggeredSkill(SkillTrigger.BLOCK, this.am.get(), BukkitAdapter.adapt(ee.getBukkitEntity()),
-						new Pair[0]);
+				new TriggeredSkill(SkillTrigger.BLOCK, this.am.get(), BukkitAdapter.adapt(ee.getBukkitEntity()), true);
 		}
 	}
 }

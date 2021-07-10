@@ -49,7 +49,7 @@ public class InfectWithMythic extends SkillMechanic implements ITargetedEntitySk
 						new FixedMetadataValue(Utils.mythicmobs, mob_type.getFaction()));
 			}
 			Utils.mobmanager.registerActiveMob(am);
-			new TriggeredSkill(SkillTrigger.SPAWN, am, data.getCaster().getEntity(), new Pair[0]);
+			new TriggeredSkill(SkillTrigger.SPAWN, am, data.getCaster().getEntity(), true);
 		}
 		return am;
 	}
