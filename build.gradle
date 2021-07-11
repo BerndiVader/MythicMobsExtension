@@ -1,13 +1,15 @@
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
+        allowInsecureProtocol = true
     }
     maven {
         url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+        allowInsecureProtocol = true
     }
  }
  
@@ -37,7 +39,7 @@ dependencies {
 }
 
 processResources {
-    
+    duplicatesStrategy = 'include'
     print("Process properties....")
     Properties p1=new Properties()
     File pf1=new File("$project.projectDir/gradle.properties")
@@ -71,48 +73,10 @@ compileJava {
     
     doLast {
         print("Create POM file....")
-        pom {
-            project {
-                groupId project.group
-                artifactId project.name
-                version project.version
-            }
-        }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
-        println("Done!")
+	subprojects {
+	  group = 'com.mythicmobsextension'
+	  task generatePom << { pom { }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+        println("Done!")}}
     }
     
 }
-
-uploadArchives {
-    doLast {
-        print("Update repository files....")
-	def d1=project.projectDir
-	Properties archiva=new Properties()
-        
-        File data=new File("${d1}/../usr.properties")
-	if(data.exists())
-        {
-            archiva.load(data.newDataInputStream())
-            def usr=archiva.getProperty('usr')
-            def pwd=archiva.getProperty('pwd')
-
-
-            repositories.mavenDeployer {
-                    repository(url:'http://mc.hackerzlair.org:8888/repository/public/') {
-                            authentication (userName: '${usr}', password: '${pwd}')
-                    }
-
-                    pom.version=project.version
-                    pom.artifactId=project.name
-                    pom.groupId='com.gmail.berndivader'
-            }
-            println("Done!")
-        }
-        else
-        {
-            println("Archiva config file is missing. Repository not updated!")
-        }
-    }
-
-}
-
