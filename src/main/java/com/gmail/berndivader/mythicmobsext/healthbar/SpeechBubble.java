@@ -2,6 +2,11 @@ package com.gmail.berndivader.mythicmobsext.healthbar;
 
 import java.util.UUID;
 
+import com.gmail.berndivader.mythicmobsext.Main;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.beta.hologram.HologramLines;
+import me.filoghost.holographicdisplays.api.beta.hologram.VisibilitySettings;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,17 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.gmail.berndivader.mythicmobsext.utils.math.MathUtils;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-import com.gmail.filoghost.holographicdisplays.object.CraftHologram;
 
-public class SpeechBubble extends CraftHologram {
+public class SpeechBubble {
+	protected Hologram hologram;
 	protected LivingEntity entity;
 	protected UUID uuid;
 	protected double offset;
 	protected double sOffset;
 	protected double fOffset;
 	protected String[] template;
-	protected TextLine textline;
 	protected int counter;
 	protected int maxlines;
 	protected int il1 = 0;
@@ -39,7 +42,7 @@ public class SpeechBubble extends CraftHologram {
 
 	public SpeechBubble(LivingEntity entity, String s1, Location l1, double offset, int showCounter, String[] text,
 			double sOffset, double fOffset, boolean b1, int ll, boolean b2) {
-		super(l1);
+		hologram = HolographicDisplaysAPI.get(Main.getPlugin()).createHologram(l1);
 		this.id = s1;
 		this.ll = ll;
 		this.fOffset = fOffset;
@@ -49,14 +52,14 @@ public class SpeechBubble extends CraftHologram {
 		if (this.useOffset && b1) {
 			Vector soV = MathUtils.getSideOffsetVectorFixed(entity.getLocation().getYaw(), this.sOffset, false);
 			Vector foV = MathUtils.getFrontBackOffsetVector(entity.getLocation().getDirection(), this.fOffset);
-			this.getLocation().add(soV);
-			this.getLocation().add(foV);
+			hologram.getPosition().add(soV.getX(), soV.getY(), soV.getZ());
+			hologram.getPosition().add(foV.getX(), foV.getY(), foV.getZ());
 		}
 		this.uc1 = b2;
 		this.uuid = entity.getUniqueId();
 		HealthbarHandler.speechbubbles.put(this.uuid.toString() + this.id, this);
 		this.counter = showCounter < 1 ? 60 : showCounter * 20;
-		this.getVisibilityManager().setVisibleByDefault(true);
+		hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.VISIBLE);
 		this.counter = showCounter;
 		this.entity = entity;
 		this.offset = offset;
@@ -65,21 +68,21 @@ public class SpeechBubble extends CraftHologram {
 	}
 
 	public boolean update() {
-		if (this.isDeleted())
+		if (hologram.isDeleted())
 			return false;
 		Location l = this.entity.getLocation();
 		World w = l.getWorld();
 		double dx = l.getX();
 		double dy = l.getY();
 		double dz = l.getZ();
-		double do1 = (this.size() * 0.25) + (il1 * 0.5) + this.offset;
+		double do1 = (hologram.getLines().size() * 0.25) + (il1 * 0.5) + this.offset;
 		if (this.useOffset) {
 			Vector soV = MathUtils.getSideOffsetVectorFixed(entity.getLocation().getYaw(), this.sOffset, false);
 			Vector foV = MathUtils.getFrontBackOffsetVector(entity.getLocation().getDirection(), this.fOffset);
 			dx += soV.getX() + foV.getX();
 			dz += soV.getZ() + foV.getZ();
 		}
-		this.teleport(w, dx, dy + do1, dz);
+		hologram.setPosition(w, dx, dy + do1, dz);
 		if (uc1) {
 			this.counter--;
 			if (this.counter < 0)
@@ -90,11 +93,12 @@ public class SpeechBubble extends CraftHologram {
 
 	public void remove() {
 		HealthbarHandler.speechbubbles.remove(this.uuid.toString() + this.id);
-		this.delete();
+		hologram.delete();
 	}
 
 	public void lines() {
-		this.clearLines();
+		HologramLines lines = hologram.getLines();
+		lines.clear();
 		this.il1 = 0;
 		for (String l : this.template) {
 			if (l.contains("<additem.")) {
@@ -102,16 +106,16 @@ public class SpeechBubble extends CraftHologram {
 				a1 = "<additem." + (a3 = l.split("<additem.")[1].split(">")[0]) + ">";
 				String[] a2 = (l.replace(a1, "<split>")).split("<split>");
 				if (a2.length > 0)
-					this.appendTextLine(a2[0]);
+					lines.appendText(a2[0]);
 				Material m1;
 				if ((m1 = Material.getMaterial(a3.toUpperCase())) != null) {
-					this.appendItemLine(new ItemStack(m1));
+					lines.appendItem(new ItemStack(m1));
 					il1++;
 				}
 				if (a2.length > 1)
-					this.appendTextLine(a2[1]);
+					lines.appendText(a2[1]);
 			} else {
-				this.appendTextLine(l);
+				lines.appendText(l);
 			}
 		}
 	}

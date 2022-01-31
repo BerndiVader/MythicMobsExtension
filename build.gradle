@@ -1,8 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+if(JavaVersion.current() != JavaVersion.VERSION_1_8){
+    throw new GradleException("This build must be run with java 8")
+}
+
 repositories {
     mavenCentral()
+    maven {
+        url = "https://repo.codemc.io/repository/maven-public/"
+        allowInsecureProtocol = true
+    }
     maven {
         url "http://mc.hackerzlair.org:8888/repository/public"
         allowInsecureProtocol = true
@@ -11,19 +19,24 @@ repositories {
         url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
         allowInsecureProtocol = true
     }
- }
- 
+    maven {
+        url "https://mvn.lumine.io/repository/maven-public/"
+        allowInsecureProtocol = true
+    }
+    mavenLocal()
+}
+
 dependencies {
     compileOnly  ("org.spigotmc:spigot-1.16.5:+")
     compileOnly  ("org.spigotmc:spigot-1.16.3R:+")
     compileOnly  ("org.spigotmc:spigot-1.16.1R:+")
-    compileOnly  ("org.spigotmc:spigot-1.15.2:+") 
-    compileOnly  ("org.spigotmc:spigot-1.14.4:+") 
-    compileOnly  ("org.spigotmc:spigot-1.13.2:+") 
-    compileOnly  ("org.spigotmc:spigot-1.12.2:+") 
+    compileOnly  ("org.spigotmc:spigot-1.15.2:+")
+    compileOnly  ("org.spigotmc:spigot-1.14.4:+")
+    compileOnly  ("org.spigotmc:spigot-1.13.2:+")
+    compileOnly  ("org.spigotmc:spigot-1.12.2:+")
     compileOnly  ("com.massivecraft:massivecore:+")
     compileOnly  ("com.massivecraft:factions:+")
-    compileOnly  ("com.gmail.filoghost:holographicdisplays:+")
+    compileOnly  ("me.filoghost.holographicdisplays:holographicdisplays-api:+")
     compileOnly  ("com.comphenix:protocol:+")
     compileOnly  ("com.garbagemule:mobarena:+")
     compileOnly  ("com.sk89q:worldedit:+")
@@ -36,6 +49,7 @@ dependencies {
     compileOnly  ("com.palmergames.bukkit.towny:Towny:+")
     compileOnly  ("io.lumine.xikage:mythicmobs:4.12.0")
     compileOnly  ("me.clip:placeholderapi:+")
+    compileOnly  ("io.lumine:MythicLib:1.0.17")
 }
 
 processResources {
@@ -54,29 +68,29 @@ processResources {
     {
         println("Warning! gradle.properties file is missing!")
     }
-    
+
     print("Process resources....")
     inputs.property "version", project.version
     from (sourceSets.main.resources.srcDirs) {
-            include "plugin.yml"
-            expand "version": project.version
+        include "plugin.yml"
+        expand "version": project.version
     }
 
     from (sourceSets.main.resources.srcDirs) {
-            exclude "plugin.yml"
+        exclude "plugin.yml"
     }
     println("Done!")
 }
 
 compileJava {
     dependsOn clean
-    
+
     doLast {
         print("Create POM file....")
-	subprojects {
-	  group = 'com.mythicmobsextension'
-	  task generatePom << { pom { }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
-        println("Done!")}}
+        subprojects {
+            group = 'com.mythicmobsextension'
+            task generatePom << { pom { }.writeTo("./build/libs/"+project.name+"-"+project.version+".xml")
+                println("Done!")}}
     }
-    
+
 }

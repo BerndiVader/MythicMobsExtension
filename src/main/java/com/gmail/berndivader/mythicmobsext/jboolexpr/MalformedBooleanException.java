@@ -36,7 +36,7 @@ public final class MalformedBooleanException extends Exception {
 
 	private static List<Integer> toList(final int errorIndex) {
 		List<Integer> errorIndexes = new ArrayList<Integer>();
-		errorIndexes.add(new Integer(errorIndex));
+		errorIndexes.add(errorIndex);
 		return errorIndexes;
 	}
 

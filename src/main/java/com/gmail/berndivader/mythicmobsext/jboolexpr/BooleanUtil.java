@@ -32,15 +32,15 @@ final class BooleanUtil {
 			while (matcher.find()) {
 				int start = matcher.start();
 				if (start != 0) {
-					errorIndexes.add(new Integer(start));
+					errorIndexes.add(start);
 				}
 				int end = matcher.end();
 				if (end != booleanExpression.length()) {
-					errorIndexes.add(new Integer(end));
+					errorIndexes.add(end);
 				}
 			}
 			if (errorIndexes.isEmpty()) {
-				errorIndexes.add(new Integer(0));
+				errorIndexes.add(0);
 			}
 			throw new MalformedBooleanException("Expected [ ' ' ( ) || && ! true false ]", errorIndexes,
 					booleanExpression);
