@@ -20,8 +20,8 @@ import io.lumine.xikage.mythicmobs.skills.SkillMechanic;
 
 public class HealthbarHandler implements Listener {
 
-	static Plugin plugin = Main.getPlugin();
-	static Logger logger = Main.logger;
+	static Plugin plugin;
+	static Logger logger;
 	static String str_pluginName;
 	public static ConcurrentHashMap<UUID, Healthbar> healthbars;
 	public static ConcurrentHashMap<String, SpeechBubble> speechbubbles;

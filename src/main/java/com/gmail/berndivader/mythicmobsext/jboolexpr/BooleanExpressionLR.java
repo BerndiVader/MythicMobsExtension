@@ -18,7 +18,7 @@ final class BooleanExpressionLR extends BooleanExpression {
 	private IBoolean toIBoolean(final String formatedBooleanExpression, final int index)
 			throws MalformedBooleanException {
 		char lastChar = getLastChar(formatedBooleanExpression);
-		if (new Character(lastChar).toString().matches("\\s")) {
+		if (String.valueOf(lastChar).matches("\\s")) {
 			lastChar = ' ';
 		}
 		String substring = getSubstringWithoutLastChar(formatedBooleanExpression);
@@ -46,7 +46,7 @@ final class BooleanExpressionLR extends BooleanExpression {
 	private IBoolean toIBoolean(final IBoolean lastIBoolean, final String formatedBooleanExpression, final int index)
 			throws MalformedBooleanException {
 		char lastChar = getLastChar(formatedBooleanExpression);
-		if (new Character(lastChar).toString().matches("\\s")) {
+		if (String.valueOf(lastChar).matches("\\s")) {
 			lastChar = ' ';
 		}
 		String substring = getSubstringWithoutLastChar(formatedBooleanExpression);

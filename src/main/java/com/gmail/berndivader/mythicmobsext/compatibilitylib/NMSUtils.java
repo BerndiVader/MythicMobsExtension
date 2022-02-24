@@ -46,12 +46,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,6 +73,10 @@ public class NMSUtils {
     protected static boolean hasTimeSkipEvent = false;
 
     protected static String versionPrefix = "";
+    protected static int version = -1;
+    protected static int versionMinor = -1;
+    protected static String npack = "";
+    protected static String cpack = "";
 
     protected final static int NBT_TYPE_COMPOUND = 10;
     protected final static int NBT_TYPE_INT_ARRAY= 11;
@@ -375,14 +374,18 @@ public class NMSUtils {
     protected static Constructor class_RecipeChoice_ExactChoice_List_constructor;
     protected static Constructor class_BlockActionContext_constructor;
 
-    protected static Field class_Entity_invulnerableField;
+    protected static Method class_Entity_setInvulnerable;
+    protected static Method class_Entity_isInvulnerable;
+    protected static Method class_ItemStack_getTag;
+    protected static Method class_ItemStack_setTag;
+
+    protected static Method class_WorldServer_getEntityMethod;
+
     protected static Field class_Entity_persistField;
     protected static Field class_Entity_motXField;
     protected static Field class_Entity_motYField;
     protected static Field class_Entity_motZField;
     protected static Field class_Entity_motField;
-    protected static Field class_WorldServer_entitiesByUUIDField;
-    protected static Field class_ItemStack_tagField;
     protected static Field class_Firework_ticksFlownField;
     protected static Field class_Firework_expectedLifespanField;
     protected static Field class_CraftSkull_profile;
@@ -445,77 +448,83 @@ public class NMSUtils {
             versionPrefix = packages[3] + ".";
         }
 
-        try {
-            class_Block = fixBukkitClass("net.minecraft.server.Block");
-            class_Entity = fixBukkitClass("net.minecraft.server.Entity");
-            class_EntityLiving = fixBukkitClass("net.minecraft.server.EntityLiving");
-            class_EntityHuman = fixBukkitClass("net.minecraft.server.EntityHuman");
-            class_ItemStack = fixBukkitClass("net.minecraft.server.ItemStack");
-            class_DataWatcher = fixBukkitClass("net.minecraft.server.DataWatcher");
-            class_DataWatcherObject = fixBukkitClass("net.minecraft.server.DataWatcherObject");
-            class_NBTBase = fixBukkitClass("net.minecraft.server.NBTBase");
-            class_NBTTagCompound = fixBukkitClass("net.minecraft.server.NBTTagCompound");
-            class_NBTTagList = fixBukkitClass("net.minecraft.server.NBTTagList");
-            class_NBTTagString = fixBukkitClass("net.minecraft.server.NBTTagString");
-            class_NBTTagByte = fixBukkitClass("net.minecraft.server.NBTTagByte");
-            class_NBTTagDouble = fixBukkitClass("net.minecraft.server.NBTTagDouble");
-            class_NBTTagFloat = fixBukkitClass("net.minecraft.server.NBTTagFloat");
-            class_NBTTagInt = fixBukkitClass("net.minecraft.server.NBTTagInt");
-            class_NBTTagLong = fixBukkitClass("net.minecraft.server.NBTTagLong");
-            class_NBTTagShort = fixBukkitClass("net.minecraft.server.NBTTagShort");
-            class_CraftWorld = fixBukkitClass("org.bukkit.craftbukkit.CraftWorld");
-            class_CraftInventoryCustom = fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventoryCustom");
-            class_CraftItemStack = fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftItemStack");
-            class_CraftBlockState = fixBukkitClass("org.bukkit.craftbukkit.block.CraftBlockState");
-            class_CraftTask = fixBukkitClass("org.bukkit.craftbukkit.scheduler.CraftTask");
-            class_CraftLivingEntity = fixBukkitClass("org.bukkit.craftbukkit.entity.CraftLivingEntity");
-            class_Packet = fixBukkitClass("net.minecraft.server.Packet");
-            class_World = fixBukkitClass("net.minecraft.server.World");
-            class_WorldServer = fixBukkitClass("net.minecraft.server.WorldServer");
-            class_EnumSkyBlock = (Class<Enum>)fixBukkitClass("net.minecraft.server.EnumSkyBlock");
-            class_EnumSoundCategory = (Class<Enum>)fixBukkitClass("net.minecraft.server.SoundCategory");
-            enum_SoundCategory_PLAYERS = Enum.valueOf(class_EnumSoundCategory, "PLAYERS");
-            class_EntityPainting = fixBukkitClass("net.minecraft.server.EntityPainting");
-            class_EntityCreature = fixBukkitClass("net.minecraft.server.EntityCreature");
-            class_EntityItemFrame = fixBukkitClass("net.minecraft.server.EntityItemFrame");
-            class_EntityMinecartRideable = fixBukkitClass("net.minecraft.server.EntityMinecartRideable");
-            class_EntityTNTPrimed = fixBukkitClass("net.minecraft.server.EntityTNTPrimed");
-            class_AxisAlignedBB = fixBukkitClass("net.minecraft.server.AxisAlignedBB");
-            class_DamageSource = fixBukkitClass("net.minecraft.server.DamageSource");
-            class_EntityDamageSource = fixBukkitClass("net.minecraft.server.EntityDamageSource");
-            class_EntityFirework = fixBukkitClass("net.minecraft.server.EntityFireworks");
-            class_CraftSkull = fixBukkitClass("org.bukkit.craftbukkit.block.CraftSkull");
-            class_CraftMetaSkull = fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftMetaSkull");
-            class_NBTCompressedStreamTools = fixBukkitClass("net.minecraft.server.NBTCompressedStreamTools");
-            class_TileEntity = fixBukkitClass("net.minecraft.server.TileEntity");
-            class_EntityHorse = fixBukkitClass("net.minecraft.server.EntityHorse");
-            class_EntityWitherSkull = fixBukkitClass("net.minecraft.server.EntityWitherSkull");
-            class_PacketPlayOutAttachEntity = fixBukkitClass("net.minecraft.server.PacketPlayOutAttachEntity");
-            class_PacketPlayOutEntityDestroy = fixBukkitClass("net.minecraft.server.PacketPlayOutEntityDestroy");
-            class_PacketPlayOutSpawnEntity = fixBukkitClass("net.minecraft.server.PacketPlayOutSpawnEntity");
-            class_PacketPlayOutSpawnEntityLiving = fixBukkitClass("net.minecraft.server.PacketPlayOutSpawnEntityLiving");
-            class_PacketPlayOutEntityMetadata = fixBukkitClass("net.minecraft.server.PacketPlayOutEntityMetadata");
-            class_PacketPlayOutEntityStatus = fixBukkitClass("net.minecraft.server.PacketPlayOutEntityStatus");
-            class_PacketPlayOutExperience = fixBukkitClass("net.minecraft.server.PacketPlayOutExperience");
-            class_PacketPlayOutAnimation = fixBukkitClass("net.minecraft.server.PacketPlayOutAnimation");
-            class_PacketPlayOutBlockBreakAnimation = fixBukkitClass("net.minecraft.server.PacketPlayOutBlockBreakAnimation");
-            class_EntityFallingBlock = fixBukkitClass("net.minecraft.server.EntityFallingBlock");
-            class_EntityArmorStand = fixBukkitClass("net.minecraft.server.EntityArmorStand");
-            class_EntityPlayer = fixBukkitClass("net.minecraft.server.EntityPlayer");
-            class_PlayerConnection = fixBukkitClass("net.minecraft.server.PlayerConnection");
-            class_Chunk = fixBukkitClass("net.minecraft.server.Chunk");
-            class_CraftPlayer = fixBukkitClass("org.bukkit.craftbukkit.entity.CraftPlayer");
-            class_CraftChunk = fixBukkitClass("org.bukkit.craftbukkit.CraftChunk");
-            class_CraftEntity = fixBukkitClass("org.bukkit.craftbukkit.entity.CraftEntity");
-            class_TileEntitySign = fixBukkitClass("net.minecraft.server.TileEntitySign");
-            class_CraftServer = fixBukkitClass("org.bukkit.craftbukkit.CraftServer");
-            class_MinecraftServer = fixBukkitClass("net.minecraft.server.MinecraftServer");
-            class_BlockPosition = fixBukkitClass("net.minecraft.server.BlockPosition");
+        String[] versions = className.replace(".", ",").split(",")[3].substring(1).split("_");
+        version = Integer.parseInt(versions[1]); // 1.X
+        versionMinor = Integer.parseInt(versions[2].substring(1)); // 1.X.Y
+        npack = "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        cpack = Bukkit.getServer().getClass().getPackage().getName() + ".";
 
-            class_EntityProjectile = NMSUtils.getBukkitClass("net.minecraft.server.EntityProjectile");
-            class_EntityFireball = NMSUtils.getBukkitClass("net.minecraft.server.EntityFireball");
-            class_EntityArrow = NMSUtils.getBukkitClass("net.minecraft.server.EntityArrow");
-            class_CraftArrow = NMSUtils.getBukkitClass("org.bukkit.craftbukkit.entity.CraftArrow");
+        try {
+            class_Block = fixBukkitClass("Block", true, "world.level.block");
+            class_Entity = fixBukkitClass("Entity", true, "world.entity");
+            class_EntityLiving = fixBukkitClass("EntityLiving", true, "world.entity");
+            class_EntityHuman = fixBukkitClass("EntityHuman", true, "world.entity.player");
+            class_ItemStack = fixBukkitClass("ItemStack", true, "world.item");
+            class_DataWatcher = fixBukkitClass("DataWatcher", true, "network.syncher");
+            class_DataWatcherObject = fixBukkitClass("DataWatcherObject", true, "network.syncher");
+            class_NBTBase = fixBukkitClass("NBTBase", true, "nbt");
+            class_NBTTagCompound = fixBukkitClass("NBTTagCompound", true, "nbt");
+            class_NBTTagList = fixBukkitClass("NBTTagList", true, "nbt");
+            class_NBTTagString = fixBukkitClass("NBTTagString", true, "nbt");
+            class_NBTTagByte = fixBukkitClass("NBTTagByte", true, "nbt");
+            class_NBTTagDouble = fixBukkitClass("NBTTagDouble", true, "nbt");
+            class_NBTTagFloat = fixBukkitClass("NBTTagFloat", true, "nbt");
+            class_NBTTagInt = fixBukkitClass("NBTTagInt", true, "nbt");
+            class_NBTTagLong = fixBukkitClass("NBTTagLong", true, "nbt");
+            class_NBTTagShort = fixBukkitClass("NBTTagShort", true, "nbt");
+            class_CraftWorld = fixBukkitClass("CraftWorld", false);
+            class_CraftInventoryCustom = fixBukkitClass("inventory.CraftInventoryCustom", false);
+            class_CraftItemStack = fixBukkitClass("inventory.CraftItemStack", false);
+            class_CraftBlockState = fixBukkitClass("block.CraftBlockState", false);
+            class_CraftTask = fixBukkitClass("scheduler.CraftTask", false);
+            class_CraftLivingEntity = fixBukkitClass("entity.CraftLivingEntity", false);
+            class_Packet = fixBukkitClass("Packet", true, "network.protocol");
+            class_World = fixBukkitClass("World", true, "world.level");
+            class_WorldServer = fixBukkitClass("WorldServer", true, "server.level");
+            class_EnumSkyBlock = (Class<Enum>)fixBukkitClass("EnumSkyBlock", true, "world.level");
+            class_EnumSoundCategory = (Class<Enum>)fixBukkitClass("SoundCategory", true, "sounds");
+            enum_SoundCategory_PLAYERS = Enum.valueOf(class_EnumSoundCategory, "PLAYERS");
+            class_EntityPainting = fixBukkitClass("EntityPainting", true, "world.entity.decoration");
+            class_EntityCreature = fixBukkitClass("EntityCreature", true, "world.entity");
+            class_EntityItemFrame = fixBukkitClass("EntityItemFrame", true, "world.entity.decoration");
+            class_EntityMinecartRideable = fixBukkitClass("EntityMinecartRideable", true, "world.entity.vehicle");
+            class_EntityTNTPrimed = fixBukkitClass("EntityTNTPrimed", true, "world.entity.item");
+            class_AxisAlignedBB = fixBukkitClass("AxisAlignedBB", true, "world.phys");
+            class_DamageSource = fixBukkitClass("DamageSource", true, "world.damagesource");
+            class_EntityDamageSource = fixBukkitClass("EntityDamageSource", true, "world.damagesource");
+            class_EntityFirework = fixBukkitClass("EntityFireworks", true, "world.entity.projectile");
+            class_CraftSkull = fixBukkitClass("block.CraftSkull", false);
+            class_CraftMetaSkull = fixBukkitClass("inventory.CraftMetaSkull", false);
+            class_NBTCompressedStreamTools = fixBukkitClass("NBTCompressedStreamTools", true, "nbt");
+            class_TileEntity = fixBukkitClass("TileEntity", true, "world.level.block.entity");
+            class_EntityHorse = fixBukkitClass("EntityHorse", true, "world.entity.animal.horse");
+            class_EntityWitherSkull = fixBukkitClass("EntityWitherSkull", true, "world.entity.projectile");
+            class_PacketPlayOutAttachEntity = fixBukkitClass("PacketPlayOutAttachEntity", true, "network.protocol.game");
+            class_PacketPlayOutEntityDestroy = fixBukkitClass("PacketPlayOutEntityDestroy", true, "network.protocol.game");
+            class_PacketPlayOutSpawnEntity = fixBukkitClass("PacketPlayOutSpawnEntity", true, "network.protocol.game");
+            class_PacketPlayOutSpawnEntityLiving = fixBukkitClass("PacketPlayOutSpawnEntityLiving", true, "network.protocol.game");
+            class_PacketPlayOutEntityMetadata = fixBukkitClass("PacketPlayOutEntityMetadata", true, "network.protocol.game");
+            class_PacketPlayOutEntityStatus = fixBukkitClass("PacketPlayOutEntityStatus", true, "network.protocol.game");
+            class_PacketPlayOutExperience = fixBukkitClass("PacketPlayOutExperience", true, "network.protocol.game");
+            class_PacketPlayOutAnimation = fixBukkitClass("PacketPlayOutAnimation", true, "network.protocol.game");
+            class_PacketPlayOutBlockBreakAnimation = fixBukkitClass("PacketPlayOutBlockBreakAnimation", true, "network.protocol.game");
+            class_EntityFallingBlock = fixBukkitClass("EntityFallingBlock", true,"world.entity.item");
+            class_EntityArmorStand = fixBukkitClass("EntityArmorStand", true, "world.entity.decoration");
+            class_EntityPlayer = fixBukkitClass("EntityPlayer", true, "server.level");
+            class_PlayerConnection = fixBukkitClass("PlayerConnection", true, "server.network");
+            class_Chunk = fixBukkitClass("Chunk", true, "world.level.chunk");
+            class_CraftPlayer = fixBukkitClass("entity.CraftPlayer", false);
+            class_CraftChunk = fixBukkitClass("CraftChunk", false);
+            class_CraftEntity = fixBukkitClass("entity.CraftEntity", false);
+            class_TileEntitySign = fixBukkitClass("TileEntitySign", true, "world.level.block.entity");
+            class_CraftServer = fixBukkitClass("CraftServer", false);
+            class_MinecraftServer = fixBukkitClass("MinecraftServer", true, "server");
+            class_BlockPosition = fixBukkitClass("BlockPosition", true, "core");
+
+            class_EntityProjectile = fixBukkitClass("EntityProjectile", true, "world.entity.projectile");
+            class_EntityFireball = fixBukkitClass("EntityFireball", true, "world.entity.projectile");
+            class_EntityArrow = fixBukkitClass("EntityArrow", true, "world.entity.projectile");
+            class_CraftArrow = fixBukkitClass("entity.CraftArrow", false);
 
             class_Entity_getBukkitEntityMethod = class_Entity.getMethod("getBukkitEntity");
             class_Entity_setYawPitchMethod = class_Entity.getDeclaredMethod("setYawPitch", Float.TYPE, Float.TYPE);
@@ -548,7 +557,8 @@ public class NMSUtils {
             class_CraftLivingEntity_getHandleMethod = class_CraftLivingEntity.getMethod("getHandle");
             class_CraftWorld_getHandleMethod = class_CraftWorld.getMethod("getHandle");
             class_EntityPlayer_openSignMethod = class_EntityPlayer.getMethod("openSign", class_TileEntitySign);
-            class_EntityPlayer_setResourcePackMethod = class_EntityPlayer.getMethod("setResourcePack", String.class, String.class);
+            // 1.17 : remove because it's setResourcePack(String, String, boolean, IChatBaseComponent)
+//          class_EntityPlayer_setResourcePackMethod = class_EntityPlayer.getMethod("setResourcePack", String.class, String.class);
             class_CraftServer_getServerMethod = class_CraftServer.getMethod("getServer");
             class_MinecraftServer_getResourcePackMethod = class_MinecraftServer.getMethod("getResourcePack");
             
@@ -565,17 +575,18 @@ public class NMSUtils {
 
             class_CraftWorld_environmentField = class_CraftWorld.getDeclaredField("environment");
             class_CraftWorld_environmentField.setAccessible(true);
-            class_Entity_invulnerableField = class_Entity.getDeclaredField("invulnerable");
-            class_Entity_invulnerableField.setAccessible(true);
-            class_ItemStack_tagField = class_ItemStack.getDeclaredField("tag");
-            class_ItemStack_tagField.setAccessible(true);
-            class_EntityTNTPrimed_source = class_EntityTNTPrimed.getDeclaredField("source");
-            class_EntityTNTPrimed_source.setAccessible(true);
-            class_EntityPlayer_playerConnectionField = class_EntityPlayer.getDeclaredField("playerConnection");
+            class_Entity_setInvulnerable = class_Entity.getDeclaredMethod("setInvulnerable", boolean.class);
+            class_Entity_isInvulnerable = class_Entity.getDeclaredMethod("isInvulnerable");
 
-            class_Firework_ticksFlownField = class_EntityFirework.getDeclaredField("ticksFlown");
+            class_ItemStack_getTag = class_ItemStack.getDeclaredMethod("getTag");
+            class_ItemStack_setTag = class_ItemStack.getDeclaredMethod("setTag", class_NBTTagCompound);
+
+            class_EntityTNTPrimed_source = class_EntityTNTPrimed.getDeclaredField(version < 17 ? "source" : "d"); // 1.17 : owner
+            class_EntityPlayer_playerConnectionField = class_EntityPlayer.getDeclaredField(version < 17 ? "playerConnection" : "b"); // 1.17 : connection
+
+            class_Firework_ticksFlownField = class_EntityFirework.getDeclaredField(version < 17 ? "ticksFlown" : "e"); // 1.17 : life
             class_Firework_ticksFlownField.setAccessible(true);
-            class_Firework_expectedLifespanField = class_EntityFirework.getDeclaredField("expectedLifespan");
+            class_Firework_expectedLifespanField = class_EntityFirework.getDeclaredField(version < 17 ? "expectedLifespan" : "f"); // 1.17 : lifetime
             class_Firework_expectedLifespanField.setAccessible(true);
 
             class_NBTTagCompound_constructor = class_NBTTagCompound.getConstructor();
@@ -587,33 +598,33 @@ public class NMSUtils {
             class_NBTTagFloat_constructor = new NBTConstructor(class_NBTTagFloat, Float.TYPE);
             class_NBTTagLong_constructor = new NBTConstructor(class_NBTTagLong, Long.TYPE);
 
-            Class<?> class_NBTTagIntArray = fixBukkitClass("net.minecraft.server.NBTTagIntArray");
-            Class<?> class_NBTTagByteArray = fixBukkitClass("net.minecraft.server.NBTTagByteArray");
+            Class<?> class_NBTTagIntArray = fixBukkitClass("NBTTagIntArray", true, "nbt");
+            Class<?> class_NBTTagByteArray = fixBukkitClass("NBTTagByteArray", true, "nbt");
             class_NBTTagIntArray_constructor = class_NBTTagIntArray.getConstructor(int[].class);
             class_NBTTagByteArray_constructor = class_NBTTagByteArray.getConstructor(byte[].class);
 
             try {
-                Class<?> class_NBTTagLongArray = fixBukkitClass("net.minecraft.server.NBTTagLongArray");
+                Class<?> class_NBTTagLongArray = fixBukkitClass("NBTTagLongArray", true, "nbt");
                 class_NBTTagLongArray_constructor = class_NBTTagLongArray.getConstructor(long[].class);
             } catch (Throwable ignore) {
                 class_NBTTagLongArray_constructor = null;
             }
 
-            class_NBTTagList_list = class_NBTTagList.getDeclaredField("list");
+            class_NBTTagList_list = class_NBTTagList.getDeclaredField(version < 17 ? "list" : "w");
             class_NBTTagList_list.setAccessible(true);
-            class_NBTTagByte_dataField = class_NBTTagByte.getDeclaredField("data");
+            class_NBTTagByte_dataField = class_NBTTagByte.getDeclaredField(version < 17 ? "data" : "x");
             class_NBTTagByte_dataField.setAccessible(true);
-            class_NBTTagDouble_dataField = class_NBTTagDouble.getDeclaredField("data");
+            class_NBTTagDouble_dataField = class_NBTTagDouble.getDeclaredField(version < 17 ? "data" : "w");
             class_NBTTagDouble_dataField.setAccessible(true);
-            class_NBTTagFloat_dataField = class_NBTTagFloat.getDeclaredField("data");
+            class_NBTTagFloat_dataField = class_NBTTagFloat.getDeclaredField(version < 17 ? "data" : "w");
             class_NBTTagFloat_dataField.setAccessible(true);
-            class_NBTTagInt_dataField = class_NBTTagInt.getDeclaredField("data");
+            class_NBTTagInt_dataField = class_NBTTagInt.getDeclaredField(version < 17 ? "data" : "c");
             class_NBTTagInt_dataField.setAccessible(true);
-            class_NBTTagLong_dataField = class_NBTTagLong.getDeclaredField("data");
+            class_NBTTagLong_dataField = class_NBTTagLong.getDeclaredField(version < 17 ? "data" : "c");
             class_NBTTagLong_dataField.setAccessible(true);
-            class_NBTTagShort_dataField = class_NBTTagShort.getDeclaredField("data");
+            class_NBTTagShort_dataField = class_NBTTagShort.getDeclaredField(version < 17 ? "data" : "c");
             class_NBTTagShort_dataField.setAccessible(true);
-            class_NBTTagString_dataField = class_NBTTagString.getDeclaredField("data");
+            class_NBTTagString_dataField = class_NBTTagString.getDeclaredField(version < 17 ? "data" : "A");
             class_NBTTagString_dataField.setAccessible(true);
             class_NBTTagList_getMethod = class_NBTTagList.getMethod("get", Integer.TYPE);
             class_NBTTagList_sizeMethod = class_NBTTagList.getMethod("size");
@@ -623,21 +634,21 @@ public class NMSUtils {
             class_NBTTagCompound_getMethod = class_NBTTagCompound.getMethod("get", String.class);
             class_NBTTagCompound_getCompoundMethod = class_NBTTagCompound.getMethod("getCompound", String.class);
 
-            class_EntityFallingBlock_hurtEntitiesField = class_EntityFallingBlock.getDeclaredField("hurtEntities");
+            class_EntityFallingBlock_hurtEntitiesField = class_EntityFallingBlock.getDeclaredField(version < 17 ? "hurtEntities" : "ap");
             class_EntityFallingBlock_hurtEntitiesField.setAccessible(true);
-            class_EntityFallingBlock_fallHurtAmountField = class_EntityFallingBlock.getDeclaredField("fallHurtAmount");
+            class_EntityFallingBlock_fallHurtAmountField = class_EntityFallingBlock.getDeclaredField(version < 17 ? "fallHurtAmount" : "ar"); // 1.17 : fallDamagePerDistance
             class_EntityFallingBlock_fallHurtAmountField.setAccessible(true);
-            class_EntityFallingBlock_fallHurtMaxField = class_EntityFallingBlock.getDeclaredField("fallHurtMax");
+            class_EntityFallingBlock_fallHurtMaxField = class_EntityFallingBlock.getDeclaredField(version < 17 ? "fallHurtMax" : "aq"); // 1.17 : fallDamageMax
             class_EntityFallingBlock_fallHurtMaxField.setAccessible(true);
 
             class_CraftItemStack_getHandleField = class_CraftItemStack.getDeclaredField("handle");
             class_CraftItemStack_getHandleField.setAccessible(true);
-            
+
             class_MemorySection_mapField = MemorySection.class.getDeclaredField("map");
             class_MemorySection_mapField.setAccessible(true);
-            
-            class_TileEntityContainer = fixBukkitClass("net.minecraft.server.TileEntityContainer");
-            class_ChestLock = fixBukkitClass("net.minecraft.server.ChestLock");
+
+            class_TileEntityContainer = fixBukkitClass("TileEntityContainer", true, "world.level.block.entity");
+            class_ChestLock = fixBukkitClass("ChestLock", true, "world");
             class_Entity_getBoundingBox = class_Entity.getMethod("getBoundingBox");
             class_GameProfile = getClass("com.mojang.authlib.GameProfile");
             class_GameProfile_constructor = class_GameProfile.getConstructor(UUID.class, String.class);
@@ -657,14 +668,13 @@ public class NMSUtils {
             class_GameProfileProperty_constructor = class_GameProfileProperty.getConstructor(String.class, String.class, String.class);
             class_GameProfileProperty_noSignatureConstructor = class_GameProfileProperty.getConstructor(String.class, String.class);
 
-            class_EnumDirection = (Class<Enum>)fixBukkitClass("net.minecraft.server.EnumDirection");
+            class_EnumDirection = (Class<Enum>)fixBukkitClass("EnumDirection", true, "core");
             class_BlockPosition_Constructor = class_BlockPosition.getConstructor(Double.TYPE, Double.TYPE, Double.TYPE);
             class_EntityPaintingConstructor = class_EntityPainting.getConstructor(class_World, class_BlockPosition, class_EnumDirection);
             class_EntityItemFrameConstructor = class_EntityItemFrame.getConstructor(class_World, class_BlockPosition, class_EnumDirection);
 
             // TODO: Server.getEntity(UUID) in 1.11+
-            class_WorldServer_entitiesByUUIDField = class_WorldServer.getDeclaredField("entitiesByUUID");
-            class_WorldServer_entitiesByUUIDField.setAccessible(true);
+            class_WorldServer_getEntityMethod = class_WorldServer.getDeclaredMethod("getEntity", UUID.class);
 
             // TODO: World.getNearbyEntities in 1.11+
             class_AxisAlignedBB_Constructor = class_AxisAlignedBB.getConstructor(Double.TYPE, Double.TYPE, Double.TYPE, Double.TYPE, Double.TYPE, Double.TYPE);
@@ -718,12 +728,12 @@ public class NMSUtils {
             }
 
             try {
-                Class<?> class_CraftArt = fixBukkitClass("org.bukkit.craftbukkit.CraftArt");
+                Class<?> class_CraftArt = fixBukkitClass("CraftArt", false);
                 class_CraftArt_NotchToBukkitMethod = class_CraftArt.getMethod("BukkitToNotch", Art.class);
-                Class<?> class_EntityPainting = fixBukkitClass("net.minecraft.server.EntityPainting");
+                Class<?> class_EntityPainting = fixBukkitClass("EntityPainting", true, "world.entity.decoration");
                 class_EntityPainting_art = class_EntityPainting.getDeclaredField("art");
                 class_EntityPainting_art.setAccessible(true);
-                Class<?> class_EntityHanging = fixBukkitClass("net.minecraft.server.EntityHanging");
+                Class<?> class_EntityHanging = fixBukkitClass("EntityHanging", true, "world.entity.decoration");
                 class_EntityHanging_blockPosition = class_EntityHanging.getField("blockPosition");
                 class_EntityHanging_blockPosition.setAccessible(true);
                 class_BlockPosition_getXMethod = class_BlockPosition.getMethod("getX");
@@ -801,9 +811,9 @@ public class NMSUtils {
                 class_Material_isLegacyMethod = Material.class.getMethod("isLegacy");
                 class_Material_getLegacyMethod = Material.class.getMethod("getMaterial", String.class, Boolean.TYPE);
 
-                class_MinecraftKey = fixBukkitClass("net.minecraft.server.MinecraftKey");
+                class_MinecraftKey = fixBukkitClass("MinecraftKey", true, "resources");
                 class_MinecraftKey_constructor = class_MinecraftKey.getConstructor(String.class);
-                class_Vec3D = fixBukkitClass("net.minecraft.server.Vec3D");
+                class_Vec3D = fixBukkitClass("Vec3D", true, "world.phys");
                 class_Vec3D_constructor = class_Vec3D.getConstructor(Double.TYPE, Double.TYPE, Double.TYPE);
 
                 Class<?> class_BlockData = Class.forName("org.bukkit.block.data.BlockData");
@@ -866,7 +876,7 @@ public class NMSUtils {
 
             // 1.14 Support
             try {
-                class_EnumExplosionEffect = (Class<Enum>)fixBukkitClass("net.minecraft.server.Explosion$Effect");
+                class_EnumExplosionEffect = (Class<Enum>)fixBukkitClass("Explosion$Effect", true, "world.level");
                 enum_ExplosionEffect_BREAK = Enum.valueOf(class_EnumExplosionEffect, "BREAK");
                 enum_ExplosionEffect_NONE = Enum.valueOf(class_EnumExplosionEffect, "NONE");
                 class_World_explodeMethod = class_World.getMethod("createExplosion", class_Entity, Double.TYPE, Double.TYPE, Double.TYPE, Float.TYPE, Boolean.TYPE, class_EnumExplosionEffect);
@@ -884,7 +894,7 @@ public class NMSUtils {
             if (isCurrentVersion) {
                 try {
                     entityTypes = new HashMap<>();
-                    class_entityTypes = fixBukkitClass("net.minecraft.server.EntityTypes");
+                    class_entityTypes = fixBukkitClass("EntityTypes", true, "world.entity");
                     for (Field field : class_entityTypes.getFields()) {
                         if (field.getType().equals(class_entityTypes)) {
                             Object entityType = field.get(null);
@@ -957,7 +967,7 @@ public class NMSUtils {
 
             }
             try {
-                class_PacketPlayOutCustomSoundEffect = fixBukkitClass("net.minecraft.server.PacketPlayOutCustomSoundEffect");
+                class_PacketPlayOutCustomSoundEffect = fixBukkitClass("PacketPlayOutCustomSoundEffect", true, "network.protocol.game");
 
                 if (class_MinecraftKey_constructor != null) {
                     class_PacketPlayOutCustomSoundEffect_Constructor = class_PacketPlayOutCustomSoundEffect.getConstructor(class_MinecraftKey, class_EnumSoundCategory, class_Vec3D, Float.TYPE, Float.TYPE);
@@ -969,11 +979,11 @@ public class NMSUtils {
             }
 
             try {
-                Class<?> class_ItemBoneMeal = fixBukkitClass("net.minecraft.server.ItemBoneMeal");
+                Class<?> class_ItemBoneMeal = fixBukkitClass("ItemBoneMeal", true, "world.item");
                 class_ItemDye_bonemealMethod = class_ItemBoneMeal.getMethod("a", class_ItemStack, class_World, class_BlockPosition);
             } catch (Throwable not13) {
                 try {
-                    Class<?> class_ItemDye = fixBukkitClass("net.minecraft.server.ItemDye");
+                    Class<?> class_ItemDye = fixBukkitClass("ItemDye", true, "world.item");
                     class_ItemDye_bonemealMethod = class_ItemDye.getMethod("a", class_ItemStack, class_World, class_BlockPosition);
                 } catch (Throwable ex) {
                     class_ItemDye_bonemealMethod = null;
@@ -1022,7 +1032,7 @@ public class NMSUtils {
                 class_NBTTagList_getDoubleMethod = null;
             }
             try {
-                Class<?> class_IBlockData = fixBukkitClass("net.minecraft.server.IBlockData");
+                Class<?> class_IBlockData = fixBukkitClass("IBlockData", true, "world.level.block.state");
                 class_World_getTypeMethod = class_World.getMethod("getType", class_BlockPosition);
                 class_World_setTypeAndDataMethod = class_World.getMethod("setTypeAndData", class_BlockPosition, class_IBlockData, Integer.TYPE);
             } catch (Throwable ex) {
@@ -1040,7 +1050,8 @@ public class NMSUtils {
                 Field damageSource_MagicField = class_DamageSource.getField("MAGIC");
                 object_magicSource = damageSource_MagicField.get(null);
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, magic damage will not work, using normal damage instead", ex);
+                getLogger().log(Level.WARNING, "An error occurred, magic damage will not work, using normal damage instead");
+                //getLogger().log(Level.WARNING, "An error occurred, magic damage will not work, using normal damage instead", ex);
                 class_EntityLiving_damageEntityMethod = null;
                 class_DamageSource_getMagicSourceMethod = null;
                 object_magicSource = null;
@@ -1051,7 +1062,7 @@ public class NMSUtils {
                     class_EntityHuman_getBedMethod = class_EntityPlayer.getMethod("getSpawn");
                     class_EntityPlayer_getSpawnDimensionMethod = class_EntityPlayer.getMethod("getSpawnDimension");
                     class_EntityPlayer_serverField = class_EntityPlayer.getField("server");
-                    Class<?> class_resourceKey = fixBukkitClass("net.minecraft.server.ResourceKey");
+                    Class<?> class_resourceKey = fixBukkitClass("ResourceKey", true, "resources");
                     class_MinecraftServer_getWorldServerMethod = class_MinecraftServer.getMethod("getWorldServer", class_resourceKey);
                     class_WorldServer_worldMethod = class_WorldServer.getMethod("getWorld");
                 } catch (Exception notCurrent) {
@@ -1060,7 +1071,8 @@ public class NMSUtils {
                 }
             } catch (Throwable ex) {
                 class_EntityHuman_getBedMethod = null;
-                getLogger().log(Level.WARNING, "An error occurred, could not get bed location directly, will use API", ex);
+                getLogger().log(Level.WARNING, "An error occurred, could not get bed location directly, will use API");
+                //getLogger().log(Level.WARNING, "An error occurred, could not get bed location directly, will use API", ex);
             }
 
             try {
@@ -1085,7 +1097,7 @@ public class NMSUtils {
                 }
             }
             try {
-                Class<?> class_IBlockData = fixBukkitClass("net.minecraft.server.IBlockData");
+                Class<?> class_IBlockData = fixBukkitClass("IBlockData", true, "world.level.block.state");
                 class_Block_fromLegacyData = class_Block.getMethod("fromLegacyData", Integer.TYPE);
                 class_Chunk_setBlockMethod = class_Chunk.getMethod("a", class_BlockPosition, class_IBlockData);
             } catch (Throwable ex) {
@@ -1280,31 +1292,33 @@ public class NMSUtils {
                     }
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred while registering entity movement accessors, vehicle control will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred while registering entity movement accessors, vehicle control will not work");
+                //getLogger().log(Level.WARNING, "An error occurred while registering entity movement accessors, vehicle control will not work", ex);
                 class_Entity_jumpingField = null;
                 class_Entity_moveStrafingField = null;
                 class_Entity_moveForwardField = null;
             }
 
             try {
-                class_BlockBase = fixBukkitClass("net.minecraft.server.BlockBase");
+                class_BlockBase = fixBukkitClass("BlockBase", true, "world.level.block.state");
                 class_Block_durabilityField = class_BlockBase.getDeclaredField("durability");
                 class_Block_durabilityField.setAccessible(true);
             } catch (Exception not16) {
                 try {
                     class_Block_durabilityField = class_Block.getDeclaredField("durability");
                     class_Block_durabilityField.setAccessible(true);
-                    Class<?> craftMagicNumbers = fixBukkitClass("org.bukkit.craftbukkit.util.CraftMagicNumbers");
+                    Class<?> craftMagicNumbers = fixBukkitClass("util.CraftMagicNumbers", false);
                     class_CraftMagicNumbers_getBlockMethod = craftMagicNumbers.getMethod("getBlock", Material.class);
                 } catch (Throwable ex) {
-                    getLogger().log(Level.WARNING, "An error occurred while registering block durability accessor, durability-based block checks will not work", ex);
+                    getLogger().log(Level.WARNING, "An error occurred while registering block durability accessor, durability-based block checks will not work");
+                    //getLogger().log(Level.WARNING, "An error occurred while registering block durability accessor, durability-based block checks will not work", ex);
                     class_Block_durabilityField = null;
                     class_CraftMagicNumbers_getBlockMethod = null;
                 }
             }
 
             try {
-                Class<?> craftMagicNumbers = fixBukkitClass("org.bukkit.craftbukkit.util.CraftMagicNumbers");
+                Class<?> craftMagicNumbers = fixBukkitClass("util.CraftMagicNumbers", false);
                 class_CraftMagicNumbers_getBlockMethod = craftMagicNumbers.getMethod("getBlock", Material.class);
             } catch (Throwable ex) {
                 getLogger().log(Level.WARNING, "An error occurred while registering block accessor, durability-based block checks will not work", ex);
@@ -1315,13 +1329,13 @@ public class NMSUtils {
                 // 1.12
                 try {
                     // Common to 1.12 and below
-                    class_PacketPlayOutChat = fixBukkitClass("net.minecraft.server.PacketPlayOutChat");
-                    class_ChatComponentText = fixBukkitClass("net.minecraft.server.ChatComponentText");
-                    class_IChatBaseComponent = fixBukkitClass("net.minecraft.server.IChatBaseComponent");
+                    class_PacketPlayOutChat = fixBukkitClass("PacketPlayOutChat", true, "network.protocol.game");
+                    class_ChatComponentText = fixBukkitClass("ChatComponentText", true, "network.chat");
+                    class_IChatBaseComponent = fixBukkitClass("IChatBaseComponent", true, "network.chat");
                     class_ChatComponentText_constructor = class_ChatComponentText.getConstructor(String.class);
 
                     // Common to 1.16 and below
-                    class_ChatMessageType = (Class<Enum>)fixBukkitClass("net.minecraft.server.ChatMessageType");
+                    class_ChatMessageType = (Class<Enum>)fixBukkitClass("ChatMessageType", true, "network.chat");
                     enum_ChatMessageType_GAME_INFO = Enum.valueOf(class_ChatMessageType, "GAME_INFO");
 
                     // 1.16 specific
@@ -1363,7 +1377,7 @@ public class NMSUtils {
 
             try {
                 try {
-                    class_IBlockData = fixBukkitClass("net.minecraft.server.IBlockData");
+                    class_IBlockData = fixBukkitClass("IBlockData", true, "world.level.block.state");
                     class_TileEntity_loadMethod = class_TileEntity.getMethod("load", class_IBlockData, class_NBTTagCompound);
                 } catch (Throwable not16) {
                     class_IBlockData = null;
@@ -1501,7 +1515,8 @@ public class NMSUtils {
                     }
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, chest locking and unlocking will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, chest locking and unlocking will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, chest locking and unlocking will not work", ex);
                 class_TileEntityContainer_setLock = null;
                 class_TileEntityContainer_getLock = null;
             }
@@ -1519,13 +1534,14 @@ public class NMSUtils {
                     class_PlayerConnection_floatCountField.setAccessible(true);
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, player flight exemption will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, player flight exemption will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, player flight exemption will not work", ex);
                 class_PlayerConnection_floatCountField = null;
             }
 
             try {
                 try { // Purpur fork
-                    Class<?> class_IProjectile = fixBukkitClass("net.minecraft.server.IProjectile");
+                    Class<?> class_IProjectile = fixBukkitClass("IProjectile", true, "world.entity.projectile");
                     class_EntityArrow_lifeField = class_IProjectile.getDeclaredField("despawnCounter");
                 } catch (Throwable ignore) {
                     try {
@@ -1571,7 +1587,8 @@ public class NMSUtils {
                     }
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, thorn damage override to hurt ender dragon will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, thorn damage override to hurt ender dragon will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, thorn damage override to hurt ender dragon will not work", ex);
                 class_EntityDamageSource_setThornsMethod = null;
             }
 
@@ -1592,7 +1609,8 @@ public class NMSUtils {
                     class_Entity_saveMethod = class_Entity.getMethod("e", class_NBTTagCompound);
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, saving entities to spawn eggs will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, saving entities to spawn eggs will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, saving entities to spawn eggs will not work", ex);
                 class_Entity_getTypeMethod = null;
                 class_Entity_saveMethod = null;
             }
@@ -1611,7 +1629,8 @@ public class NMSUtils {
                     class_ItemStack_createStackMethod = class_ItemStack.getMethod("createStack", class_NBTTagCompound);
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, restoring inventories from schematics will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, restoring inventories from schematics will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, restoring inventories from schematics will not work", ex);
                 class_ItemStack_createStackMethod = null;
             }
 
@@ -1619,7 +1638,8 @@ public class NMSUtils {
                 class_EntityArrow_damageField = class_EntityArrow.getDeclaredField("damage");
                 class_EntityArrow_damageField.setAccessible(true);
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, setting arrow damage will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, setting arrow damage will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, setting arrow damage will not work", ex);
                 class_EntityArrow_damageField = null;
             }
 
@@ -1636,7 +1656,8 @@ public class NMSUtils {
                     class_Entity_isSilentMethod = class_Entity.getDeclaredMethod("ad");
                 }
             } catch (Throwable ex) {
-                getLogger().log(Level.WARNING, "An error occurred, silent entities will not work", ex);
+                getLogger().log(Level.WARNING, "An error occurred, silent entities will not work");
+                //getLogger().log(Level.WARNING, "An error occurred, silent entities will not work", ex);
                 class_Entity_setSilentMethod = null;
                 class_Entity_isSilentMethod = null;
             }
@@ -1669,14 +1690,14 @@ public class NMSUtils {
 
             // Auto block state creation
             try {
-                class_CraftBlock = fixBukkitClass("org.bukkit.craftbukkit.block.CraftBlock");
+                class_CraftBlock = fixBukkitClass("block.CraftBlock");
                 class_CraftBlock_getNMSBlockMethod = class_CraftBlock.getDeclaredMethod("getNMSBlock");
                 class_CraftBlock_getNMSBlockMethod.setAccessible(true);
-                class_BlockActionContext = fixBukkitClass("net.minecraft.server.BlockActionContext");
+                class_BlockActionContext = fixBukkitClass("BlockActionContext", true, "world.item.context");
                 class_Block_getPlacedStateMethod = class_Block.getMethod("getPlacedState", class_BlockActionContext);
-                class_EnumHand = (Class<Enum>)fixBukkitClass("net.minecraft.server.EnumHand");
+                class_EnumHand = (Class<Enum>)fixBukkitClass("EnumHand", true, "world");
                 enum_EnumHand_MAIN_HAND = Enum.valueOf(class_EnumHand, "MAIN_HAND");
-                class_MovingObjectPositionBlock = fixBukkitClass("net.minecraft.server.MovingObjectPositionBlock");
+                class_MovingObjectPositionBlock = fixBukkitClass("MovingObjectPositionBlock", true, "world.phys");
                 class_BlockActionContext_constructor = class_BlockActionContext.getDeclaredConstructor(class_World, class_EntityHuman, class_EnumHand, class_ItemStack, class_MovingObjectPositionBlock);
                 class_BlockActionContext_constructor.setAccessible(true);
                 class_MovingObjectPositionBlock_createMethod = class_MovingObjectPositionBlock.getMethod("a", class_Vec3D, class_EnumDirection, class_BlockPosition);
@@ -1692,7 +1713,8 @@ public class NMSUtils {
         }
         catch (Throwable ex) {
             failed = true;
-            getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic", ex);
+            getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic");
+            //getLogger().log(Level.SEVERE, "An unexpected error occurred initializing Magic", ex);
         }
 
         return !failed;
@@ -1726,23 +1748,21 @@ public class NMSUtils {
         return result;
     }
 
-    public static Class<?> getBukkitClass(String className) {
-        Class<?> result = null;
-        try {
-            result = fixBukkitClass(className);
-        } catch (Exception ex) {
-            result = null;
+    public static Class<?> fixBukkitClass(String className, boolean nms, String package17) throws ClassNotFoundException {
+        if (nms) {
+            className = (version < 17 ? npack : "net.minecraft." + package17) + "." + className;
+        } else {
+            className = cpack + className;
         }
 
-        return result;
+        return NMSUtils.class.getClassLoader().loadClass(className);
+    }
+
+    public static Class<?> fixBukkitClass(String className, boolean nms) throws ClassNotFoundException {
+        return fixBukkitClass(className, nms, null);
     }
 
     public static Class<?> fixBukkitClass(String className) throws ClassNotFoundException {
-        if (!versionPrefix.isEmpty()) {
-            className = className.replace("org.bukkit.craftbukkit.", "org.bukkit.craftbukkit." + versionPrefix);
-            className = className.replace("net.minecraft.server.", "net.minecraft.server." + versionPrefix);
-        }
-
         return NMSUtils.class.getClassLoader().loadClass(className);
     }
 
@@ -1901,7 +1921,7 @@ public class NMSUtils {
     public static Object getTag(Object mcItemStack) {
         Object tag = null;
         try {
-            tag = class_ItemStack_tagField.get(mcItemStack);
+            tag = class_ItemStack_getTag.invoke(mcItemStack);
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -1943,9 +1963,9 @@ public class NMSUtils {
             return null;
         }
         try {
-            Object tag = class_ItemStack_tagField.get(nmsStack);
+            Object tag = class_ItemStack_getTag.invoke(nmsStack);
             if (tag == null) {
-                class_ItemStack_tagField.set(nmsStack, class_NBTTagCompound_constructor.newInstance());
+                class_ItemStack_setTag.invoke(nmsStack, class_NBTTagCompound_constructor.newInstance());
             }
         } catch (Throwable ex) {
             ex.printStackTrace();
@@ -1970,7 +1990,7 @@ public class NMSUtils {
         try {
             Object mcItemStack = getHandle(itemStack);
             if (mcItemStack == null) return null;
-            tag = class_ItemStack_tagField.get(mcItemStack);
+            tag = class_ItemStack_getTag.invoke(mcItemStack);
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -2036,7 +2056,7 @@ public class NMSUtils {
                 Object tagObject = getTag(craft);
                 if (tagObject == null) {
                     tagObject = class_NBTTagCompound_constructor.newInstance();
-                    class_ItemStack_tagField.set(craft, tagObject);
+                    class_ItemStack_setTag.invoke(craft, tagObject);
                 }
                 outputObject = class_NBTTagCompound_constructor.newInstance();
                 class_NBTTagCompound_setMethod.invoke(tagObject, tag, outputObject);

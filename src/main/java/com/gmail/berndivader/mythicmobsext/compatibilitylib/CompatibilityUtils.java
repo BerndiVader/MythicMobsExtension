@@ -71,16 +71,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -238,17 +229,17 @@ public class CompatibilityUtils extends NMSUtils {
     public static void setInvulnerable(Entity entity, boolean flag) {
         try {
             Object handle = getHandle(entity);
-            class_Entity_invulnerableField.set(handle, flag);
+            class_Entity_setInvulnerable.invoke(handle, flag);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public static boolean isInvulnerable(Entity entity) {
-        if (class_Entity_invulnerableField == null) return false;
+        if (class_Entity_isInvulnerable == null) return false;
         try {
             Object handle = getHandle(entity);
-            return (boolean)class_Entity_invulnerableField.get(handle);
+            return (boolean) class_Entity_isInvulnerable.invoke(handle);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -518,7 +509,7 @@ public class CompatibilityUtils extends NMSUtils {
     public static void ageItem(Item item, int ticksToAge)
     {
         try {
-            Class<?> itemClass = fixBukkitClass("net.minecraft.server.EntityItem");
+            Class<?> itemClass = fixBukkitClass("EntityItem", true, "world.entity.item");
             Object handle = getHandle(item);
             Field ageField = itemClass.getDeclaredField("age");
             ageField.setAccessible(true);
@@ -1126,6 +1117,7 @@ public class CompatibilityUtils extends NMSUtils {
         // TODO: Player.setResourcePack in 1.11+
         try {
             String hashString = BaseEncoding.base16().lowerCase().encode(hash);
+            // 1.17 : remove initialization of class_EntityPlayer_setResourcePackMethod
             class_EntityPlayer_setResourcePackMethod.invoke(getHandle(player), rp, hashString);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1532,13 +1524,18 @@ public class CompatibilityUtils extends NMSUtils {
     public static Entity getEntity(World world, UUID uuid) {
         try {
             Object worldHandle = getHandle(world);
-            final Map<UUID, Entity> entityMap = (Map<UUID, Entity>)class_WorldServer_entitiesByUUIDField.get(worldHandle);
+            Object nmsEntity = class_WorldServer_getEntityMethod.invoke(worldHandle, uuid);
+            if (nmsEntity != null) {
+                return getBukkitEntity(nmsEntity);
+            }
+            /*final Map<UUID, Entity> entityMap = (Map<UUID, Entity>) class_WorldServer_getEntitiesMethod.invoke(worldHandle);
             if (entityMap != null) {
                 Object nmsEntity = entityMap.get(uuid);
                 if (nmsEntity != null) {
                     return getBukkitEntity(nmsEntity);
                 }
             }
+             */
         } catch (Exception ex) {
             ex.printStackTrace();
         }
