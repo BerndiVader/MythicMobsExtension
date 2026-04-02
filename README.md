@@ -6,7 +6,7 @@
 ## Use the bot there to get help `!help`
 
 
-## [DOWNLOAD](https://mc.hackerzlair.org/jenkins/job/MythicMobsExtension/) [![Build Status](https://mc.hackerzlair.org/jenkins/job/MythicMobsExtension/badge/icon)] <br>
+## [DOWNLOAD](https://jenkins.berndivader.org/jenkins/job/MythicMobsExtension/) [![Build Status](https://jenkins.berndivader.org/jenkins/job/MythicMobsExtension/badge/icon)] <br>
 
 
 ### [Wiki](https://github.com/BerndiVader/MythicMobsExtension/wiki) VERY OUTDATED
