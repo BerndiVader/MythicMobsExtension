@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Creature;
@@ -69,26 +69,25 @@ public class NMSUtils extends CompatibilityUtils {
 	public static boolean initialize() {
 		boolean bool = com.gmail.berndivader.mythicmobsext.compatibilitylib.NMSUtils.initialize(Main.getPlugin().getLogger());
 		try {
-			class_IChatBaseComponent_ChatSerializer = fixBukkitClass(
-					"net.minecraft.server.IChatBaseComponent$ChatSerializer");
-			class_EntitySnowman = fixBukkitClass("net.minecraft.server.EntitySnowman");
+			class_IChatBaseComponent_ChatSerializer = fixBukkitClass("IChatBaseComponent$ChatSerializer", true, "network.chat");
+			class_EntitySnowman = fixBukkitClass("EntitySnowman", true, "world.entity.animal");
 			class_Drop = fixBukkitClass("io.lumine.xikage.mythicmobs.drops.Drop");
-			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(
-					Utils.serverV < 14 ? "net.minecraft.server.PathfinderGoalSelector$PathfinderGoalSelectorItem"
-							: "net.minecraft.server.PathfinderGoalWrapped");
-			class_IInventory = fixBukkitClass("net.minecraft.server.IInventory");
-			class_CraftInventory = fixBukkitClass("org.bukkit.craftbukkit.inventory.CraftInventory");
+			class_PathfinderGoalSelector_PathfinderGoalSelectorItem = fixBukkitClass(Utils.serverV < 14 ?
+							"PathfinderGoalSelector$PathfinderGoalSelectorItem" : "PathfinderGoalWrapped",
+					true, "world.entity.ai.goal");
+			class_IInventory = fixBukkitClass("IInventory", true, "world");
+			class_CraftInventory = fixBukkitClass("inventory.CraftInventory", false);
 			class_MetadataStoreBase = fixBukkitClass("org.bukkit.metadata.MetadataStoreBase");
 
-			class_Entity_lastXField = class_Entity.getDeclaredField("lastX");
+			class_Entity_lastXField = class_Entity.getDeclaredField(version < 17 ? "lastX" : "u"); // 1.17 : xo
 			class_Entity_lastXField.setAccessible(true);
-			class_Entity_lastYField = class_Entity.getDeclaredField("lastY");
+			class_Entity_lastYField = class_Entity.getDeclaredField(version < 17 ? "lastY" : "v"); // 1.17 : yo
 			class_Entity_lastYField.setAccessible(true);
-			class_Entity_lastZField = class_Entity.getDeclaredField("lastZ");
+			class_Entity_lastZField = class_Entity.getDeclaredField(version < 17 ? "lastZ" : "w"); // 1.17 : zo
 			class_Entity_lastZField.setAccessible(true);
-			class_Entity_lastPitchField = class_Entity.getDeclaredField("lastPitch");
+			class_Entity_lastPitchField = class_Entity.getDeclaredField(version < 17 ? "lastPitch" : "x"); // 1.17 : yRotO
 			class_Entity_lastPitchField.setAccessible(true);
-			class_Entity_lastYawField = class_Entity.getDeclaredField("lastYaw");
+			class_Entity_lastYawField = class_Entity.getDeclaredField(version < 17 ? "lastYaw" : "y"); // 1.17 : xRotO
 			class_Entity_lastYawField.setAccessible(true);
 
 			if (Utils.serverV < 14) {
@@ -108,16 +107,16 @@ public class NMSUtils extends CompatibilityUtils {
 			class_MinecraftServer_currentTickField = class_MinecraftServer.getDeclaredField("currentTick");
 			class_MinecraftServer_currentTickField.setAccessible(true);
 
-			class_Entity_getFlagMethod = class_Entity.getMethod("getFlag", Integer.TYPE);
+			class_Entity_getFlagMethod = class_Entity.getMethod(version < 18 ? "getFlag" : "h", Integer.TYPE);
 			class_IChatBaseComponent_ChatSerializer_aMethod = class_IChatBaseComponent_ChatSerializer.getMethod("a",
 					String.class);
-			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod("setGoalTarget",
+			class_EntityCreature_setGoalTargetMethod = class_EntityCreature.getMethod(version < 18 ? "setGoalTarget" : "setTarget",
 					class_EntityLiving, TargetReason.class, Boolean.TYPE);
-			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod("clearActiveItem");
-			class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod("getArmorStrength");
-			class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod("setHasPumpkin", Boolean.TYPE);
-			class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod("getArrowCount");
-			class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE);
+			class_EntityPlayer_clearActiveItemMethod = class_EntityPlayer.getMethod(version < 18 ? "clearActiveItem" : "eR");
+			class_EntityLiving_getArmorStrengthMethod = class_EntityLiving.getMethod(version < 18 ? "getArmorStrength" : "ei");
+			class_EntitySnowman_setHasPumpkinMethod = class_EntitySnowman.getMethod(version < 18 ? "setHasPumpkin" : "v", Boolean.TYPE);
+			class_EntityLiving_getArrowCountMethod = class_EntityLiving.getMethod(version < 18 ? "getArrowCount" : "em");
+			class_EntityLiving_setArrowCountMethod = class_EntityLiving.getMethod("setArrowCount", Integer.TYPE, Boolean.TYPE);
 			class_PathfinderGoalSelector_PathfinderGoalSelectorItem_equalsMethod = class_PathfinderGoalSelector_PathfinderGoalSelectorItem
 					.getMethod("equals", Object.class);
 
@@ -199,11 +198,11 @@ public class NMSUtils extends CompatibilityUtils {
 	 * @param server {@link Server}
 	 * @return int - ticks
 	 */
-	public static int getCurrentTick(Server s1) {
+	public static int getCurrentTick(Server server) {
 		int i1 = 0;
 		Object o1;
 		try {
-			if ((o1 = getHandle(s1)) != null) {
+			if ((o1 = getHandle(server)) != null) {
 				i1 = class_MinecraftServer_currentTickField.getInt(o1);
 			}
 		} catch (Exception ex) {
@@ -452,7 +451,7 @@ public class NMSUtils extends CompatibilityUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Map<Plugin, MetadataValue>> getEntityMetadataMap(Server server) {
-		Map<String, Map<Plugin, MetadataValue>> metadata_map = new HashMap<String, Map<Plugin, MetadataValue>>();
+		Map<String, Map<Plugin, MetadataValue>> metadata_map = new HashMap<>();
 		try {
 			Object craft_server = server;
 			Object entity_metadata_store = class_CraftServer_getEntityMetadataStoreMethod.invoke(craft_server);
@@ -472,7 +471,7 @@ public class NMSUtils extends CompatibilityUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Map<Plugin, MetadataValue>> getPlayerMetadataMap(Entity entity) {
-		Map<String, Map<Plugin, MetadataValue>> metadata_map = new HashMap<String, Map<Plugin, MetadataValue>>();
+		Map<String, Map<Plugin, MetadataValue>> metadata_map = new HashMap<>();
 		try {
 			Object craft_server = entity.getServer();
 			Object entity_metadata_store = class_CraftServer_getPlayerMetadataStoreMethod.invoke(craft_server);
